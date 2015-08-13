@@ -1,0 +1,31 @@
+env:
+  node: true
+  es6: true
+
+rules:
+  curly: [0, "all"]
+  dot-notation: [2, {}]
+  eqeqeq: [0, "smart"]
+  camelcase: [0]
+  semi: [2, "never"]
+  strict: [2, "never"]
+  max-nested-callbacks: [2, 4]
+  no-mixed-requires: [1, false]
+  no-return-assign: [2, "always"]
+  no-unused-vars: [2, {"vars": "all", "args": "none"}]
+  no-process-exit: [0]
+
+globals:
+  $: true,
+  require: false,
+  document: true,
+  expect: true,
+  describe: false,
+  xdescribe: false,
+  it: false,
+  xit: false,
+  afterEach: false,
+  after: false,
+  beforeEach: false,
+  before: false,
+  Promise: true

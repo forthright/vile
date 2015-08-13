@@ -1,0 +1,5 @@
+# Directories below will not be scanned at all
+exclude_paths:
+  - spec/fixtures
+   # in case run from one level up
+  - ruby/spec/fixtures

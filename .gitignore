@@ -1,0 +1,12 @@
+node_modules
+bower_components
+coverage
+npm-debug.log
+/lib
+.test
+web/report/*.js
+web/report/*.css
+tags
+.build
+tmp
+plugins

@@ -1,0 +1,10 @@
+{
+  "rules": [{
+    "files": [
+      "src/**",
+      "test/**"
+    ],
+    "naming": "lowercase_underscore",
+    "level": "error"
+  }]
+}

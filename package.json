@@ -1,0 +1,87 @@
+{
+  "name": "vile",
+  "version": "0.1.0-alpha",
+  "description": "A punishing, yet easy to use tool for writing insightful code.",
+  "main": "index.js",
+  "directories": {
+    "test": "test",
+    "lib": "lib"
+  },
+  "bin": {
+    "vile": "bin/cli"
+  },
+  "scripts": {
+    "compile": "tsc --outDir .build --target es6 src/*.ts src/**/*.ts && babel -d lib -m common .build",
+    "compile-dev": "coffee -cb test",
+    "dev": "bin/dev",
+    "lint": "bin/lint",
+    "lint-cov": "bin/lint-cov",
+    "postinstall": "npm run compile && bower install -f",
+    "test": "bin/test",
+    "wrap": "npm-shrinkwrap",
+    "punish": "bin/cli -pc",
+    "test-cov": "bin/test-cov",
+    "test-ci-build": "npm run punish && bin/test-ci-build"
+  },
+  "author": "Brent Lintner <brent.lintner@gmail.com>",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/brentlintner/vile/issues"
+  },
+  "homepage": "https://github.com/brentlintner/vile",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brentlintner/vile.git"
+  },
+  "keywords": [
+    "quality",
+    "analyze",
+    "analyse",
+    "lint",
+    "jshint",
+    "eslint",
+    "coffeelint",
+    "tslint",
+    "hlint",
+    "git",
+    "check",
+    "code",
+    "tool"
+  ],
+  "dependencies": {
+    "babel": "5.8.21",
+    "bluebird": "2.9.34",
+    "bower": "1.4.1",
+    "cli-spinner": "0.2.1",
+    "coffee-script": "1.9.3",
+    "coffeelint": "^1.10.1",
+    "commander": "2.8.1",
+    "connect-coffee-script": "0.2.1",
+    "count-lines": "0.1.2",
+    "express": "4.13.3",
+    "extend": "3.0.0",
+    "ignore-file": "1.1.2",
+    "jade": "1.11.0",
+    "js-yaml": "3.3.1",
+    "lodash": "3.10.1",
+    "minilog": "2.0.8",
+    "npm-shrinkwrap": "5.4.0",
+    "string-padder": "1.0.3",
+    "stylus": "0.52.0",
+    "typescript": "1.5.3",
+    "uuid": "2.0.1",
+    "wrench": "1.5.8"
+  },
+  "devDependencies": {
+    "chai": "3.2.0",
+    "coffeelint": "1.10.1",
+    "constable": "0.0.4",
+    "istanbul": "0.3.17",
+    "mimus": "0.1.2",
+    "mocha": "2.2.5",
+    "police": "0.4.0",
+    "pryjs": "0.1.1",
+    "sinon": "1.15.4",
+    "sinon-chai": "2.8.0"
+  }
+}

@@ -1,0 +1,15 @@
+plugins/**/node_modules
+node_modules
+bower_components
+.git
+coverage
+plugins/newline/lib
+.baseDir.ts
+.build/**
+plugins/reek/lib/**
+plugins/rubocop/lib/**
+plugins/newline/lib/**
+plugins/comment/lib/**
+plugins/hlint/lib/**
+typings/node.d.ts
+typings/bluebird.d.ts

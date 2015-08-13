@@ -1,0 +1,114 @@
+vile:
+  plugins: [
+      #"nsp",
+      #"npm-check-updates",
+      "license",
+      "coffeelint",
+      "jshint",
+      "eslint",
+      "newline",
+      "readme",
+      "semver",
+      "comment",
+      "length",
+      "csslint",
+      "tslint",
+      "whitespace"
+    ]
+
+  ignore: [
+      "node_modules",
+      "bower_components",
+      ".build",
+      ".test",
+      ".log",
+      "coverage",
+      "plugins/**/node_modules/**",
+      "plugins/reek/lib/**",
+      "plugins/rubocop/lib/**",
+      "plugins/newline/lib/**",
+      "plugins/comment/lib/**",
+      "plugins/hlint/lib/**",
+      "plugins/csslint/lib/**",
+      "plugins/scsslint/lib/**",
+      "plugins/rubycritic/lib/**",
+      "plugins/bithound/lib/**",
+      "plugins/codeclimate/lib/**",
+      "plugins/length/lib/**",
+      "plugins/nsp/lib/**",
+      "plugins/npm-check-updates/lib/**",
+      "web/report/pygments.css",
+      "web/report/pygments.styl",
+      "typings",
+      "lib"
+    ]
+
+eslint:
+  config: .eslintrc
+  ignore: .eslintignore
+
+tslint:
+  config: tslint.json
+  ignore : .tslintignore
+
+csslint:
+  config: .csslintrc
+  ignore: .csslintignore
+
+jshint:
+  config: .jshintrc
+  ignore: .jshintignore
+
+coffeelint:
+  config: coffeelint.json
+
+length:
+  config:
+    file: 250
+    line: 80
+
+license:
+  config: [
+      "MPL-2.0",
+      "MIT",
+      "MIT*",
+      "The MIT License",
+      "Public Domain",
+      "PSF",
+      "BSD",
+      "BSD*",
+      "BSD-3-Clause",
+      "BSD-2-Clause",
+      "BSD-3-Clause AND MIT",
+      "Artistic-2.0",
+      "(BSD-2-Clause OR MIT OR Apache-2.0)",
+      "ISC",
+      "WTFPL",
+      "(BSD-2-Clause OR WTFPL)",
+      "Apache*",
+      "Apache License 2.0",
+      "Apache 2.0",
+      "Apache-2.0",
+      "WTFPL"
+    ]
+  ignore: [
+      "ansi",
+      "assert-plus",
+      "bindings",
+      "buffers",
+      "cli-color",
+      "commander",
+      "config-chain",
+      "css-parse",
+      "css-stringify",
+      "css",
+      "cycle",
+      "debug",
+      "dreamopt",
+      "growl",
+      "microee",
+      "ms",
+      "pkginfo",
+      "uglify-js"
+    ]
+

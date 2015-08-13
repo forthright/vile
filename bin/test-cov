@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+export npm_config_coverage=1
+rm -r coverage
+mkdir coverage
+istanbul test --print none --dir coverage/non-system bin/test
+istanbul report | grep -vPi '^done$'
+istanbul report text-summary

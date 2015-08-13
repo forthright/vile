@@ -1,0 +1,2 @@
+let g:syntastic_typescript_tsc_args = "-t es6"
+let g:ctrlp_custom_ignore = '\v[\/](\.?build|\.test|dist|\.git|\.hg|\.svn)$'
