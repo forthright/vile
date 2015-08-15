@@ -1,4 +1,4 @@
-/// <reference path="../typings/index.d.ts" />
+/// <reference path="lib/typings/index.d.ts" />
 
 module vile {
 
@@ -252,7 +252,7 @@ let into_executed_plugins = (
 // TODO: merge custom_list with config.plugins
 let run_plugins = (
   custom_plugins : Vile.PluginList = [],
-  config : Vile.YMLConfig = {},
+  config : Vile.YMLConfig = {}
 ) : bluebird.Promise<Vile.IssuesPerFile> => {
   let app_config = _.get(config, "vile", {})
   let plugins : Vile.PluginList = custom_plugins

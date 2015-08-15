@@ -1,4 +1,4 @@
-/// <reference path="../../typings/index.d.ts" />
+/// <reference path="../lib/typings/index.d.ts" />
 
 module vile {
 

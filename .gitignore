@@ -9,4 +9,4 @@ web/report/*.css
 tags
 .build
 tmp
-plugins
+/typings
