@@ -62,12 +62,15 @@ To actually punish your code, you need to install plugins first.
 
 For a complete list of plugins, see [here](http://github.com/brentlintner/vile-plugins);
 
-**STOP!!!** Currently, the method below does not work.
+**STOP!!!** Currently, the `npm install` method below does not work,
+until they are actually published.
 
 Instead:
 
+    git clone git@github.com:brentlintner/vile-plugins.git
+    git clone git@github.com:brentlintner/vile.git
     cd vile
-    ln -s ../vile-plugins
+    for pkg in ../vile-plugins/vile-*; do npm link $pkg; done
 
 Then you can add a `plugins: []` entry to `.vile.yml`, or just use the
 CLI to specify a custom set, ex: `vile -p rubocop,reek`.
@@ -232,8 +235,26 @@ This project ascribes to CoralineAda's [Contributor Covenant](https://github.com
     git clone git@github.com:brentlintner/vile.git
     cd vile
     npm i
-    npm run dev
+
+To run the CLI locally:
+
+    node bin/cli -h
+
+Note: You can also create an alias in your `~/.bashrc`.
+
+    alias vile="/home/me/src/vile/bin/cli"
+
+To run tests:
+
     npm test
+
+To recompile `src` to `lib`:
+
+    npm run compile
+
+To run compile task with file watch in the background:
+
+    npm run dev
 
 ## Architecture
 

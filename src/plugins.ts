@@ -16,9 +16,11 @@ let util = require("./util")
 let score = require("./score")
 let log = logger.create("plugin")
 
-const PLUGINS = path.resolve(path.join(__dirname, "..", "plugins"))
+const NODE_MODULES = path.resolve(path.join(__dirname, "..", "node_modules"))
 
 Bluebird.promisifyAll(fs)
+
+let is_plugin = (name) => /^vile-/.test(name)
 
 let valid_plugin = (api) => api && typeof api.punish == "function"
 
@@ -97,11 +99,9 @@ let log_plugin_messages = (
   })
 }
 
-// TODO: make all plugins run in a separate proc
 let require_plugin = (name : string) : Vile.Plugin => {
   try {
-    // TODO change when plugins are installed via npm
-    return require(`./../plugins/${name}/lib/index`)
+    return require(`vile-${name}`)
   } catch (e) {
     log.error(failed_message(name))
     log_error(e)
@@ -126,7 +126,9 @@ let log_plugin = (
 }
 
 let plugin_is_allowed = (name : string, allowed) : boolean => {
-  return !allowed || _.some(allowed, (n) => n == name)
+  return !allowed ||
+    allowed.length == 0 ||
+    _.some(allowed, (n) => n == name)
 }
 
 let run_plugin = (
@@ -190,9 +192,11 @@ let run_plugin_in_fork = (name : string, config : Vile.PluginConfig) => {
 
 // TODO: make into smaller methods
 let into_executed_plugins = (
-  allowed,
+  allowed : string[],
   config : Vile.YMLConfig
-) => (name) : bluebird.Promise<any> => {
+) => (pkg_name : string) : bluebird.Promise<any> => {
+  let name : string = pkg_name.replace("vile-", "")
+
   return new Bluebird((resolve : any, reject) : any => {
     if (!plugin_is_allowed(name, allowed)) return resolve([])
 
@@ -223,7 +227,7 @@ let into_executed_plugins = (
           resolve(issues)
         })
         .catch(() => {
-          // sub process already logs error
+          // Note: sub process already logs error
           reject(new Error(`${name} plugin died horribly..`))
           process.exit(1)
         })
@@ -248,14 +252,15 @@ let into_executed_plugins = (
 // TODO: merge custom_list with config.plugins
 let run_plugins = (
   custom_plugins : Vile.PluginList = [],
-  config : Vile.YMLConfig = {}
+  config : Vile.YMLConfig = {},
 ) : bluebird.Promise<Vile.IssuesPerFile> => {
   let app_config = _.get(config, "vile", {})
   let plugins : Vile.PluginList = custom_plugins
 
   if (app_config.plugins) plugins = app_config.plugins
 
-  return fs.readdirAsync(PLUGINS)
+  return fs.readdirAsync(NODE_MODULES)
+    .filter(is_plugin)
     .map(into_executed_plugins(plugins, config), { concurrency: 1 })
     .then(score.calculate_all)
     .catch(error_executing_plugins)
