@@ -15,8 +15,21 @@ Use it if you want don't want to touch `.js/.coffee/.ts`. :-)
 
 ## Installation
 
+Currently, this gem is a simple, thin, probably inefficient
+way to support a `gem`, so you will need to install the `vile`
+npm package as well:
+
+    npm install -g vile
     gem install vile
 
-## Usage
+## CLI
 
     vile -h
+
+## Library
+
+```ruby
+require "vile/punish"
+
+Vile::Punish.exec
+```

@@ -13,7 +13,3 @@ if ENV.key? 'TEST_COV'
     add_filter "/fixtures/"
   end
 end
-
-def file_to_s path
-  IO.readlines(path).join
-end

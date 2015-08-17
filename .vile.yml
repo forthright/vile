@@ -1,7 +1,7 @@
 vile:
   plugins: [
-      #"nsp",
-      #"npm-check-updates",
+      "nsp",
+      "npm-check-updates",
       "license",
       "coffeelint",
       "jshint",

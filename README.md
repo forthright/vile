@@ -1,6 +1,8 @@
 # vile
 
 [![Circle CI](https://circleci.com/gh/brentlintner/vile.svg?style=svg&circle-token=76807e9cc864afc2d2af7db4c744a0eae8b9fc00)](https://circleci.com/gh/brentlintner/vile)
+[![NPM version](https://badge.fury.io/js/vile.svg)](http://badge.fury.io/js/vile)
+[![Gem Version](https://badge.fury.io/rb/vile.svg)](http://badge.fury.io/rb/vile)
 
 A punishing, yet easy to use tool for writing insightful code.
 
