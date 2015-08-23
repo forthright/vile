@@ -113,9 +113,9 @@ let promise_each_file = (
 let into_issue = (
   type : string,
   filepath : string,
-  message : string,
-  start : any,
-  end : any
+  message : string = "",
+  start : any = {},
+  end : any = {}
 ) : Vile.Issue => {
   return {
     type: type,
