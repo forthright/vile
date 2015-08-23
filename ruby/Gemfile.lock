@@ -2,15 +2,15 @@ PATH
   remote: .
   specs:
     vile (0.1.0)
-      colorize (~> 0.7.7)
+      colorize (~> 0.7)
       manowar (~> 0.0.1)
-      slop (~> 4.2.0)
-      spinning_cursor (~> 0.3.0)
+      slop (~> 4.2)
+      spinning_cursor (~> 0.3)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    awesome_print (1.6.1)
+    awesome_print (0.4.0)
     colorize (0.7.7)
     diff-lcs (1.2.5)
     docile (1.1.5)
@@ -44,11 +44,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  awesome_print
-  bundler
-  rspec (~> 3.3.0)
-  simplecov
-  simplecov-lcov
+  awesome_print (~> 0)
+  bundler (~> 1.10)
+  rspec (~> 3.3)
+  simplecov (~> 0)
+  simplecov-lcov (~> 0)
   vile!
 
 BUNDLED WITH
