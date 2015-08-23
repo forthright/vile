@@ -69,10 +69,12 @@ until they are actually published.
 
 Instead:
 
-    git clone git@github.com:brentlintner/vile-plugins.git
-    git clone git@github.com:brentlintner/vile.git
+    mkdir vile
     cd vile
-    for pkg in ../vile-plugins/vile-*; do npm link $pkg; done
+    git clone git@github.com:brentlintner/vile-plugins.git plugins
+    git clone git@github.com:brentlintner/vile.git lib
+    cd lib
+    for pkg in ../plugins/vile-*; do npm link $pkg; done
 
 Then you can add a `plugins: []` entry to `.vile.yml`, or just use the
 CLI to specify a custom set, ex: `vile -p rubocop,reek`.
