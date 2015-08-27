@@ -59,7 +59,7 @@ let digest = (issues : Vile.IssuesPerFile) : Vile.Stats => {
       if (score < lowest) lowest = score
       if (score < 100) {
         total_issues += _.reject(file_issues, (issue : Vile.Issue) => {
-          return issue.score == 100
+          return issue.type == util.OK
         }).length
         failed += 1
       }
