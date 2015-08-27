@@ -1,6 +1,4 @@
-plugins/**/node_modules/**
 node_modules/**
 bower_components/**
 lib/**
 .build/**
-plugins/**/lib/**
