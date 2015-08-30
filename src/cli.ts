@@ -3,8 +3,10 @@
 module vile {
 
 let cli = require("commander")
+let _ = require("lodash")
 let path = require("path")
 let vile   : Vile.Lib.Index   = require("./index")
+let util = require("./util")
 let score  : Vile.Lib.Score   = require("./score")
 let logger : Vile.Lib.Logger  = require("./logger")
 let config : Vile.Lib.Config  = require("./config")
@@ -24,20 +26,16 @@ let set_log_levels = (logs? : string) => {
 
 let punish = (plugins, opts : any = {}) => {
   vile
-    .exec(parse_plugins(plugins), opts.config)
+    .exec(parse_plugins(plugins), opts.config, opts.format)
     // TODO: Vile.IssuesPerFile
     .then((issues : any) => {
       let stats = score.digest(issues)
 
+      if (opts.format == "json") {
+        process.stdout.write(JSON.stringify({ stats: stats, issues: issues }))
       // TODO: dual options sucks
-      if (opts.scores || opts.summary) {
-        score.log(issues, stats, opts.summary, opts.grades)
-      }
-
-      if (opts.fileview) {
-        // TODO: support a custom route (just log to console)
-        let rootview = opts.fileview == true ? null : opts.fileview
-        vile.report(rootview, issues, stats)
+      } else if (opts.scores || opts.summary) {
+        return score.log(issues, stats, opts.summary, opts.grades)
       }
     })
 }
@@ -66,9 +64,14 @@ let run = (app) => {
   if (app.log) set_log_levels(app.log)
 
   if (app.punish) {
+    // HACK! TODO
+    if (app.format == "json") {
+      logger.quiet()
+    }
+
     punish(app.punish, {
+      format: app.format,
       scores: app.scores,
-      fileview: app.format == "web",
       config: config.get(),
       summary: app.summary,
       grades: app.grades
@@ -94,7 +97,7 @@ let configure = () => {
     .option("-g, --grades",
             "print all file scores as A-F grades")
     .option("-f, --format [type]",
-            "specify output format (web,console,json,yml)")
+            "specify output format (console=default,json)")
     .option("-l, --log [level]",
             "specify the log level info|warn|error|debug)")
     .option("-q, --quiet",

@@ -75,7 +75,9 @@ let humanize_line_num = (issue) : string => {
     `${start_line}${end_line}` : start_line
 }
 
-let to_console = (issue : Vile.Issue) : string => {
+let to_console = (
+  issue : Vile.Issue
+) : string => {
   // TODO handle end of line being different
   let h_line = humanize_line_num(issue)
   let h_char = humanize_line_char(issue)
@@ -86,8 +88,11 @@ let to_console = (issue : Vile.Issue) : string => {
 
 let log_plugin_messages = (
   name : string,
-  issues : Vile.Issue[] = []
+  issues : Vile.Issue[] = [],
+  format : string = null
 ) => {
+  if (format == "json") return
+
   let nlog = logger.create(name)
 
   issues.forEach((issue : Vile.Issue, index : number) => {
@@ -116,13 +121,14 @@ let failed = (list : Vile.Issue[]) => {
 
 let log_plugin = (
   name : string,
-  list : Vile.Issue[] = []
+  list : Vile.Issue[] = [],
+  format = null
 ) => {
   let message : string = failed(list) ?
     failed_message(name) : passed_message(name);
 
   log.info(message)
-  log_plugin_messages(name, list)
+  log_plugin_messages(name, list, format)
 }
 
 let plugin_is_allowed = (name : string, allowed) : boolean => {
@@ -193,7 +199,8 @@ let run_plugin_in_fork = (name : string, config : Vile.PluginConfig) => {
 // TODO: make into smaller methods
 let into_executed_plugins = (
   allowed : string[],
-  config : Vile.YMLConfig
+  config : Vile.YMLConfig,
+  format : string
 ) => (pkg_name : string) : bluebird.Promise<any> => {
   let name : string = pkg_name.replace("vile-", "")
 
@@ -212,7 +219,7 @@ let into_executed_plugins = (
     if (cluster.isMaster) {
       let spin
 
-      if (!process.env.NO_COLOR) {
+      if (!process.env.NO_COLOR && format != "json") {
         // TODO: allow plugins to log things after spinner is stopped
         // TODO: don't do spinner in here? somewhere better to put spinner?
         spin = new Spinner(`${string.padRight(name, 26, " ")}PUNISH`)
@@ -223,7 +230,7 @@ let into_executed_plugins = (
       run_plugin_in_fork(name, plugin_config)
         .then((issues : Vile.Issue[]) => {
           if (spin) spin.stop(true)
-          log_plugin(name, issues) // TODO: don't log here
+          log_plugin(name, issues, format) // TODO: don't log here
           resolve(issues)
         })
         .catch(() => {
@@ -252,7 +259,8 @@ let into_executed_plugins = (
 // TODO: merge custom_list with config.plugins
 let run_plugins = (
   custom_plugins : Vile.PluginList = [],
-  config : Vile.YMLConfig = {}
+  config : Vile.YMLConfig = {},
+  format = null
 ) : bluebird.Promise<Vile.IssuesPerFile> => {
   let app_config = _.get(config, "vile", {})
   let plugins : Vile.PluginList = custom_plugins
@@ -261,7 +269,7 @@ let run_plugins = (
 
   return fs.readdirAsync(NODE_MODULES)
     .filter(is_plugin)
-    .map(into_executed_plugins(plugins, config), { concurrency: 1 })
+    .map(into_executed_plugins(plugins, config, format), { concurrency: 1 })
     .then(score.calculate_all)
     .catch(error_executing_plugins)
 }

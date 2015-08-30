@@ -17,7 +17,6 @@ a unified, project focused context.
 ## Requirements
 
 - [NodeJS](http://nodejs.org)
-- [Pygments](http://pygments.org) (for web reports)
 
 ## Installation
 
@@ -145,18 +144,15 @@ This prints all file scores to the console.
 
 You can turn on various output formats with the `-f` option.
 
-### File View
+### JSON
 
-    vile -pc -f web
-
-With this mode, you can bring up a simple directory view of
-all your checked directories and files, and the issues for each file.
+    vile -pc -f json
 
 ## Logging
 
 You can set the logging level if needed.
 
-    vile -pc -l error
+    vile -pc -l warn
 
 ## Creating A Plugin
 

@@ -5,7 +5,6 @@ module vile {
 let extend = require("extend")
 let plugins = require("./plugins")
 let util = require("./util")
-let report = require("./report")
 let logger = require("./logger")
 
 // TODO: flush out
@@ -14,7 +13,6 @@ const library = extend(
   {},
   plugins,
   util,
-  report,
   { logger: logger }
 )
 

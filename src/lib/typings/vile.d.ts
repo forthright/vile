@@ -69,7 +69,7 @@ declare module Vile {
 
     export interface Index {
       report : (r : string, is : IssueList, s : Stats) => any;
-      exec   : (p : PluginList, opts? : any) => Promise<IssueList>;
+      exec   : (p : PluginList, opts : any, format : string) => Promise<IssueList>;
     }
 
     export interface Logger {
