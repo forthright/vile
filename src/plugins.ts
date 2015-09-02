@@ -256,7 +256,6 @@ let into_executed_plugins = (
   })
 }
 
-// TODO: merge custom_list with config.plugins
 let run_plugins = (
   custom_plugins : Vile.PluginList = [],
   config : Vile.YMLConfig = {},
@@ -265,7 +264,10 @@ let run_plugins = (
   let app_config = _.get(config, "vile", {})
   let plugins : Vile.PluginList = custom_plugins
 
-  if (app_config.plugins) plugins = app_config.plugins
+  // TODO: merge custom_list with config.plugins?
+  if (custom_plugins.length == 0 && app_config.plugins) {
+    plugins = app_config.plugins
+  }
 
   return fs.readdirAsync(NODE_MODULES)
     .filter(is_plugin)
