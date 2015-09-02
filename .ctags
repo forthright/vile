@@ -1,15 +1,7 @@
 --recurse=yes
 --tag-relative=yes
 --exclude=.git
+--exclude=.build
 --exclude=lib
---exclude=plugins/**/lib
 --exclude=node_modules
 --exclude=bower_components
---exclude=plugins/**/node_modules
---exclude=plugins/reek/lib/**
---exclude=plugins/rubocop/lib/**
---exclude=plugins/newline/lib/**
---exclude=plugins/comment/lib/**
---exclude=plugins/hlint/lib/**
---exclude=plugins/lesshint/lib/**
---exclude=plugins/csslint/lib/**
