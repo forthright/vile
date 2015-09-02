@@ -33,3 +33,8 @@ require "vile/punish"
 
 Vile::Punish.exec
 ```
+
+## Hacking
+
+  ./bin/dev-setup
+  ruby bin/vile -h
