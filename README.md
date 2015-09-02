@@ -62,22 +62,14 @@ To actually punish your code, you need to install plugins first.
 
 For a complete list of plugins, see [here](http://github.com/brentlintner/vile-plugins);
 
-**STOP!!!** Currently, the `npm install` method below does not work,
+**STOP!!!**
+
+Currently, the `npm install` method below does not work,
 until they are actually published.
 
-Instead:
+Instead, use [vile-project](http://github.com/brentlintner/vile-project).
 
-    mkdir vile
-    cd vile
-    git clone git@github.com:brentlintner/vile-plugins.git plugins
-    git clone git@github.com:brentlintner/vile.git lib
-    cd lib
-    for pkg in ../plugins/vile-*; do npm link $pkg; done
-
-Then you can add a `plugins: []` entry to `.vile.yml`, or just use the
-CLI to specify a custom set, ex: `vile -p rubocop,reek`.
-
-----------------
+-----------------------------------------------------------
 
 To get started, install a plugin package in your project root:
 
@@ -96,6 +88,8 @@ pull them in and run their checks.
 You can also specify a white-list of installed plugins to only run:
 
     vile -p eslint,coffeelint
+
+-----------------------------------------------------------
 
 ## Config File
 

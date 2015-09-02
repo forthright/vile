@@ -1,8 +1,9 @@
 vile:
   plugins: [
       "nsp",
-      "npm-check-updates",
+      "ncu",
       "license",
+      "depcheck",
       "coffeelint",
       "jshint",
       "eslint",
@@ -11,7 +12,6 @@ vile:
       "semver",
       "comment",
       "length",
-      "csslint",
       "tslint",
       "whitespace"
     ]
@@ -26,6 +26,12 @@ vile:
       "typings",
       "lib"
     ]
+
+depcheck:
+  config:
+    ignore_dev_deps: false
+    ignore_dirs: [ ]
+    ignore_deps: [ "pryjs" ]
 
 eslint:
   config: .eslintrc
