@@ -1,21 +1,25 @@
 vile:
   plugins: [
-      "nsp",
-      "ncu",
-      "license",
-      "depcheck",
       "coffeelint",
-      "jshint",
-      "eslint",
-      "newline",
-      "readme",
-      "semver",
       "comment",
-      "length",
-      "tslint",
-      "whitespace",
+      "constable",
+      "depcheck",
+      "eslint",
+      "html-validator",
       "htmllint",
-      "html-validator"
+      "jshint",
+      "length",
+      "license",
+      "ncu",
+      "newline",
+      "nsp",
+      "readme",
+      "reek",
+      "rubocop",
+      "rubycritic",
+      "semver",
+      "tslint",
+      "whitespace"
     ]
 
   ignore: [
