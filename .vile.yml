@@ -13,7 +13,9 @@ vile:
       "comment",
       "length",
       "tslint",
-      "whitespace"
+      "whitespace",
+      "htmllint",
+      "html-validator"
     ]
 
   ignore: [
