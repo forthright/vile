@@ -51,11 +51,13 @@ let humanize_line_char = (issue : Vile.Issue) : string => {
   let start : Vile.IssueLine = _.get(issue, "where.start", {})
   let end : Vile.IssueLine = _.get(issue, "where.end", {})
 
-  let start_character : string = typeof start.character == "number" ?
-    String(start.character) : ""
+  let start_character : string = (
+      typeof start.character == "number" || typeof start.character == "string"
+    ) ? String(start.character) : ""
 
-  let end_character : string = typeof end.line == "number" &&
-    end.character != start.character ?  `-${String(end.character)}` : ""
+  let end_character : string = (
+      typeof end.character == "number" || typeof end.character == "string"
+    ) && end.character != start.character ? `-${String(end.character)}` : ""
 
   return typeof end.character == "number" ?
     `${start_character}${end_character}` : start_character
@@ -65,11 +67,13 @@ let humanize_line_num = (issue) : string => {
   let start : Vile.IssueLine = _.get(issue, "where.start", {})
   let end : Vile.IssueLine = _.get(issue, "where.end", {})
 
-  let start_line : string = typeof start.line == "number" ?
-    String(start.line) : ""
+  let start_line : string = (
+      typeof start.line == "number" || typeof start.line == "string"
+    ) ? String(start.line) : ""
 
-  let end_line : string = typeof end.line == "number" &&
-    end.line != start.line ?  `-${String(end.line)}` : ""
+  let end_line : string = (
+      typeof end.line == "number" || typeof end.line == "string"
+    ) && end.line != start.line ? `-${String(end.line)}` : ""
 
   return typeof end.line == "number" ?
     `${start_line}${end_line}` : start_line
