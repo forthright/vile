@@ -19,7 +19,9 @@ vile:
       "rubycritic",
       "semver",
       "tslint",
-      "whitespace"
+      "whitespace",
+      "eclint",
+      "fs-lint"
     ]
 
   ignore: [
@@ -28,6 +30,7 @@ vile:
       ".build",
       ".test",
       ".log",
+      ".git",
       "coverage",
       "typings",
       "lib"
@@ -38,6 +41,9 @@ depcheck:
     ignore_dev_deps: false
     ignore_dirs: [ ]
     ignore_deps: [ "pryjs" ]
+
+eclint:
+  ignore: [ "lib" ]
 
 eslint:
   config: .eslintrc

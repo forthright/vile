@@ -2,9 +2,17 @@
   "rules": [{
     "files": [
       "src/**",
-      "test/**"
+      "test/**",
+      "ruby/spec/**",
+      "ruby/lib/**"
     ],
     "naming": "lowercase_underscore",
+    "level": "error"
+  }, {
+    "files": [
+      "bin/**"
+    ],
+    "naming": "lowercase-dash",
     "level": "error"
   }]
 }
