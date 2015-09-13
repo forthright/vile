@@ -16,8 +16,6 @@ let util = require("./util")
 let score = require("./score")
 let log = logger.create("plugin")
 
-const NODE_MODULES = path.resolve(path.join(__dirname, "..", "node_modules"))
-
 Bluebird.promisifyAll(fs)
 
 let is_plugin = (name) => /^vile-/.test(name)
@@ -110,7 +108,7 @@ let log_plugin_messages = (
 
 let require_plugin = (name : string) : Vile.Plugin => {
   try {
-    return require(`vile-${name}`)
+    return require(`@brentlintner/vile-${name}`)
   } catch (e) {
     log.error(failed_message(name))
     log_error(e)
@@ -260,6 +258,9 @@ let into_executed_plugins = (
   })
 }
 
+let cwd_plugins_path = () =>
+  path.resolve(path.join(process.cwd(), "node_modules", "@brentlintner"))
+
 let run_plugins = (
   custom_plugins : Vile.PluginList = [],
   config : Vile.YMLConfig = {},
@@ -273,7 +274,7 @@ let run_plugins = (
     plugins = app_config.plugins
   }
 
-  return fs.readdirAsync(NODE_MODULES)
+  return fs.readdirAsync(cwd_plugins_path())
     .filter(is_plugin)
     .map(into_executed_plugins(plugins, config, format), { concurrency: 1 })
     .then(score.calculate_all)
