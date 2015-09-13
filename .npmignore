@@ -1,0 +1,9 @@
+ruby
+test
+.test
+.build
+coverage
+node_modules
+bower_components
+tmp
+typings
