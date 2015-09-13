@@ -1,6 +1,6 @@
 {
   "name": "@brentlintner/vile",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A punishing, yet easy to use tool for writing insightful code.",
   "main": "lib/index.js",
   "directories": {
@@ -51,6 +51,7 @@
     "tool"
   ],
   "dependencies": {
+    "@brentlintner/vile-htmllint": "~0.1.1",
     "babel": "^5.8.21",
     "bluebird": "^2.9.30",
     "bower": "^1.4.1",
