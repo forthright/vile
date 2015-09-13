@@ -107,8 +107,10 @@ let log_plugin_messages = (
 }
 
 let require_plugin = (name : string) : Vile.Plugin => {
+  let cwd_node_modules = process.cwd() + "/node_modules"
+
   try {
-    return require(`@brentlintner/vile-${name}`)
+    return require(`${cwd_node_modules}/@brentlintner/vile-${name}`)
   } catch (e) {
     log.error(failed_message(name))
     log_error(e)
