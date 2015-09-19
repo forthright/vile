@@ -1,29 +1,4 @@
 vile:
-  plugins: [
-      "coffeelint",
-      "comment",
-      "constable",
-      "depcheck",
-      "eslint",
-      "html-validator",
-      "htmllint",
-      "jshint",
-      "length",
-      "license",
-      "ncu",
-      "newline",
-      "nsp",
-      "readme",
-      "reek",
-      "rubocop",
-      "rubycritic",
-      "semver",
-      "tslint",
-      "whitespace",
-      "eclint",
-      "fs-lint"
-    ]
-
   ignore: [
       "node_modules",
       "bower_components",
