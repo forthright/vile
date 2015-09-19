@@ -17,21 +17,18 @@ a unified, project focused context.
 ## Requirements
 
 - [NodeJS](http://nodejs.org)
+- [Ruby](http://
 
 ## Installation
 
 Since Vile's core is written in JS, the main project
-is distributed via [npm](http://npmjs.org):
+is distributed via [npm](http://npmjs.org).
 
-    npm install vile
-
-There is also a ruby [gem](ruby/):
-
-    gem install vile
+There is also a ruby [gem](ruby/) you can install manually (for now).
 
 #### Node CLI
 
-    npm install -g vile
+    npm install -g @brentlintner/vile
     vile --help
 
 #### Node API
@@ -53,8 +50,8 @@ require("vile")
 
 Until API docs are a thing.. look more into the [src](src/)
 to find out more about the main library. The
-[cli](src/cli.coffee) module is a good starting place,
-along with the [main library](src/index.coffee) module.
+[cli](src/cli.ts) module is a good starting place,
+along with the [main library](src/index.ts) module.
 
 ## Plugins
 
@@ -62,21 +59,12 @@ To actually punish your code, you need to install plugins first.
 
 For a complete list of plugins, see [here](http://github.com/brentlintner/vile-plugins);
 
-**STOP!!!**
-
-Currently, the `npm install` method below does not work,
-until they are actually published.
-
-Instead, use [vile-project](http://github.com/brentlintner/vile-project).
-
------------------------------------------------------------
-
 To get started, install a plugin package in your project root:
 
-Example:
+Example, install the `eslint` plugin:
 
     cd into_my_project
-    npm install vile-eslint
+    npm install @brentlintner/vile-eslint
 
 Then just run:
 
@@ -89,15 +77,12 @@ You can also specify a white-list of installed plugins to only run:
 
     vile -p eslint,coffeelint
 
------------------------------------------------------------
-
 ## Config File
 
 Create a `.vile.yml` file in your project root:
 
 ```yml
 vile:
-  plugins: ["custom_list"]
   ignore: ["custom ignore list"]
 
 some_plugin:
@@ -111,7 +96,11 @@ Then include it when punishing:
 
 Or, more tersely:
 
-    vile -pc
+    vile -cp
+
+You can also run specific plugins with your config:
+
+    vile -cp eslint
 
 ### Ignoring Files
 
