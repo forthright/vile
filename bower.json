@@ -1,7 +1,0 @@
-{
-  "name": "vile",
-  "dependencies": {
-    "pure": "0.6.0",
-    "jquery": "2.1.4"
-  }
-}

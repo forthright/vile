@@ -17,7 +17,7 @@
     "dev": "bin/dev",
     "lint": "bin/lint",
     "lint-cov": "bin/lint-cov",
-    "postinstall": "tsd reinstall -so && npm run compile && bower install -f",
+    "postinstall": "tsd reinstall -so && npm run compile",
     "update": "police -lt package.json && constable -u && tsd update -so",
     "test": "bin/test",
     "wrap": "npm-shrinkwrap",
