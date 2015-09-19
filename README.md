@@ -17,7 +17,6 @@ a unified, project focused context.
 ## Requirements
 
 - [NodeJS](http://nodejs.org)
-- [Ruby](http://
 
 ## Installation
 
