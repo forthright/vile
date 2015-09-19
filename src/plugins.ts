@@ -144,7 +144,7 @@ let plugin_is_allowed = (name : string, allowed) : boolean => {
 let run_plugin = (
   name : string,
   config : Vile.PluginConfig = {
-    plugins: [],
+    config: {},
     ignore: []
   }
 ) : bluebird.Promise<any> => {
