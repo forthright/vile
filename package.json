@@ -11,7 +11,7 @@
     "vile": "bin/cli"
   },
   "scripts": {
-    "compile": "tsc --outDir .build --target es6 src/*.ts && babel -d lib -m common .build",
+    "compile": "rm -r .build && tsc --outDir .build --target es6 src/*.ts && babel -d lib -m common .build",
     "compile-dev": "coffee -cb test",
     "plugins": "for pkg in ../plugins/vile-*; do npm link $pkg; done",
     "dev": "bin/dev",
