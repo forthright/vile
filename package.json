@@ -8,7 +8,7 @@
     "lib": "lib"
   },
   "bin": {
-    "vile": "bin/cli"
+    "vile": "bin/vile"
   },
   "scripts": {
     "compile": "rm -r .build && tsc --outDir .build --target es6 src/*.ts && babel -d lib -m common .build",
