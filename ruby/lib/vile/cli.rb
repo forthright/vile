@@ -49,9 +49,7 @@ private
       puts Vile::VERSION
     end
 
-    o.on     "-h", "--help", "show this help text" do
-      puts o
-    end
+    o.on     "-h", "--help", "show this help text"
   end
 end
 

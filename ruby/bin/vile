@@ -17,8 +17,6 @@ SpinningCursor.run do
     opts = Vile::CLI.parse
     no_args = opts.to_hash.reject { |k, h| h == [] || !h }.empty?
 
-    puts opts if no_args
-
     unless opts["help"] || no_args
       Vile::Punish.exec opts do |line|
         puts line
