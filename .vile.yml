@@ -6,6 +6,7 @@ vile:
       ".git",
       "coverage",
       "typings",
+      "tmp",
       "lib"
     ]
 
@@ -13,7 +14,7 @@ depcheck:
   config:
     ignore_dev_deps: false
     ignore_dirs: [ ]
-    ignore_deps: [ "pryjs" ]
+    ignore_deps: [ "pryjs", "@brentlintner/*" ]
 
 eclint:
   ignore: [ "lib" ]
@@ -24,6 +25,7 @@ rubycritic:
     complexity: 80
     churn: 20
     rating: "A"
+  ignore: .rcignore
 
 length:
   config:
