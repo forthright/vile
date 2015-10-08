@@ -1,10 +1,8 @@
 vile:
   ignore: [
       "node_modules",
-      "bower_components",
       ".build",
       ".test",
-      ".log",
       ".git",
       "coverage",
       "typings",
@@ -20,24 +18,12 @@ depcheck:
 eclint:
   ignore: [ "lib" ]
 
-eslint:
-  config: .eslintrc
-  ignore: .eslintignore
-
-tslint:
-  config: tslint.json
-  ignore : .tslintignore
-
-csslint:
-  config: .csslintrc
-  ignore: .csslintignore
-
-jshint:
-  config: .jshintrc
-  ignore: .jshintignore
-
-coffeelint:
-  config: coffeelint.json
+rubycritic:
+  config:
+    method_count: 10
+    complexity: 80
+    churn: 20
+    rating: "A"
 
 length:
   config:
@@ -74,24 +60,3 @@ license:
       "Apache-2.0",
       "WTFPL"
     ]
-  ignore: [
-      "ansi",
-      "assert-plus",
-      "bindings",
-      "buffers",
-      "cli-color",
-      "commander",
-      "config-chain",
-      "css-parse",
-      "css-stringify",
-      "css",
-      "cycle",
-      "debug",
-      "dreamopt",
-      "growl",
-      "microee",
-      "ms",
-      "pkginfo",
-      "uglify-js"
-    ]
-

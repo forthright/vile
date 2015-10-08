@@ -26,11 +26,11 @@ let is_array = (list) => list && typeof list.forEach == "function"
 
 let is_promise = (list) => list && typeof list.then == "function"
 
-let padRight = (num, txt="") => string.padRight(txt, num, " ")
+let pad_right = (num, txt="") => string.padRight(txt, num, " ")
 
-let failed_message = (txt) => `${padRight(16, txt)}FAIL`
+let failed_message = (txt) => `${pad_right(16, txt)}FAIL`
 
-let passed_message = (txt) => `${padRight(16, txt)}PASS`
+let passed_message = (txt) => `${pad_right(16, txt)}PASS`
 
 let log_error = (e : NodeJS.ErrnoException) => {
   console.log()
@@ -226,7 +226,7 @@ let into_executed_plugins = (
       if (!process.env.NO_COLOR && format != "json") {
         // TODO: allow plugins to log things after spinner is stopped
         // TODO: don't do spinner in here? somewhere better to put spinner?
-        spin = new Spinner(`${string.padRight(name, 26, " ")}PUNISH`)
+        spin = new Spinner(`${pad_right(26, name)}PUNISH`)
         spin.setSpinnerDelay(60)
         spin.start()
       }

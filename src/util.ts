@@ -3,10 +3,10 @@
 module vile {
 
 let fs = require("fs")
+let path = require("path")
 let child_process = require("child_process")
 let _ = require("lodash")
 let Bluebird : typeof bluebird.Promise = require("bluebird")
-let wrench = require("wrench")
 let ignore = require("ignore-file")
 let logger = require("./logger")
 let log = logger.create("util")
@@ -33,6 +33,21 @@ let is_ignored = (
   }
 
   return ignored(filepath)
+}
+
+// TODO: make io async
+let collect_files = (target, allowed) : string[] => {
+  // TODO HACK Plugins should be encouraged to ignore directories
+  //      Need to give dir/file type on promise_each allow
+  if (!/node_modules|bower_components|\.git/i.test(target) &&
+      fs.statSync(target).isDirectory()) {
+    return _.flatten(fs.readdirSync(target).map((subpath) => {
+      return collect_files(path.join(target, subpath), allowed)
+    }))
+  } else {
+    let rel_path = target.replace(process.cwd(), "").replace(/^\//, "")
+    if (allowed(rel_path)) return [rel_path]
+  }
 }
 
 // TODO: better typing
@@ -81,11 +96,10 @@ let promise_each_file = (
   if (!opts.hasOwnProperty("read_data")) opts.read_data = true
 
   let readdir = new Bluebird((resolve, reject) => {
-    let files = wrench.readdirSyncRecursive(dirpath)
+    let files = collect_files(dirpath, allow)
 
     let checkable = _.chain(_.flatten(files))
       .select((f) => fs.existsSync(f) && fs.statSync(f).isFile())
-      .select(allow)
       .value()
 
     resolve(checkable)
