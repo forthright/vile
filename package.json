@@ -13,7 +13,6 @@
   "scripts": {
     "compile": "tsc --outDir .build --target es6 src/*.ts && babel -d lib -m common .build",
     "compile-dev": "coffee -cb test",
-    "plugins": "for pkg in ../plugins/vile-*; do npm link $pkg; done",
     "dev": "bin/dev",
     "lint": "bin/lint",
     "lint-cov": "bin/lint-cov",
@@ -21,7 +20,6 @@
     "update": "police -lt package.json && constable -u && tsd update -so",
     "test": "bin/test",
     "wrap": "npm-shrinkwrap",
-    "punish": "bin/cli -pc",
     "test-cov": "bin/test-cov",
     "test-ci-build": "npm run punish && bin/test-ci-build"
   },
@@ -51,7 +49,6 @@
     "tool"
   ],
   "dependencies": {
-    "@brentlintner/vile-htmllint": "~0.1.1",
     "babel": "~5.8.21",
     "bluebird": "~2.9.30",
     "bower": "~1.4.1",
@@ -72,6 +69,25 @@
     "wrench": "~1.5.8"
   },
   "devDependencies": {
+    "@brentlintner/vile-coffeelint": "0.0.2",
+    "@brentlintner/vile-constable": "0.0.2",
+    "@brentlintner/vile-depcheck": "0.0.1",
+    "@brentlintner/vile-eclint": "0.0.1",
+    "@brentlintner/vile-eslint": "0.0.1",
+    "@brentlintner/vile-fs-lint": "0.0.1",
+    "@brentlintner/vile-htmllint": "~0.1.1",
+    "@brentlintner/vile-jshint": "0.0.1",
+    "@brentlintner/vile-length": "0.0.1",
+    "@brentlintner/vile-license": "0.0.1",
+    "@brentlintner/vile-ncu": "0.0.1",
+    "@brentlintner/vile-newline": "0.0.1",
+    "@brentlintner/vile-project": "0.0.1",
+    "@brentlintner/vile-reek": "0.0.1",
+    "@brentlintner/vile-rubocop": "0.0.4",
+    "@brentlintner/vile-rubycritic": "0.0.1",
+    "@brentlintner/vile-semver": "0.0.1",
+    "@brentlintner/vile-tslint": "0.0.1",
+    "@brentlintner/vile-whitespace": "0.0.1",
     "chai": "~3.2.0",
     "coffeelint": "~1.10.1",
     "constable": "~0.0.4",
