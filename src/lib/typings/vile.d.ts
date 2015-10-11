@@ -1,3 +1,5 @@
+/// <reference path="bluebird.d.ts" />
+
 declare module Vile {
   export interface Issue {
     type   : string;
@@ -26,7 +28,7 @@ declare module Vile {
 
   export type IssueList = Issue[]
 
-  export type Result = IssueList | Promise<IssueList>
+  export type Result = IssueList | bluebird.Promise<IssueList>
 
   export interface IssueLocation {
     start : IssueLine;
@@ -69,7 +71,11 @@ declare module Vile {
 
     export interface Index {
       report : (r : string, is : IssueList, s : Stats) => any;
-      exec   : (p : PluginList, opts : any, format : string) => Promise<IssueList>;
+      exec   : (
+        p : PluginList,
+        opts : any,
+        format : string
+      ) => bluebird.Promise<IssueList>;
     }
 
     export interface Logger {
@@ -77,6 +83,14 @@ declare module Vile {
       level   : () => any;
       create  : (m ? : string) => any;
       verbose : (s : boolean) => void;
+    }
+
+    export interface App {
+      commit : (
+        project : string,
+        issues : IssueList,
+        email : string
+      ) => bluebird.Promise<any>;
     }
 
     export interface Score {

@@ -7,10 +7,11 @@ let _ = require("lodash")
 let path = require("path")
 let vile   : Vile.Lib.Index   = require("./index")
 let util = require("./util")
-let score  : Vile.Lib.Score   = require("./score")
-let logger : Vile.Lib.Logger  = require("./logger")
-let config : Vile.Lib.Config  = require("./config")
-let pkg    : Vile.Lib.Package = require("./../package")
+let app     : Vile.Lib.App     = require("./app")
+let score   : Vile.Lib.Score   = require("./score")
+let logger  : Vile.Lib.Logger  = require("./logger")
+let config  : Vile.Lib.Config  = require("./config")
+let pkg     : Vile.Lib.Package = require("./../package")
 
 const DEFAULT_VILE_YML = ".vile.yml"
 
@@ -35,7 +36,18 @@ let punish = (plugins, opts : any = {}) => {
         process.stdout.write(JSON.stringify({ stats: stats, issues: issues }))
       // TODO: dual options sucks
       } else if (opts.scores || opts.summary) {
-        return score.log(issues, stats, opts.summary, opts.grades)
+        score.log(issues, stats, opts.summary, opts.grades)
+
+        if (opts.deploy) {
+          return app.commit(
+            opts.config.vile.project,
+            issues,
+            opts.config.vile.email
+          )
+          .then((res) => {
+            console.log(res)
+          })
+        }
       }
     })
 }
@@ -72,6 +84,7 @@ let run = (app) => {
     punish(app.punish, {
       format: app.format,
       scores: app.scores,
+      deploy: app.deploy,
       config: config.get(),
       summary: app.summary,
       grades: app.grades
@@ -104,6 +117,8 @@ let configure = () => {
             "be wvery wvery quiet")
     .option("-v, --verbose",
             "log all the things")
+    .option("-d, --deploy",
+            "commit data to vile.io")
 
   cli.on("--help", () => {
     console.log("  To log without color and a spinner:")

@@ -57,12 +57,12 @@ let digest = (issues : Vile.IssuesPerFile) : Vile.Stats => {
 
       if (score > highest) highest = score
       if (score < lowest) lowest = score
-      if (score < 100) {
-        total_issues += _.reject(file_issues, (issue : Vile.Issue) => {
-          return issue.type == util.OK
-        }).length
-        failed += 1
-      }
+
+      total_issues += _.reject(file_issues, (issue : Vile.Issue) => {
+        return issue.type == util.OK
+      }).length
+
+      if (score < 100) failed += 1
       if (score < 80) less_than_80 += 1
       if (score < 60) less_than_60 += 1
 
@@ -141,49 +141,47 @@ let log_scores = (
   only_log_totals=false,
   show_grades=false
 ) : any => {
-  if (!_.some(issues, (i : any) => i.length > 0)) return Bluebird.resolve()
+  if (!_.some(issues, (i : any) => i.length > 0)) return
 
-  return new Bluebird((resolve, reject) => {
-    let log = logger.create("score")
-    if (!only_log_totals) log.info()
+  let log = logger.create("score")
+  if (!only_log_totals) log.info()
 
-    // TODO: DRY (in another method in this module)
-    if (!only_log_totals) {
-      _.keys(issues)
-        .sort(alpha_asc)
-        .forEach((file) => {
-          let file_issues : Vile.IssueList = issues[file]
-          let score = Math.round(
-            _.sum(file_issues, (i) => i.score) /
-            _.keys(file_issues).length
-          )
-          let display_score = show_grades ? letterize(score) : `${score}%`
-          log.info(`${str.padRight(display_score, 8, " ")} ${file}`)
-        })
-    }
+  // TODO: DRY (in another method in this module)
+  if (!only_log_totals) {
+    _.keys(issues)
+      .sort(alpha_asc)
+      .forEach((file) => {
+        let file_issues : Vile.IssueList = issues[file]
+        let score = Math.round(
+          _.sum(file_issues, (i) => i.score) /
+          _.keys(file_issues).length
+        )
+        let display_score = show_grades ? letterize(score) : `${score}%`
+        log.info(`${str.padRight(display_score, 8, " ")} ${file}`)
+      })
+  }
 
-    let project_score = show_grades ?
-      stats.letter_score : `${stats.project_score}%`
+  let project_score = show_grades ?
+    stats.letter_score : `${stats.project_score}%`
 
-    let lowest_score = show_grades ?
-      letterize(stats.lowest_score) : `${stats.lowest_score}%`
+  let lowest_score = show_grades ?
+    letterize(stats.lowest_score) : `${stats.lowest_score}%`
 
-    let highest_score = show_grades ?
-      letterize(stats.highest_score) : `${stats.highest_score}%`
+  let highest_score = show_grades ?
+    letterize(stats.highest_score) : `${stats.highest_score}%`
 
-    log.info()
-    log.info(`Project Score:  ${project_score}`)
-    log.info()
-    log.info(`Total Issues:   ${stats.total_issues}`)
-    log.info()
-    log.info(`Failed Files:   ${stats.failed_files}`)
-    log.info(`Passed Files:   ${stats.passed_files}`)
-    log.info(`Total Files:    ${stats.total_files}`)
-    log.info(`Lowest Score:   ${lowest_score}`)
-    log.info(`Highest Score:  ${highest_score}`)
-    log.info(`Below 80%:      ${stats.less_than_80}`)
-    log.info(`Below 60%:      ${stats.less_than_60}`)
-  })
+  log.info()
+  log.info(`Project Score:  ${project_score}`)
+  log.info()
+  log.info(`Total Issues:   ${stats.total_issues}`)
+  log.info()
+  log.info(`Failed Files:   ${stats.failed_files}`)
+  log.info(`Passed Files:   ${stats.passed_files}`)
+  log.info(`Total Files:    ${stats.total_files}`)
+  log.info(`Lowest Score:   ${lowest_score}`)
+  log.info(`Highest Score:  ${highest_score}`)
+  log.info(`Below 80%:      ${stats.less_than_80}`)
+  log.info(`Below 60%:      ${stats.less_than_60}`)
 }
 
 module.exports = {
