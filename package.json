@@ -65,7 +65,7 @@
     "request": "^2.64.0",
     "string-padder": "~1.0.3",
     "tsd": "~0.6.3",
-    "typescript": "~1.5.3",
+    "typescript": "~1.6.2",
     "uuid": "~2.0.1",
     "wrench": "~1.5.8"
   },

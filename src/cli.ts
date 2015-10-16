@@ -4,16 +4,18 @@ module vile {
 
 let cli = require("commander")
 let _ = require("lodash")
+let fs = require("fs")
 let path = require("path")
 let vile   : Vile.Lib.Index   = require("./index")
 let util = require("./util")
-let app     : Vile.Lib.App     = require("./app")
+let service : Vile.Lib.Service     = require("./service")
 let score   : Vile.Lib.Score   = require("./score")
 let logger  : Vile.Lib.Logger  = require("./logger")
 let config  : Vile.Lib.Config  = require("./config")
 let pkg     : Vile.Lib.Package = require("./../package")
 
 const DEFAULT_VILE_YML = ".vile.yml"
+const DEFAULT_VILE_AUTH_YML = ".vilerc"
 
 // TODO: plugin interface
 let parse_plugins = (plugins : string) : Vile.PluginList => {
@@ -39,14 +41,18 @@ let punish = (plugins, opts : any = {}) => {
         score.log(issues, stats, opts.summary, opts.grades)
 
         if (opts.deploy) {
-          return app.commit(
-            opts.config.vile.project,
-            issues,
-            opts.config.vile.email
-          )
-          .then((res) => {
-            console.log(res)
-          })
+          config.load_auth(path.join(process.cwd(), DEFAULT_VILE_AUTH_YML))
+
+          return service
+            .commit(issues, stats, config.get_auth())
+            .then((http) => {
+              let log = logger.create("vile.io")
+              if (_.get(http, "response.statusCode") == 200) {
+                log.info(http.body)
+              } else {
+                log.error(http.body)
+              }
+            })
         }
       }
     })
@@ -67,7 +73,21 @@ let load_config = (app : any) => {
   }
 }
 
+// TODO
+let authenticate = () => {
+  console.log("  To authenticate, first go to " +
+      "https://vile.io and create a project AuthToken.")
+  console.log()
+  console.log("  Then:")
+  console.log()
+  console.log("    echo \"email: user_email\"     >> .vilerc")
+  console.log("    echo \"project: project_name\" >> .vilerc")
+  console.log("    echo \"token: auth_token\"     >> .vilerc")
+  console.log("    echo \".vilerc\"               >> .gitignore")
+}
+
 let run = (app) => {
+  if (app.authenticate) return authenticate()
   if (app.verbose) logger.verbose(true)
   if (app.quiet) logger.quiet()
 
@@ -77,9 +97,7 @@ let run = (app) => {
 
   if (app.punish) {
     // HACK! TODO
-    if (app.format == "json") {
-      logger.quiet()
-    }
+    if (app.format == "json") logger.quiet()
 
     punish(app.punish, {
       format: app.format,
@@ -117,6 +135,8 @@ let configure = () => {
             "be wvery wvery quiet")
     .option("-v, --verbose",
             "log all the things")
+    .option("-a, --authenticate",
+            "authenticate with vile.io")
     .option("-d, --deploy",
             "commit data to vile.io")
 

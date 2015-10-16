@@ -108,6 +108,18 @@ The `vile.ignore` (and plugin specific) setting is a list of items to ignore.
 At the moment, each plugin is responsible for matching.
 Most make use of [ignore-file](https://github.com/mafintosh/ignore-file).
 
+## Publishing
+
+You can publish your project to [vile.io](http://vile.io).
+
+Make an account if you don't have one, then:
+
+    vile --authenticate
+
+Then:
+
+    vile -cp --deploy
+
 ## Scoring
 
     vile -pc -s

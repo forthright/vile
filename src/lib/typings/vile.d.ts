@@ -61,8 +61,16 @@ declare module Vile {
 
   export module Lib {
     export interface Config {
-      load : (f : string) => any;
-      get  : () => any;
+      load      : (f : string) => any;
+      load_auth : (f : string) => any;
+      get       : () => any;
+      get_auth  : () => any;
+    }
+
+    export interface AuthConfig {
+      email   : string;
+      token   : string;
+      project : string;
     }
 
     export interface Package {
@@ -85,11 +93,11 @@ declare module Vile {
       verbose : (s : boolean) => void;
     }
 
-    export interface App {
+    export interface Service {
       commit : (
-        project : string,
         issues : IssueList,
-        email : string
+        stats : Stats,
+        auth_config : AuthConfig
       ) => bluebird.Promise<any>;
     }
 
