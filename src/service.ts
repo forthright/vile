@@ -7,7 +7,8 @@ let request : any = require("request")
 let fs : any = require("fs")
 let path : any = require("path")
 
-const VILE_IO = "http://localhost:3000/commits"
+const VILE_IO = "http://joffrey-baratheon.herokuapp.com/commits"
+//const VILE_IO = "http://localhost:3000/commits"
 
 let commit = (issues, stats, auth) =>
   new Bluebird((resolve, reject) => {
