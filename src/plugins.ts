@@ -234,6 +234,9 @@ let into_executed_plugins = (
       run_plugin_in_fork(name, plugin_config)
         .then((issues : Vile.Issue[]) => {
           if (spin) spin.stop(true)
+          issues.forEach((issue) => {
+            issue.file = issue.file.replace(process.cwd(), "").replace(/^\/?/, "")
+          })
           log_plugin(name, issues, format) // TODO: don't log here
           resolve(issues)
         })
