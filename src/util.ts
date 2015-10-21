@@ -45,7 +45,7 @@ let collect_files = (target, allowed) : string[] => {
       return collect_files(path.join(target, subpath), allowed)
     }))
   } else {
-    let rel_path = target.replace(process.cwd(), "").replace(/^\//, "")
+    let rel_path = path.relative(process.cwd(), target)
     if (allowed(rel_path)) return [rel_path]
   }
 }
