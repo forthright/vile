@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+echo ""
+echo "installing node dependencies"
+npm i
+
+echo ""
+echo "install ruby dependencies"
+bundle

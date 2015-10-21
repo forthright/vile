@@ -14,6 +14,7 @@
     "compile": "tsc --outDir .build --target es6 src/*.ts && babel -d lib -m common .build",
     "compile-dev": "coffee -cb test",
     "dev": "bin/dev",
+    "dev-setup": "bin/dev-setup",
     "lint": "bin/lint",
     "lint-cov": "bin/lint-cov",
     "postinstall": "tsd reinstall -so && npm run compile",
