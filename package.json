@@ -81,6 +81,7 @@
     "@brentlintner/vile-jshint": "0.0.1",
     "@brentlintner/vile-length": "0.0.1",
     "@brentlintner/vile-license": "0.0.1",
+    "@brentlintner/vile-ncu": "0.0.3",
     "@brentlintner/vile-newline": "0.0.1",
     "@brentlintner/vile-nsp": "0.0.2",
     "@brentlintner/vile-project": "0.0.1",
