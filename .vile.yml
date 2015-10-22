@@ -1,6 +1,4 @@
 vile:
-  project: vile
-  email: brent.lintner@gmail.com
   ignore: [
       "node_modules",
       ".build",
