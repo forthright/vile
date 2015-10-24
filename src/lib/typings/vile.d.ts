@@ -6,24 +6,7 @@ declare module Vile {
     file   : string;
     msg    : string;
     where  : IssueLocation;
-    score? : number;
-  }
-
-  export interface Stats {
-    total_issues  : number;
-    total_files   : number;
-    failed_files  : number;
-    passed_files  : number;
-    project_score : number;
-    letter_score  : string;
-    lowest_score  : number;
-    highest_score : number;
-    less_than_80  : number;
-    less_than_60  : number;
-  }
-
-  export interface IssuesPerFile {
-    [filepath : string] : IssueList;
+    data?  : any;
   }
 
   export type IssueList = Issue[]
@@ -78,7 +61,6 @@ declare module Vile {
     }
 
     export interface Index {
-      report : (r : string, is : IssueList, s : Stats) => any;
       exec   : (
         p : PluginList,
         opts : any,
@@ -96,21 +78,8 @@ declare module Vile {
     export interface Service {
       commit : (
         issues : IssueList,
-        stats : Stats,
         auth_config : AuthConfig
       ) => bluebird.Promise<any>;
-    }
-
-    export interface Score {
-      calculate_file : (i : IssueList) => number;
-      calculate_all  : (i : IssueList) => IssuesPerFile;
-      digest         : (i : IssuesPerFile) => Stats;
-      log            : (
-        i : IssueList,
-        s : Stats,
-        log_totals : boolean,
-        show_grades : boolean
-      ) => void;
     }
   }
 }

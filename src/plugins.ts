@@ -13,7 +13,6 @@ let spinner = require("cli-spinner")
 let Spinner = spinner.Spinner
 let logger = require("./logger")
 let util = require("./util")
-let score = require("./score")
 let log = logger.create("plugin")
 
 Bluebird.promisifyAll(fs)
@@ -201,6 +200,7 @@ let run_plugin_in_fork = (name : string, config : Vile.PluginConfig) => {
 }
 
 // TODO: make into smaller methods
+// TODO: support possible concurrent forks
 let into_executed_plugins = (
   allowed : string[],
   config : Vile.YMLConfig,
@@ -270,7 +270,7 @@ let run_plugins = (
   custom_plugins : Vile.PluginList = [],
   config : Vile.YMLConfig = {},
   format = null
-) : bluebird.Promise<Vile.IssuesPerFile> => {
+) : bluebird.Promise<Vile.IssueList> => {
   let app_config = _.get(config, "vile", {})
   let plugins : Vile.PluginList = custom_plugins
 
@@ -282,7 +282,6 @@ let run_plugins = (
   return fs.readdirAsync(cwd_plugins_path())
     .filter(is_plugin)
     .map(into_executed_plugins(plugins, config, format), { concurrency: 1 })
-    .then(score.calculate_all)
     .catch(error_executing_plugins)
 }
 

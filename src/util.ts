@@ -129,7 +129,8 @@ let into_issue = (
   filepath : string,
   message : string = "",
   start : any = {},
-  end : any = {}
+  end : any = {},
+  data : any = {}
 ) : Vile.Issue => {
   return {
     type: type,
@@ -138,7 +139,8 @@ let into_issue = (
     where: {
       start: start,
       end: end
-    }
+    },
+    data: data
   }
 }
 
@@ -150,7 +152,8 @@ module.exports = {
   OK : "ok",
   INFO: "info",
   WARNING: "warn",
-  ERROR: "error"
+  ERROR: "error",
+  GIT: "git"
 }
 
 }

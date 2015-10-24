@@ -7,19 +7,16 @@ let request : any = require("request")
 let fs : any = require("fs")
 let path : any = require("path")
 
-const VILE_IO = "http://joffrey-baratheon.herokuapp.com/commits"
-//const VILE_IO = "http://localhost:3000/commits"
+//const VILE_IO = "http://joffrey-baratheon.herokuapp.com/commits"
+const VILE_IO = "http://localhost:3000/commits"
 
-let commit = (issues, stats, auth) =>
+let commit = (issues, auth) =>
   new Bluebird((resolve, reject) => {
     request.post({
       url: VILE_IO,
       form: {
-       project: auth.project,
-       token: auth.token,
-       email: auth.email,
-       stats: stats,
-       issues: issues
+        auth: auth,
+        issues: issues
       }
     }, (err, httpResponse, body) => {
       if (err) reject({error: err})

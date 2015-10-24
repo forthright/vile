@@ -9,7 +9,6 @@ let path = require("path")
 let vile   : Vile.Lib.Index   = require("./index")
 let util = require("./util")
 let service : Vile.Lib.Service     = require("./service")
-let score   : Vile.Lib.Score   = require("./score")
 let logger  : Vile.Lib.Logger  = require("./logger")
 let config  : Vile.Lib.Config  = require("./config")
 let pkg     : Vile.Lib.Package = require("./../package")
@@ -30,30 +29,24 @@ let set_log_levels = (logs? : string) => {
 let punish = (plugins, opts : any = {}) => {
   vile
     .exec(parse_plugins(plugins), opts.config, opts.format)
-    // TODO: Vile.IssuesPerFile
     .then((issues : any) => {
-      let stats = score.digest(issues)
+      if (opts.deploy) {
+        config.load_auth(path.join(process.cwd(), DEFAULT_VILE_AUTH_YML))
+
+        return service
+          .commit(issues, config.get_auth())
+          .then((http) => {
+            let log = logger.create("vile.io")
+            if (_.get(http, "response.statusCode") == 200) {
+              log.info(http.body)
+            } else {
+              log.error(http.body)
+            }
+          })
+      }
 
       if (opts.format == "json") {
-        process.stdout.write(JSON.stringify({ stats: stats, issues: issues }))
-      // TODO: dual options sucks
-      } else if (opts.scores || opts.summary) {
-        score.log(issues, stats, opts.summary, opts.grades)
-
-        if (opts.deploy) {
-          config.load_auth(path.join(process.cwd(), DEFAULT_VILE_AUTH_YML))
-
-          return service
-            .commit(issues, stats, config.get_auth())
-            .then((http) => {
-              let log = logger.create("vile.io")
-              if (_.get(http, "response.statusCode") == 200) {
-                log.info(http.body)
-              } else {
-                log.error(http.body)
-              }
-            })
-        }
+        process.stdout.write(JSON.stringify(issues))
       }
     })
 }
@@ -101,11 +94,8 @@ let run = (app) => {
 
     punish(app.punish, {
       format: app.format,
-      scores: app.scores,
       deploy: app.deploy,
-      config: config.get(),
-      summary: app.summary,
-      grades: app.grades
+      config: config.get()
     })
   }
 }
@@ -121,12 +111,6 @@ let configure = () => {
                             string, else run all installed plugins`)
     .option("-c, --config [path]",
             "specify a config file, else look for one in the cwd")
-    .option("-s, --scores",
-            "print all file scores")
-    .option("-S, --summary",
-            "print just a summary of scores")
-    .option("-g, --grades",
-            "print all file scores as A-F grades")
     .option("-f, --format [type]",
             "specify output format (console=default,json)")
     .option("-l, --log [level]",
