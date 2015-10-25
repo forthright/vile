@@ -29,19 +29,23 @@ let set_log_levels = (logs? : string) => {
 let punish = (plugins, opts : any = {}) => {
   vile
     .exec(parse_plugins(plugins), opts.config, opts.format)
-    .then((issues : any) => {
+    .then((issues : Vile.IssueList) => {
       if (opts.deploy) {
         config.load_auth(path.join(process.cwd(), DEFAULT_VILE_AUTH_YML))
+        let log = logger.create("vile.io")
 
         return service
           .commit(issues, config.get_auth())
           .then((http) => {
-            let log = logger.create("vile.io")
             if (_.get(http, "response.statusCode") == 200) {
               log.info(http.body)
             } else {
               log.error(http.body)
             }
+          })
+          .catch((err) => {
+            console.log() // newline because spinner is running
+            log.error(err.stack || err)
           })
       }
 

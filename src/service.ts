@@ -4,6 +4,7 @@ module vile {
 
 let Bluebird : typeof bluebird.Promise = require("bluebird")
 let request : any = require("request")
+let _ : any = require("lodash")
 let fs : any = require("fs")
 let path : any = require("path")
 
@@ -15,8 +16,12 @@ let commit = (issues, auth) =>
     request.post({
       url: VILE_IO,
       form: {
-        auth: auth,
-        issues: issues
+        auth: {
+          project: auth.project,
+          email: auth.email,
+          token: auth.token
+        },
+        issues: JSON.stringify(issues)
       }
     }, (err, httpResponse, body) => {
       if (err) reject({error: err})

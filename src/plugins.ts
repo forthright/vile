@@ -97,7 +97,7 @@ let log_plugin_messages = (
   let nlog = logger.create(name)
 
   issues.forEach((issue : Vile.Issue, index : number) => {
-    if (issue.type == util.OK) return
+    if (issue.type == util.OK || issue.type == util.GIT) return
 
     // TODO: lookup/log unknown logs
     let print : (s : string) => void = nlog[issue.type || "error"]
@@ -118,7 +118,8 @@ let require_plugin = (name : string) : Vile.Plugin => {
 
 let failed = (list : Vile.Issue[]) => {
   return _.reject(list,
-    (item : Vile.Issue) => item.type == util.OK
+    (item : Vile.Issue) =>
+      item.type == util.OK || item.type == util.GIT
   ).length > 0
 }
 
@@ -240,7 +241,9 @@ let into_executed_plugins = (
           log_plugin(name, issues, format) // TODO: don't log here
           resolve(issues)
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log() // newline because spinner is running
+          log.error(err.stack || err)
           // Note: sub process already logs error
           reject(new Error(`${name} plugin died horribly..`))
           process.exit(1)
@@ -282,6 +285,7 @@ let run_plugins = (
   return fs.readdirAsync(cwd_plugins_path())
     .filter(is_plugin)
     .map(into_executed_plugins(plugins, config, format), { concurrency: 1 })
+    .then(_.flatten)
     .catch(error_executing_plugins)
 }
 
