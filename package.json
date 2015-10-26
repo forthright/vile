@@ -54,25 +54,16 @@
     "tool"
   ],
   "dependencies": {
-    "babel": "~5.8.29",
     "bluebird": "~2.10.2",
-    "bower": "~1.6.5",
     "cli-spinner": "~0.2.1",
-    "coffee-script": "~1.10.0",
-    "coffeelint": "~1.13.0",
     "commander": "~2.9.0",
-    "count-lines": "~0.1.2",
     "extend": "~3.0.0",
     "ignore-file": "~1.1.2",
     "js-yaml": "~3.4.3",
     "lodash": "~3.10.1",
     "minilog": "~2.0.8",
     "request": "~2.64.0",
-    "string-padder": "~1.0.3",
-    "tsd": "~0.6.3",
-    "typescript": "~1.6.2",
-    "uuid": "~2.0.1",
-    "wrench": "~1.5.8"
+    "string-padder": "~1.0.3"
   },
   "devDependencies": {
     "@brentlintner/vile-coffeelint": "0.0.3",
@@ -96,7 +87,9 @@
     "@brentlintner/vile-semver": "0.0.1",
     "@brentlintner/vile-tslint": "0.0.2",
     "@brentlintner/vile-whitespace": "0.0.2",
+    "babel": "~5.8.29",
     "chai": "~3.4.0",
+    "coffee-script": "~1.10.0",
     "coffeelint": "~1.13.0",
     "constable": "~0.0.4",
     "istanbul": "~0.4.0",
@@ -107,6 +100,9 @@
     "pryjs": "~0.1.1",
     "release-it": "~2.3.1",
     "sinon": "~1.17.2",
-    "sinon-chai": "~2.8.0"
+    "sinon-chai": "~2.8.0",
+    "tsd": "~0.6.3",
+    "typescript": "~1.6.2",
+    "wrench": "~1.5.8"
   }
 }
