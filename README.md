@@ -120,6 +120,9 @@ Then:
 
     vile -cp --deploy
 
+Note: For development, set `VILE_APP=http://localhost:3000` so it
+does not try to publish to `http://vile.io`.
+
 ## Formatting
 
 You can turn on various output formats with the `-f` option.

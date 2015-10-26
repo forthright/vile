@@ -8,13 +8,14 @@ let _ : any = require("lodash")
 let fs : any = require("fs")
 let path : any = require("path")
 
-//const VILE_IO = "http://joffrey-baratheon.herokuapp.com/commits"
-const VILE_IO = "http://localhost:3000/commits"
+const VILE_APP = process.env.VILE_APP || "http://joffrey-baratheon.herokuapp.com"
+
+console.log(VILE_APP)
 
 let commit = (issues, auth) =>
   new Bluebird((resolve, reject) => {
     request.post({
-      url: VILE_IO,
+      url: `${VILE_APP}/commits`,
       form: {
         auth: {
           project: auth.project,
