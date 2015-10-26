@@ -10,8 +10,6 @@ let path : any = require("path")
 
 const VILE_APP = process.env.VILE_APP || "http://joffrey-baratheon.herokuapp.com"
 
-console.log(VILE_APP)
-
 let commit = (issues, auth) =>
   new Bluebird((resolve, reject) => {
     request.post({
