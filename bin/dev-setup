@@ -4,5 +4,14 @@ echo "installing node dependencies"
 npm i
 
 echo ""
+echo "update typescript typings"
+npm run tsd
+
+echo ""
+echo "compiling project"
+npm run compile
+npm run compile-dev
+
+echo ""
 echo "install ruby dependencies"
 bundle

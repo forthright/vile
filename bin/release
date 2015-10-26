@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+level=$1
+
+if [ -z "${level}" ]; then
+  level=patch
+fi
+
+npm run compile &&
+git add -f lib &&
+release-it -n -p -i $level -m "v%s"

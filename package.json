@@ -10,6 +10,11 @@
   "bin": {
     "vile": "bin/vile"
   },
+  "files": [
+    "bin",
+    "lib",
+    "LICENSE"
+  ],
   "scripts": {
     "compile": "tsc --outDir .build --target es6 src/*.ts && babel -d lib -m common .build",
     "compile-dev": "coffee -cb test",
@@ -17,10 +22,9 @@
     "dev-setup": "bin/dev-setup",
     "lint": "bin/lint",
     "lint-cov": "bin/lint-cov",
-    "postinstall": "tsd reinstall -so && npm run compile",
     "update": "police -lt package.json && constable -u && tsd update -so",
+    "tsd": "tsd reinstall -so",
     "test": "bin/test",
-    "wrap": "npm-shrinkwrap",
     "test-cov": "bin/test-cov",
     "test-ci-build": "npm run punish && bin/test-ci-build"
   },
@@ -101,6 +105,7 @@
     "npm-shrinkwrap": "~5.4.0",
     "police": "~0.4.0",
     "pryjs": "~0.1.1",
+    "release-it": "~2.3.1",
     "sinon": "~1.17.2",
     "sinon-chai": "~2.8.0"
   }
