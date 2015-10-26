@@ -204,8 +204,8 @@ let run_plugin_in_fork = (name : string, config : Vile.PluginConfig) => {
 // TODO: support possible concurrent forks
 let into_executed_plugins = (
   allowed : string[],
-  config : Vile.YMLConfig,
-  format : string
+  config : Vile.YMLConfig = null,
+  opts : any = {}
 ) => (pkg_name : string) : bluebird.Promise<any> => {
   let name : string = pkg_name.replace("vile-", "")
 
@@ -224,7 +224,7 @@ let into_executed_plugins = (
     if (cluster.isMaster) {
       let spin
 
-      if (!process.env.NO_COLOR && format != "json") {
+      if (opts.spinner && opts.format != "json") {
         // TODO: allow plugins to log things after spinner is stopped
         // TODO: don't do spinner in here? somewhere better to put spinner?
         spin = new Spinner(`${pad_right(26, name)}PUNISH`)
@@ -238,7 +238,7 @@ let into_executed_plugins = (
           issues.forEach((issue) => {
             issue.file = issue.file.replace(process.cwd(), "").replace(/^\/?/, "")
           })
-          log_plugin(name, issues, format) // TODO: don't log here
+          log_plugin(name, issues, opts.format) // TODO: don't log here
           resolve(issues)
         })
         .catch((err) => {
@@ -272,7 +272,7 @@ let cwd_plugins_path = () =>
 let run_plugins = (
   custom_plugins : Vile.PluginList = [],
   config : Vile.YMLConfig = {},
-  format = null
+  opts : any = {}
 ) : bluebird.Promise<Vile.IssueList> => {
   let app_config = _.get(config, "vile", {})
   let plugins : Vile.PluginList = custom_plugins
@@ -284,7 +284,7 @@ let run_plugins = (
 
   return fs.readdirAsync(cwd_plugins_path())
     .filter(is_plugin)
-    .map(into_executed_plugins(plugins, config, format), { concurrency: 1 })
+    .map(into_executed_plugins(plugins, config, opts), { concurrency: 1 })
     .then(_.flatten)
     .catch(error_executing_plugins)
 }

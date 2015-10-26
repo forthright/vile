@@ -28,7 +28,8 @@ let set_log_levels = (logs? : string) => {
 
 let punish = (plugins, opts : any = {}) => {
   vile
-    .exec(parse_plugins(plugins), opts.config, opts.format)
+    // TODO: don't like opts here
+    .exec(parse_plugins(plugins), opts.config, opts)
     .then((issues : Vile.IssueList) => {
       if (opts.deploy) {
         config.load_auth(path.join(process.cwd(), DEFAULT_VILE_AUTH_YML))
@@ -98,6 +99,8 @@ let run = (app) => {
 
     punish(app.punish, {
       format: app.format,
+      color: !app["no-color"],
+      spinner: !app.quiet,
       deploy: app.deploy,
       config: config.get()
     })
@@ -116,24 +119,18 @@ let configure = () => {
     .option("-c, --config [path]",
             "specify a config file, else look for one in the cwd")
     .option("-f, --format [type]",
-            "specify output format (console=default,json)")
+            "specify output format (color=default,json)")
     .option("-l, --log [level]",
-            "specify the log level info|warn|error|debug)")
+            "specify the log level (info|warn|error|debug)")
     .option("-q, --quiet",
-            "be wvery wvery quiet")
+            "log nothing")
     .option("-v, --verbose",
             "log all the things")
     .option("-a, --authenticate",
             "authenticate with vile.io")
     .option("-d, --deploy",
-            "commit data to vile.io")
-
-  cli.on("--help", () => {
-    console.log("  To log without color and a spinner:")
-    console.log("")
-    console.log("    $ NO_COLOR=1 vile -p")
-    console.log("")
-  })
+            "publish to vile.io")
+    .option("--no-color", "disable color")
 
   if (no_args()) cli.outputHelp()
 }

@@ -120,20 +120,6 @@ Then:
 
     vile -cp --deploy
 
-## Scoring
-
-    vile -pc -s
-
-This prints all file scores to the console.
-
-### Only Print Summary
-
-    vile -pcS
-
-### Printing Percents As Grades
-
-    vile -pcsg
-
 ## Formatting
 
 You can turn on various output formats with the `-f` option.

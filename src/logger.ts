@@ -2,6 +2,7 @@
 
 module vile {
 
+let _ = require("lodash")
 let minilog = require("minilog")
 let filter = new minilog.Filter()
 
@@ -25,7 +26,10 @@ let verbose = (is_verbose : boolean) => {
   default_filter()
 }
 
-let init = (nocolor) => {
+let init = () => {
+  // HACK!
+  let nocolor = _.includes(process.argv, "--no-color")
+
   if (nocolor) {
     minilog
       .pipe(filter)
@@ -49,6 +53,6 @@ module.exports = {
   level: log_level
 }
 
-init(process.env.NO_COLOR)
+init()
 
 }

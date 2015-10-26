@@ -63,8 +63,8 @@ declare module Vile {
     export interface Index {
       exec   : (
         p : PluginList,
-        opts : any,
-        format : string
+        config : YMLConfig,
+        opts : any
       ) => bluebird.Promise<IssueList>;
     }
 
