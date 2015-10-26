@@ -3,18 +3,15 @@
   "version": "0.3.2",
   "description": "A punishing, yet easy to use tool for writing insightful code.",
   "main": "lib/index.js",
-  "directories": {
-    "test": "test",
-    "lib": "lib"
-  },
+  "files": [
+    "bin/vile",
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
   "bin": {
     "vile": "bin/vile"
   },
-  "files": [
-    "bin",
-    "lib",
-    "LICENSE"
-  ],
   "scripts": {
     "compile": "tsc --outDir .build --target es6 src/*.ts && babel -d lib -m common .build",
     "compile-dev": "coffee -cb test",
