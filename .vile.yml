@@ -16,7 +16,8 @@ language:
       "tags",
       ".eslintrc",
       ".eslintignore",
-      ".node-version"
+      ".node-version",
+      ".tsdrc"
     ]
 
 depcheck:
