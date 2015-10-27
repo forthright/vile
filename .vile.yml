@@ -4,10 +4,19 @@ vile:
       ".build",
       ".test",
       ".git",
+      "tags",
       "coverage",
       "typings",
       "tmp",
       "lib"
+    ]
+
+language:
+  ignore: [
+      "tags",
+      ".eslintrc",
+      ".eslintignore",
+      ".node-version"
     ]
 
 depcheck:

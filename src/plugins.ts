@@ -43,6 +43,7 @@ let error_executing_plugins = (err : NodeJS.ErrnoException) => {
 }
 
 // TODO: DRY both methods
+// TODO: move logging out of plugins?
 
 let humanize_line_char = (issue : Vile.Issue) : string => {
   let start : Vile.IssueLine = _.get(issue, "where.start", {})
