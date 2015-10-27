@@ -153,7 +153,8 @@ module.exports = {
   INFO: "info",
   WARNING: "warn",
   ERROR: "error",
-  GIT: "git"
+  GIT: "git",
+  LANG: "lang"
 }
 
 }
