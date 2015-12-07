@@ -154,7 +154,8 @@ module.exports = {
   WARNING: "warn",
   ERROR: "error",
   GIT: "git",
-  LANG: "lang"
+  LANG: "lang",
+  COV : "cov"
 }
 
 }
