@@ -72,6 +72,7 @@
     "@brentlintner/vile-git": "0.0.1",
     "@brentlintner/vile-htmllint": "~0.1.1",
     "@brentlintner/vile-jshint": "0.0.1",
+    "@brentlintner/vile-language": "0.0.2",
     "@brentlintner/vile-length": "0.0.1",
     "@brentlintner/vile-license": "0.0.1",
     "@brentlintner/vile-ncu": "0.0.3",
