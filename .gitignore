@@ -11,3 +11,4 @@ tags
 tmp
 /typings
 .vilerc
+.tsdrc
