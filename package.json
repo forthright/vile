@@ -46,6 +46,8 @@
     "tslint",
     "hlint",
     "git",
+    "language",
+    "coverage",
     "check",
     "code",
     "tool"
