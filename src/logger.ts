@@ -28,7 +28,7 @@ let verbose = (is_verbose : boolean) => {
 
 let init = () => {
   // HACK!
-  let nocolor = _.includes(process.argv, "--no-color")
+  let nocolor = _.includes(process.argv, "--nodecorations")
 
   if (nocolor) {
     minilog

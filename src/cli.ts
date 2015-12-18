@@ -99,8 +99,7 @@ let run = (app) => {
 
     punish(app.punish, {
       format: app.format,
-      color: !app["no-color"],
-      spinner: !app.quiet,
+      spinner: !(app.quiet || app["nodecorations"]),
       deploy: app.deploy,
       config: config.get()
     })
@@ -130,7 +129,7 @@ let configure = () => {
             "authenticate with vile.io")
     .option("-d, --deploy",
             "publish to vile.io")
-    .option("--no-color", "disable color")
+    .option("--nodecorations", "disable color and progress bar")
 
   if (no_args()) cli.outputHelp()
 }
