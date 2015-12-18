@@ -13,7 +13,7 @@ It can be used to run all types of analysis and checks via one top level package
 
 The goal of the project is not to compete with or replace existing
 analysis tools, but to support them unobstrusively as possible,
-and even compliment them, while presenting the information in
+and even complement them, while presenting the information in
 a unified, project focused context.
 
 ## Requirements
