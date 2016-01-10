@@ -12,6 +12,9 @@
   "bin": {
     "vile": "bin/vile"
   },
+  "engines" : {
+    "node" : ">=0.10.0"
+  },
   "scripts": {
     "compile": "tsc --outDir .build --target es6 src/*.ts && babel -d lib -m common .build",
     "compile-dev": "coffee -cb test",
