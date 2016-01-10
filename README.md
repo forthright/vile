@@ -58,7 +58,7 @@ along with the [main library](src/index.ts) module.
 
 To actually punish your code, you need to install plugins first.
 
-For a complete list of plugins, see [here](http://github.com/brentlintner/vile-plugins);
+For a complete list of plugins, see [here](http://joffrey-baratheon.herokuapp.com/plugins);
 
 To get started, install a plugin package in your project root:
 
