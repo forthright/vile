@@ -1,4 +1,5 @@
 GEM
+  remote: https://rubygems.org/
   specs:
     abstract_type (0.0.7)
     adamantium (0.2.0)
@@ -73,9 +74,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  reek
   rubocop
   rubycritic
 
 BUNDLED WITH
-   1.10.6
+   1.11.2
