@@ -23,6 +23,10 @@ depcheck:
     ignore_dirs: [ ]
     ignore_deps: [ "pryjs", "@brentlintner/*" ]
 
+coverage:
+  config:
+    path: coverage/lcov.info
+
 tslint:
   config: tslint.json
   ignore: .tslintignore
