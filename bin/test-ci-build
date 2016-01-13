@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 npm run compile &&
+npm run compile-dev &&
 npm run lint &&
 npm run test-cov
 

@@ -7,11 +7,7 @@ vile:
       "tags",
       "coverage",
       "typings",
-      "tmp"
-    ]
-
-language:
-  ignore: [
+      "tmp",
       "tags",
       ".eslintrc",
       ".eslintignore",
@@ -29,9 +25,6 @@ depcheck:
     ignore_dirs: [ ]
     ignore_deps: [ "pryjs", "@brentlintner/*" ]
 
-length:
-  ignore: [ "lib" ]
-
 whitespace:
   ignore: [ "lib" ]
 
@@ -45,11 +38,6 @@ rubycritic:
     churn: 20
     rating: "A"
   ignore: .rcignore
-
-length:
-  config:
-    file: 250
-    line: 80
 
 license:
   config: [

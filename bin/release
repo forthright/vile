@@ -5,6 +5,8 @@ if [ -z "${level}" ]; then
   level=patch
 fi
 
+npm run tsd &&
 npm run compile &&
+npm test &&
 git add -f lib &&
 release-it -n -p -i $level -m "v%s"
