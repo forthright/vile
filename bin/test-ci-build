@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
+npm run tsd &&
 npm run compile &&
 npm run compile-dev &&
 npm run lint &&
