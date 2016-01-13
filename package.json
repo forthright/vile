@@ -17,7 +17,7 @@
   },
   "scripts": {
     "compile": "tsc --outDir .build --target es6 src/*.ts && babel -d lib -m common .build",
-    "compile-dev": "coffee -cb test",
+    "compile-dev": "coffee -cbo .test test",
     "dev": "bin/dev",
     "dev-setup": "bin/dev-setup",
     "lint": "bin/lint",
