@@ -6,4 +6,4 @@ test:
   override:
     - npm run test-ci-build
   post:
-    - npm run vile
+    - bundle exec npm run vile
