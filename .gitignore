@@ -10,4 +10,3 @@ tags
 .build
 tmp
 /typings
-.vilerc
