@@ -3,3 +3,4 @@ ruby/.bundle/**
 node_modules/**
 haskell/**
 coverage/**
+vendor/**

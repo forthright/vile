@@ -6,3 +6,6 @@ coverage
 .build/**
 typings/**
 src/lib/typings/bluebird.d.ts
+vendor
+.bundle
+.test
