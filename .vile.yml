@@ -23,10 +23,6 @@ depcheck:
     ignore_dirs: [ ]
     ignore_deps: [ "pryjs", "@brentlintner/*" ]
 
-coverage:
-  config:
-    path: coverage/lcov.info
-
 rubycritic:
   config:
     method_count: 10
