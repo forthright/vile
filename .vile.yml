@@ -5,6 +5,7 @@ vile:
       ".test",
       ".git",
       "tags",
+      "lib",
       "coverage",
       "typings",
       "tmp",
@@ -15,21 +16,11 @@ vile:
       ".tsdrc"
     ]
 
-jshint:
-  config: .jshintrc
-  ignore: .jshintignore
-
 depcheck:
   config:
     ignore_dev_deps: false
     ignore_dirs: [ ]
     ignore_deps: [ "pryjs", "@brentlintner/*" ]
-
-whitespace:
-  ignore: [ "lib" ]
-
-eclint:
-  ignore: [ "lib" ]
 
 rubycritic:
   config:
