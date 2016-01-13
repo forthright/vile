@@ -4,3 +4,4 @@ node_modules/**
 haskell/**
 coverage/**
 vendor/**
+.test/**
