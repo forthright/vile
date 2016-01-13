@@ -23,6 +23,10 @@ depcheck:
     ignore_dirs: [ ]
     ignore_deps: [ "pryjs", "@brentlintner/*" ]
 
+tslint:
+  config: tslint.json
+  ignore: .tslintignore
+
 rubycritic:
   config:
     method_count: 10
