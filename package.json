@@ -68,7 +68,7 @@
     "string-padder": "~1.0.3"
   },
   "devDependencies": {
-    "@brentlintner/vile": "0.4.1",
+    "@brentlintner/vile": "0.4.3",
     "@brentlintner/vile-coffeelint": "~0.0.4",
     "@brentlintner/vile-depcheck": "~0.0.3",
     "@brentlintner/vile-eclint": "~0.0.2",
