@@ -2,6 +2,10 @@ machine:
   node:
     version: 4.2.4
 
+dependencies:
+  override:
+    - npm install
+
 test:
   override:
     - npm run test-ci-build
