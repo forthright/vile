@@ -1,5 +1,6 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gem "rubocop"
-gem "reek"
-gem "rubycritic"
+group :development do
+  gem "rubocop", require: false
+  gem "rubycritic", require: false
+end
