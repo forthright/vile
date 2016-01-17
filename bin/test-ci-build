@@ -3,7 +3,6 @@
 npm run tsd &&
 npm run compile &&
 npm run compile-dev &&
-npm run lint &&
 npm run test-cov
 
 ## TODO once proper tests are written

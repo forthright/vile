@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+tsc --outDir .build --target es6 src/*.ts &&
+babel -d lib -m common .build
