@@ -98,9 +98,9 @@ let log_plugin_messages = (
   let nlog = logger.create(name)
 
   issues.forEach((issue : Vile.Issue, index : number) => {
+    // TODO: support new issues that extend issue/warning
     if (issue.type == util.ERROR ||
-        issue.type == util.WARNING ||
-        issue.type == util.INFO) {
+        issue.type == util.WARN) {
       // TODO: lookup/log unknown logs
       let print : (s : string) => void = nlog[issue.type || "error"]
       print(to_console(issue))
@@ -122,7 +122,7 @@ let require_plugin = (name : string) : Vile.Plugin => {
 let failed = (list : Vile.Issue[]) => {
   return _.select(list,
     (item : Vile.Issue) =>
-      item.type == util.ERROR || item.type == util.WARNING
+      item.type == util.ERROR || item.type == util.WARN
   ).length > 0
 }
 

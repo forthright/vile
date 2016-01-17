@@ -15,7 +15,6 @@ Bluebird.promisifyAll(fs)
 
 let log_error = (e : NodeJS.ErrnoException) => {
   console.log()
-  log.error(e.stack || e)
 }
 
 // TODO: figure out an ideal ignore system
@@ -124,35 +123,24 @@ let promise_each_file = (
   })
 }
 
-let into_issue = (
-  type : string,
-  filepath : string,
-  message : string = "",
-  start : any = {},
-  end : any = {},
-  data : any = {}
-) : Vile.Issue => {
-  return {
-    type: type,
-    file: filepath,
-    msg: message,
-    where: {
-      start: start,
-      end: end
-    },
-    data: data
-  }
-}
+// TODO: validate issue objects as it comes in
+let into_issue = (data : any) : Vile.Issue => data
 
 module.exports = {
   promise_each: promise_each_file,
   issue: into_issue,
   ignored: is_ignored,
   spawn: spawn,
-  OK : "ok",
-  INFO: "info",
-  WARNING: "warn",
-  ERROR: "error",
+  WARN: "warning",
+  STYL: "style",
+  MAIN: "maintainability",
+  COMP: "complexity",
+  CHURN: "churn",
+  DUPE: "duplicate",
+  ERR: "error",
+  SEC: "security",
+  DEP: "dependency",
+  STAT: "stat",
   GIT: "git",
   LANG: "lang",
   COV : "cov"

@@ -119,9 +119,6 @@ Then:
 
     vile -cp --deploy
 
-Note: For development, set `VILE_APP=http://localhost:3000` so it
-does not try to publish to `http://vile.io`.
-
 ## Formatting
 
 You can turn on various output formats with the `-f` option.
@@ -149,32 +146,15 @@ module.exports = {
 }
 ```
 
-Issues are structured as such:
+See the [docs](http://vile.io/docs) page for how Issues are structured.
 
-```javascript
-{
-  type: vile.ERROR|vile.WARNING|vile.INFO,
-  file: "filepath",
-  msg: "issue details",
-  where: {
-    start: { line: 10, character: 40 },
-    end: { line: 10, character: 40 }
-  }
-}
-```
 You can also `require("vile")` in your plugin and use its
 API, which provides some helpers.
 
 ### Files Without Issues
 
-For optimal data analysis, a plugin should return a single issue to indicate
-the file was checked, if it can.
-
-Example:
-
-``` javascript
-  vile.issue(vile.OK, "filepath")
-```
+Any files that are not ignored globally via `vile.ignore` and have no
+issues are sent along with any reported issues.
 
 ## Versioning
 
@@ -238,6 +218,10 @@ To run compile task with file watch in the background:
 
     npm run dev
 
+
+Note: For development, set `VILE_APP=http://localhost:3000 bin/vile ...` so it
+does not try to publish to `http://vile.io`.
+
 ## Architecture
 
 The core of vile is written in `~ES6` Style [TypeScript](http://www.typescriptlang.org),
@@ -247,6 +231,7 @@ The test code is written in [CoffeeScript](http://coffeescript.org).
 
 ### Directory Structure
 
-- `ruby` - any ruby wrapper related code
 - `src` - typescript lib
-- `lib` - output
+- `lib` - compiled js
+- `ruby` - any ruby wrapper related code
+- `test` - any test related code, written in coffeescript

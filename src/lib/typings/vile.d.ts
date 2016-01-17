@@ -1,6 +1,7 @@
 /// <reference path="bluebird.d.ts" />
 
 declare module Vile {
+  // TODO: add all types of issues to this spec
   export interface Issue {
     type   : string;
     file   : string;

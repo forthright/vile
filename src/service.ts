@@ -5,7 +5,7 @@ module vile {
 let Bluebird : typeof bluebird.Promise = require("bluebird")
 let request : any = require("request")
 let _ : any = require("lodash")
-let fs : any = require("fs")
+let fs = require("fs")
 let path : any = require("path")
 
 const VILE_APP = process.env.VILE_APP || "http://joffrey-baratheon.herokuapp.com"

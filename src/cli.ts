@@ -2,24 +2,23 @@
 
 module vile {
 
-let cli = require("commander")
-let _ = require("lodash")
-let fs = require("fs")
-let path = require("path")
-let vile   : Vile.Lib.Index   = require("./index")
-let util = require("./util")
-let service : Vile.Lib.Service     = require("./service")
+let cli                        = require("commander")
+let _                          = require("lodash")
+let fs                         = require("fs")
+let path                       = require("path")
+let vile    : Vile.Lib.Index   = require("./index")
+let util                       = require("./util")
+let service : Vile.Lib.Service = require("./service")
 let logger  : Vile.Lib.Logger  = require("./logger")
 let config  : Vile.Lib.Config  = require("./config")
 let pkg     : Vile.Lib.Package = require("./../package")
 
-const DEFAULT_VILE_YML = ".vile.yml"
-const DEFAULT_VILE_AUTH_YML = ".vilerc"
+const DEFAULT_VILE_YML         = ".vile.yml"
+const DEFAULT_VILE_AUTH_YML    = ".vilerc"
 
 // TODO: plugin interface
-let parse_plugins = (plugins : string) : Vile.PluginList => {
-  return plugins.split ? plugins.split(",") : undefined
-}
+let parse_plugins = (plugins : string) : Vile.PluginList =>
+  plugins.split ? plugins.split(",") : undefined
 
 let set_log_levels = (logs? : string) => {
   logger.quiet()
@@ -134,11 +133,10 @@ let configure = () => {
   if (no_args()) cli.outputHelp()
 }
 
-let interpret = (argv) => {
-  configure()
-  cli.parse(argv)
-  run(cli)
-}
+let interpret = (argv) =>
+  (configure(),
+    cli.parse(argv),
+      run(cli))
 
 module.exports = {
   interpret: interpret
