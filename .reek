@@ -2,3 +2,4 @@ exclude_paths:
   - node_modules
   - tmp
   - vendor
+  - spec
