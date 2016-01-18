@@ -88,6 +88,12 @@ let to_console = (
   return `${ issue.file }: ${ loc }${ issue.msg }`
 }
 
+let is_displayable = (issue : any) =>
+  _.any(
+    util.warnings.concat(util.errors),
+    (t) => issue.type == t
+  )
+
 let log_plugin_messages = (
   name : string,
   issues : Vile.Issue[] = [],
@@ -98,12 +104,8 @@ let log_plugin_messages = (
   let nlog = logger.create(name)
 
   issues.forEach((issue : Vile.Issue, index : number) => {
-    // TODO: support new issues that extend issue/warning
-    if (issue.type == util.ERROR ||
-        issue.type == util.WARN) {
-      // TODO: lookup/log unknown logs
-      let print : (s : string) => void = nlog[issue.type || "error"]
-      print(to_console(issue))
+    if (is_displayable(issue)) {
+      nlog.error(to_console(issue))
     }
   })
 }
@@ -119,12 +121,10 @@ let require_plugin = (name : string) : Vile.Plugin => {
   }
 }
 
-let failed = (list : Vile.Issue[]) => {
-  return _.select(list,
-    (item : Vile.Issue) =>
-      item.type == util.ERROR || item.type == util.WARN
+let failed = (list : Vile.Issue[]) =>
+  _.select(list,
+    (item : Vile.Issue) => is_displayable(item)
   ).length > 0
-}
 
 let log_plugin = (
   name : string,

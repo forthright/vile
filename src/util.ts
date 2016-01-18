@@ -131,6 +131,18 @@ module.exports = {
   issue: into_issue,
   ignored: is_ignored,
   spawn: spawn,
+  // TODO: map dynamically
+  warnings: [
+    "warning",
+    "style",
+    "maintainability",
+    "duplicate"
+  ],
+  errors: [
+    "error",
+    "security",
+    "dependency"
+  ],
   WARN: "warning",
   STYL: "style",
   MAIN: "maintainability",
