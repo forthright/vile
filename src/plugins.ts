@@ -80,12 +80,12 @@ let humanize_line_num = (issue) : string => {
 let to_console = (
   issue : Vile.Issue
 ) : string => {
-  // TODO handle end of line being different
   let h_line = humanize_line_num(issue)
   let h_char = humanize_line_char(issue)
   let loc = h_line || h_char ?
-    `line ${ h_line || "?" }, col ${ h_char || "?" }, ` : ""
-  return `${ issue.file }: ${ loc }${ issue.msg }`
+    `${ h_line ? "line " + h_line + ", " : "" }` +
+    `${ h_char ? "col " + h_char + ", " : "" }` : ""
+  return `${ issue.path }: ${ loc }${ issue.message }`
 }
 
 let is_displayable = (issue : any) =>
@@ -101,11 +101,13 @@ let log_plugin_messages = (
 ) => {
   if (format == "json") return
 
-  let nlog = logger.create(name)
+  let nlogs = {}
 
   issues.forEach((issue : Vile.Issue, index : number) => {
     if (is_displayable(issue)) {
-      nlog.error(to_console(issue))
+      let t = issue.type
+      if (!nlogs[t]) nlogs[t] = logger.create(t)
+      nlogs[t].error(to_console(issue))
     }
   })
 }
@@ -239,7 +241,11 @@ let into_executed_plugins = (
         .then((issues : Vile.Issue[]) => {
           if (spin) spin.stop(true)
           issues.forEach((issue) => {
-            issue.file = issue.file.replace(process.cwd(), "").replace(/^\/?/, "")
+            if (_.has(issue, "path")) {
+              issue.path = issue.path.replace(process.cwd(), "").replace(/^\/?/, "");
+            } else {
+              issue.path = "?"
+            }
           })
           log_plugin(name, issues, opts.format) // TODO: don't log here
           resolve(issues)

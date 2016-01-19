@@ -3,11 +3,10 @@
 declare module Vile {
   // TODO: add all types of issues to this spec
   export interface Issue {
-    type   : string;
-    file   : string;
-    msg    : string;
-    where  : IssueLocation;
-    data?  : any;
+    type    : string;
+    path    : string;
+    message : string;
+    where   : IssueLocation;
   }
 
   export type IssueList = Issue[]
@@ -15,7 +14,7 @@ declare module Vile {
   export type Result = IssueList | bluebird.Promise<IssueList>
 
   export interface IssueLocation {
-    start : IssueLine;
+    start? : IssueLine;
     end?  : IssueLine;
   }
 
