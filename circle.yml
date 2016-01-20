@@ -5,5 +5,3 @@ machine:
 test:
   override:
     - npm run test-ci-build
-  post:
-    - bundle exec npm run vile
