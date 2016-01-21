@@ -1,7 +1,0 @@
-ruby/.bundle/**
-.bundle/**
-node_modules/**
-haskell/**
-coverage/**
-vendor/**
-.test/**

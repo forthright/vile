@@ -82,13 +82,37 @@ let to_console = (
 ) : string => {
   let h_line = humanize_line_num(issue)
   let h_char = humanize_line_char(issue)
+  let details = _.has(issue, "title") &&
+                issue.message != issue.title ?
+                  `${issue.title} => ${issue.message}` : issue.title
   let loc = h_line || h_char ?
     `${ h_line ? "line " + h_line + ", " : "" }` +
     `${ h_char ? "col " + h_char + ", " : "" }` : ""
-  return `${ issue.path }: ${ loc }${ issue.message }`
+  return `${ issue.path }: ${ loc }${ details }`
 }
 
-let is_displayable = (issue : any) =>
+let to_console_churn = (
+  issue : Vile.Issue
+) => `${ issue.path }: ${ issue.churn }`
+
+let to_console_comp = (
+  issue : Vile.Issue
+) => `${ issue.path }: ${ issue.complexity }`
+
+let to_console_lang = (
+  issue : Vile.Issue
+) => `${ issue.path }: ${ issue.language }`
+
+let to_console_git = (
+  issue : Vile.Issue
+) => {
+  let date = _.get(issue, "commit.commit_date") ||
+              _.get(issue, "commit.author_date")
+  let sha = _.get(issue, "commit.sha")
+  return `${ sha }: ${ date }`
+}
+
+let is_error_or_warn = (issue : any) =>
   _.any(
     util.warnings.concat(util.errors),
     (t) => issue.type == t
@@ -104,10 +128,27 @@ let log_plugin_messages = (
   let nlogs = {}
 
   issues.forEach((issue : Vile.Issue, index : number) => {
-    if (is_displayable(issue)) {
-      let t = issue.type
-      if (!nlogs[t]) nlogs[t] = logger.create(t)
+    let t = issue.type
+    if (!nlogs[t]) nlogs[t] = logger.create(t)
+
+    if (_.any(util.errors, (t) => issue.type == t)) {
       nlogs[t].error(to_console(issue))
+    } else if (_.any(util.warnings, (t) => issue.type == t)) {
+      if (issue.type == util.COMP) {
+        nlogs[t].warn(to_console_comp(issue))
+      } else if (issue.type == util.CHURN) {
+        nlogs[t].warn(to_console_churn(issue))
+      } else {
+        nlogs[t].warn(to_console(issue))
+      }
+    } else {
+      if (issue.type == util.LANG) {
+        nlogs[t].info(to_console_lang(issue))
+      } else if (issue.type == util.GIT) {
+        nlogs[t].info(to_console_git(issue))
+      } else {
+        nlogs[t].info(to_console(issue))
+      }
     }
   })
 }
@@ -125,7 +166,7 @@ let require_plugin = (name : string) : Vile.Plugin => {
 
 let failed = (list : Vile.Issue[]) =>
   _.select(list,
-    (item : Vile.Issue) => is_displayable(item)
+    (item : Vile.Issue) => is_error_or_warn(item)
   ).length > 0
 
 let log_plugin = (

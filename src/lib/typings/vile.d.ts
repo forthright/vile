@@ -3,10 +3,18 @@
 declare module Vile {
   // TODO: add all types of issues to this spec
   export interface Issue {
-    type    : string;
-    path    : string;
-    message : string;
-    where   : IssueLocation;
+    type      : string;
+    path      : string;
+    message   : string;
+    title?    : string;
+    current?  : string;
+    latest?   : string;
+    name?     : string;
+    commit?   : any;
+    language? : string;
+    complexity? : string;
+    churn? : string;
+    where?    : IssueLocation;
   }
 
   export type IssueList = Issue[]
