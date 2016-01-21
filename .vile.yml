@@ -23,6 +23,11 @@ depcheck:
     ignore_dirs: [ ]
     ignore_deps: [ "pryjs", "@brentlintner/*" ]
 
+length:
+  config:
+    file: 120
+    line: 80
+
 coverage:
   config:
     path: coverage/lcov.info
@@ -33,39 +38,31 @@ tslint:
 
 rubycritic:
   config:
-    method_count: 10
-    complexity: 80
-    churn: 20
+    paths: [ "ruby" ]
     rating: "A"
-  ignore: .rcignore
 
 license:
-  config: [
-      "MPL-2.0",
+  config:
+    ignored: [ "tslint" ]
+    disallowed: [ "Apache" ]
+    allowed: [
       "MIT",
-      "MIT*",
-      "The MIT License",
-      "MIT License",
+      "MPL",
+      "MPL-2.0",
       "Public Domain",
       "PSF",
       "BSD",
-      "BSD*",
-      "BSD-like",
-      "APACHEv2",
-      "Unlicense",
       "BSD-3-Clause",
       "BSD-2-Clause",
-      "BSD-3-Clause AND MIT",
+      "Unlicense",
       "Artistic-2.0",
-      "(BSD-2-Clause OR MIT OR Apache-2.0)",
       "ISC",
       "WTFPL",
-      "(BSD-2-Clause OR WTFPL)",
-      "Apache2",
       "Apache",
-      "Apache*",
-      "Apache License 2.0",
-      "Apache 2.0",
       "Apache-2.0",
-      "WTFPL"
+      "Apache 2.0",
+      "Apache*",
+      "Apachev2",
+      "WTFPL",
+      "GPL"
     ]
