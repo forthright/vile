@@ -25,33 +25,65 @@ let set_log_levels = (logs? : string) => {
   if (logs.split) logs.split(",").forEach(logger.level)
 }
 
-let punish = (plugins, opts : any = {}) => {
+let padded_file_score = (score : number) =>
+  (score < 100 ? " " : "") + String(score) + "%"
+
+let log_vileio_summary = (log : any, info : any, verbose : boolean) => {
+  // HACK
+  let score : number = _.get(info, "score")
+  let files : any[] = _.get(info, "files")
+  let new_issues : number = _.get(info, "new_issues")
+  let review_url : string = _.get(info, "review_url")
+
+  if (verbose)
+    _.each(files, (file : any) =>
+      log.info(`${padded_file_score(_.get(file, "score"))} => ` +
+               `${_.get(file, "path")}`))
+
+  log.info()
+  log.info(`Score: ${score}%`)
+  log.info(`New Issues: ${new_issues}`)
+  log.info(review_url)
+}
+
+let publish = (issues : Vile.IssueList, opts : any) => {
+  config.load_auth(path.join(process.cwd(), DEFAULT_VILE_AUTH_YML))
+  let log = logger.create("vile.io")
+
+  return service
+    .commit(issues, config.get_auth())
+    .then((http) => {
+      if (_.get(http, "response.statusCode") == 200) {
+        log_vileio_summary(
+          log,
+          _.attempt(JSON.parse.bind(null, http.body)),
+          opts.scores
+        )
+      } else {
+        log.error(http.body)
+      }
+    })
+    .catch((err) => {
+      console.log() // newline because spinner is running
+      log.error(err.stack || err)
+    })
+}
+
+let punish = (app : any) => {
+  let plugins : string = app.punish
+
+  // TODO: not ideal to mutate the app
+  _.merge(app, {
+    spinner: !(app.quiet || app.nodecorations),
+    config: config.get()
+  })
+
   vile
-    // TODO: don't like opts here
-    .exec(parse_plugins(plugins), opts.config, opts)
+    .exec(parse_plugins(plugins), app.config, app)
     .then((issues : Vile.IssueList) => {
-      if (opts.deploy) {
-        config.load_auth(path.join(process.cwd(), DEFAULT_VILE_AUTH_YML))
-        let log = logger.create("vile.io")
-
-        return service
-          .commit(issues, config.get_auth())
-          .then((http) => {
-            if (_.get(http, "response.statusCode") == 200) {
-              log.info(http.body)
-            } else {
-              log.error(http.body)
-            }
-          })
-          .catch((err) => {
-            console.log() // newline because spinner is running
-            log.error(err.stack || err)
-          })
-      }
-
-      if (opts.format == "json") {
+      if (app.deploy) return publish(issues, app)
+      if (app.format == "json")
         process.stdout.write(JSON.stringify(issues))
-      }
     })
 }
 
@@ -86,23 +118,10 @@ let authenticate = () => {
 let run = (app) => {
   if (app.authenticate) return authenticate()
   if (app.verbose) logger.verbose(true)
-  if (app.quiet) logger.quiet()
-
-  load_config(app)
-
+  if (app.quiet || app.format == "json") logger.quiet()
   if (app.log) set_log_levels(app.log)
-
-  if (app.punish) {
-    // HACK! TODO
-    if (app.format == "json") logger.quiet()
-
-    punish(app.punish, {
-      format: app.format,
-      spinner: !(app.quiet || app["nodecorations"]),
-      deploy: app.deploy,
-      config: config.get()
-    })
-  }
+  load_config(app)
+  if (app.punish) punish(app)
 }
 
 let no_args = () : boolean => !process.argv.slice(2).length
@@ -128,6 +147,8 @@ let configure = () => {
             "authenticate with vile.io")
     .option("-d, --deploy",
             "publish to vile.io")
+    .option("-s, --scores",
+            "show file scores and detailed stats")
     .option("--nodecorations", "disable color and progress bar")
 
   if (no_args()) cli.outputHelp()

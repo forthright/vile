@@ -14,7 +14,7 @@ let log = logger.create("util")
 Bluebird.promisifyAll(fs)
 
 let log_error = (e : NodeJS.ErrnoException) => {
-  console.log()
+  console.log(e)
 }
 
 // TODO: figure out an ideal ignore system
@@ -36,17 +36,14 @@ let is_ignored = (
 
 // TODO: make io async
 let collect_files = (target, allowed) : string[] => {
-  // TODO HACK Plugins should be encouraged to ignore directories
-  //      Need to give dir/file type on promise_each allow
-  if (!/node_modules|bower_components|\.git/i.test(target) &&
-      fs.statSync(target).isDirectory()) {
+  let rel_path = path.relative(process.cwd(), target)
+  if (!allowed(rel_path)) return
+
+  if (fs.statSync(target).isDirectory()) {
     return _.flatten(fs.readdirSync(target).map((subpath) => {
       return collect_files(path.join(target, subpath), allowed)
     }))
-  } else {
-    let rel_path = path.relative(process.cwd(), target)
-    if (allowed(rel_path)) return [rel_path]
-  }
+  } else { return [ rel_path ] }
 }
 
 // TODO: better typing
@@ -131,6 +128,8 @@ module.exports = {
   issue: into_issue,
   ignored: is_ignored,
   spawn: spawn,
+
+  OK: "ok",
 
   WARN: "warning",
   STYL: "style",

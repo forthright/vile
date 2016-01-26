@@ -11,6 +11,7 @@ let _ = require("lodash")
 let string = require("string-padder")
 let spinner = require("cli-spinner")
 let Spinner = spinner.Spinner
+let ignore = require("ignore-file")
 let logger = require("./logger")
 let util = require("./util")
 let log = logger.create("plugin")
@@ -258,7 +259,7 @@ let into_executed_plugins = (
   return new Bluebird((resolve : any, reject) : any => {
     if (!plugin_is_allowed(name, allowed)) return resolve([])
 
-    let vile_ignore : Vile.PluginList = _.get(config, "vile.ignore", [])
+    let vile_ignore : string[] = _.get(config, "vile.ignore", [])
     let plugin_config : any = config[name] || {}
 
     if (!plugin_config.ignore) {
@@ -316,6 +317,22 @@ let into_executed_plugins = (
   })
 }
 
+let add_ok_issues = (vile_ignore : any) =>
+  (issues : Vile.IssueList) =>
+    util.promise_each(
+      process.cwd(),
+      // TODO: don't compile ignore every time
+      (p) => !util.ignored(p, vile_ignore),
+      (filepath) => util.issue({
+        type: util.OK,
+        path: filepath
+      }),
+      { read_data: false })
+    .then((ok_issues : Vile.IssueList) =>
+      _.reject(ok_issues, (issue : Vile.Issue) =>
+        _.any(issues, (i) => i.path == issue.path)
+      ).concat(issues))
+
 let cwd_plugins_path = () =>
   path.resolve(path.join(process.cwd(), "node_modules", "@brentlintner"))
 
@@ -336,6 +353,7 @@ let run_plugins = (
     .filter(is_plugin)
     .map(into_executed_plugins(plugins, config, opts), { concurrency: 1 })
     .then(_.flatten)
+    .then(add_ok_issues(app_config.ignore))
     .catch(error_executing_plugins)
 }
 

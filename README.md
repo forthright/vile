@@ -34,7 +34,7 @@ There is also a ruby [gem](ruby/) you can install manually (for now).
 ```javascript
 require("vile")
   .exec()
-  .then((issues) => { })
+  .then((issues) => {...})
 ```
 
 You can also do more complex things:
@@ -90,7 +90,7 @@ some_plugin:
 
 Then include it when punishing:
 
-    vile --punish --config
+    vile --config --punish
 
 Or, more tersely:
 
@@ -99,6 +99,14 @@ Or, more tersely:
 You can also run specific plugins with your config:
 
     vile -cp eslint
+
+Or specify a list in your config:
+
+
+```yml
+vile:
+  plugins: [ "eslint" ]
+```
 
 ### Ignoring Files
 
