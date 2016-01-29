@@ -2,7 +2,7 @@
 
 module vile {
 
-let Bluebird : typeof bluebird.Promise = require("bluebird")
+let Bluebird : typeof Promise = require("bluebird")
 let request : any = require("request")
 let _ : any = require("lodash")
 let fs = require("fs")

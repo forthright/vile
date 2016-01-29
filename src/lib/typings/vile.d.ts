@@ -1,5 +1,3 @@
-/// <reference path="bluebird.d.ts" />
-
 declare module Vile {
   // TODO: add all types of issues to this spec
   export interface Issue {
@@ -11,6 +9,7 @@ declare module Vile {
     latest?   : string;
     name?     : string;
     commit?   : any;
+    plugin?   : string;
     language? : string;
     complexity? : string;
     churn? : string;
@@ -19,7 +18,7 @@ declare module Vile {
 
   export type IssueList = Issue[]
 
-  export type Result = IssueList | bluebird.Promise<IssueList>
+  export type Result = IssueList | Promise<IssueList>
 
   export interface IssueLocation {
     start? : IssueLine;
@@ -73,7 +72,7 @@ declare module Vile {
         p : PluginList,
         config : YMLConfig,
         opts : any
-      ) => bluebird.Promise<IssueList>;
+      ) => Promise<IssueList>;
     }
 
     export interface Logger {
@@ -87,7 +86,7 @@ declare module Vile {
       commit : (
         issues : IssueList,
         auth_config : AuthConfig
-      ) => bluebird.Promise<any>;
+      ) => Promise<any>;
     }
   }
 }
