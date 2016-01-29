@@ -8,7 +8,6 @@ let path = require("path")
 let cluster = require("cluster")
 let os = require("os")
 let _ = require("lodash")
-let uuid = require("uuid")
 // TODO: don't hardcode padding lower in module
 let string = require("string-padder")
 let spinner = require("cli-spinner")
