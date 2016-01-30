@@ -84,7 +84,7 @@
     "@brentlintner/vile-rubocop": "^0.1.0",
     "@brentlintner/vile-rubycritic": "^0.1.2",
     "@brentlintner/vile-semver": "^0.1.1",
-    "@brentlintner/vile-tslint": "^0.2.5",
+    "@brentlintner/vile-tslint": "^0.2.6",
     "@brentlintner/vile-whitespace": "^0.1.0",
     "babel": "^5.8.29",
     "chai": "^3.4.1",
