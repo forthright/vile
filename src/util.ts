@@ -9,7 +9,11 @@ let _ = require("lodash")
 let Bluebird : typeof bluebird.Promise = require("bluebird")
 let ignore = require("ignore-file")
 let logger = require("./logger")
+let config  : Vile.Lib.Config = require("./config")
 let log = logger.create("util")
+
+// TODO: make a constants file or something
+const DEFAULT_VILE_YML         = ".vile.yml"
 
 Bluebird.promisifyAll(fs)
 
@@ -17,16 +21,25 @@ let log_error = (e : NodeJS.ErrnoException) => {
   console.log(e)
 }
 
-// TODO: figure out an ideal ignore system
-//       make it work with ignore-file?
 let is_ignored = (
   filepath : string,
-  ignore_list : Vile.IgnoreList = []
+  ignore_config : any = []
 ) : boolean => {
   let ignored : (a : string) => boolean
 
-  if (ignore_list) {
-    ignored = ignore.compile(ignore_list.join("\n"))
+  if (!ignore_config) {
+    let conf : any = config.get()
+    // HACK: this is fragile, perhaps config should be in this module
+    ignore_config = conf == {} ? _.get(
+      config.load(DEFAULT_VILE_YML),
+      "vile.ignore"
+    ) : conf
+  }
+
+  if (ignore_config) {
+    ignored = typeof ignore_config == "string" ?
+      ignore.sync(ignore_config) :
+      ignore.compile(ignore_config.join("\n"))
   } else {
     ignored = () => false
   }
@@ -36,10 +49,13 @@ let is_ignored = (
 
 // TODO: make io async
 let collect_files = (target, allowed) : string[] => {
-  let rel_path = path.relative(process.cwd(), target)
-  if (!allowed(rel_path)) return
+  let at_root = !path.relative(process.cwd(), target)
+  let rel_path = at_root ? target : path.relative(process.cwd(), target)
+  let is_dir = fs.statSync(rel_path).isDirectory();
 
-  if (fs.statSync(target).isDirectory()) {
+  if (!at_root && !allowed(rel_path, is_dir)) return;
+
+  if (is_dir) {
     return _.flatten(fs.readdirSync(target).map((subpath) => {
       return collect_files(path.join(target, subpath), allowed)
     }))
@@ -85,7 +101,7 @@ let spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
 // TODO: check for app specific ignore (to ignore files plugin ignores)
 let promise_each_file = (
   dirpath : string,
-  allow : (a : string) => boolean,
+  allow : (file_or_dir_path : string, is_dir : boolean) => boolean,
   parse_file : (file : string, data? : string) => void,
   opts : any = {}
 ) : bluebird.Promise<any> => {

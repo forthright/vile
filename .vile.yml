@@ -34,7 +34,6 @@ coverage:
 
 tslint:
   config: tslint.json
-  ignore: .tslintignore
 
 rubycritic:
   config:
@@ -44,7 +43,7 @@ rubycritic:
 license:
   config:
     ignored: [ "tslint" ]
-    disallowed: [ "Apache" ]
+    disallowed: [ ]
     allowed: [
       "MIT",
       "MPL",
