@@ -343,14 +343,14 @@ let execute_plugins = (
           .then((issues : Vile.Issue[]) =>
             (normalize_paths(issues), issues))
           .catch((err) => {
-            if (spin) spin.stop()
+            if (spin) spin.stop(true)
             log.error(err.stack || err)
             reject(err)
           })
       }, { concurrency: concurrency })
       .then(_.flatten)
       .then((issues : Vile.Issue[]) => {
-        if (spin) spin.stop()
+        if (spin) spin.stop(true)
         if (opts.format != "json") log_issues(plugins, issues)
         resolve(issues)
       })
