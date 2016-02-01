@@ -23,7 +23,7 @@ let log_error = (e : NodeJS.ErrnoException) => {
 
 let is_ignored = (
   filepath : string,
-  ignore_config : any = []
+  ignore_config : any
 ) : boolean => {
   let ignored : (a : string) => boolean
 
