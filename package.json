@@ -70,7 +70,7 @@
   "devDependencies": {
     "@brentlintner/vile": "^0.5.7",
     "@brentlintner/vile-coffeelint": "^0.1.2",
-    "@brentlintner/vile-comment": "^0.1.2",
+    "@brentlintner/vile-comment": "^0.1.4",
     "@brentlintner/vile-depcheck": "^0.1.0",
     "@brentlintner/vile-eclint": "^0.1.0",
     "@brentlintner/vile-eslint": "^0.1.0",
