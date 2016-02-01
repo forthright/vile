@@ -112,8 +112,16 @@ vile:
 
 The `vile.ignore` (and plugin specific) setting is a list of items to ignore.
 
-At the moment, each plugin is responsible for matching.
-Most make use of [ignore-file](https://github.com/mafintosh/ignore-file).
+If a plugin specifies its own `ignore` list, then it will be merged into
+`vile.ignore` and passed to the respective plugin when it is run.
+
+At the moment, each plugin is responsible for matching against
+the provided ignore list.
+
+However, you can use the `vile.ignored("path", ignore_list)` library
+method to do the matching for you.
+
+For reference, [ignore-file](https://github.com/mafintosh/ignore-file) is currently used for matching.
 
 ## Publishing
 
@@ -144,13 +152,14 @@ You can set the logging level if needed.
 ## Creating A Plugin
 
 A plugin should be prefixed with `vile-`, and
-have a `commonjs` module that exports a `punish` method.
+have a `commonjs` module that exports a `punish` method,
+which should return an array of issues,
+or a promise that resolves into one.
 
 ```javascript
 module.exports = {
-  punish: function (plugin_config) {
-    return [issues] || a_promise_that_resolves_to_array_of_issues;
-  }
+  punish: (plugin_config) =>
+    [issues] || a_promise_that_resolves_to_array_of_issues
 }
 ```
 
