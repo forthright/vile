@@ -8,7 +8,8 @@ let _ : any = require("lodash")
 let fs = require("fs")
 let path : any = require("path")
 
-const VILE_APP = process.env.VILE_APP || "http://joffrey-baratheon.herokuapp.com"
+const PRODUCTON_URL = "http://joffrey-baratheon.herokuapp.com"
+const VILE_APP = process.env.VILE_APP || PRODUCTON_URL
 
 let commit = (issues, auth) =>
   new Bluebird((resolve, reject) => {

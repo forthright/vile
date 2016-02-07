@@ -5,7 +5,7 @@ vile:
       ".test",
       ".git",
       "tags",
-      "lib",
+      "/lib",
       "coverage",
       "typings",
       "tmp",

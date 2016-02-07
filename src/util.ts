@@ -147,6 +147,16 @@ module.exports = {
 
   OK: "ok",
 
+  displayable_issues: [
+    "warning",
+    "style",
+    "maintainability",
+    "duplicate",
+    "error",
+    "security",
+    "dependency"
+  ],
+
   WARN: "warning",
   STYL: "style",
   MAIN: "maintainability",

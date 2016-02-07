@@ -1,24 +1,32 @@
 declare module Vile {
-  // TODO: add all types of issues to this spec
+  // TODO: make issue sub type defs
   export interface Issue {
-    type      : string;
-    path      : string;
-    message   : string;
-    title?    : string;
-    current?  : string;
-    latest?   : string;
-    name?     : string;
-    commit?   : any;
-    plugin?   : string;
-    language? : string;
+    type        : string;
+    path        : string;
+    message     : string;
+    title?      : string;
+    name?       : string;
+    commit?     : any;
+    dependency? : any;
+    security?   : any;
+    plugin?     : string;
+    snippet?    : Snippet[];
+    language?   : string;
     complexity? : string;
-    churn? : string;
-    where?    : IssueLocation;
+    churn?      : string;
+    where?      : IssueLocation;
   }
 
   export type IssueList = Issue[]
 
   export type Result = IssueList | Promise<IssueList>
+
+  export interface Snippet {
+    offset : number;
+    line   : number;
+    text   : string;
+    ending : string;
+  }
 
   export interface IssueLocation {
     start? : IssueLine;

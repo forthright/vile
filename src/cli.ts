@@ -149,6 +149,8 @@ let configure = () => {
             "publish to vile.io")
     .option("-s, --scores",
             "show file scores and detailed stats")
+    .option("-i, --snippets",
+            "add code snippets to issues")
     .option("--nodecorations", "disable color and progress bar")
 
   if (no_args()) cli.outputHelp()

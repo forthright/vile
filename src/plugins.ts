@@ -7,6 +7,7 @@ let fs = require("fs")
 let path = require("path")
 let cluster = require("cluster")
 let os = require("os")
+let linez = require("linez")
 let _ = require("lodash")
 // TODO: don't hardcode padding lower in module
 let string = require("string-padder")
@@ -360,7 +361,41 @@ let execute_plugins = (
     }
   })
 
-let add_ok_issues = (vile_ignore : any) =>
+// HACK: only open file once for line parsing
+// HACK: this method needs to be refactored
+let add_code_snippets = (vile_ignore : Vile.IgnoreList = []) =>
+  (issues : Vile.IssueList) =>
+    (<any>Bluebird).map(issues, (issue : Vile.Issue) => {
+      let start = Number(_.get(issue, "where.start.line", 0))
+      let end = Number(_.get(issue, "where.end.line", start))
+      if (_.any(util.displayable_issues, (t) => t == issue.type) &&
+         _.has(issue, "path") && fs.statSync(issue.path).isFile()) {
+        return fs.readFileAsync(path.join(process.cwd(), issue.path), "utf-8")
+          .then((data) => {
+            if (start === 0 && end === start) return issue
+
+            let lines = linez(data).lines
+
+            issue.snippet = lines.reduce((snippets, line, num) => {
+              if ((num > (start - 4) && num < (end + 2))) {
+                snippets.push({
+                  offset: _.get(line, "offset"),
+                  line: _.get(line, "number"),
+                  text: _.get(line, "text", " "),
+                  ending: _.get(line, "ending")
+                })
+              }
+              return snippets
+            }, [])
+
+            return issue
+          })
+      } else {
+        return issue
+      }
+    })
+
+let add_ok_issues = (vile_ignore : Vile.IgnoreList = []) =>
   (issues : Vile.IssueList) =>
     util.promise_each(
       process.cwd(),
@@ -382,24 +417,26 @@ let add_ok_issues = (vile_ignore : any) =>
 let cwd_plugins_path = () =>
   path.resolve(path.join(process.cwd(), "node_modules", "@brentlintner"))
 
+let passthrough = (value : any) => value
+
 let run_plugins = (
   custom_plugins : Vile.PluginList = [],
   config : Vile.YMLConfig = {},
   opts : any = {}
 ) : bluebird.Promise<Vile.IssueList> => {
   let app_config = _.get(config, "vile", {})
-
+  let ignore = _.get(app_config, "ignore")
   let plugins : Vile.PluginList = custom_plugins
 
-  // TODO: merge custom_list with config.plugins
-  if (custom_plugins.length == 0 && app_config.plugins) {
-    plugins = app_config.plugins
+  if (app_config.plugins) {
+    plugins = _.uniq(plugins.concat(app_config.plugins))
   }
 
   return fs.readdirAsync(cwd_plugins_path())
     .filter(is_plugin)
     .then(execute_plugins(plugins, config, opts))
-    .then(add_ok_issues(app_config.ignore))
+    .then(opts.snippets ? add_code_snippets(ignore) : passthrough)
+    .then(add_ok_issues(ignore))
     .catch(error_executing_plugins)
 }
 
