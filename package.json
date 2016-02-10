@@ -26,7 +26,7 @@
     "test": "bin/test",
     "test-cov": "bin/test-cov",
     "test-ci-build": "bin/test-ci-build",
-    "vile": "vile -cpsd --nodecorations"
+    "vile": "vile -cpisd --nodecorations"
   },
   "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
@@ -69,7 +69,7 @@
     "string-padder": "^1.0.3"
   },
   "devDependencies": {
-    "@brentlintner/vile": "^0.5.10",
+    "@brentlintner/vile": "^0.5.11",
     "@brentlintner/vile-coffeelint": "^0.1.3",
     "@brentlintner/vile-comment": "^0.1.4",
     "@brentlintner/vile-depcheck": "^0.1.0",
