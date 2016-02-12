@@ -324,12 +324,15 @@ let execute_plugins = (
       }
 
       let spin
+      let workers = {}
       let plugin_count : number = plugins.length
       let concurrency : number = os.cpus().length || 1
 
       cluster.on("fork", (worker) => {
         if (spin) spin.stop(true)
-        log.info(`multitasking (${worker.id}/${plugin_count})`)
+        log.info(
+          `multitasking ${workers[worker.id]} ` +
+          `(${worker.id}/${plugin_count})`)
         if (spin) spin.start()
       })
 
@@ -340,7 +343,9 @@ let execute_plugins = (
       }
 
       (<any>Bluebird).map(plugins, (plugin : string) => {
-        return run_plugins_in_fork([ plugin ], config, cluster.fork())
+        let worker = cluster.fork()
+        workers[worker.id] = plugin.replace("vile-", "")
+        return run_plugins_in_fork([ plugin ], config, worker)
           .then((issues : Vile.Issue[]) =>
             (normalize_paths(issues), issues))
           .catch((err) => {
