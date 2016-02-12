@@ -26,7 +26,7 @@ There is also a ruby [gem](ruby/) you can install manually (for now).
 
 #### Node CLI
 
-    npm install -g @brentlintner/vile
+    npm install -g @forthright/vile
     vile --help
 
 #### Node API
@@ -62,7 +62,7 @@ To get started, install a plugin package in your project root:
 Example, install the `eslint` plugin:
 
     cd into_my_project
-    npm install @brentlintner/vile-eslint
+    npm install @forthright/vile-eslint
 
 Then just run:
 

@@ -157,7 +157,7 @@ let require_plugin = (name : string) : Vile.Plugin => {
   let cwd_node_modules = process.cwd() + "/node_modules"
 
   try {
-    return require(`${cwd_node_modules}/@brentlintner/vile-${name}`)
+    return require(`${cwd_node_modules}/@forthright/vile-${name}`)
   } catch (e) {
     log.error(failed_message(name))
     log_error(e)
@@ -420,7 +420,7 @@ let add_ok_issues = (vile_ignore : Vile.IgnoreList = []) =>
 
 
 let cwd_plugins_path = () =>
-  path.resolve(path.join(process.cwd(), "node_modules", "@brentlintner"))
+  path.resolve(path.join(process.cwd(), "node_modules", "@forthright"))
 
 let passthrough = (value : any) => value
 
