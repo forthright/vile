@@ -1,5 +1,7 @@
 # vile [![Circle CI](https://circleci.com/gh/brentlintner/vile.svg?style=svg&circle-token=76807e9cc864afc2d2af7db4c744a0eae8b9fc00)](https://circleci.com/gh/brentlintner/vile)
 
+[![score-badge](http://joffrey-baratheon.herokuapp.com/brentlintner/vile/badges/score?token=4_y-Kus1bunceBtsraA7)](http://joffrey-baratheon.herokuapp.com/brentlintner/vile) [![security-badge](http://joffrey-baratheon.herokuapp.com/brentlintner/vile/badges/security?token=4_y-Kus1bunceBtsraA7)](http://joffrey-baratheon.herokuapp.com/brentlintner/vile) [![coverage-badge](http://joffrey-baratheon.herokuapp.com/brentlintner/vile/badges/coverage?token=4_y-Kus1bunceBtsraA7)](http://joffrey-baratheon.herokuapp.com/brentlintner/vile) [![dependency-badge](http://joffrey-baratheon.herokuapp.com/brentlintner/vile/badges/dependency?token=4_y-Kus1bunceBtsraA7)](http://joffrey-baratheon.herokuapp.com/brentlintner/vile)
+
 A punishing, yet easy to use tool for writing insightful code.
 
 It can be used to run all types of analysis and checks via one top level package.
