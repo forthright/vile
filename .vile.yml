@@ -21,7 +21,7 @@ depcheck:
   config:
     ignore_dev_deps: false
     ignore_dirs: [ ]
-    ignore_deps: [ "pryjs", "@brentlintner/*" ]
+    ignore_deps: [ "pryjs", "@forthright/*" ]
 
 length:
   config:
