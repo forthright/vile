@@ -163,6 +163,7 @@ module.exports = {
   COMP: "complexity",
   CHURN: "churn",
   DUPE: "duplicate",
+  DEP: "dependency",
   // TODO: map dynamically
   warnings: [
     "warning",
@@ -170,16 +171,15 @@ module.exports = {
     "maintainability",
     "complexity",
     "churn",
-    "duplicate"
+    "duplicate",
+    "dependency"
   ],
 
   ERR: "error",
   SEC: "security",
-  DEP: "dependency",
   errors: [
     "error",
-    "security",
-    "dependency"
+    "security"
   ],
 
   STAT: "stat",
