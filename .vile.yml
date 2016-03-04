@@ -1,10 +1,12 @@
 vile:
+  allow: []
   ignore: [
       "node_modules",
       ".build",
       ".test",
       ".git",
       "tags",
+      "tsconfig.json",
       "/lib",
       "coverage",
       "typings",
@@ -21,12 +23,23 @@ depcheck:
   config:
     ignore_dev_deps: false
     ignore_dirs: [ ]
-    ignore_deps: [ "pryjs", "@forthright/*" ]
+    ignore_deps: [
+        "mocha",
+        "babel-cli",
+        "coffee-script",
+        "istanbul",
+        "release-it",
+        "typescript",
+        "wrench",
+        "pryjs",
+        "@forthright/*"
+      ]
 
 length:
   config:
     file: 120
     line: 80
+  ignore: [ "test" ]
 
 coverage:
   config:
@@ -34,11 +47,6 @@ coverage:
 
 tslint:
   config: tslint.json
-
-rubycritic:
-  config:
-    paths: [ "ruby" ]
-    rating: "A"
 
 license:
   config:

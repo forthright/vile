@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-tsc -w --target es6 --outDir .build src/*.ts &
+tsc -w -t es6 -m commonjs --moduleResolution node --outDir .build src/**.ts &
 sleep 2
 babel -w -d lib -m common --compact false .build &
 sleep 2

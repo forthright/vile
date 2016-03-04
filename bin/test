@@ -1,2 +1,31 @@
 #!/usr/bin/env node
-require('./../.test/runner').run()
+var path = require("path")
+var wrench = require("wrench")
+var Mocha = require("mocha")
+var specs = path.join(__dirname, "..", ".test")
+
+function find(spec_type) {
+  return wrench
+    .readdirSyncRecursive(path.join(specs, spec_type))
+    .map(function(p) {
+      return path.resolve(path.join(specs, spec_type, p))
+    })
+}
+
+function all_specs() {
+  return find("unit")
+    .concat(find("integration"))
+    .concat(find("system"))
+}
+
+function run() {
+  var runner = new Mocha({
+    ui: "bdd",
+    reporter: "spec",
+    timeout: 10000
+  })
+  runner.files = find("unit")
+  return runner.run(process.exit)
+}
+
+run()

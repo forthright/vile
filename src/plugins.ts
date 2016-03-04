@@ -1,45 +1,43 @@
 /// <reference path="lib/typings/index.d.ts" />
 
-module vile {
-
-let Bluebird : typeof bluebird.Promise = require("bluebird")
-let fs = require("fs")
-let path = require("path")
-let cluster = require("cluster")
-let os = require("os")
-let linez = require("linez")
-let _ = require("lodash")
+var Bluebird : typeof bluebird.Promise = require("bluebird")
+var fs = require("fs")
+var path = require("path")
+var cluster = require("cluster")
+var os = require("os")
+var linez = require("linez")
+var _ = require("lodash")
 // TODO: don't hardcode padding lower in module
-let string = require("string-padder")
-let spinner = require("cli-spinner")
-let Spinner = spinner.Spinner
-let ignore = require("ignore-file")
-let logger = require("./logger")
-let util = require("./util")
-let log = logger.create("plugin")
+var string = require("string-padder")
+var spinner = require("cli-spinner")
+var Spinner = spinner.Spinner
+var ignore = require("ignore-file")
+var logger : Vile.Lib.Logger  = require("./logger")
+var util = require("./util")
+var log = logger.create("plugin")
 
 Bluebird.promisifyAll(fs)
 
-let is_plugin = (name) => /^vile-/.test(name)
+var is_plugin = (name) => /^vile-/.test(name)
 
-let valid_plugin = (api) => api && typeof api.punish == "function"
+var valid_plugin = (api) => api && typeof api.punish == "function"
 
-let is_array = (list) => list && typeof list.forEach == "function"
+var is_array = (list) => list && typeof list.forEach == "function"
 
-let is_promise = (list) => list && typeof list.then == "function"
+var is_promise = (list) => list && typeof list.then == "function"
 
-let pad_right = (num, txt="") => string.padRight(txt, num, " ")
+var pad_right = (num, txt="") => string.padRight(txt, num, " ")
 
-let failed_message = (txt) => `${pad_right(16, txt)}FAIL`
+var failed_message = (txt) => `${pad_right(16, txt)}FAIL`
 
-let passed_message = (txt) => `${pad_right(16, txt)}PASS`
+var passed_message = (txt) => `${pad_right(16, txt)}PASS`
 
-let log_error = (e : NodeJS.ErrnoException) => {
+var log_error = (e : NodeJS.ErrnoException) => {
   console.log()
   log.error(e.stack || e)
 }
 
-let error_executing_plugins = (err : NodeJS.ErrnoException) => {
+var error_executing_plugins = (err : NodeJS.ErrnoException) => {
   log.error("Error executing plugins")
   log.error(err.stack || err)
   process.exit(1)
@@ -48,7 +46,7 @@ let error_executing_plugins = (err : NodeJS.ErrnoException) => {
 // TODO: DRY both methods
 // TODO: move logging out of plugins?
 
-let humanize_line_char = (issue : Vile.Issue) : string => {
+var humanize_line_char = (issue : Vile.Issue) : string => {
   let start : Vile.IssueLine = _.get(issue, "where.start", {})
   let end : Vile.IssueLine = _.get(issue, "where.end", {})
 
@@ -64,7 +62,7 @@ let humanize_line_char = (issue : Vile.Issue) : string => {
     `${start_character}${end_character}` : start_character
 }
 
-let humanize_line_num = (issue) : string => {
+var humanize_line_num = (issue) : string => {
   let start : Vile.IssueLine = _.get(issue, "where.start", {})
   let end : Vile.IssueLine = _.get(issue, "where.end", {})
 
@@ -80,7 +78,7 @@ let humanize_line_num = (issue) : string => {
     `${start_line}${end_line}` : start_line
 }
 
-let to_console = (
+var to_console = (
   issue : Vile.Issue
 ) : string => {
   let h_line = humanize_line_num(issue)
@@ -94,19 +92,19 @@ let to_console = (
   return `${ issue.path }: ${ loc }${ details }`
 }
 
-let to_console_churn = (
+var to_console_churn = (
   issue : Vile.Issue
 ) => `${ issue.path }: ${ issue.churn }`
 
-let to_console_comp = (
+var to_console_comp = (
   issue : Vile.Issue
 ) => `${ issue.path }: ${ issue.complexity }`
 
-let to_console_lang = (
+var to_console_lang = (
   issue : Vile.Issue
 ) => `${ issue.path }: ${ issue.language }`
 
-let to_console_git = (
+var to_console_git = (
   issue : Vile.Issue
 ) => {
   let date = _.get(issue, "commit.commit_date") ||
@@ -115,12 +113,12 @@ let to_console_git = (
   return `${ sha }: ${ date }`
 }
 
-let is_error_or_warn = (issue : any) =>
+var is_error_or_warn = (issue : any) =>
   _.any(
     util.warnings.concat(util.errors),
     (t) => issue.type == t)
 
-let log_issue_messages = (
+var log_issue_messages = (
   issues : Vile.Issue[] = []
 ) => {
   let nlogs = {}
@@ -153,7 +151,7 @@ let log_issue_messages = (
   })
 }
 
-let require_plugin = (name : string) : Vile.Plugin => {
+var require_plugin = (name : string) : Vile.Plugin => {
   let cwd_node_modules = process.cwd() + "/node_modules"
 
   try {
@@ -164,11 +162,11 @@ let require_plugin = (name : string) : Vile.Plugin => {
   }
 }
 
-let failed = (name : string, list : Vile.Issue[]) =>
+var failed = (name : string, list : Vile.Issue[]) =>
   _.any(list, (item : Vile.Issue) =>
     item.plugin = name && is_error_or_warn(item))
 
-let log_issues = (
+var log_issues = (
   plugins : string[],
   issues : Vile.Issue[] = []
 ) => {
@@ -182,11 +180,11 @@ let log_issues = (
   })
 }
 
-let map_plugin_name_to_issues = (name : string) => (issues : Vile.Issue[]) =>
+var map_plugin_name_to_issues = (name : string) => (issues : Vile.Issue[]) =>
   _.map(issues, (issue : Vile.Issue) =>
     (issue.plugin = name, issue))
 
-let run_plugin = (
+var run_plugin = (
   name : string,
   config : Vile.PluginConfig = {
     config: {},
@@ -215,7 +213,7 @@ let run_plugin = (
     }
   })
 
-let run_plugins_in_fork = (
+var run_plugins_in_fork = (
   plugins : string[],
   config : Vile.YMLConfig,
   worker : any
@@ -247,7 +245,7 @@ let run_plugins_in_fork = (
     })
   })
 
-let normalize_paths = (issues) =>
+var normalize_paths = (issues) =>
   _.each(issues, (issue) => {
     if (_.has(issue, "path")) {
       issue.path = issue.path
@@ -256,23 +254,31 @@ let normalize_paths = (issues) =>
     }
   })
 
-let get_plugin_config = (name : string, config : Vile.YMLConfig) => {
-  let plugin_config : any = config[name] || {}
+var get_plugin_config = (name : string, config : Vile.YMLConfig) => {
+  let plugin_config : any = _.get(config, name, {})
   let vile_ignore : string[] = _.get(config, "vile.ignore", [])
+  let vile_allow : string[] = _.get(config, "vile.allow", [])
 
-  if (!plugin_config.ignore) {
+  // TODO: dupe code below
+
+  if (_.isEmpty(plugin_config.ignore)) {
     plugin_config.ignore = vile_ignore
   } else if (is_array(plugin_config.ignore)) {
     plugin_config.ignore = _.uniq(plugin_config.ignore.concat(vile_ignore))
   }
 
+  if (_.isEmpty(plugin_config.allow)) {
+    plugin_config.allow = vile_allow
+  } else if (is_array(plugin_config.allow)) {
+    plugin_config.allow = _.uniq(plugin_config.allow.concat(vile_allow))
+  }
+
   return plugin_config
 }
 
-let ping_parent = (process : any) =>
-  process.send("")
+var ping_parent = (process : any) => process.send("")
 
-let handle_worker_request = (data) => {
+var handle_worker_request = (data) => {
   let plugins : string[] = data.plugins
   let config : Vile.YMLConfig = data.config
 
@@ -290,7 +296,7 @@ let handle_worker_request = (data) => {
   .then((issues) => process.send(issues))
 }
 
-let check_for_uninstalled_plugins = (
+var check_for_uninstalled_plugins = (
   allowed : string[],
   plugins : Vile.PluginList
 ) => {
@@ -308,7 +314,7 @@ let check_for_uninstalled_plugins = (
   if (errors) process.exit(1)
 }
 
-let execute_plugins = (
+var execute_plugins = (
   allowed : Vile.PluginList = [],
   config : Vile.YMLConfig = null,
   opts : any = {}
@@ -368,7 +374,7 @@ let execute_plugins = (
 
 // HACK: only open file once for line parsing
 // HACK: this method needs to be refactored
-let add_code_snippets = (vile_ignore : Vile.IgnoreList = []) =>
+var add_code_snippets = () =>
   (issues : Vile.IssueList) =>
     (<any>Bluebird).map(issues, (issue : Vile.Issue) => {
       let start = Number(_.get(issue, "where.start.line", 0))
@@ -400,12 +406,17 @@ let add_code_snippets = (vile_ignore : Vile.IgnoreList = []) =>
       }
     })
 
-let add_ok_issues = (vile_ignore : Vile.IgnoreList = []) =>
+var add_ok_issues = (
+  vile_allow  : Vile.AllowList = [],
+  vile_ignore : Vile.IgnoreList = []
+) =>
   (issues : Vile.IssueList) =>
     util.promise_each(
       process.cwd(),
-      // TODO: don't compile ignore every time
-      (p) => !util.ignored(p, vile_ignore),
+      // TODO: don't compile ignore/allow every time
+      // NOTE: need to fallthrough if is_dir, in case --gitdiff is set
+      (p, is_dir) => (util.allowed(p, vile_allow) || is_dir) &&
+        !util.ignored(p, vile_ignore) ,
       (filepath) => util.issue({
         type: util.OK,
         path: filepath
@@ -419,18 +430,19 @@ let add_ok_issues = (vile_ignore : Vile.IgnoreList = []) =>
     })
 
 
-let cwd_plugins_path = () =>
+var cwd_plugins_path = () =>
   path.resolve(path.join(process.cwd(), "node_modules", "@forthright"))
 
-let passthrough = (value : any) => value
+var passthrough = (value : any) => value
 
-let run_plugins = (
+var run_plugins = (
   custom_plugins : Vile.PluginList = [],
   config : Vile.YMLConfig = {},
   opts : any = {}
 ) : bluebird.Promise<Vile.IssueList> => {
   let app_config = _.get(config, "vile", {})
   let ignore = _.get(app_config, "ignore")
+  let allow = _.get(app_config, "allow")
   let plugins : Vile.PluginList = custom_plugins
 
   if (app_config.plugins) {
@@ -440,14 +452,12 @@ let run_plugins = (
   return fs.readdirAsync(cwd_plugins_path())
     .filter(is_plugin)
     .then(execute_plugins(plugins, config, opts))
-    .then(opts.snippets ? add_code_snippets(ignore) : passthrough)
-    .then(add_ok_issues(ignore))
+    .then(opts.snippets ? add_code_snippets() : passthrough)
+    .then(add_ok_issues(allow, ignore))
     .catch(error_executing_plugins)
 }
 
 module.exports = {
   exec: run_plugins,
   exec_plugin: run_plugin
-}
-
 }

@@ -1,34 +1,33 @@
 /// <reference path="lib/typings/index.d.ts" />
 
-module vile {
+var cli                        = require("commander")
+var _                          = require("lodash")
+var fs                         = require("fs")
+var path                       = require("path")
+var vile    : Vile.Lib.Index   = require("./index")
+var util                       = require("./util")
+var git                        = require("./git")
+var service : Vile.Lib.Service = require("./service")
+var logger  : Vile.Lib.Logger  = require("./logger")
+var config  : Vile.Lib.Config  = require("./config")
+var pkg     : Vile.Lib.Package = require("./../package")
 
-let cli                        = require("commander")
-let _                          = require("lodash")
-let fs                         = require("fs")
-let path                       = require("path")
-let vile    : Vile.Lib.Index   = require("./index")
-let util                       = require("./util")
-let service : Vile.Lib.Service = require("./service")
-let logger  : Vile.Lib.Logger  = require("./logger")
-let config  : Vile.Lib.Config  = require("./config")
-let pkg     : Vile.Lib.Package = require("./../package")
-
-const DEFAULT_VILE_YML         = ".vile.yml"
-const DEFAULT_VILE_AUTH_YML    = ".vilerc"
+var DEFAULT_VILE_YML         = ".vile.yml"
+var DEFAULT_VILE_AUTH_YML    = ".vilerc"
 
 // TODO: plugin interface
-let parse_plugins = (plugins : string) : Vile.PluginList =>
-  plugins.split ? plugins.split(",") : undefined
+var parse_plugins = (plugins : string) : Vile.PluginList =>
+  plugins && plugins.split ? plugins.split(",") : undefined
 
-let set_log_levels = (logs? : string) => {
+var set_log_levels = (logs? : string) => {
   logger.quiet()
   if (logs.split) logs.split(",").forEach(logger.level)
 }
 
-let padded_file_score = (score : number) =>
+var padded_file_score = (score : number) =>
   (score < 100 ? " " : "") + String(score) + "%"
 
-let log_vileio_summary = (log : any, info : any, verbose : boolean) => {
+var log_vileio_summary = (log : any, info : any, verbose : boolean) => {
   // HACK
   let score : number = _.get(info, "score")
   let files : any[] = _.get(info, "files")
@@ -46,7 +45,7 @@ let log_vileio_summary = (log : any, info : any, verbose : boolean) => {
   log.info(review_url)
 }
 
-let publish = (issues : Vile.IssueList, opts : any) => {
+var publish = (issues : Vile.IssueList, opts : any) => {
   config.load_auth(path.join(process.cwd(), DEFAULT_VILE_AUTH_YML))
   let log = logger.create("vile.io")
 
@@ -69,7 +68,7 @@ let publish = (issues : Vile.IssueList, opts : any) => {
     })
 }
 
-let punish = (app : any) => {
+var punish = (app : any) => {
   let plugins : string = app.punish
 
   // TODO: not ideal to mutate the app
@@ -78,16 +77,34 @@ let punish = (app : any) => {
     config: config.get()
   })
 
-  vile
+  if (!_.isEmpty(app.args)) {
+    let vile_allow = _.get(app, "config.vile.allow")
+    let allow = _.isEmpty(app.args) ? [] : app.args
+    if (!_.isEmpty(vile_allow)) allow = allow.concat(vile_allow)
+    _.set(app, "config.vile.allow", allow)
+  }
+
+  let exec = () => vile
     .exec(parse_plugins(plugins), app.config, app)
     .then((issues : Vile.IssueList) => {
       if (app.deploy) return publish(issues, app)
       if (app.format == "json")
         process.stdout.write(JSON.stringify(issues))
     })
+
+  if (app.gitdiff) {
+    let rev = typeof app.gitdiff == "string" ?
+      app.gitdiff : undefined
+    git.changed_files(rev).then((paths : string[]) => {
+      _.set(app, "config.vile.allow", paths)
+      exec()
+    })
+  } else {
+    exec()
+  }
 }
 
-let load_config = (app : any) => {
+var load_config = (app : any) => {
   let app_config : string
 
   if (app.config) {
@@ -103,7 +120,7 @@ let load_config = (app : any) => {
 }
 
 // TODO
-let authenticate = () => {
+var authenticate = () => {
   console.log("  To authenticate, first go to " +
       "https://vile.io and create a project AuthToken.")
   console.log()
@@ -115,21 +132,21 @@ let authenticate = () => {
   console.log("    echo \".vilerc\"               >> .gitignore")
 }
 
-let run = (app) => {
+var run = (app) => {
   if (app.authenticate) return authenticate()
   if (app.verbose) logger.verbose(true)
   if (app.quiet || app.format == "json") logger.quiet()
   if (app.log) set_log_levels(app.log)
   load_config(app)
-  if (app.punish) punish(app)
+  if (!_.isEmpty(app.args) || app.punish) punish(app)
 }
 
-let no_args = () : boolean => !process.argv.slice(2).length
+var no_args = () : boolean => !process.argv.slice(2).length
 
-let configure = () => {
+var configure = () => {
   cli
     .version(pkg.version)
-    .usage("[options]")
+    .usage("[options] <file|dir ...>")
     .option("-p, --punish [plugin_list]",
             `unless specified in config, this can be a comma delimited
                             string, else run all installed plugins`)
@@ -146,23 +163,23 @@ let configure = () => {
     .option("-a, --authenticate",
             "authenticate with vile.io")
     .option("-d, --deploy",
-            "publish to vile.io")
+            "publish to vile.io (disables --gitdiff)")
     .option("-s, --scores",
             "show file scores and detailed stats")
     .option("-i, --snippets",
             "add code snippets to issues")
+    .option("-g, --gitdiff [rev]",
+            "only check files patched in latest HEAD commit, or rev")
     .option("--nodecorations", "disable color and progress bar")
 
   if (no_args()) cli.outputHelp()
 }
 
-let interpret = (argv) =>
+var interpret = (argv) =>
   (configure(),
     cli.parse(argv),
       run(cli))
 
 module.exports = {
   interpret: interpret
-}
-
 }

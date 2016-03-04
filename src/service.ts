@@ -1,17 +1,15 @@
 /// <reference path="lib/typings/index.d.ts" />
 
-module vile {
+var Bluebird : typeof bluebird.Promise = require("bluebird")
+var request : any = require("request")
+var _ : any = require("lodash")
+var fs = require("fs")
+var path : any = require("path")
 
-let Bluebird : typeof Promise = require("bluebird")
-let request : any = require("request")
-let _ : any = require("lodash")
-let fs = require("fs")
-let path : any = require("path")
+var PRODUCTON_URL = "http://joffrey-baratheon.herokuapp.com"
+var VILE_APP = process.env.VILE_APP || PRODUCTON_URL
 
-const PRODUCTON_URL = "http://joffrey-baratheon.herokuapp.com"
-const VILE_APP = process.env.VILE_APP || PRODUCTON_URL
-
-let commit = (issues, auth) =>
+var commit = (issues, auth) =>
   new Bluebird((resolve, reject) => {
     request.post({
       url: `${VILE_APP}/commits`,
@@ -34,6 +32,4 @@ let commit = (issues, auth) =>
 
 module.exports = {
   commit: commit
-}
-
 }

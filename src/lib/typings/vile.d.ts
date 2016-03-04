@@ -44,16 +44,20 @@ declare module Vile {
   export interface PluginConfig {
     config?  : any;
     ignore?  : IgnoreList;
+    allow?   : AllowList;
   }
 
   export interface Config {
     plugins : PluginList;
     ignore  : IgnoreList;
+    allow?   : AllowList;
   }
 
   export interface PluginList extends Array<string> {}
 
   export interface IgnoreList extends Array<string> {}
+
+  export interface AllowList extends Array<string> {}
 
   export interface YMLConfig extends Object {}
 

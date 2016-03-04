@@ -1,54 +1,66 @@
 /// <reference path="lib/typings/index.d.ts" />
 
-module vile {
-
-let fs = require("fs")
-let path = require("path")
-let child_process = require("child_process")
-let _ = require("lodash")
-let Bluebird : typeof bluebird.Promise = require("bluebird")
-let ignore = require("ignore-file")
-let logger = require("./logger")
-let config  : Vile.Lib.Config = require("./config")
-let log = logger.create("util")
+var fs = require("fs")
+var path = require("path")
+var child_process = require("child_process")
+var _ = require("lodash")
+var Bluebird : typeof bluebird.Promise = require("bluebird")
+var ignore = require("ignore-file")
+var logger : Vile.Lib.Logger  = require("./logger")
+var config : Vile.Lib.Config = require("./config")
+var log = logger.create("util")
 
 // TODO: make a constants file or something
-const DEFAULT_VILE_YML         = ".vile.yml"
+var DEFAULT_VILE_YML         = ".vile.yml"
 
 Bluebird.promisifyAll(fs)
 
-let log_error = (e : NodeJS.ErrnoException) => {
+var log_error = (e : NodeJS.ErrnoException) => {
   console.log(e)
 }
 
-let is_ignored = (
+var matches = (
   filepath : string,
-  ignore_config : any
+  key : string,
+  list_or_string : any
 ) : boolean => {
-  let ignored : (a : string) => boolean
+  let matched : (a : string) => boolean
 
-  if (!ignore_config) {
+  if (!list_or_string) {
     let conf : any = config.get()
     // HACK: this is fragile, perhaps config should be in this module
-    ignore_config = conf == {} ? _.get(
+    config = conf == {} ? _.get(
       config.load(DEFAULT_VILE_YML),
-      "vile.ignore"
+      key
     ) : conf
   }
 
-  if (ignore_config) {
-    ignored = typeof ignore_config == "string" ?
-      ignore.sync(ignore_config) :
-      ignore.compile(ignore_config.join("\n"))
+  if (list_or_string) {
+    matched = typeof list_or_string == "string" ?
+      ignore.sync(list_or_string) :
+      ignore.compile(list_or_string.join("\n"))
   } else {
-    ignored = () => false
+    matched = () => false
   }
 
-  return ignored(filepath)
+  return matched(filepath)
 }
 
+var is_ignored = (
+  filepath : string,
+  ignore_config : any
+) : boolean =>
+  matches(filepath, "vile.ignore", ignore_config)
+
+var is_allowed = (
+  filepath : string,
+  allow_config : any
+) : boolean =>
+  _.isEmpty(allow_config) ? true :
+    matches(filepath, "vile.allow", allow_config)
+
 // TODO: make io async
-let collect_files = (target, allowed) : string[] => {
+var collect_files = (target, allowed) : string[] => {
   let at_root = !path.relative(process.cwd(), target)
   let rel_path = at_root ? target : path.relative(process.cwd(), target)
   let is_dir = fs.statSync(rel_path).isDirectory();
@@ -64,7 +76,7 @@ let collect_files = (target, allowed) : string[] => {
 
 // TODO: better typing
 // TODO: add mem limit to child process
-let spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
+var spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
   return new Bluebird((resolve : any, reject) => {
     let log = logger.create(bin)
     let chunks : Buffer[] = []
@@ -99,7 +111,7 @@ let spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
 
 // TODO: uber complex
 // TODO: check for app specific ignore (to ignore files plugin ignores)
-let promise_each_file = (
+var promise_each_file = (
   dirpath : string,
   allow : (file_or_dir_path : string, is_dir : boolean) => boolean,
   parse_file : (file : string, data? : string) => void,
@@ -137,12 +149,13 @@ let promise_each_file = (
 }
 
 // TODO: validate issue objects as it comes in
-let into_issue = (data : any) : Vile.Issue => data
+var into_issue = (data : any) : Vile.Issue => data
 
 module.exports = {
   promise_each: promise_each_file,
   issue: into_issue,
   ignored: is_ignored,
+  allowed: is_allowed,
   spawn: spawn,
 
   OK: "ok",
@@ -192,6 +205,4 @@ module.exports = {
     "lang",
     "cov"
   ]
-}
-
 }

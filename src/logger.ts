@@ -1,23 +1,21 @@
 /// <reference path="lib/typings/index.d.ts" />
 
-module vile {
+var _ = require("lodash")
+var minilog = require("minilog")
+var filter = new minilog.Filter()
 
-let _ = require("lodash")
-let minilog = require("minilog")
-let filter = new minilog.Filter()
-
-let default_filter = () => {
+var default_filter = () => {
   filter.allow(/.*/, "error")
   filter.allow(/.*/, "info")
   filter.defaultResult = false
 }
 
-let quiet = () => filter.clear()
+var quiet = () => filter.clear()
 
-let log_level = (level : string) =>
+var log_level = (level : string) =>
   filter.allow(/.*/, level)
 
-let verbose = (is_verbose : boolean) => {
+var verbose = (is_verbose : boolean) => {
   if (is_verbose) {
     quiet()
     filter.allow(/.*/, "debug")
@@ -26,7 +24,7 @@ let verbose = (is_verbose : boolean) => {
   default_filter()
 }
 
-let init = () => {
+var init = () => {
   // HACK!
   let nocolor = _.includes(process.argv, "--nodecorations")
 
@@ -54,5 +52,3 @@ module.exports = {
 }
 
 init()
-
-}

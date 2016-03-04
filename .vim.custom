@@ -1,1 +1,1 @@
-let g:syntastic_typescript_tsc_args = "-t es6"
+let g:syntastic_typescript_tsc_args = "-t ES6 --moduleResolution node"

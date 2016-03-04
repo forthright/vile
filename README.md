@@ -82,10 +82,12 @@ Create a `.vile.yml` file in your project root:
 ```yml
 vile:
   ignore: ["custom ignore list"]
+  allow: ["or a custom allow list"]
 
 some_plugin:
   config: plugin_config
   ignore: plugin_ignore
+  allow: plugin_allow
 ```
 
 Then include it when punishing:
@@ -123,6 +125,17 @@ method to do the matching for you.
 
 For reference, [ignore-file](https://github.com/mafintosh/ignore-file) is currently used for matching.
 
+### Allowing Files
+
+The `vile.allow` (and plugin specific) setting specifies paths to
+*only* include.
+
+It is treated just like the `vile.ignore` list.
+
+It's util method is `vile.allowed("path", allow_list)`.
+
+You can also just: `vile file dir ....`.
+
 ## Publishing
 
 You can publish your project to [vile.io](http://vile.io).
@@ -141,13 +154,13 @@ You can turn on various output formats with the `-f` option.
 
 ### JSON
 
-    vile -pc -f json
+    vile -cp -f json
 
 ## Logging
 
 You can set the logging level if needed.
 
-    vile -pc -l warn
+    vile -cp -l warn
 
 ## Creating A Plugin
 
@@ -217,11 +230,7 @@ This project ascribes to CoralineAda's [Contributor Covenant](https://github.com
 
 To run the CLI locally:
 
-    node bin/cli -h
-
-Note: You can also create an alias in your `~/.bashrc`.
-
-    alias vile="/home/me/src/vile/bin/cli"
+    node bin/vile -h
 
 To run tests:
 
