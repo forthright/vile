@@ -11,7 +11,3 @@ echo ""
 echo "compiling project"
 npm run compile
 npm run compile-dev
-
-echo ""
-echo "install ruby dependencies"
-bundle

@@ -24,8 +24,6 @@ a unified, project focused context.
 Since Vile's core is written in JS, the main project
 is distributed via [npm](http://npmjs.org).
 
-There is also a ruby [gem](ruby/) you can install manually (for now).
-
 #### Node CLI
 
     npm install -g @forthright/vile
@@ -252,5 +250,4 @@ The test code is written in [CoffeeScript](http://coffeescript.org).
 
 - `src` - typescript lib
 - `lib` - compiled js
-- `ruby` - any ruby wrapper related code
 - `test` - any test related code, written in coffeescript
