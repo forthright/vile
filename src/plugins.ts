@@ -372,21 +372,26 @@ var execute_plugins = (
     }
   })
 
-// HACK: only open file once for line parsing
-// HACK: this method needs to be refactored
+var passthrough = (value : any) => value
+
 var add_code_snippets = () =>
   (issues : Vile.IssueList) =>
-    (<any>Bluebird).map(issues, (issue : Vile.Issue) => {
-      let start = Number(_.get(issue, "where.start.line", 0))
-      let end = Number(_.get(issue, "where.end.line", start))
-      if (_.any(util.displayable_issues, (t) => t == issue.type) &&
-         _.has(issue, "path") && fs.statSync(issue.path).isFile()) {
-        return fs.readFileAsync(path.join(process.cwd(), issue.path), "utf-8")
-          .then((data) => {
-            if (start === 0 && end === start) return issue
+    (<any>Bluebird).map(_.uniq(_.map(issues, "path")), (filepath : string) => {
+      if (!(filepath &&
+            fs.existsSync(filepath) &&
+              fs.statSync(filepath).isFile())) return
 
-            let lines = linez(data).lines
+      let lines = linez(fs.readFileSync(
+        path.join(process.cwd(), filepath),
+        "utf-8"
+      )).lines
 
+      _.each(_.select(issues, (i : Vile.Issue) => i.path = filepath),
+        (issue : Vile.Issue) => {
+          let start = Number(_.get(issue, "where.start.line", 0))
+          let end = Number(_.get(issue, "where.end.line", start))
+          if (start === 0 && end === start) return
+          if (_.any(util.displayable_issues, (t) => t == issue.type)) {
             issue.snippet = lines.reduce((snippets, line, num) => {
               if ((num > (start - 4) && num < (end + 2))) {
                 snippets.push({
@@ -398,13 +403,15 @@ var add_code_snippets = () =>
               }
               return snippets
             }, [])
+          }
+        })
 
-            return issue
-          })
-      } else {
-        return issue
-      }
+      lines = undefined
     })
+    .then(() => issues)
+
+var cwd_plugins_path = () =>
+  path.resolve(path.join(process.cwd(), "node_modules", "@forthright"))
 
 var add_ok_issues = (
   vile_allow  : Vile.AllowList = [],
@@ -428,12 +435,6 @@ var add_ok_issues = (
       log_issue_messages(distinct_ok_issues)
       return distinct_ok_issues.concat(issues)
     })
-
-
-var cwd_plugins_path = () =>
-  path.resolve(path.join(process.cwd(), "node_modules", "@forthright"))
-
-var passthrough = (value : any) => value
 
 var run_plugins = (
   custom_plugins : Vile.PluginList = [],
