@@ -11,7 +11,6 @@ var _ = require("lodash")
 var string = require("string-padder")
 var spinner = require("cli-spinner")
 var Spinner = spinner.Spinner
-var ignore = require("ignore-file")
 var logger : Vile.Lib.Logger  = require("./logger")
 var util = require("./util")
 var log = logger.create("plugin")

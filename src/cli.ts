@@ -2,10 +2,8 @@
 
 var cli                        = require("commander")
 var _                          = require("lodash")
-var fs                         = require("fs")
 var path                       = require("path")
 var vile    : Vile.Lib.Index   = require("./index")
-var util                       = require("./util")
 var git                        = require("./git")
 var service : Vile.Lib.Service = require("./service")
 var logger  : Vile.Lib.Logger  = require("./logger")

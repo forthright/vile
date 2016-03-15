@@ -8,7 +8,6 @@ var Bluebird : typeof bluebird.Promise = require("bluebird")
 var ignore = require("ignore-file")
 var logger : Vile.Lib.Logger  = require("./logger")
 var config : Vile.Lib.Config = require("./config")
-var log = logger.create("util")
 
 // TODO: make a constants file or something
 var DEFAULT_VILE_YML         = ".vile.yml"

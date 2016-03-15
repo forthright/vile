@@ -2,9 +2,6 @@
 
 var Bluebird : typeof bluebird.Promise = require("bluebird")
 var request : any = require("request")
-var _ : any = require("lodash")
-var fs = require("fs")
-var path : any = require("path")
 
 var PRODUCTON_URL = "http://joffrey-baratheon.herokuapp.com"
 var VILE_APP = process.env.VILE_APP || PRODUCTON_URL
@@ -22,11 +19,14 @@ var commit = (issues, auth) =>
         issues: JSON.stringify(issues)
       }
     }, (err, httpResponse, body) => {
-      if (err) reject({error: err})
-      else resolve(<any>{
-        body: body,
-        response: httpResponse
-      })
+      if (err) {
+        reject({error: err})
+      } else {
+        resolve(<any>{
+          body: body,
+          response: httpResponse
+        })
+      }
     })
   })
 
