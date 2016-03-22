@@ -385,7 +385,7 @@ var add_code_snippets = () =>
         "utf-8"
       )).lines
 
-      _.each(_.select(issues, (i : Vile.Issue) => i.path = filepath),
+      _.each(_.select(issues, (i : Vile.Issue) => i.path == filepath),
         (issue : Vile.Issue) => {
           let start = Number(_.get(issue, "where.start.line", 0))
           let end = Number(_.get(issue, "where.end.line", start))
