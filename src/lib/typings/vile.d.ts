@@ -9,6 +9,7 @@ declare module Vile {
     commit?     : any;
     dependency? : any;
     security?   : any;
+    stat?       : any;
     plugin?     : string;
     snippet?    : Snippet[];
     language?   : string;
