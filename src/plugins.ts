@@ -112,6 +112,17 @@ var to_console_git = (
   return `${ sha }: ${ date }`
 }
 
+var to_console_stat = (
+  issue : Vile.Issue
+) => {
+  let size = _.get(issue, "stat.size", "?")
+  let loc = _.get(issue, "stat.loc", "?")
+  let lines = _.get(issue, "stat.loc", "?")
+  let comments = _.get(issue, "stat.comment", "?")
+  return `${ issue.path } (${ size ? (size / 1024).toFixed(3) + "KB" : "" })` +
+    ` - ${ lines } lines, ${ loc } loc, ${ comments } comments`
+}
+
 var is_error_or_warn = (issue : any) =>
   _.any(
     util.warnings.concat(util.errors),
@@ -141,6 +152,8 @@ var log_issue_messages = (
         nlogs[t].info(to_console_lang(issue))
       } else if (issue.type == util.GIT) {
         nlogs[t].info(to_console_git(issue))
+      } else if (issue.type == util.STAT) {
+        nlogs[t].info(to_console_stat(issue))
       } else if (issue.type == util.OK) {
         nlogs[t].info(issue.path)
       } else {
