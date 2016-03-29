@@ -70,7 +70,7 @@
     "string-padder": "^1.0.3"
   },
   "devDependencies": {
-    "@forthright/vile": "^0.5.18",
+    "@forthright/vile": "^0.5.21",
     "@forthright/vile-coffeelint": "^0.1.5",
     "@forthright/vile-comment": "^0.1.9",
     "@forthright/vile-coverage": "^0.2.4",
