@@ -1,6 +1,6 @@
 # vile [![Circle CI](https://circleci.com/gh/brentlintner/vile.svg?style=svg&circle-token=76807e9cc864afc2d2af7db4c744a0eae8b9fc00)](https://circleci.com/gh/brentlintner/vile)
 
-[![score-badge](http://joffrey-baratheon.herokuapp.com/brentlintner/vile/badges/score?token=4_y-Kus1bunceBtsraA7)](http://joffrey-baratheon.herokuapp.com/brentlintner/vile) [![security-badge](http://joffrey-baratheon.herokuapp.com/brentlintner/vile/badges/security?token=4_y-Kus1bunceBtsraA7)](http://joffrey-baratheon.herokuapp.com/brentlintner/vile) [![coverage-badge](http://joffrey-baratheon.herokuapp.com/brentlintner/vile/badges/coverage?token=4_y-Kus1bunceBtsraA7)](http://joffrey-baratheon.herokuapp.com/brentlintner/vile) [![dependency-badge](http://joffrey-baratheon.herokuapp.com/brentlintner/vile/badges/dependency?token=4_y-Kus1bunceBtsraA7)](http://joffrey-baratheon.herokuapp.com/brentlintner/vile)
+[![score-badge](http://vile.io/brentlintner/vile/badges/score?token=4_y-Kus1bunceBtsraA7)](http://vile.io/brentlintner/vile) [![security-badge](http://vile.io/brentlintner/vile/badges/security?token=4_y-Kus1bunceBtsraA7)](http://vile.io/brentlintner/vile) [![coverage-badge](http://vile.io/brentlintner/vile/badges/coverage?token=4_y-Kus1bunceBtsraA7)](http://vile.io/brentlintner/vile) [![dependency-badge](http://vile.io/brentlintner/vile/badges/dependency?token=4_y-Kus1bunceBtsraA7)](http://vile.io/brentlintner/vile)
 
 A punishing, yet easy to use tool for writing insightful code.
 
@@ -55,7 +55,7 @@ along with the [main library](src/index.ts) module.
 
 To actually punish your code, you need to install plugins first.
 
-For a complete list of plugins, see [here](http://joffrey-baratheon.herokuapp.com/plugins);
+For a complete list of plugins, see [here](http://vile.io/plugins);
 
 To get started, install a plugin package in your project root:
 
