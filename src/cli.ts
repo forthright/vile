@@ -62,7 +62,10 @@ var publish = (issues : Vile.IssueList, opts : any) => {
     })
     .catch((err) => {
       console.log() // newline because spinner is running
-      log.error(err.stack || err)
+      // HACK: not the best logging of errors here
+      log.error(_.get(err, "stack") ||
+                _.get(err, "message") ||
+                JSON.stringify(err))
     })
 }
 
