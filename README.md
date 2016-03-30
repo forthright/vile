@@ -1,6 +1,6 @@
 # vile [![Circle CI](https://circleci.com/gh/brentlintner/vile.svg?style=svg&circle-token=76807e9cc864afc2d2af7db4c744a0eae8b9fc00)](https://circleci.com/gh/brentlintner/vile)
 
-[![score-badge](http://vile.io/brentlintner/vile/badges/score?token=4_y-Kus1bunceBtsraA7)](http://vile.io/brentlintner/vile) [![security-badge](http://vile.io/brentlintner/vile/badges/security?token=4_y-Kus1bunceBtsraA7)](http://vile.io/brentlintner/vile) [![coverage-badge](http://vile.io/brentlintner/vile/badges/coverage?token=4_y-Kus1bunceBtsraA7)](http://vile.io/brentlintner/vile) [![dependency-badge](http://vile.io/brentlintner/vile/badges/dependency?token=4_y-Kus1bunceBtsraA7)](http://vile.io/brentlintner/vile)
+[![score-badge](https://vile.io/brentlintner/vile/badges/score?token=4_y-Kus1bunceBtsraA7)](https://vile.io/brentlintner/vile) [![security-badge](https://vile.io/brentlintner/vile/badges/security?token=4_y-Kus1bunceBtsraA7)](https://vile.io/brentlintner/vile) [![coverage-badge](https://vile.io/brentlintner/vile/badges/coverage?token=4_y-Kus1bunceBtsraA7)](https://vile.io/brentlintner/vile) [![dependency-badge](https://vile.io/brentlintner/vile/badges/dependency?token=4_y-Kus1bunceBtsraA7)](https://vile.io/brentlintner/vile)
 
 A punishing, yet easy to use tool for writing insightful code.
 
@@ -55,7 +55,7 @@ along with the [main library](src/index.ts) module.
 
 To actually punish your code, you need to install plugins first.
 
-For a complete list of plugins, see [here](http://vile.io/plugins);
+For a complete list of plugins, see [here](https://vile.io/plugins);
 
 To get started, install a plugin package in your project root:
 
@@ -138,7 +138,7 @@ You can also just: `vile file dir ....`.
 
 ## Publishing
 
-You can publish your project to [vile.io](http://vile.io).
+You can publish your project to [vile.io](https://vile.io).
 
 Make an account if you don't have one, then:
 
@@ -176,7 +176,7 @@ module.exports = {
 }
 ```
 
-See the [docs](http://vile.io/docs) page for how Issues are structured.
+See the [docs](https://vile.io/docs) page for how Issues are structured.
 
 You can also `require("vile")` in your plugin and use its
 API, which provides some helpers.
@@ -246,7 +246,7 @@ To run compile task with file watch in the background:
 
 
 Note: For development, set `VILE_APP=http://localhost:3000 bin/vile ...` so it
-does not try to publish to `http://vile.io`.
+does not try to publish to `https://vile.io`.
 
 ## Architecture
 

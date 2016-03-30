@@ -3,7 +3,7 @@
 var Bluebird : typeof bluebird.Promise = require("bluebird")
 var request : any = require("request")
 
-var PRODUCTON_URL = "http://vile.io"
+var PRODUCTON_URL = "https://vile.io"
 var VILE_APP = process.env.VILE_APP || PRODUCTON_URL
 
 var commit = (issues, auth) =>
