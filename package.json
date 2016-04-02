@@ -64,7 +64,7 @@
     "ignore-file": "^1.1.2",
     "js-yaml": "^3.5.5",
     "linez": "^4.1.1",
-    "lodash": "^3.10.x",
+    "lodash": "^4.7.x",
     "minilog": "^3.0.0",
     "request": "^2.69.0",
     "string-padder": "^1.0.3"

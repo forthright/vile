@@ -124,7 +124,7 @@ var to_console_stat = (
 }
 
 var is_error_or_warn = (issue : any) =>
-  _.any(
+  _.some(
     util.warnings.concat(util.errors),
     (t) => issue.type == t)
 
@@ -137,9 +137,9 @@ var log_issue_messages = (
     let t = issue.type
     if (!nlogs[t]) nlogs[t] = logger.create(t)
 
-    if (_.any(util.errors, (t) => issue.type == t)) {
+    if (_.some(util.errors, (t) => issue.type == t)) {
       nlogs[t].error(to_console(issue))
-    } else if (_.any(util.warnings, (t) => issue.type == t)) {
+    } else if (_.some(util.warnings, (t) => issue.type == t)) {
       if (issue.type == util.COMP) {
         nlogs[t].info(to_console_comp(issue))
       } else if (issue.type == util.CHURN) {
@@ -175,7 +175,7 @@ var require_plugin = (name : string) : Vile.Plugin => {
 }
 
 var failed = (name : string, list : Vile.Issue[]) =>
-  _.any(list, (item : Vile.Issue) =>
+  _.some(list, (item : Vile.Issue) =>
     item.plugin = name && is_error_or_warn(item))
 
 var log_issues = (
@@ -315,7 +315,7 @@ var check_for_uninstalled_plugins = (
   let errors = false
 
   _.each(allowed, (name : string) => {
-    if (!_.any(plugins, (plugin : string) =>
+    if (!_.some(plugins, (plugin : string) =>
       plugin.replace("vile-", "") == name
     )) {
       errors = true
@@ -337,8 +337,8 @@ var execute_plugins = (
     if (cluster.isMaster) {
       // TODO: own method
       if (allowed.length > 0) {
-        plugins = _.select(plugins, (p) =>
-                           _.any(allowed, (a) => p.replace("vile-", "") == a))
+        plugins = _.filter(plugins, (p) =>
+                           _.some(allowed, (a) => p.replace("vile-", "") == a))
       }
 
       let spin
@@ -398,12 +398,12 @@ var add_code_snippets = () =>
         "utf-8"
       )).lines
 
-      _.each(_.select(issues, (i : Vile.Issue) => i.path == filepath),
+      _.each(_.filter(issues, (i : Vile.Issue) => i.path == filepath),
         (issue : Vile.Issue) => {
           let start = Number(_.get(issue, "where.start.line", 0))
           let end = Number(_.get(issue, "where.end.line", start))
           if (start === 0 && end === start) return
-          if (_.any(util.displayable_issues, (t) => t == issue.type)) {
+          if (_.some(util.displayable_issues, (t) => t == issue.type)) {
             issue.snippet = lines.reduce((snippets, line, num) => {
               if ((num > (start - 4) && num < (end + 2))) {
                 snippets.push({
@@ -443,7 +443,7 @@ var add_ok_issues = (
       { read_data: false })
     .then((ok_issues : Vile.IssueList) => {
       let distinct_ok_issues = _.reject(ok_issues, (issue : Vile.Issue) =>
-        _.any(issues, (i) => i.path == issue.path))
+        _.some(issues, (i) => i.path == issue.path))
       log_issue_messages(distinct_ok_issues)
       return distinct_ok_issues.concat(issues)
     })

@@ -8,7 +8,7 @@ var logger : Vile.Lib.Logger  = require("./logger")
 var log = logger.create("git")
 
 var into_file_paths = (gtd_raw : any[]) =>
-  _.map(_.select(gtd_raw,
+  _.map(_.filter(gtd_raw,
     (raw : any) => _.get(raw, "status", "").toUpperCase() != "D"),
     (raw : any) => _.get(raw, "toFile"))
 

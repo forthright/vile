@@ -122,7 +122,7 @@ var promise_each_file = (
     let files = collect_files(dirpath, allow)
 
     let checkable = _.chain(_.flatten(files))
-      .select((f) => fs.existsSync(f) && fs.statSync(f).isFile())
+      .filter((f) => fs.existsSync(f) && fs.statSync(f).isFile())
       .value()
 
     resolve(checkable)
