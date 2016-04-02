@@ -24,7 +24,7 @@ test_script:
 
 notifications:
   - provider: Slack
-    incoming_webhook: https://hooks.slack.com/services/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
+    incoming_webhook: https://hooks.slack.com/services/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
 
   - provider: Email
     to:
