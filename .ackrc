@@ -16,7 +16,10 @@
 --ignore-dir=tmp
 --ignore-dir=log
 --ignore-dir=public
+--ignore-dir=.build
+--ignore-dir=lib
 --ignore-dir=coverage
+--ignore-dir=.test
 --ignore-dir=.git
 --ignore-dir=.bundle
 --ignore-file=is:tags
