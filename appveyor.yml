@@ -12,11 +12,8 @@ clone_depth: 5
 
 build: off
 
-environment:
-    nodejs_version: "4.4.2"
-
 install:
-  - ps: Install-Product nodejs $env:nodejs_version x64
+  - ps: Install-Product node 4.4.0 x64
   - npm install
 
 test_script:
