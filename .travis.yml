@@ -3,8 +3,19 @@ os:
 
 language: node_js
 
-node_js:
-  - "4.4.0"
+env:
+  - NODE_VERSION="0.12"
+  - NODE_VERSION="4.4.0"
+
+before_install:
+  - rm -rf ~/.nvm
+  - git clone --depth 1 https://github.com/creationix/nvm.git ~/.nvm
+  - source ~/.nvm/nvm.sh
+  - nvm install $NODE_VERSION
+  - node --version
+
+install:
+  - npm install
 
 git:
   depth: 1
