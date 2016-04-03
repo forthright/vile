@@ -1,0 +1,13 @@
+os:
+  - osx
+
+language: node_js
+
+node_js:
+  - "4.4.0"
+
+git:
+  depth: 1
+
+script:
+  - npm run test-ci-build
