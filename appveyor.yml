@@ -15,12 +15,12 @@ clone_depth: 1
 build: off
 
 install:
+  - node --version
+  - npm --version
   - set PATH=%APPDATA%\npm;%PATH%
   - npm install
 
 test_script:
-  - node --version
-  - npm --version
   - npm run test-ci-build
 
 notifications:
