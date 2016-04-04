@@ -22,13 +22,13 @@ notifications:
     slack: vile-team:7m87AOerZQ1inYwPxxh5kBJs
 
 before_install:
-  - brew update
-  - brew install nvm
-  - source $(brew --prefix nvm)/nvm.sh
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install nvm; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source $(brew --prefix nvm)/nvm.sh; fi
   - uname -a
   - nvm --version
   - nvm install $NODE_VER
-  - nvm use --delete-prefix v$NODE_VER
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then nvm use --delete-prefix v$NODE_VER; fi
   - node --version
   - npm --version
 
