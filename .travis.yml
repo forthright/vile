@@ -29,6 +29,7 @@ before_install:
   - nvm --version
   - nvm install $NODE_VER
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then nvm use --delete-prefix v$NODE_VER; fi
+  - npm install -g npm
   - node --version
   - npm --version
 
