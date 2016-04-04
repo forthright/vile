@@ -1,6 +1,11 @@
 machine:
   node:
-    version: 4.2.4
+    version: 4.4.2
+
+dependencies:
+  pre:
+    - node --version
+    - npm --version
 
 test:
   override:
