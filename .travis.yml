@@ -17,16 +17,14 @@ env:
 
 matrix:
   fast_finish: true
-  allow_failures:
-    - env: NODE_VER=5
 
 notifications:
     slack: vile-team:7m87AOerZQ1inYwPxxh5kBJs
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install nvm; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source $(brew --prefix nvm)/nvm.sh; fi
+  - brew update
+  - brew install nvm
+  - source $(brew --prefix nvm)/nvm.sh
   - uname -a
   - nvm --version
   - nvm install $NODE_VER
