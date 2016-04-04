@@ -1,5 +1,8 @@
-os: osx
-sudo: false
+os:
+  - osx
+
+sudo:
+  - false
 
 cache:
   directories:
