@@ -15,6 +15,7 @@ clone_depth: 1
 build: off
 
 install:
+  - ver
   - node --version
   - npm --version
   - set PATH=%APPDATA%\npm;%PATH%
