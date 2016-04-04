@@ -1,7 +1,14 @@
-#!/usr/bin/env sh
-export npm_config_coverage=1
-rm -r coverage
-mkdir coverage
-istanbul test --print none --dir coverage/non-system bin/test
-istanbul report | grep -vie '^done$'
-istanbul report text-summary
+#!/usr/bin/env node
+require("shelljs/global")
+
+process.env["npm_config_coverage"] = "1"
+
+rm("-r", "coverage")
+
+mkdir("coverage")
+
+exec(
+  "npm run istanbul -- test --dir coverage bin/test",
+  function(code) {
+    if (code !== 0) exit(code)
+  })

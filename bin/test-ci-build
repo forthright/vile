@@ -1,16 +1,28 @@
-#!/usr/bin/env sh
+#!/usr/bin/env node
+require("shelljs/global")
 
-npm run tsd &&
-npm run compile &&
-npm run compile-dev &&
-npm run test-cov
+// TODO use lint-cov once proper tests are written
+// TODO: create util methods for async chaining
+exec(
+  "npm run tsd",
+  function(code) {
+    if (code !== 0) exit(code)
 
-## TODO once proper tests are written
-# npm run lint-cov
+    exec(
+      "npm run compile",
+      function(code) {
+        if (code !== 0) exit(code)
 
-status=$?
+        exec(
+          "npm run compile-dev",
+          function(code) {
+            if (code !== 0) exit(code)
 
-if [ "$status" -gt 0 ]; then
-  echo "test-ci tasks returned $status. failing build!";
-  exit 1;
-fi
+            exec(
+              "npm run test-cov",
+              function(code) {
+                if (code !== 0) exit(code)
+              })
+          })
+      })
+  })

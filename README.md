@@ -226,7 +226,9 @@ This project ascribes to CoralineAda's [Contributor Covenant](https://github.com
     git clone git@github.com:brentlintner/vile.git
     cd vile
     npm i
-    npm run dev-setup
+    npm run tsd
+    npm run compile
+    npm run compile-dev
 
 To run the CLI locally:
 

@@ -1,2 +1,8 @@
-#!/usr/bin/env sh
-coffee -cbo .test test
+#!/usr/bin/env node
+require("shelljs/global")
+
+exec(
+  "npm run coffee -- -cbo .test test",
+  function (code, stderr, stdout) {
+    if (code !== 0) exit(code)
+  })

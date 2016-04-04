@@ -1,3 +1,17 @@
-#!/usr/bin/env sh
-tsc -t es6 -m commonjs --moduleResolution node --outDir .build src/**.ts &&
-babel -d lib -m common .build
+#!/usr/bin/env node
+require("shelljs/global")
+
+exec(
+  "npm run tsc -- " +
+    "-t es6 -m commonjs --moduleResolution node " +
+    "--outDir .build src/**.ts",
+  function(code, stdout, stderr) {
+    if (code !== 0) exit(code)
+
+    exec(
+      "npm run babel -- -d lib -m common .build",
+      function(code, stdout, stderr) {
+        if (code !== 0) exit(code)
+      })
+  })
+
