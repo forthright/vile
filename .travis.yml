@@ -6,6 +6,7 @@ env:
 
 install:
   - brew install nvm
+  - source $(brew --prefix nvm)/nvm.sh
   - nvm install $NODE_VER
   - node --version
   - npm install
