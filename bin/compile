@@ -2,9 +2,7 @@
 require("shelljs/global")
 
 exec(
-  "npm run tsc -- " +
-    "-t es6 -m commonjs --moduleResolution node " +
-    "--outDir .build src/**.ts",
+  "npm run tsc",
   function(code, stdout, stderr) {
     if (code !== 0) exit(code)
 
