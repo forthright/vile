@@ -1,6 +1,10 @@
 os: osx
 sudo: false
 
+cache:
+  directories:
+    - node_modules
+
 env:
   - NODE_VER="4.4.2"
 
