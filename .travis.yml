@@ -10,6 +10,7 @@ install:
   - source $(brew --prefix nvm)/nvm.sh
   - nvm --version
   - nvm install $NODE_VER
+  - nvm use --delete-prefix v$NODE_VER
   - node --version
   - npm --version
   - npm install
