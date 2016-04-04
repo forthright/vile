@@ -15,6 +15,7 @@ notifications:
     slack: vile-team:7m87AOerZQ1inYwPxxh5kBJs
 
 install:
+  - uname -a
   - brew update
   - brew install nvm
   - source $(brew --prefix nvm)/nvm.sh
