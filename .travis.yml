@@ -17,7 +17,17 @@ matrix:
   fast_finish: true
 
 notifications:
-    slack: vile-team:7m87AOerZQ1inYwPxxh5kBJs
+  slack: vile-team:7m87AOerZQ1inYwPxxh5kBJs
+    on_pull_requests: false
+    on_success: change
+    on_failure: always
+    on_start: never
+  email:
+    recipients:
+      - brent.lintner@gmail.com
+    on_success: change
+    on_failure: always
+    on_start: never
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
