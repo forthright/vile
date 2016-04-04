@@ -1,18 +1,13 @@
-os:
-  - osx
-
+os: osx
+sudo: false
 language: node_js
-
-env:
-  - NODE_VERSION="4.4.0"
-
-before_install:
+node_js: "4.4.0"
 
 install:
   - rm -rf ~/.nvm
   - git clone --depth 1 https://github.com/creationix/nvm.git ~/.nvm
   - source ~/.nvm/nvm.sh
-  - nvm install $NODE_VERSION
+  - nvm install 4.4.0
   - node --version
   - npm install
 
