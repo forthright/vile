@@ -4,25 +4,19 @@ require("shelljs/global")
 // TODO use lint-cov once proper tests are written
 // TODO: create util methods for async chaining
 exec(
-  "npm run tsd",
+  "npm run compile",
   function(code) {
     if (code !== 0) exit(code)
 
     exec(
-      "npm run compile",
+      "npm run compile-dev",
       function(code) {
         if (code !== 0) exit(code)
 
         exec(
-          "npm run compile-dev",
+          "npm run test-cov",
           function(code) {
             if (code !== 0) exit(code)
-
-            exec(
-              "npm run test-cov",
-              function(code) {
-                if (code !== 0) exit(code)
-              })
           })
       })
   })

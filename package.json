@@ -29,7 +29,6 @@
     "test-cov": "node bin/test-cov",
     "test-ci-build": "node bin/test-ci-build",
     "tsc": "tsc",
-    "tsd": "tsd reinstall -so",
     "vile": "vile -cpisd --nodecorations"
   },
   "author": "Brent Lintner <brent.lintner@gmail.com>",
