@@ -2,8 +2,6 @@ os:
   - linux
   - osx
 
-language: node_js
-
 sudo:
   - false
 
@@ -12,16 +10,20 @@ cache:
     - node_modules
 
 env:
-  - NODE_VER="0.10"
-  - NODE_VER="0.12"
-  - NODE_VER="4"
-  - NODE_VER="5"
+  - NODE_VER=0.10
+  - NODE_VER=0.12
+  - NODE_VER=4
+  - NODE_VER=5
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - env: NODE_VER=5
 
 notifications:
     slack: vile-team:7m87AOerZQ1inYwPxxh5kBJs
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install graphviz; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install nvm; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source $(brew --prefix nvm)/nvm.sh; fi

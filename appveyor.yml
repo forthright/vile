@@ -3,6 +3,11 @@ version: "#{build}"
 cache:
   - node_modules
 
+matrix:
+  fast_finish: true
+
+platform: Any CPU
+
 init:
   - git config --global core.autocrlf input
 
