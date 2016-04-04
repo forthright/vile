@@ -8,6 +8,9 @@ cache:
 env:
   - NODE_VER="4.4.2"
 
+notifications:
+    slack: vile-team:7m87AOerZQ1inYwPxxh5kBJs
+
 install:
   - brew update
   - brew install nvm
