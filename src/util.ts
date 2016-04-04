@@ -2,7 +2,7 @@
 
 var fs = require("fs")
 var path = require("path")
-var child_process = require("child_process")
+var execa = require("execa")
 var _ = require("lodash")
 var Bluebird : typeof bluebird.Promise = require("bluebird")
 var ignore = require("ignore-file")
@@ -83,7 +83,7 @@ var spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
 
     log.debug(`${bin} ${opts.args.join(" ")}`)
 
-    let proc = child_process.spawn(bin, opts.args, {
+    let proc = execa.spawn(bin, opts.args, {
       stdio: [process.stdin, "pipe", "pipe"]
     })
 
