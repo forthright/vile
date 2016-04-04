@@ -63,6 +63,7 @@
     "bluebird": "^3.3.4",
     "cli-spinner": "0.2.5",
     "commander": "^2.9.0",
+    "execa": "^0.2.2",
     "extend": "^3.0.0",
     "git-diff-tree": "^1.0.0",
     "ignore-file": "^1.1.2",
