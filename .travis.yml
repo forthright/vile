@@ -38,5 +38,9 @@ install:
 git:
   depth: 1
 
+branches:
+  only:
+    - master
+
 script:
   - npm run test-ci-build
