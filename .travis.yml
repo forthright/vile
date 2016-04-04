@@ -2,8 +2,7 @@ os:
   - linux
   - osx
 
-sudo:
-  - false
+sudo: false
 
 cache:
   directories:
