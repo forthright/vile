@@ -1,3 +1,5 @@
+language: node_js
+
 os:
   - linux
   - osx
@@ -50,6 +52,9 @@ git:
 branches:
   only:
     - master
+
+before_script:
+  - echo ""
 
 script:
   - npm run test-ci-build
