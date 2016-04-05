@@ -2,7 +2,9 @@
 
 var fs = require("fs")
 var path = require("path")
-var execa = require("execa")
+var child_process = require("child_process")
+var npm_run_path = require("npm-run-path")
+var extend = require("extend")
 var _ = require("lodash")
 var Bluebird : typeof bluebird.Promise = require("bluebird")
 var ignore = require("ignore-file")
@@ -80,11 +82,18 @@ var spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
     let log = logger.create(bin)
     let chunks : Buffer[] = []
     let errors = []
+    let env = extend({}, process.env)
+
+    env.PATH = npm_run_path({
+      cwd: process.cwd(),
+      path: env.PATH
+    })
 
     log.debug(`${bin} ${opts.args.join(" ")}`)
 
-    let proc = execa.spawn(bin, opts.args, {
-      stdio: [process.stdin, "pipe", "pipe"]
+    let proc = child_process.spawn(bin, opts.args, {
+      stdio: [process.stdin, "pipe", "pipe"],
+      env: env
     })
 
     proc.stdout.on("data", (chunk : Buffer) => {
