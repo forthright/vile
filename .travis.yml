@@ -19,8 +19,9 @@ matrix:
   fast_finish: true
 
 notifications:
-  slack: vile-team:7m87AOerZQ1inYwPxxh5kBJs
-    on_pull_requests: false
+  slack:
+    rooms:
+      - vile-team:7m87AOerZQ1inYwPxxh5kBJs
     on_success: change
     on_failure: always
     on_start: never
