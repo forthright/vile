@@ -7,9 +7,23 @@ cache:
 
 environment:
   matrix:
-    - nodejs_version: "0.12"
-    - nodejs_version: "4"
-    - nodejs_version: "5"
+    - nodejs_version: 0.12
+      npm_version: 2.x.x
+
+    - nodejs_version: 0.12
+      npm_version: 3.x.x
+
+    - nodejs_version: 4
+      npm_version: 2.x.x
+
+    - nodejs_version: 4
+      npm_version: 3.x.x
+
+    - nodejs_version: 5
+      npm_version: 2.x.x
+
+    - nodejs_version: 5
+      npm_version: 3.x.x
 
 platform:
   - x86
@@ -33,7 +47,7 @@ build: off
 
 install:
   - ps: Install-Product node $env:nodejs_version
-  - npm install -g npm
+  - npm install -g npm@$npm_version
   - ver && node --version && npm --version
   - npm install
 
