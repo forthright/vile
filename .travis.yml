@@ -49,7 +49,7 @@ install:
   - npm install
 
 git:
-  depth: 1
+  depth: 10
 
 branches:
   only:
