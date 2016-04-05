@@ -5,6 +5,7 @@ machine:
 dependencies:
   pre:
     - npm install -g npm
+    - uname -a
     - node --version
     - npm --version
 
