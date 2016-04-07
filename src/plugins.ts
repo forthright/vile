@@ -164,7 +164,7 @@ var log_issue_messages = (
 }
 
 var require_plugin = (name : string) : Vile.Plugin => {
-  let cwd_node_modules = process.cwd() + "/node_modules"
+  let cwd_node_modules = path.join(process.cwd(), "node_modules")
 
   try {
     return require(`${cwd_node_modules}/@forthright/vile-${name}`)
