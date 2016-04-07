@@ -266,24 +266,26 @@ var normalize_paths = (issues) =>
     }
   })
 
+// TODO: support String || Array values
+var set_config_list = (plugin_config, key, base) => {
+  let list = _.get(plugin_config, key, [])
+
+  if (_.isString(list)) list = [list]
+
+  if (_.isEmpty(list)) {
+    _.set(plugin_config, key, base)
+  } else if (is_array(list)) {
+    _.set(plugin_config, key, _.uniq(list.concat(base)))
+  }
+}
+
 var get_plugin_config = (name : string, config : Vile.YMLConfig) => {
   let plugin_config : any = _.get(config, name, {})
   let vile_ignore : string[] = _.get(config, "vile.ignore", [])
   let vile_allow : string[] = _.get(config, "vile.allow", [])
 
-  // TODO: dupe code below
-
-  if (_.isEmpty(plugin_config.ignore)) {
-    plugin_config.ignore = vile_ignore
-  } else if (is_array(plugin_config.ignore)) {
-    plugin_config.ignore = _.uniq(plugin_config.ignore.concat(vile_ignore))
-  }
-
-  if (_.isEmpty(plugin_config.allow)) {
-    plugin_config.allow = vile_allow
-  } else if (is_array(plugin_config.allow)) {
-    plugin_config.allow = _.uniq(plugin_config.allow.concat(vile_allow))
-  }
+  set_config_list(plugin_config, "ignore", vile_ignore)
+  set_config_list(plugin_config, "allow", vile_allow)
 
   return plugin_config
 }
