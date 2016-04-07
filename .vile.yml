@@ -56,29 +56,26 @@ tslint:
 license:
   config:
     ignored:
-      - tslint
-      - tweetnacl
-      - commander
-      - growl
       - cli-table
-      - debug
       - classifier
       - dox
-      - event-stream
-      - map-stream
+      - growl
+      - debug
+      - commander
       - microee
+      - map-stream
+      - event-stream
+      - pjs
+      - uri-templates
+      - parsimmon
+      - tweetnacl
       - split
       - tv4
       - forthright/vile-comment
       - forthright/vile-eslint
-      - forthright/vile-nsp
-      - forthright/vile-whitespace
-      - forthright/vile-comment
-      - forthright/vile-eslint
       - forthright/vile-length
-      - forthright/vile-license
       - forthright/vile-nsp
-      - forthright/vile-stat"
+      - forthright/vile-stat
       - forthright/vile-tslint
       - forthright/vile-whitespace
     disallowed: []
