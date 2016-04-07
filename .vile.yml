@@ -1,22 +1,27 @@
 vile:
   allow: []
-  ignore: [
-      "node_modules",
-      ".build",
-      ".test",
-      ".git",
-      "tags",
-      "tsconfig.json",
-      "/lib",
-      "coverage",
-      "typings",
-      "tmp",
-      "tags",
-      ".eslintrc",
-      ".eslintignore",
-      ".node-version",
-      "vendor"
-    ]
+  ignore:
+    - coverage
+    - node_modules
+    - lib
+    - tags
+    - .test
+    - .ctags
+    - .git
+    - circle.yml
+    - .editorconfig
+    - .eslintignore
+    - .eslintrc
+    - .gitignore
+    - .npmrc
+    - tags
+    - tsconfig.json
+    - "/lib"
+    - vendor
+    - README.md
+    - typings
+    - .vile.yml
+    - .vilerc
 
 depcheck:
   config:
@@ -79,34 +84,33 @@ license:
       - forthright/vile-tslint
       - forthright/vile-whitespace
     disallowed: []
-    allowed: [
-      "CC-BY-3.0",
-      "The MIT License",
-      "MIT",
-      "MIT AND CC-BY-3.0",
-      "MPL",
-      "MPL-2.0",
-      "MPLv2.0",
-      "Public Domain",
-      "PSF",
-      "BSD",
-      "BSD-3-Clause",
-      "BSD-2-Clause",
-      "BSD-3-Clause AND MIT",
-      "BSD-2-Clause OR MIT",
-      "BSD-2-Clause OR WTFPL",
-      "BSD-2-Clause OR MIT OR Apache-2.0",
-      "Unlicense",
-      "Artistic-2.0",
-      "ISC",
-      "WTFPL",
-      "Apache",
-      "Apache2",
-      "Apache-2.0",
-      "Apache 2.0",
-      "Apache*",
-      "Apache License, Version 2.0",
-      "Apachev2",
-      "WTFPL",
-      "GPL"
-    ]
+    allowed:
+      - CC-BY-3.0
+      - The MIT License
+      - MIT
+      - MIT AND CC-BY-3.0
+      - MPL
+      - MPL-2.0
+      - MPLv2.0
+      - Public Domain
+      - PSF
+      - BSD
+      - BSD-3-Clause
+      - BSD-2-Clause
+      - BSD-3-Clause AND MIT
+      - BSD-2-Clause OR MIT
+      - BSD-2-Clause OR WTFPL
+      - BSD-2-Clause OR MIT OR Apache-2.0
+      - Unlicense
+      - Artistic-2.0
+      - ISC
+      - WTFPL
+      - Apache
+      - Apache2
+      - Apache-2.0
+      - Apache 2.0
+      - Apache*
+      - Apache License, Version 2.0
+      - Apachev2
+      - WTFPL
+      - GPL
