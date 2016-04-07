@@ -22,27 +22,6 @@ var set_log_levels = (logs? : string) => {
   if (logs.split) logs.split(",").forEach(logger.level)
 }
 
-var padded_file_score = (score : number) =>
-  (score < 100 ? " " : "") + String(score) + "%"
-
-var log_vileio_summary = (log : any, info : any, verbose : boolean) => {
-  // HACK
-  let score : number = _.get(info, "score")
-  let files : any[] = _.get(info, "files")
-  let new_issues : number = _.get(info, "new_issues")
-  let review_url : string = _.get(info, "review_url")
-
-  if (verbose)
-    _.each(files, (file : any) =>
-      log.info(`${padded_file_score(_.get(file, "score"))} => ` +
-               `${_.get(file, "path")}`))
-
-  log.info()
-  log.info(`Score: ${score}%`)
-  log.info(`New Issues: ${new_issues}`)
-  log.info(review_url)
-}
-
 var publish = (issues : Vile.IssueList, opts : any) => {
   config.load_auth(path.join(process.cwd(), DEFAULT_VILE_AUTH_YML))
   let log = logger.create("vile.io")
@@ -51,11 +30,9 @@ var publish = (issues : Vile.IssueList, opts : any) => {
     .commit(issues, config.get_auth())
     .then((http) => {
       if (_.get(http, "response.statusCode") == 200) {
-        log_vileio_summary(
-          log,
+        service.log(
           _.attempt(JSON.parse.bind(null, http.body)),
-          opts.scores
-        )
+          opts.scores)
       } else {
         log.error(http.body)
       }

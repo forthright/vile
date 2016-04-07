@@ -100,6 +100,11 @@ declare module Vile {
         issues : IssueList,
         auth_config : AuthConfig
       ) => Promise<any>;
+
+      log : (
+        post_json : any,
+        verbose : boolean
+      ) => void;
     }
   }
 }
