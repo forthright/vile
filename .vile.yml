@@ -21,25 +21,30 @@ vile:
 depcheck:
   config:
     ignore_dev_deps: false
-    ignore_dirs: [ ]
-    ignore_deps: [
-        "mocha",
-        "babel-cli",
-        "coffee-script",
-        "istanbul",
-        "release-it",
-        "typescript",
-        "wrench",
-        "pryjs",
-        "shelljs",
-        "@forthright/*"
-      ]
+    ignore_dirs:
+      - src
+      - typings
+      - node_modules
+      - coverage
+      - tmp
+    ignore_deps:
+      - mocha
+      - babel-cli
+      - coffee-script
+      - istanbul
+      - release-it
+      - typescript
+      - wrench
+      - pryjs
+      - shelljs
+      - "@forthright/*"
 
 length:
   config:
     file: 120
     line: 80
-  ignore: [ "test" ]
+  ignore:
+    - ignore
 
 coverage:
   config:
@@ -52,15 +57,30 @@ license:
   config:
     ignored:
       - tslint
+      - tweetnacl
+      - commander
       - growl
-      - "forthright/vile-comment"
-      - "forthright/vile-eslint"
-      - "forthright/vile-length"
-      - "forthright/vile-license"
-      - "forthright/vile-nsp"
-      - "forthright/vile-stat"
-      - "forthright/vile-tslint"
-      - "forthright/vile-whitespace"
+      - cli-table
+      - debug
+      - classifier
+      - dox
+      - event-stream
+      - map-stream
+      - microee
+      - split
+      - tv4
+      - forthright/vile-comment
+      - forthright/vile-eslint
+      - forthright/vile-nsp
+      - forthright/vile-whitespace
+      - forthright/vile-comment
+      - forthright/vile-eslint
+      - forthright/vile-length
+      - forthright/vile-license
+      - forthright/vile-nsp
+      - forthright/vile-stat"
+      - forthright/vile-tslint
+      - forthright/vile-whitespace
     disallowed: []
     allowed: [
       "CC-BY-3.0",
