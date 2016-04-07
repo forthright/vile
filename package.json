@@ -107,7 +107,6 @@
     "shelljs": "^0.6.0",
     "sinon": "^1.17.3",
     "sinon-chai": "^2.8.0",
-    "tsd": "^0.6.5",
     "typescript": "^1.8.9",
     "wrench": "^1.5.9"
   }

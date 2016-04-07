@@ -15,7 +15,6 @@ vile:
       ".eslintrc",
       ".eslintignore",
       ".node-version",
-      ".tsdrc",
       "vendor"
     ]
 
@@ -32,6 +31,7 @@ depcheck:
         "typescript",
         "wrench",
         "pryjs",
+        "shelljs",
         "@forthright/*"
       ]
 
