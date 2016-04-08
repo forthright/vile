@@ -1,7 +1,14 @@
 vile:
-  allow: []
   ignore:
+    - appveyor.yml
     - coverage
+    - coffeelint.json
+    - .ackrc
+    - .babelrc
+    - .build
+    - .npmignore
+    - .travis.yml
+    - .vim.custom
     - node_modules
     - lib
     - tags
@@ -15,13 +22,15 @@ vile:
     - .gitignore
     - .npmrc
     - tags
+    - tmp
     - tsconfig.json
+    - tslint.json
+    - tsd.json
     - "/lib"
     - vendor
     - README.md
     - typings
     - .vile.yml
-    - .vilerc
 
 depcheck:
   config:
@@ -54,9 +63,6 @@ length:
 coverage:
   config:
     path: coverage/lcov.info
-
-tslint:
-  config: tslint.json
 
 license:
   config:
