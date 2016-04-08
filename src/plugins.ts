@@ -340,7 +340,7 @@ var execute_plugins = (
       // TODO: own method
       if (allowed.length > 0) {
         plugins = _.filter(plugins, (p) =>
-                           _.some(allowed, (a) => p.replace("vile-", "") == a))
+          _.some(allowed, (a) => p.replace("vile-", "") == a))
       }
 
       let spin

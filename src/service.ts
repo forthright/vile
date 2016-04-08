@@ -46,15 +46,15 @@ var log_summary = (post_json : any, verbose : boolean) => {
 
   if (verbose)
     _.each(files, (file : any) =>
-      log.info(`${padded_file_score(_.get(file, "score"))} => ` +
-               `${_.get(file, "path")}`))
+      log.info(
+        `${padded_file_score(_.get(file, "score"))} => ` +
+        `${_.get(file, "path")}`))
 
   log.info()
   log.info(`Score: ${score}%`)
   log.info(description)
   log.info(url)
 }
-
 
 module.exports = {
   commit: commit,
