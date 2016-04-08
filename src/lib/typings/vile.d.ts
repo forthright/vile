@@ -65,7 +65,7 @@ declare module Vile {
   export module Lib {
     export interface Config {
       load      : (f : string) => any;
-      load_auth : (f : string) => any;
+      load_auth : () => any;
       get       : () => any;
       get_auth  : () => any;
     }

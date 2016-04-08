@@ -11,7 +11,6 @@ var config  : Vile.Lib.Config  = require("./config")
 var pkg     : Vile.Lib.Package = require("./../package")
 
 var DEFAULT_VILE_YML         = ".vile.yml"
-var DEFAULT_VILE_AUTH_YML    = ".vilerc"
 
 // TODO: plugin interface
 var parse_plugins = (plugins : string) : Vile.PluginList =>
@@ -23,8 +22,9 @@ var set_log_levels = (logs? : string) => {
 }
 
 var publish = (issues : Vile.IssueList, opts : any) => {
-  config.load_auth(path.join(process.cwd(), DEFAULT_VILE_AUTH_YML))
   let log = logger.create("vile.io")
+
+  config.load_auth()
 
   return service
     .commit(issues, config.get_auth())
@@ -104,10 +104,9 @@ var authenticate = () => {
   console.log()
   console.log("  Then:")
   console.log()
-  console.log("    echo \"email: user_email\"     >> .vilerc")
-  console.log("    echo \"project: project_name\" >> .vilerc")
-  console.log("    echo \"token: auth_token\"     >> .vilerc")
-  console.log("    echo \".vilerc\"               >> .gitignore")
+  console.log("    ~$ export VILE_EMAIL=login_email")
+  console.log("    ~$ export VILE_PROJECT=project_name")
+  console.log("    ~$ export VILE_API_TOKEN=project_auth_token")
 }
 
 var run = (app) => {
