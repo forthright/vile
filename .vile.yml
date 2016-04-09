@@ -57,8 +57,6 @@ length:
   config:
     file: 120
     line: 80
-  ignore:
-    - ignore
 
 coverage:
   config:
