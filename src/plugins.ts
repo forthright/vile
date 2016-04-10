@@ -7,8 +7,6 @@ var cluster = require("cluster")
 var os = require("os")
 var linez = require("linez")
 var _ = require("lodash")
-// TODO: don't hardcode padding lower in module
-var string = require("string-padder")
 var spinner = require("cli-spinner")
 var Spinner = spinner.Spinner
 var logger : Vile.Lib.Logger  = require("./logger")
@@ -24,12 +22,6 @@ var valid_plugin = (api) => api && typeof api.punish == "function"
 var is_array = (list) => list && typeof list.forEach == "function"
 
 var is_promise = (list) => list && typeof list.then == "function"
-
-var pad_right = (num, txt="") => string.padRight(txt, num, " ")
-
-var failed_message = (txt) => `${pad_right(16, txt)}FAIL`
-
-var passed_message = (txt) => `${pad_right(16, txt)}PASS`
 
 var log_error = (e : NodeJS.ErrnoException) => {
   console.log()
@@ -123,11 +115,6 @@ var to_console_stat = (
     ` - ${ lines } lines, ${ loc } loc, ${ comments } comments`
 }
 
-var is_error_or_warn = (issue : any) =>
-  _.some(
-    util.warnings.concat(util.errors),
-    (t) => issue.type == t)
-
 var log_issue_messages = (
   issues : Vile.Issue[] = []
 ) => {
@@ -169,27 +156,8 @@ var require_plugin = (name : string) : Vile.Plugin => {
   try {
     return require(`${cwd_node_modules}/@forthright/vile-${name}`)
   } catch (e) {
-    log.error(failed_message(name))
     log_error(e)
   }
-}
-
-var failed = (name : string, list : Vile.Issue[]) =>
-  _.some(list, (item : Vile.Issue) =>
-    item.plugin = name && is_error_or_warn(item))
-
-var log_issues = (
-  plugins : string[],
-  issues : Vile.Issue[] = []
-) => {
-  log_issue_messages(issues)
-
-  _.each(plugins, (plugin : string) => {
-    let name : string = plugin.replace("vile-", "")
-    let message : string = failed(name, issues) ?
-      failed_message(name) : passed_message(name);
-    log.info(message)
-  })
 }
 
 var map_plugin_name_to_issues = (name : string) => (issues : Vile.Issue[]) =>
@@ -377,7 +345,7 @@ var execute_plugins = (
       .then(_.flatten)
       .then((issues : Vile.Issue[]) => {
         if (spin) spin.stop(true)
-        if (opts.format != "json") log_issues(plugins, issues)
+        if (opts.format != "json") log_issue_messages(issues)
         resolve(issues)
       })
     } else {

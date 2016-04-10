@@ -72,8 +72,7 @@
     "lodash": "^4.9.x",
     "minilog": "^3.0.0",
     "npm-run-path": "^1.0.0",
-    "request": "^2.70.0",
-    "string-padder": "^1.0.3"
+    "request": "^2.70.0"
   },
   "devDependencies": {
     "@forthright/vile": ">= 0.7.0",
