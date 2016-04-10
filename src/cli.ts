@@ -10,6 +10,8 @@ var logger  : Vile.Lib.Logger  = require("./logger")
 var config  : Vile.Lib.Config  = require("./config")
 var pkg     : Vile.Lib.Package = require("./../package")
 
+var log = logger.create("cli")
+
 var DEFAULT_VILE_YML         = ".vile.yml"
 
 // TODO: plugin interface
@@ -99,14 +101,14 @@ var load_config = (app : any) => {
 
 // TODO
 var authenticate = () => {
-  console.log("  To authenticate, first go to " +
+  log.info("To authenticate, first go to " +
       "https://vile.io and create a project AuthToken.")
-  console.log()
-  console.log("  Then:")
-  console.log()
-  console.log("    ~$ export VILE_EMAIL=login_email")
-  console.log("    ~$ export VILE_PROJECT=project_name")
-  console.log("    ~$ export VILE_API_TOKEN=project_auth_token")
+  log.info()
+  log.info("Then:")
+  log.info()
+  log.info("  ~$ export VILE_EMAIL=login_email")
+  log.info("  ~$ export VILE_PROJECT=project_name")
+  log.info("  ~$ export VILE_API_TOKEN=project_auth_token")
 }
 
 var run = (app) => {
