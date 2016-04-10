@@ -397,7 +397,8 @@ var cwd_plugins_path = () =>
 
 var add_ok_issues = (
   vile_allow  : Vile.AllowList = [],
-  vile_ignore : Vile.IgnoreList = []
+  vile_ignore : Vile.IgnoreList = [],
+  log_distinct_ok_issues = false
 ) =>
   (issues : Vile.IssueList) =>
     util.promise_each(
@@ -414,7 +415,11 @@ var add_ok_issues = (
     .then((ok_issues : Vile.IssueList) => {
       let distinct_ok_issues = _.reject(ok_issues, (issue : Vile.Issue) =>
         _.some(issues, (i) => i.path == issue.path))
-      log_issue_messages(distinct_ok_issues)
+
+      if (log_distinct_ok_issues) {
+        log_issue_messages(distinct_ok_issues)
+      }
+
       return distinct_ok_issues.concat(issues)
     })
 
@@ -436,7 +441,7 @@ var run_plugins = (
     .filter(is_plugin)
     .then(execute_plugins(plugins, config, opts))
     .then(opts.snippets ? add_code_snippets() : passthrough)
-    .then(add_ok_issues(allow, ignore))
+    .then(add_ok_issues(allow, ignore, opts.scores))
     .catch(error_executing_plugins)
 }
 
