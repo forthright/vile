@@ -3,6 +3,7 @@
 var fs = require("fs")
 var path = require("path")
 var child_process = require("child_process")
+var qs = require("qs")
 var npm_run_path = require("npm-run-path")
 var extend = require("extend")
 var _ = require("lodash")
