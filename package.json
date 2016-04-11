@@ -61,7 +61,6 @@
     "tool"
   ],
   "dependencies": {
-    "express": "3.0.0",
     "bluebird": "^3.3.4",
     "cli-spinner": "0.2.5",
     "commander": "^2.9.0",
