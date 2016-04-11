@@ -83,6 +83,17 @@ var to_console = (
   return `${ issue.path }: ${ loc }${ details }`
 }
 
+var to_console_duplicate = (
+  issue : Vile.Issue
+) => {
+  let files = _.chain(issue)
+    .get("duplicate.locations", [])
+    .map("path")
+    .uniq()
+    .join(", ")
+  return `${ issue.path }: Duplicate code in ${ files }`
+}
+
 var to_console_churn = (
   issue : Vile.Issue
 ) => `${ issue.path }: ${ issue.churn }`
@@ -131,6 +142,8 @@ var log_issue_messages = (
         nlogs[t].info(to_console_comp(issue))
       } else if (issue.type == util.CHURN) {
         nlogs[t].info(to_console_churn(issue))
+      } else if (issue.type == util.DUPE) {
+        nlogs[t].warn(to_console_duplicate(issue))
       } else {
         nlogs[t].warn(to_console(issue))
       }
