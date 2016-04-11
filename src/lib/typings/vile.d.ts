@@ -1,15 +1,20 @@
+// vile.d.ts
+// The go to definition for Vile data
+
+// TODO: split up better (in this file)
 declare module Vile {
-  // TODO: make issue sub type defs
   export interface Issue {
     type        : string;
     path        : string;
     message     : string;
     title?      : string;
     name?       : string;
-    commit?     : any;
-    dependency? : any;
-    security?   : any;
-    stat?       : any;
+    signature?  : string;
+    commit?     : Commit;
+    dependency? : Dependency;
+    security?   : Security;
+    stat?       : Stat;
+    coverage?   : Coverage;
     plugin?     : string;
     snippet?    : Snippet[];
     language?   : string;
@@ -18,15 +23,61 @@ declare module Vile {
     where?      : IssueLocation;
   }
 
+  export interface Commit {
+    sha?          : string;
+    branch?       : string;
+    message?      : string;
+    committer?    : string;
+    commit_date?  : string;
+    author?       : string;
+    author_date   : string;
+  }
+
+  export interface Dependency {
+    name     : string;
+    current? : string;
+    latest?  : string;
+  }
+
+  export interface Security {
+    package     : string;
+    version?    : number;
+    advisory?   : string;
+    patched?    : string[];
+    vulnerable? : string[];
+    unaffected? : string[];
+  }
+
+  export interface DuplicateLocations {
+    path      : string;
+    snippet?  : Snippet[];
+    where?    : IssueLocation;
+  }
+
+  export interface Duplicate {
+    locations: DuplicateLocations[]
+  }
+
+  export interface Stat {
+    size?     : number;
+    loc?      : number;
+    lines?    : number;
+    comments? : number;
+  }
+
   export type IssueList = Issue[]
 
   export type Result = IssueList | Promise<IssueList>
 
   export interface Snippet {
-    offset : number;
-    line   : number;
-    text   : string;
-    ending : string;
+    line     : number;
+    offset?  : number;
+    text     : string;
+    ending?  : string;
+  }
+
+  export interface Coverage {
+    total : number;
   }
 
   export interface IssueLocation {
@@ -35,9 +86,10 @@ declare module Vile {
   }
 
   export interface IssueLine {
-    line      : number;
-    character : number;
+    line       : number;
+    character? : number;
   }
+
   export interface Plugin {
     punish : (config? : PluginConfig) => Result;
   }
