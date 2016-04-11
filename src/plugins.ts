@@ -369,6 +369,20 @@ var execute_plugins = (
 
 var passthrough = (value : any) => value
 
+// TODO: use Linez typings
+var into_snippet = (lines : any, start : number, end : number) =>
+  _.reduce(lines, (snippets, line, num) => {
+    if ((num > (start - 4) && num < (end + 2))) {
+      snippets.push({
+        offset: _.get(line, "offset"),
+        line: _.get(line, "number"),
+        text: _.get(line, "text", " "),
+        ending: _.get(line, "ending")
+      })
+    }
+    return snippets
+  }, [])
+
 var add_code_snippets = () =>
   (issues : Vile.IssueList) =>
     (<any>Bluebird).map(_.uniq(_.map(issues, "path")), (filepath : string) => {
@@ -385,23 +399,35 @@ var add_code_snippets = () =>
         (issue : Vile.Issue) => {
           let start = Number(_.get(issue, "where.start.line", 0))
           let end = Number(_.get(issue, "where.end.line", start))
-          if (start === 0 && end === start) return
-          if (_.some(util.displayable_issues, (t) => t == issue.type)) {
-            issue.snippet = lines.reduce((snippets, line, num) => {
-              if ((num > (start - 4) && num < (end + 2))) {
-                snippets.push({
-                  offset: _.get(line, "offset"),
-                  line: _.get(line, "number"),
-                  text: _.get(line, "text", " "),
-                  ending: _.get(line, "ending")
-                })
+
+          if (issue.type == util.DUPE) {
+            let locations : Vile.DuplicateLocations[] = _.
+              get(issue, "duplicate.locations", [])
+
+            _.each(locations, (loc : Vile.DuplicateLocations) => {
+              let start = Number(_.get(loc, "where.start.line", 0))
+              let end = Number(_.get(loc, "where.end.line", start))
+              if (start === 0 && end === start) return
+
+              if (loc.path == filepath) {
+                loc.snippet = into_snippet(lines, start, end)
+              } else {
+                // HACK: dupe reading here to get this to work with right files
+                let alt_lines = linez(fs.readFileSync(
+                  path.join(process.cwd(), loc.path),
+                  "utf-8"
+                )).lines
+                loc.snippet = into_snippet(alt_lines, start, end)
               }
-              return snippets
-            }, [])
+            })
+          } else {
+            if (start === 0 && end === start) return
+
+            if (_.some(util.displayable_issues, (t) => t == issue.type)) {
+              issue.snippet = into_snippet(lines, start, end)
+            }
           }
         })
-
-      lines = undefined
     })
     .then(() => issues)
 
