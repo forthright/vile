@@ -8,6 +8,7 @@ var os = require("os")
 var linez = require("linez")
 var _ = require("lodash")
 var spinner = require("cli-spinner")
+var qs = require("qs")
 var Spinner = spinner.Spinner
 var logger : Vile.Lib.Logger  = require("./logger")
 var util = require("./util")
