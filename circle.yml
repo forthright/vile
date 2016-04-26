@@ -4,7 +4,9 @@ machine:
 
 dependencies:
   pre:
-    - "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
+    - rm -rf .git
+    - git clone $CIRCLE_REPOSITORY
+    - git checkout -b $CIRCLE_BRANCH origin/$CIRCLE_BRANCH
     - npm install -g npm
     - uname -a
     - node --version
