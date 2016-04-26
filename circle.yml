@@ -3,8 +3,9 @@ machine:
     version: 5.10.1
 
 checkout:
-  pre:
+  override:
     - rm -rf .git
+    - git clone git@github.com:forthright/vile.git
 
 dependencies:
   pre:
