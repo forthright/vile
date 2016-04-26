@@ -5,7 +5,7 @@ machine:
 checkout:
   override:
     - rm -rf .git
-    - git clone git@github.com:forthright/vile.git
+    - git clone git@github.com:forthright/vile.git && cd vile
 
 dependencies:
   pre:
