@@ -2,13 +2,9 @@ machine:
   node:
     version: 5.10.1
 
-checkout:
-  post:
-    - git fetch origin $CIRCLE_BRANCH
-    - git reset --hard origin/$CIRCLE_BRANCH
-
 dependencies:
   pre:
+    - "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
     - npm install -g npm
     - uname -a
     - node --version
