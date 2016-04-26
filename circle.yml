@@ -3,8 +3,9 @@ machine:
     version: 5.10.1
 
 checkout:
-  override:
-    - git clone git@github.com:forthright/vile.git --depth 50
+  post:
+    - git fetch origin $CIRCLE_BRANCH
+    - git reset --hard origin/$CIRCLE_BRANCH
 
 dependencies:
   pre:
