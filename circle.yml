@@ -2,6 +2,9 @@ machine:
   node:
     version: 5.10.1
 
+checkout:
+  override: git clone git@github.com:forthright/vile.git --depth 50
+
 dependencies:
   pre:
     - npm install -g npm
