@@ -2,11 +2,12 @@ machine:
   node:
     version: 5.10.1
 
-dependencies:
+checkout:
   pre:
     - rm -rf .git
-    - git clone git@github.com:forthright/vile.git
-    - git checkout -b $CIRCLE_BRANCH origin/$CIRCLE_BRANCH
+
+dependencies:
+  pre:
     - npm install -g npm
     - uname -a
     - node --version
