@@ -4,6 +4,9 @@ machine:
 
 dependencies:
   pre:
+    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    - sudo apt-get update -y
+    - sudo apt-get install libstdc++-4.9-dev -y
     - npm install -g npm
     - uname -a
     - node --version
