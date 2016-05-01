@@ -166,6 +166,14 @@ module.exports = {
   allowed: is_allowed,
   spawn: spawn,
 
+  API: {
+    COMMIT: {
+      FINISHED: "finished",
+      PROCESSING: "processing",
+      FAILED: "failed"
+    }
+  },
+
   OK: "ok",
 
   displayable_issues: [

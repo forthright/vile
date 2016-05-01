@@ -1,5 +1,6 @@
 /// <reference path="lib/typings/index.d.ts" />
 
+var Bluebird : typeof bluebird.Promise = require("bluebird")
 var cli                        = require("commander")
 var _                          = require("lodash")
 var path                       = require("path")
@@ -8,11 +9,14 @@ var git                        = require("./git")
 var service : Vile.Lib.Service = require("./service")
 var logger  : Vile.Lib.Logger  = require("./logger")
 var config  : Vile.Lib.Config  = require("./config")
+var util                       = require("./util")
 var pkg     : Vile.Lib.Package = require("./../package")
 
 var log = logger.create("cli")
+let service_log = logger.create("vile.io")
 
-var DEFAULT_VILE_YML         = ".vile.yml"
+var DEFAULT_VILE_YML            = ".vile.yml"
+var COMMIT_STATUS_INTERVAL_TIME = 1000 // 1s
 
 // TODO: plugin interface
 var parse_plugins = (plugins : string) : Vile.PluginList =>
@@ -23,26 +27,81 @@ var set_log_levels = (logs? : string) => {
   if (logs.split) logs.split(",").forEach(logger.level)
 }
 
-var publish = (issues : Vile.IssueList, opts : any) => {
-  let log = logger.create("vile.io")
+var wait_for_done_status = (commit_id : number, auth : any) =>
+  new Bluebird((resolve, reject) => {
+    // HACK: this is not consistent, and network latency will mess this
+    let id = setInterval(() => {
+      service
+        .commit_status(commit_id, auth)
+        .then((http) => {
+          let status_code = _.get(http, "response.statusCode")
+          let body_json = _.attempt(
+            JSON.parse.bind(null, _.get(http, "body", "{}")))
+          let message = _.get(body_json, "message")
+          let data = _.get(body_json, "data")
 
-  config.load_auth()
+          if (status_code != 200) {
+            if (message) {
+              service_log.info(`Commit: ${message}`)
+            } else {
+              service_log.error(http.body)
+            }
+            return
+          }
+
+          service_log.debug(`Commit ${commit_id} ${message}`)
+
+          if (message == util.API.COMMIT.FINISHED) {
+            clearInterval(id)
+            resolve(data)
+          } else if (message == util.API.COMMIT.FAILED) {
+            clearInterval(id)
+            reject(data)
+          }
+        })
+    }, COMMIT_STATUS_INTERVAL_TIME)
+  })
+
+var publish = (issues : Vile.IssueList, cli_time : number, opts : any) => {
+  let auth = config.get_auth()
+
+  // HACK: can pass in project via cli arg, or via env var
+  if (_.isEmpty(auth.project)) auth.project = opts.deploy
 
   return service
-    .commit(issues, config.get_auth())
+    .commit(issues, cli_time, auth)
     .then((http) => {
-      if (_.get(http, "response.statusCode") == 200) {
-        service.log(
-          _.attempt(JSON.parse.bind(null, http.body)),
-          opts.scores)
+      if (_.get(http, "response.statusCode") != 200) {
+        // TODO: move log and error handling to inside service module
+        service_log.error(_.get(http, "body"))
+        return
+      }
+
+      let body_json = _.attempt(
+        JSON.parse.bind(null, _.get(http, "body", "{}")))
+      let commit_state = _.get(body_json, "message")
+      let commit_id = _.get(body_json, "data.commit_id")
+
+      service_log.info(`Commit ${commit_id} ${commit_state}`)
+
+      if (!commit_id) {
+        throw new Error("No commit uid was provided on commit. " +
+                        "Can't check status.")
+      } else if (!commit_state) {
+        throw new Error("No commit state was provided upon creation. " +
+                        "Can't check status.")
+      } else if (commit_state == util.API.COMMIT.FAILED) {
+        throw new Error("Creating commit state is failed.")
       } else {
-        log.error(http.body)
+        return wait_for_done_status(commit_id, auth)
+          .then((data) =>
+            service.log(data, opts.scores))
       }
     })
     .catch((err) => {
       console.log() // newline because spinner is running
       // HACK: not the best logging of errors here
-      log.error(_.get(err, "stack") ||
+      service_log.error(_.get(err, "stack") ||
                 _.get(err, "message") ||
                 JSON.stringify(err))
     })
@@ -64,10 +123,14 @@ var punish = (app : any) => {
     _.set(app, "config.vile.allow", allow)
   }
 
+  let cli_start_time = new Date().getTime()
+
   let exec = () => vile
     .exec(parse_plugins(plugins), app.config, app)
     .then((issues : Vile.IssueList) => {
-      if (app.deploy) return publish(issues, app)
+      let cli_end_time = new Date().getTime()
+      let cli_time = cli_end_time - cli_start_time
+      if (app.deploy) return publish(issues, cli_time, app)
       if (app.format == "json")
         process.stdout.write(JSON.stringify(issues))
     })
@@ -84,6 +147,7 @@ var punish = (app : any) => {
   }
 }
 
+// TODO: move into config.ts
 var load_config = (app : any) => {
   let app_config : string
 
@@ -106,9 +170,7 @@ var authenticate = () => {
   log.info()
   log.info("Then:")
   log.info()
-  log.info("  ~$ export VILE_EMAIL=login_email")
-  log.info("  ~$ export VILE_PROJECT=project_name")
-  log.info("  ~$ export VILE_API_TOKEN=project_auth_token")
+  log.info("  ~$ VILE_API_TOKEN=project_auth_token")
 }
 
 var run = (app) => {
@@ -141,8 +203,9 @@ var configure = () => {
             "log all the things")
     .option("-a, --authenticate",
             "authenticate with vile.io")
-    .option("-d, --deploy",
-            "publish to vile.io (disables --gitdiff)")
+    .option("-d, --deploy [project_name]",
+            "publish to vile.io (disables --gitdiff)- " +
+              "alternatively, you can set a VILE_PROJECT env var.")
     .option("-s, --scores",
             "show file scores and detailed stats")
     .option("-i, --snippets",

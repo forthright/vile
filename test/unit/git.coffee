@@ -4,6 +4,7 @@ git = mimus.require "./../../lib/git", __dirname, []
 chai = require "./../helpers/sinon_chai"
 sinon = require "sinon"
 git_log = mimus.get git, "log"
+git_repo_path = path.join(process.cwd(), ".git")
 expect = chai.expect
 git_diff_tree = undefined
 
@@ -63,14 +64,14 @@ describe "git", ->
           git.changed_files().should.be.fulfilled.notify ->
             process.nextTick ->
               git_diff_tree.should.have.been
-                .calledWith sinon.match.string, { originalRev: "--root" }
+                .calledWith git_repo_path, { originalRev: "--root" }
               done()
 
         it "uses custom one if given", (done) ->
           git.changed_files("master").should.be.fulfilled.notify ->
             process.nextTick ->
               git_diff_tree.should.have.been
-                .calledWith sinon.match.string, { originalRev: "master" }
+                .calledWith git_repo_path, { originalRev: "master" }
               done()
 
       describe "repo path", ->

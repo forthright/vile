@@ -7,56 +7,87 @@ var _ = require("lodash")
 
 var HOST = "vile.io"
 var PROD_URL = `https://${HOST}`
+var API_TARGET = "api/v0"
 var VILE_APP = process.env.VILE_APP || PROD_URL
 var log = logger.create(HOST)
 
-var commit = (issues, auth) =>
+var http_authentication = (auth_token : string) : any => {
+  return { "Authorization": `Token token=${auth_token}` }
+}
+
+var api_path = (endpoint : string) : string =>
+  `${VILE_APP}/${API_TARGET}/${endpoint}`
+
+var handle_response = (resolve, reject) =>
+  (err, response, body : Vile.JsonApiResponse) =>
+    err ?
+      reject({error: err}) :
+      resolve(<any>{
+        body: body,
+        response: response
+      })
+
+var commit = (
+  issues : any[],
+  cli_time : number,
+  auth : any
+) =>
   new Bluebird((resolve, reject) => {
+    let url = api_path(`${auth.project}/commits`)
+    log.debug(`POST ${url}`)
     request.post({
-      url: `${VILE_APP}/commits`,
+      url: url,
+      headers: http_authentication(auth.token),
       form: {
-        auth: {
-          project: auth.project,
-          email: auth.email,
-          token: auth.token
-        },
-        issues: JSON.stringify(issues)
+        issues: JSON.stringify(issues),
+        cli_time: cli_time
       }
-    }, (err, httpResponse, body) => {
-      if (err) {
-        reject({error: err})
-      } else {
-        resolve(<any>{
-          body: body,
-          response: httpResponse
-        })
-      }
-    })
+    },
+    handle_response(resolve, reject))
+  })
+
+var commit_status = (
+  commit_id : number,
+  auth : any
+) =>
+  new Bluebird((resolve, reject) => {
+    let url = api_path(`${auth.project}/commits/${commit_id}/status`)
+    log.debug(`GET ${url}`)
+    request.get({
+      url: url,
+      headers: http_authentication(auth.token)
+    },
+    handle_response(resolve, reject))
   })
 
 var padded_file_score = (score : number) =>
   (score < 100 ? " " : "") + String(score) + "%"
 
 var log_summary = (post_json : any, verbose : boolean) => {
-  // HACK
   let score : number = _.get(post_json, "score")
   let files : any[] = _.get(post_json, "files")
-  let description : number = _.get(post_json, "description")
+  let time : number = _.get(post_json, "time")
   let url : string = _.get(post_json, "url")
+  let time_in_seconds : string = (time / 1000)
+    .toFixed(2)
+    .toString()
+    .replace(/\.0*$/, "")
 
-  if (verbose)
+  if (verbose) {
     _.each(files, (file : any) =>
       log.info(
         `${padded_file_score(_.get(file, "score"))} => ` +
         `${_.get(file, "path")}`))
+  }
 
   log.info()
   log.info(`Score: ${score}%`)
-  log.info(description)
+  log.info(`Time: ${time_in_seconds}s`)
   log.info(url)
 }
 
 module.exports = {
   commit: commit,
+  commit_status: commit_status,
   log: log_summary
 }

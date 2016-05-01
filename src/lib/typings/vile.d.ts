@@ -58,6 +58,11 @@ declare module Vile {
     locations: DuplicateLocations[]
   }
 
+  export interface JsonApiResponse {
+    message : string;
+    data? : any;
+  }
+
   export interface Stat {
     size?     : number;
     loc?      : number;
@@ -117,15 +122,8 @@ declare module Vile {
   export module Lib {
     export interface Config {
       load      : (f : string) => any;
-      load_auth : () => any;
       get       : () => any;
       get_auth  : () => any;
-    }
-
-    export interface AuthConfig {
-      email   : string;
-      token   : string;
-      project : string;
     }
 
     export interface Package {
@@ -150,7 +148,13 @@ declare module Vile {
     export interface Service {
       commit : (
         issues : IssueList,
-        auth_config : AuthConfig
+        cli_time : number,
+        auth : any
+      ) => Promise<any>;
+
+      commit_status : (
+        commit_id : number,
+        auth : any
       ) => Promise<any>;
 
       log : (

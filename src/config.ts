@@ -15,22 +15,23 @@ var load_config_from_file = (filepath) => {
   }
 }
 
-var load_auth_config_from_env = (filepath) => {
+var load_auth_config_from_env = () => {
   auth_conf = {}
   let env = process.env
-  auth_conf.project = env.VILE_PROJECT
-  auth_conf.email   = env.VILE_EMAIL
   auth_conf.token   = env.VILE_API_TOKEN
+  auth_conf.project = env.VILE_PROJECT
   return auth_conf
 }
 
 var get = () => conf || {}
 
-var get_auth = () => auth_conf || {}
+var get_auth = () => {
+  if (!auth_conf) load_auth_config_from_env()
+  return auth_conf
+}
 
 module.exports = <Vile.Lib.Config>{
   load: load_config_from_file,
   get: get,
-  load_auth: load_auth_config_from_env,
   get_auth: get_auth
 }
