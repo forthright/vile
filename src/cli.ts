@@ -16,7 +16,7 @@ var log = logger.create("cli")
 let service_log = logger.create("vile.io")
 
 var DEFAULT_VILE_YML            = ".vile.yml"
-var COMMIT_STATUS_INTERVAL_TIME = 1000 // 1s
+var COMMIT_STATUS_INTERVAL_TIME = 2000 // 2s
 
 // TODO: plugin interface
 var parse_plugins = (plugins : string) : Vile.PluginList =>
@@ -42,21 +42,23 @@ var wait_for_done_status = (commit_id : number, auth : any) =>
 
           if (status_code != 200) {
             if (message) {
-              service_log.info(`Commit: ${message}`)
+              service_log.info(`Commit: ${commit_id} ${message}`)
             } else {
+              service_log.error("http status:", status_code)
               service_log.error(http.body)
             }
-            return
-          }
-
-          service_log.debug(`Commit ${commit_id} ${message}`)
-
-          if (message == util.API.COMMIT.FINISHED) {
-            clearInterval(id)
-            resolve(data)
-          } else if (message == util.API.COMMIT.FAILED) {
             clearInterval(id)
             reject(data)
+          } else {
+            service_log.info(`Commit ${commit_id} ${message}`)
+
+            if (message == util.API.COMMIT.FINISHED) {
+              clearInterval(id)
+              resolve(data)
+            } else if (message == util.API.COMMIT.FAILED) {
+              clearInterval(id)
+              reject(data)
+            }
           }
         })
     }, COMMIT_STATUS_INTERVAL_TIME)
