@@ -75,7 +75,7 @@
     "request": "^2.72.0"
   },
   "devDependencies": {
-    "@forthright/vile": ">= 0.8.0",
+    "@forthright/vile": ">=0.8.1",
     "@forthright/vile-coffeelint": ">=0.1.10",
     "@forthright/vile-comment": ">=0.1.14",
     "@forthright/vile-coverage": ">=0.2.10",
