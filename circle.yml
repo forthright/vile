@@ -16,4 +16,4 @@ test:
   override:
     - npm run test-ci-build
   post:
-    - npm run vile
+    - time npm run vile
