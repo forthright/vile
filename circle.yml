@@ -5,7 +5,6 @@ machine:
 dependencies:
   pre:
     - sh bin/check-libstdc-deb
-    - npm install -g npm
     - sh bin/list-env-versions
 
 test:
