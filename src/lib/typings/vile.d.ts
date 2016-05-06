@@ -1,8 +1,13 @@
 // vile.d.ts
 // The go to definition for Vile data
 
-// TODO: split up better (in this file)
 declare module Vile {
+
+  // -------------------------------------------------
+  // Issue
+  //
+  // Type defs for vile issue object creation
+  //
   export interface Issue {
     type        : string;
     path        : string;
@@ -12,6 +17,7 @@ declare module Vile {
     signature?  : string;
     commit?     : Commit;
     dependency? : Dependency;
+    duplicate?  : Duplicate;
     security?   : Security;
     stat?       : Stat;
     coverage?   : Coverage;
@@ -21,68 +27,6 @@ declare module Vile {
     complexity? : string;
     churn?      : string;
     where?      : IssueLocation;
-  }
-
-  export interface Commit {
-    sha?          : string;
-    branch?       : string;
-    message?      : string;
-    committer?    : string;
-    commit_date?  : string;
-    author?       : string;
-    author_date   : string;
-  }
-
-  export interface Dependency {
-    name     : string;
-    current? : string;
-    latest?  : string;
-  }
-
-  export interface Security {
-    package     : string;
-    version?    : number;
-    advisory?   : string;
-    patched?    : string[];
-    vulnerable? : string[];
-    unaffected? : string[];
-  }
-
-  export interface DuplicateLocations {
-    path      : string;
-    snippet?  : Snippet[];
-    where?    : IssueLocation;
-  }
-
-  export interface Duplicate {
-    locations: DuplicateLocations[]
-  }
-
-  export interface JsonApiResponse {
-    message : string;
-    data? : any;
-  }
-
-  export interface Stat {
-    size?     : number;
-    loc?      : number;
-    lines?    : number;
-    comments? : number;
-  }
-
-  export type IssueList = Issue[]
-
-  export type Result = IssueList | Promise<IssueList>
-
-  export interface Snippet {
-    line     : number;
-    offset?  : number;
-    text     : string;
-    ending?  : string;
-  }
-
-  export interface Coverage {
-    total : number;
   }
 
   export interface IssueLocation {
@@ -95,8 +39,99 @@ declare module Vile {
     character? : number;
   }
 
+  export type IssueList = Issue[]
+
+  export interface Snippet {
+    line     : number;
+    offset?  : number;
+    text     : string;
+    ending?  : string;
+  }
+
+  // -------------------------------------------------
+  // Commit
+  //
+  // Any sort of source control infomation (GIT, SVN, etc)
+  //
+  export interface Commit {
+    sha?          : string;
+    branch?       : string;
+    message?      : string;
+    committer?    : string;
+    commit_date?  : string;
+    author?       : string;
+    author_date?  : string;
+  }
+
+  // -------------------------------------------------
+  // Dependency
+  //
+  // Anything related to project dependencies
+  //
+  export interface Dependency {
+    name     : string;
+    current? : string;
+    latest?  : string;
+  }
+
+  // -------------------------------------------------
+  // Security
+  //
+  // Anything security related
+  //
+  export interface Security {
+    package     : string;
+    version?    : number;
+    advisory?   : string;
+    patched?    : string[];
+    vulnerable? : string[];
+    unaffected? : string[];
+  }
+
+  // -------------------------------------------------
+  // Duplicate
+  //
+  // Anything related to duplicate/similar code
+  //
+  export interface Duplicate {
+    locations: DuplicateLocations[]
+  }
+
+  export interface DuplicateLocations {
+    path      : string;
+    snippet?  : Snippet[];
+    where?    : IssueLocation;
+  }
+
+  // -------------------------------------------------
+  // Stat
+  //
+  // Anything related to file statistics
+  //
+  export interface Stat {
+    size?     : number;
+    loc?      : number;
+    lines?    : number;
+    comments? : number;
+  }
+
+  // -------------------------------------------------
+  // Coverage
+  //
+  // Anything related to file test code coverage
+  //
+  export interface Coverage {
+    total : number;
+  }
+
+  // -------------------------------------------------
+  // Config
+  //
+  // Anything related to .vile.yml or plugin creation
+  //
+
   export interface Plugin {
-    punish : (config? : PluginConfig) => Result;
+    punish : (config? : PluginConfig) => IssueList | Promise<IssueList>;
   }
 
   export interface PluginConfig {
@@ -105,21 +140,38 @@ declare module Vile {
     allow?   : AllowList;
   }
 
-  export interface Config {
-    plugins : PluginList;
-    ignore  : IgnoreList;
+  interface VileConfig {
+    plugins? : PluginList;
+    ignore?  : IgnoreList;
     allow?   : AllowList;
   }
 
-  export interface PluginList extends Array<string> {}
+  export type PluginList = string[]
 
-  export interface IgnoreList extends Array<string> {}
+  export type IgnoreList = string[]
 
-  export interface AllowList extends Array<string> {}
+  export type AllowList = string[]
 
-  export interface YMLConfig extends Object {}
+  export type YMLConfig = any
+
+  // -------------------------------------------------
+  // Library API
+  //
+  // let vile    : Vile.Lib.Index   = require("vile")
+  //
+  // or...
+  //
+  // let vile    : Vile.Lib.Index   = require("./index")
+  // let service : Vile.Lib.Service = require("./service")
+  // let config  : Vile.Lib.Config  = require("./config")
+  //
 
   export module Lib {
+    export interface JsonApiResponse {
+      message : string;
+      data? : any;
+    }
+
     export interface Config {
       load      : (f : string) => any;
       get       : () => any;

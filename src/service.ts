@@ -19,7 +19,7 @@ var api_path = (endpoint : string) : string =>
   `${VILE_APP}/${API_TARGET}/${endpoint}`
 
 var handle_response = (resolve, reject) =>
-  (err, response, body : Vile.JsonApiResponse) =>
+  (err, response, body : Vile.Lib.JsonApiResponse) =>
     err ?
       reject({error: err}) :
       resolve(<any>{

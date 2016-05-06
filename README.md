@@ -51,11 +51,14 @@ to find out more about the main library. The
 [cli](src/cli.ts) module is a good starting place,
 along with the [main library](src/index.ts) module.
 
+For type definitions for using the library, building
+plugins, and creating issues, see [here](https://github.com/forthright/vile/blob/master/src/lib/typings/vile.d.ts).
+
 ## Plugins
 
 To actually punish your code, you need to install plugins first.
 
-For a complete list of plugins, see [here](https://vile.io/plugins);
+For a complete list of plugins, see [here](https://vile.io/plugins).
 
 To get started, install a plugin package in your project root:
 

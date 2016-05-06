@@ -192,7 +192,7 @@ var configure = () => {
     .usage("[options] <file|dir ...>")
     .option("-p, --punish [plugin_list]",
             `unless specified in config, this can be a comma delimited
-                            string, else run all installed plugins`)
+                             string, else run all installed plugins`)
     .option("-c, --config [path]",
             "specify a config file, else look for one in the cwd")
     .option("-f, --format [type]",
@@ -207,7 +207,7 @@ var configure = () => {
             "authenticate with vile.io")
     .option("-d, --deploy [project_name]",
             "publish to vile.io (disables --gitdiff)- " +
-              "alternatively, you can set a VILE_PROJECT env var.")
+              "alternatively, you can set a VILE_PROJECT env var")
     .option("-s, --scores",
             "show file scores and detailed stats")
     .option("-i, --snippets",
