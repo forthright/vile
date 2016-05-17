@@ -2,6 +2,7 @@ vile:
   ignore:
     - appveyor.yml
     - coverage
+    - LICENSE
     - coffeelint.json
     - .ackrc
     - .babelrc
