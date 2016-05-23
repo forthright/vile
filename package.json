@@ -61,7 +61,7 @@
     "tool"
   ],
   "dependencies": {
-    "bluebird": "^3.3.5",
+    "bluebird": "^3.4.0",
     "cli-spinner": "0.2.5",
     "commander": "^2.9.0",
     "extend": "^3.0.0",
@@ -75,7 +75,7 @@
     "request": "^2.72.0"
   },
   "devDependencies": {
-    "@forthright/vile": ">=0.8.1",
+    "@forthright/vile": ">=0.8.2",
     "@forthright/vile-coffeelint": ">=0.1.10",
     "@forthright/vile-comment": ">=0.1.14",
     "@forthright/vile-coverage": ">=0.2.10",
@@ -102,7 +102,7 @@
     "mocha": "^2.4.5",
     "npm-check-updates": "^2.6.5",
     "pryjs": "^1.0.2",
-    "release-it": "^2.3.1",
+    "release-it": "^2.4.0",
     "shelljs": "^0.7.0",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
