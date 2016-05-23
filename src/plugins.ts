@@ -388,7 +388,7 @@ var add_code_snippets = () =>
     (<any>Bluebird).map(_.uniq(_.map(issues, "path")), (filepath : string) => {
       if (!(filepath &&
             fs.existsSync(filepath) &&
-              fs.statSync(filepath).isFile())) return
+              fs.lstatSync(filepath).isFile())) return
 
       let lines = linez(fs.readFileSync(
         path.join(process.cwd(), filepath),

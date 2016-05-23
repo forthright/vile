@@ -64,7 +64,7 @@ var is_allowed = (
 var collect_files = (target, allowed) : string[] => {
   let at_root = !path.relative(process.cwd(), target)
   let rel_path = at_root ? target : path.relative(process.cwd(), target)
-  let is_dir = fs.statSync(rel_path).isDirectory();
+  let is_dir = fs.lstatSync(rel_path).isDirectory();
 
   if (!at_root && !allowed(rel_path, is_dir)) return;
 
@@ -131,7 +131,7 @@ var promise_each_file = (
     let files = collect_files(dirpath, allow)
 
     let checkable = _.chain(_.flatten(files))
-      .filter((f) => fs.existsSync(f) && fs.statSync(f).isFile())
+      .filter((f) => fs.existsSync(f) && fs.lstatSync(f).isFile())
       .value()
 
     resolve(checkable)
@@ -139,7 +139,7 @@ var promise_each_file = (
 
   return readdir.then((files : string[]) => {
     return Bluebird.all(files.map((target) => {
-      if (fs.statSync(target).isFile()) {
+      if (fs.lstatSync(target).isFile()) {
         if (opts.read_data) {
           return fs.readFileAsync(target, { encoding: "utf-8" })
             .then((data) => parse_file(target, data))
