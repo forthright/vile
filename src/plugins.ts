@@ -76,7 +76,8 @@ var to_console = (
   let h_char = humanize_line_char(issue)
   let details = _.has(issue, "title") &&
                 issue.message != issue.title ?
-                  `${issue.title} => ${issue.message}` : issue.title
+                  `${issue.title} => ${issue.message}` :
+                    (issue.message || issue.title)
   let loc = h_line || h_char ?
     `${ h_line ? "line " + h_line + ", " : "" }` +
     `${ h_char ? "col " + h_char + ", " : "" }` : ""
