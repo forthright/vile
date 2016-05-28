@@ -1,6 +1,6 @@
 # vile [![Circle CI](https://circleci.com/gh/forthright/vile.svg?style=svg&circle-token=76807e9cc864afc2d2af7db4c744a0eae8b9fc00)](https://circleci.com/gh/forthright/vile) [![Build status](https://ci.appveyor.com/api/projects/status/3qu5ih8n3iufpait/branch/master?svg=true)](https://ci.appveyor.com/project/brentlintner/vile/branch/master)
 
-[![score-badge](https://vile.io/brentlintner/vile/badges/score?token=4_y-Kus1bunceBtsraA7)](https://vile.io/brentlintner/vile) [![security-badge](https://vile.io/brentlintner/vile/badges/security?token=4_y-Kus1bunceBtsraA7)](https://vile.io/brentlintner/vile) [![coverage-badge](https://vile.io/brentlintner/vile/badges/coverage?token=4_y-Kus1bunceBtsraA7)](https://vile.io/brentlintner/vile) [![dependency-badge](https://vile.io/brentlintner/vile/badges/dependency?token=4_y-Kus1bunceBtsraA7)](https://vile.io/brentlintner/vile)
+[![score-badge](https://vile.io/brentlintner/vile/badges/score?token=uFywUmzZfbg6UboLzn6R)](https://vile.io/brentlintner/vile) [![security-badge](https://vile.io/brentlintner/vile/badges/security?token=uFywUmzZfbg6UboLzn6R)](https://vile.io/brentlintner/vile) [![coverage-badge](https://vile.io/brentlintner/vile/badges/coverage?token=uFywUmzZfbg6UboLzn6R)](https://vile.io/brentlintner/vile) [![dependency-badge](https://vile.io/brentlintner/vile/badges/dependency?token=uFywUmzZfbg6UboLzn6R)](https://vile.io/brentlintner/vile)
 
 A punishing, yet easy to use tool for writing insightful code.
 
