@@ -56,6 +56,13 @@ length:
   config:
     file: 120
     line: 80
+  ignore: [ "/lib" ]
+
+eclint:
+  ignore: [ "/lib" ]
+
+comment:
+  ignore: [ "/lib" ]
 
 coverage:
   config:
