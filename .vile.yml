@@ -64,6 +64,9 @@ eclint:
 comment:
   ignore: [ "/lib" ]
 
+stat:
+  ignore: [ "/lib" ]
+
 coverage:
   config:
     path: coverage/lcov.info
