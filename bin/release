@@ -1,11 +1,16 @@
 #!/usr/bin/env sh
 level=$1
 
+set -e
+
 if [ -z "${level}" ]; then
   level=patch
 fi
 
-npm run compile &&
-npm test &&
-git add -f lib &&
-release-it -n -p -i $level -m "v%s"
+npm run compile
+
+npm test
+
+git add -f lib
+
+npm run -- release-it -n -p -i $level -m "v%s"

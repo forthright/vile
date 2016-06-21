@@ -27,6 +27,7 @@
     "lint-cov": "node bin/lint-cov",
     "mocha": "mocha",
     "ncu": "ncu -a",
+    "release-it": "release-it",
     "test": "node bin/test",
     "test-cov": "node bin/test-cov",
     "test-ci-build": "node bin/test-ci-build",
