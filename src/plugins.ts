@@ -239,6 +239,7 @@ var run_plugins_in_fork = (
     })
   })
 
+// TODO: test this to be Windows friendly!
 var normalize_paths = (issues) =>
   _.each(issues, (issue) => {
     if (_.has(issue, "path")) {
