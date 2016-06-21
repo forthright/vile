@@ -57,7 +57,7 @@ var publish = (issues : Vile.IssueList, cli_time : number, opts : any) => {
   let auth = config.get_auth()
 
   // HACK: can pass in project via cli arg, or via env var
-  if (_.isEmpty(auth.project)) auth.project = opts.deploy
+  if (_.isEmpty(auth.project)) auth.project = opts.upload
 
   return service
     .commit(issues, cli_time, auth)
@@ -130,7 +130,7 @@ var punish = (app : any, paths : string[]) => {
     .then((issues : Vile.IssueList) => {
       let cli_end_time = new Date().getTime()
       let cli_time = cli_end_time - cli_start_time
-      if (app.deploy) return publish(issues, cli_time, app)
+      if (app.upload) return publish(issues, cli_time, app)
       if (app.format == "json")
         process.stdout.write(JSON.stringify(issues))
     })

@@ -31,7 +31,7 @@
     "test-cov": "node bin/test-cov",
     "test-ci-build": "node bin/test-ci-build",
     "tsc": "tsc",
-    "vile": "vile -cpisd --nodecorations"
+    "vile": "vile p -usi --nodecorations"
   },
   "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
@@ -75,7 +75,7 @@
     "request": "^2.72.0"
   },
   "devDependencies": {
-    "@forthright/vile": ">=0.8.3",
+    "@forthright/vile": ">=0.9.0",
     "@forthright/vile-coffeelint": ">=0.1.11",
     "@forthright/vile-comment": ">=0.1.15",
     "@forthright/vile-coverage": ">=0.2.11",
@@ -100,7 +100,7 @@
     "istanbul": "^0.4.4",
     "mimus": "^0.2.2",
     "mocha": "^2.5.3",
-    "nodegit": "0.13.1",
+    "nodegit": "0.13.2",
     "npm-check-updates": "^2.6.7",
     "pryjs": "^1.0.2",
     "release-it": "^2.4.0",
