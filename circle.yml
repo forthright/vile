@@ -5,7 +5,6 @@ machine:
 dependencies:
   pre:
     - git checkout -f $CIRCLE_BRANCH
-    - git fetch origin master
     - sh bin/list-env-versions
 
 test:
