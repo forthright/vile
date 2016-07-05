@@ -83,7 +83,7 @@
     "@forthright/vile-depcheck": ">=0.1.10",
     "@forthright/vile-eclint": ">=0.1.8",
     "@forthright/vile-eslint": ">=0.1.9",
-    "@forthright/vile-git": ">=0.4.0",
+    "@forthright/vile-git": ">=0.4.1",
     "@forthright/vile-language": ">=0.1.10",
     "@forthright/vile-length": ">=0.1.10",
     "@forthright/vile-license": ">=0.3.12",
