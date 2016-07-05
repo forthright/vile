@@ -2,9 +2,13 @@ machine:
   node:
     version: 6.2.0
 
+checkout:
+  post:
+    - "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
+    - git checkout -f $CIRCLE_BRANCH
+
 dependencies:
   pre:
-    - git checkout -f $CIRCLE_BRANCH
     - sh bin/list-env-versions
 
 test:
