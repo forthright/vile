@@ -4,7 +4,7 @@ machine:
 
 dependencies:
   pre:
-    - sh bin/check-libstdc-deb
+    - git checkout -f $CIRCLE_BRANCH
     - sh bin/list-env-versions
 
 test:

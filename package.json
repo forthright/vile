@@ -71,7 +71,7 @@
     "js-yaml": "^3.6.1",
     "linez": "^4.1.1",
     "lodash": "^4.13.x",
-    "minilog": "^3.0.0",
+    "minilog": "^3.0.1",
     "npm-run-path": "^1.0.0",
     "request": "^2.72.0"
   },
@@ -83,7 +83,7 @@
     "@forthright/vile-depcheck": ">=0.1.10",
     "@forthright/vile-eclint": ">=0.1.8",
     "@forthright/vile-eslint": ">=0.1.9",
-    "@forthright/vile-git": ">=0.3.5",
+    "@forthright/vile-git": ">=0.4.0",
     "@forthright/vile-language": ">=0.1.10",
     "@forthright/vile-length": ">=0.1.10",
     "@forthright/vile-license": ">=0.3.12",
