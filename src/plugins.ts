@@ -3,6 +3,7 @@
 var Bluebird : typeof bluebird.Promise = require("bluebird")
 var fs = require("fs")
 var path = require("path")
+var os = require("os")
 var cluster = require("cluster")
 var os = require("os")
 var linez = require("linez")
@@ -245,7 +246,13 @@ var normalize_paths = (issues) =>
     if (_.has(issue, "path")) {
       issue.path = issue.path
         .replace(process.cwd(), "")
-        .replace(/^\/?/, "")
+
+      // HACK: see above todo
+      if (!/windows/i.test(os.type())) {
+        issue.path = issue.path
+          .replace(/^\.\/?/, "")
+          .replace(/^\/?/, "")
+      }
     }
   })
 
