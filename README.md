@@ -155,6 +155,46 @@ Then:
 
     vile p --upload project_name
 
+## Editor Integration
+
+There are various text editors that have `vile` integrations.
+
+### Syntastic
+
+See [forthright/syntastic](https://github.com/forthright/syntastic) for now.
+Just replace the upstream install with the `master` branch.
+
+Current syntax checkers:
+
+* [vile_rubycritic](https://github.com/forthright/syntastic/blob/vile-checkers/syntax_checkers/ruby/vile.vim)
+* [vile_rubocop](https://github.com/forthright/syntastic/blob/vile-checkers/syntax_checkers/ruby/vile.vim)
+* [vile_sass_lint](https://github.com/forthright/syntastic/blob/vile-checkers/syntax_checkers/sass/vile.vim)
+* [vile_slim_lint](https://github.com/forthright/syntastic/blob/vile-checkers/syntax_checkers/slim/vile.vim)
+
+An example config supporing `slim`, `ruby`, and `sass`, with
+passive mode enabled:
+
+```vim
+  " Command to toggle syntastic passive mode
+  nnoremap <C-w>e :SyntasticCheck<CR>
+  nnoremap <C-w>E :SyntasticReset<CR>
+
+  " Recommended statusline (see :help syntastic)
+  set statusline+=%#warningmsg#
+  set statusline+=%{SyntasticStatuslineFlag()}
+  set statusline+=%*
+
+  " Put into passive mode, and set desired checkers
+  let g:syntastic_mode_map = { "mode": "passive" }
+  let g:syntastic_ruby_checkers=["mri", "vile_rubycritic", "vile_rubocop"]
+  let g:syntastic_slim_checkers=["vile_slim_lint"]
+  let g:syntastic_sass_checkers=["vile_sass_lint"]
+```
+
+### Atom
+
+Coming soon...
+
 ## Formatting
 
 You can turn on various output formats with the `-f` option.
