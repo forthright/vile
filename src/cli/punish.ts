@@ -180,6 +180,9 @@ var create = (cli : any) =>
             "show file scores and detailed stats")
     .option("-i, --snippets",
             "add code snippets to issues")
+    .option("-d, --dontpostprocess",
+            "don't post process data in any way (ex: adding ok issues)- " +
+            "useful for per file checking- don't use with --upload")
     .option("-g, --gitdiff [rev]",
             "only check files patched in latest HEAD commit, or rev")
     .option("-l, --log [level]",
@@ -188,7 +191,7 @@ var create = (cli : any) =>
             "log nothing")
     .option("-v, --verbose",
             "log all the things")
-    .option("--nodecorations", "disable color and progress bar")
+    .option("-n, --nodecorations", "disable color and progress bar")
     .action((paths, app) => {
       load_config(app)
       // TODO: do this globally

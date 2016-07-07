@@ -532,6 +532,7 @@ var run_plugins = (
   let ignore = _.get(app_config, "ignore")
   let allow = _.get(app_config, "allow")
   let plugins : Vile.PluginList = custom_plugins
+  let lookup_ok_issues = !opts.dontpostprocess
 
   if (app_config.plugins) {
     plugins = _.uniq(plugins.concat(app_config.plugins))
@@ -541,7 +542,8 @@ var run_plugins = (
     .filter(is_plugin)
     .then(execute_plugins(plugins, config, opts))
     .then(opts.snippets ? add_code_snippets() : passthrough)
-    .then(add_ok_issues(allow, ignore, opts.scores))
+    .then(lookup_ok_issues ?
+          add_ok_issues(allow, ignore, opts.scores) : passthrough)
     .catch(error_executing_plugins)
 }
 
