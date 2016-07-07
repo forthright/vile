@@ -5,7 +5,6 @@ var fs = require("fs")
 var path = require("path")
 var os = require("os")
 var cluster = require("cluster")
-var os = require("os")
 var linez = require("linez")
 var _ = require("lodash")
 var spinner = require("cli-spinner")
@@ -71,18 +70,44 @@ var humanize_line_num = (issue) : string => {
 }
 
 var to_console = (
-  issue : Vile.Issue
+  issue : Vile.Issue,
+  format : string = "default"
 ) : string => {
-  let h_line = humanize_line_num(issue)
-  let h_char = humanize_line_char(issue)
-  let details = _.has(issue, "title") &&
-                issue.message != issue.title ?
-                  `${issue.title} => ${issue.message}` :
-                    (issue.message || issue.title)
-  let loc = h_line || h_char ?
-    `${ h_line ? "line " + h_line + ", " : "" }` +
-    `${ h_char ? "col " + h_char + ", " : "" }` : ""
-  return `${ issue.path }: ${ loc }${ details }`
+  if (format == "syntastic") {
+    let t : string = issue.type
+    let start_info : Vile.IssueLine
+    let synastic_type : string = _
+      .some(util.errors, (i) => i.type == t) ? "E" : "W"
+
+    if (t == util.DUPE) {
+      let locs = _.get(issue, "duplicate.locations", [])
+      start_info = _.get(_.first(locs), "where.start", {})
+    } else {
+      start_info = _.get(issue, "where.start", {})
+    }
+
+    let h_line = _.get(start_info, "line", 1)
+    let h_char = _.get(start_info, "character", 1)
+    let details = _.has(issue, "title") &&
+                  issue.message != issue.title ?
+                    `${issue.title} => ${issue.message}` :
+                      (issue.message || issue.title)
+
+    return `${ issue.path }:${ h_line }:${ h_char }: ` +
+      `${synastic_type}: ${ details }`
+  } else {
+    let h_line = humanize_line_num(issue)
+    let h_char = humanize_line_char(issue)
+    let details = _.has(issue, "title") &&
+                  issue.message != issue.title ?
+                    `${issue.title} => ${issue.message}` :
+                      (issue.message || issue.title)
+    let loc = h_line || h_char ?
+      `${ h_line ? "line " + h_line + ", " : "" }` +
+      `${ h_char ? "col " + h_char + ", " : "" }` : ""
+
+    return `${ issue.path }: ${ loc }${ details }`
+  }
 }
 
 var to_console_duplicate = (
@@ -126,6 +151,17 @@ var to_console_stat = (
   let comments = _.get(issue, "stat.comment", "?")
   return `${ issue.path } (${ size ? (size / 1024).toFixed(3) + "KB" : "" })` +
     ` - ${ lines } lines, ${ loc } loc, ${ comments } comments`
+}
+
+var log_syntastic_applicable_messages = (
+  issues : Vile.Issue[] = []
+) => {
+  issues.forEach((issue : Vile.Issue, index : number) => {
+    let issue_type : string = issue.type
+    if (_.some(util.displayable_issues, (t) => issue_type == t)) {
+      console.log(to_console(issue, "syntastic"))
+    }
+  })
 }
 
 var log_issue_messages = (
@@ -256,16 +292,26 @@ var normalize_paths = (issues) =>
     }
   })
 
-// TODO: support String || Array values
-var set_config_list = (plugin_config, key, base) => {
-  let list = _.get(plugin_config, key, [])
+var set_ignore_list = (plugin_config, base) => {
+  let list = _.get(plugin_config, "ignore", [])
 
   if (_.isString(list)) list = [list]
 
   if (_.isEmpty(list)) {
-    _.set(plugin_config, key, base)
+    _.set(plugin_config, "ignore", base)
   } else if (is_array(list)) {
-    _.set(plugin_config, key, _.uniq(list.concat(base)))
+    _.set(plugin_config, "ignore", _.uniq(list.concat(base)))
+  }
+}
+
+var set_allow_list = (plugin_config, base) => {
+  if (!_.isEmpty(base)) {
+    if (_.isString(base)) base = [base]
+    _.set(plugin_config, "allow", base)
+  } else {
+    let list = _.get(plugin_config, "allow", [])
+    if (_.isString(list)) list = [list]
+    _.set(plugin_config, "allow", list)
   }
 }
 
@@ -274,8 +320,8 @@ var get_plugin_config = (name : string, config : Vile.YMLConfig) => {
   let vile_ignore : string[] = _.get(config, "vile.ignore", [])
   let vile_allow : string[] = _.get(config, "vile.allow", [])
 
-  set_config_list(plugin_config, "ignore", vile_ignore)
-  set_config_list(plugin_config, "allow", vile_allow)
+  set_ignore_list(plugin_config, vile_ignore)
+  set_allow_list(plugin_config, vile_allow)
 
   return plugin_config
 }
@@ -367,7 +413,13 @@ var execute_plugins = (
       .then(_.flatten)
       .then((issues : Vile.Issue[]) => {
         if (spin) spin.stop(true)
-        if (opts.format != "json") log_issue_messages(issues)
+
+        if (opts.format == "syntastic") {
+          log_syntastic_applicable_messages(issues)
+        } else if (opts.format != "json") {
+          log_issue_messages(issues)
+        }
+
         resolve(issues)
       })
     } else {

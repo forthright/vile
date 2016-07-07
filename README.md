@@ -26,7 +26,10 @@ is distributed via [npm](http://npmjs.org).
 
 #### Node CLI
 
-    npm install -g @forthright/vile
+    npm i -g vile
+
+See usage with:
+
     vile --help
 
 #### Node API
@@ -65,24 +68,26 @@ To get started, install a plugin package in your project root:
 Example, install the `eslint` plugin:
 
     cd into_my_project
-    npm install @forthright/vile-eslint
+    # Note: you will always need vile installed (locally) to run plugins
+    npm install @forthright/vile --save-dev
+    npm install @forthright/vile-eslint --save-dev
 
 Then just run:
 
-    vile -p
+    vile p
 
 The CLI will look up any installed plugins and automatically
 pull them in and run their checks.
 
 You can also specify a white-list of installed plugins to only run:
 
-    vile -p eslint,coffeelint
+    vile punish -p eslint,coffeelint
 
 ## Config File
 
 Create a `.vile.yml` file in your project root:
 
-```yml
+```yaml
 vile:
   ignore: ["custom ignore list"]
   allow: ["or a custom allow list"]
@@ -93,22 +98,13 @@ some_plugin:
   allow: plugin_allow
 ```
 
-Then include it when punishing:
+Then:
 
-    vile --config --punish
+    vile punish
 
-Or, more tersely:
+You can also specify a custom list in your config:
 
-    vile -cp
-
-You can also run specific plugins with your config:
-
-    vile -cp eslint
-
-Or specify a list in your config:
-
-
-```yml
+```yaml
 vile:
   plugins: [ "eslint" ]
 ```
@@ -133,11 +129,19 @@ For reference, [ignore-file](https://github.com/mafintosh/ignore-file) is curren
 The `vile.allow` (and plugin specific) setting specifies paths to
 *only* include.
 
-It is treated just like the `vile.ignore` list.
-
 It's util method is `vile.allowed("path", allow_list)`.
 
-You can also just: `vile file dir ....`.
+Note: Unlike ignore, certain levels will **overwrite** others, when set.
+
+From highest to lowest precedence, they are:
+
+1. Specified via `vile p --gitdiff`
+2. Specified via `vile p file dir ...`
+3. Specified via `vile.allow`
+4. Specified via `my_plugin.allow`
+
+So, say you call `vile p -g` it will ignore plugin/top
+level allow lists, and any path arguments provided.
 
 ## Publishing
 
@@ -145,11 +149,11 @@ You can publish your project to [vile.io](https://vile.io).
 
 Make an account if you don't have one, then:
 
-    vile --authenticate
+    vile auth
 
 Then:
 
-    vile -cp --deploy
+    vile p --upload project_name
 
 ## Formatting
 
@@ -157,13 +161,19 @@ You can turn on various output formats with the `-f` option.
 
 ### JSON
 
-    vile -cp -f json
+    vile p -f json
+
+### Syntastic
+
+An `emacs` like formatting used in Vile's syntastic plugin.
+
+    vile p -f syntastic
 
 ## Logging
 
 You can set the logging level if needed.
 
-    vile -cp -l warn
+    vile p -l warn
 
 ## Creating A Plugin
 

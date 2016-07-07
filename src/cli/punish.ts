@@ -117,10 +117,7 @@ var punish = (app : any, paths : string[]) => {
   })
 
   if (!_.isEmpty(paths)) {
-    let vile_allow = _.get(app, "config.vile.allow")
-    let allow = _.isEmpty(paths) ? [] : paths
-    if (!_.isEmpty(vile_allow)) allow = allow.concat(vile_allow)
-    _.set(app, "config.vile.allow", allow)
+    _.set(app, "config.vile.allow", paths)
   }
 
   let cli_start_time = new Date().getTime()
@@ -138,8 +135,8 @@ var punish = (app : any, paths : string[]) => {
   if (app.gitdiff) {
     let rev = typeof app.gitdiff == "string" ?
       app.gitdiff : undefined
-    git.changed_files(rev).then((paths : string[]) => {
-      _.set(app, "config.vile.allow", paths)
+    git.changed_files(rev).then((changed_paths : string[]) => {
+      _.set(app, "config.vile.allow", changed_paths)
       exec()
     })
   } else {
@@ -175,7 +172,7 @@ var create = (cli : any) =>
     .option("-c, --config [path]",
             "specify a custom config file")
     .option("-f, --format [type]",
-            "specify output format (color=default,json)")
+            "specify output format (default,json,syntastic)")
     .option("-u, --upload [project_name]",
             "publish to vile.io (disables --gitdiff)- " +
               "alternatively, you can set a VILE_PROJECT env var")
@@ -196,7 +193,8 @@ var create = (cli : any) =>
       load_config(app)
       // TODO: do this globally
       if (app.verbose) logger.verbose(true)
-      if (app.quiet || app.format == "json") logger.quiet()
+      if (app.quiet || app.format == "json" ||
+          app.format == "syntastic") logger.quiet()
       if (app.log) set_log_levels(app.log)
       punish(app, paths)
     })
