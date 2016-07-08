@@ -76,13 +76,13 @@
     "request": "^2.72.0"
   },
   "devDependencies": {
-    "@forthright/vile": ">=0.9.1",
+    "@forthright/vile": ">=0.9.4",
     "@forthright/vile-coffeelint": ">=0.1.12",
     "@forthright/vile-comment": ">=0.1.16",
     "@forthright/vile-coverage": ">=0.2.13",
     "@forthright/vile-depcheck": ">=0.1.11",
     "@forthright/vile-eclint": ">=0.1.9",
-    "@forthright/vile-eslint": ">=0.1.10",
+    "@forthright/vile-eslint": ">=0.1.11",
     "@forthright/vile-git": ">=0.4.2",
     "@forthright/vile-language": ">=0.1.11",
     "@forthright/vile-length": ">=0.1.11",

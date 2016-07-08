@@ -1,6 +1,7 @@
 vile:
   ignore:
     - appveyor.yml
+    - bower_components
     - coverage
     - LICENSE
     - coffeelint.json
@@ -17,7 +18,6 @@ vile:
     - .git
     - circle.yml
     - .editorconfig
-    - .eslintignore
     - .eslintrc
     - .gitignore
     - .npmrc
@@ -56,6 +56,9 @@ length:
   config:
     file: 120
     line: 80
+  ignore: [ "/lib" ]
+
+eslint:
   ignore: [ "/lib" ]
 
 eclint:
