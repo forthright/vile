@@ -2,6 +2,9 @@ env:
   node: true
   es6: true
 
+# TODO: once past alpha (logging when should not)
+# parser: typescript-eslint-parser
+
 rules:
   curly: [0, "all"]
   dot-notation: [2, {}]

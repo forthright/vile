@@ -108,6 +108,7 @@
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
     "typescript": "^1.8.10",
+    "typescript-eslint-parser": "0.1.0-alpha-1",
     "wrench": "^1.5.9"
   }
 }

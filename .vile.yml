@@ -62,6 +62,7 @@ jshint:
   ignore: [ "/lib" ]
 
 eslint:
+  # allow:  [ "src/**/*.ts" ] - weird logging from ts eslint module?
   ignore: [ "/lib" ]
 
 eclint:
