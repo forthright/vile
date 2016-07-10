@@ -39,7 +39,7 @@ var matches = (
   if (list_or_string) {
     matched = typeof list_or_string == "string" ?
       ignore.sync(list_or_string) :
-      ignore.compile(list_or_string.join("\n"))
+      ignore.compile(list_or_string)
   } else {
     matched = () => false
   }
@@ -47,18 +47,41 @@ var matches = (
   return matched(filepath)
 }
 
+// TODO: what to do about dirs (expecting called to know that)
+
 var is_ignored = (
   filepath : string,
-  ignore_config : any
+  ignore_config : any = []
 ) : boolean =>
   matches(filepath, "vile.ignore", ignore_config)
 
 var is_allowed = (
   filepath : string,
+  allow_config : any = []
+) : boolean => {
+  if (_.isEmpty(allow_config)) {
+    return true
+
+  // HACK: not ideal way of doing this (need to do better matching)
+  } else {
+    if (typeof allow_config == "string") allow_config = [ allow_config ]
+    // HACK: not totally correct (ex: /fo is not within /foo)
+    return _
+      .some(allow_config, (pattern : string) =>
+        pattern.indexOf(filepath) == 0 ||
+          filepath.indexOf(pattern) == 0) ||
+            matches(filepath, "vile.allow", allow_config)
+  }
+}
+
+var filter_promise_each = (
+  ignore_config : any,
   allow_config : any
-) : boolean =>
-  _.isEmpty(allow_config) ? true :
-    matches(filepath, "vile.allow", allow_config)
+) => (
+  file_or_dir : string
+) =>
+  is_allowed(file_or_dir, allow_config) &&
+    !is_ignored(file_or_dir, ignore_config)
 
 // TODO: make io async
 var collect_files = (target, allowed) : string[] => {
@@ -161,6 +184,7 @@ var into_issue = (data : any) : Vile.Issue => data
 
 module.exports = {
   promise_each: promise_each_file,
+  filter: filter_promise_each,
   issue: into_issue,
   ignored: is_ignored,
   allowed: is_allowed,

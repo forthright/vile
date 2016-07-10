@@ -58,6 +58,9 @@ length:
     line: 80
   ignore: [ "/lib" ]
 
+jshint:
+  ignore: [ "/lib" ]
+
 eslint:
   ignore: [ "/lib" ]
 
