@@ -184,6 +184,13 @@ passive mode enabled:
   set statusline+=%{SyntasticStatuslineFlag()}
   set statusline+=%*
 
+  let g:syntastic_always_populate_loc_list = 1
+  let g:syntastic_auto_loc_list = 1
+  let g:syntastic_enable_signs = 1
+  let g:syntastic_aggregate_errors = 1
+  let g:syntastic_check_on_open = 1
+  let g:syntastic_auto_jump = 0
+
   " Put into passive mode, and set desired checkers
   let g:syntastic_mode_map = { "mode": "passive" }
   let g:syntastic_ruby_checkers=["mri", "vile_rubycritic", "vile_rubocop"]
@@ -229,10 +236,32 @@ module.exports = {
 }
 ```
 
-See the [docs](https://vile.io/docs) page for how Issues are structured.
+See [vile.d.ts](src/lib/typings/vile.d.ts) for how Issues are structured.
 
 You can also `require("vile")` in your plugin and use its
 API, which provides some helpers.
+
+### Filtering
+
+Plugins are expected to support both the `ignore` and `allow` lists.
+There are some helper methods to abstract away the onerous work:
+
+`vile.filter` is great for using with `vile.promise_each`, or in general.
+
+```javascript
+let vile = require("vile")
+
+module.exports = {
+  punish: (config) => {
+    let filtered = vile.filter(config.ignore, config.allow)
+
+    get_some_filepaths()
+      .filter((filepath) => filtered(filepath))
+      .each(determine_issues)
+  }
+}
+
+```
 
 ### Files Without Issues
 
