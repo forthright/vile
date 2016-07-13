@@ -166,10 +166,15 @@ Just replace the upstream install with the `master` branch.
 
 Current syntax checkers:
 
-* [vile_rubycritic](https://github.com/forthright/syntastic/blob/vile-checkers/syntax_checkers/ruby/vile.vim)
-* [vile_rubocop](https://github.com/forthright/syntastic/blob/vile-checkers/syntax_checkers/ruby/vile.vim)
-* [vile_sass_lint](https://github.com/forthright/syntastic/blob/vile-checkers/syntax_checkers/sass/vile.vim)
-* [vile_slim_lint](https://github.com/forthright/syntastic/blob/vile-checkers/syntax_checkers/slim/vile.vim)
+* [vile_rubycritic](https://github.com/forthright/syntastic/blob/master/syntax_checkers/ruby/vile.vim)
+* [vile_rubocop](https://github.com/forthright/syntastic/blob/master/syntax_checkers/ruby/vile.vim)
+* [vile_sass_lint](https://github.com/forthright/syntastic/blob/master/syntax_checkers/sass/vile.vim)
+* [vile_slim_lint](https://github.com/forthright/syntastic/blob/master/syntax_checkers/slim/vile.vim)
+* [vile_eslint]()
+* [vile_jshint]()
+* [vile_hlint](https://github.com/forthright/syntastic/blob/master/syntax_checkers/haskell/vile.vim)
+* [vile_coffeelint](https://github.com/forthright/syntastic/blob/master/syntax_checkers/coffee/vile.vim)
+* [vile_tslint](https://github.com/forthright/syntastic/blob/master/syntax_checkers/typescript/vile.vim)
 
 An example config supporing `slim`, `ruby`, and `sass`, with
 passive mode enabled:
