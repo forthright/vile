@@ -82,7 +82,7 @@
     "@forthright/vile-coverage": ">=0.2.13",
     "@forthright/vile-depcheck": ">=0.1.11",
     "@forthright/vile-eclint": ">=0.1.9",
-    "@forthright/vile-eslint": ">=0.1.11",
+    "@forthright/vile-eslint": ">=0.1.12",
     "@forthright/vile-git": ">=0.4.2",
     "@forthright/vile-language": ">=0.1.11",
     "@forthright/vile-length": ">=0.1.11",
