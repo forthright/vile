@@ -15,6 +15,8 @@ var log = logger.create("plugin")
 
 Bluebird.promisifyAll(fs)
 
+const FILE_EXT = /\.[^\.]*$/
+
 var is_plugin = (name) => /^vile-/.test(name)
 
 var valid_plugin = (api) => api && typeof api.punish == "function"
@@ -373,33 +375,43 @@ var combine_paths = (
 
   // TODO: don't be lazy with perf here- still preserve layered path changing
   _.each(combine_paths, (paths : string[]) => {
-    let [ base_path, merge_path ] = paths
+    let [ base, merge ] = paths
+    let base_path_ext = _.first(base.match(FILE_EXT))
+    let merge_path_ext = _.first(merge.match(FILE_EXT))
+    let base_path = base.replace(FILE_EXT, "")
+    let merge_path = merge.replace(FILE_EXT, "")
     let merge_path_regexp = new RegExp(`^${merge_path}/`, "i")
 
-    _.each(issues, (issue : Vile.Issue, idx : number) =>  {
+    // TODO: Windows support, better matching
+    issues.forEach((issue : Vile.Issue, idx : number) =>  {
       let issue_path = _.get(issue, "path", "")
       let issue_type = _.get(issue, "type")
-      // TODO: way to fuzzy of a match with indexOf (use minimatch, etc)
-      // TODO: Windows support
-      if (merge_path_regexp.test(issue_path)) {
-        // if no dupe displayable issue exists with this path
-        // then remove issue
-        let potential_data_dupe : boolean = !_.some(
-          util.displayable_issues,
-          (t : string) => t == issue_type)
-        // HACK: ugh, such perf issue
-        let base_data_exists = _.some(issues,
-          (i : Vile.Issue) =>
-            i && i.path == issue_path && i.type == issue_type)
 
-        // HACK: If a lang,stat,comp issue and on base already, drop it
-        if (potential_data_dupe && base_data_exists) {
-          issues[idx] = undefined
-        } else {
-          // TODO: need to discard right amount of issues here (ex: lang)
-          let new_path = issue_path.replace(merge_path_regexp, base_path + "/")
-          _.set(issue, "path", new_path)
-        }
+      // if folder base is not same, return
+      if (!merge_path_regexp.test(issue_path)) return
+
+      // if lib.js is given, make sure .js is issue path ext
+      if (merge_path_ext &&
+          !_.first(issue_path.match(FILE_EXT)) == merge_path_ext) return
+
+      let new_path = issue_path.replace(merge_path_regexp, base_path + "/")
+      if (base_path_ext) {
+        new_path = new_path.replace(FILE_EXT, base_path_ext)
+      }
+
+      // HACK: ugh, such perf issue below
+      let potential_data_dupe : boolean = !_.some(
+        util.displayable_issues,
+        (t : string) => t == issue_type)
+      let same_data_exists = potential_data_dupe &&
+        _.some(issues, (i : Vile.Issue) =>
+          i && i.path == new_path && i.type == issue_type)
+
+      // HACK: If a lang,stat,comp issue and on base already, drop it
+      if (same_data_exists) {
+        issues[idx] = undefined
+      } else {
+        _.set(issue, "path", new_path)
       }
     })
   })

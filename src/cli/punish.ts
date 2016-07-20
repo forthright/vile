@@ -180,7 +180,7 @@ var create = (cli : any) =>
             "show file scores and detailed stats")
     .option("-x, --combine [combine_def]",
             "combine file data from two directories into one path- " +
-              "example: [src:lib,test:.test]")
+              "example: [src:lib,...] or [src.ts:lib.js,...]")
     .option("-i, --snippets",
             "add code snippets to issues")
     .option("-d, --dontpostprocess",
