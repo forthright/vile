@@ -12,6 +12,7 @@ vile:
     - .travis.yml
     - .vim.custom
     - node_modules
+    - lib
     - tags
     - .test
     - .ctags
