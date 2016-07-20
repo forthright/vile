@@ -143,6 +143,16 @@ From highest to lowest precedence, they are:
 So, say you call `vile p -g` it will ignore plugin/top
 level allow lists, and any path arguments provided.
 
+### Combining Files
+
+If you want to map a `src` build directory to a `lib` output directory:
+
+    vile p -x src:lib
+
+Or, in the case of this project's code:
+
+    vile p -x src.ts:lib.js
+
 ## Publishing
 
 You can publish your project to [vile.io](https://vile.io).
@@ -159,7 +169,9 @@ Then:
 
 There are various text editors that have `vile` integrations.
 
-### Syntastic
+### Vim
+
+Via [syntastic](https://github.com/scrooloose/syntastic).
 
 See [forthright/syntastic](https://github.com/forthright/syntastic) for now.
 Just replace the upstream install with the `master` branch.
@@ -206,14 +218,6 @@ passive mode enabled:
   let g:syntastic_slim_checkers=["vile_slim_lint", "vile_rails_best_practices"]
   let g:syntastic_sass_checkers=["vile_sass_lint"]
 ```
-
-### Atom
-
-Coming soon... (link to issue)
-
-### Sublime
-
-Coming soon... (link to issue)
 
 ## Formatting
 
