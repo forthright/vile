@@ -164,10 +164,14 @@ There are various text editors that have `vile` integrations.
 See [forthright/syntastic](https://github.com/forthright/syntastic) for now.
 Just replace the upstream install with the `master` branch.
 
+Note: There is a lot of overlap with current syntax checkers that
+do the same, and in many ways, faster, so be sure check them out too.
+
 Current syntax checkers:
 
 * [vile_rubycritic](https://github.com/forthright/syntastic/blob/master/syntax_checkers/ruby/vile.vim)
 * [vile_rubocop](https://github.com/forthright/syntastic/blob/master/syntax_checkers/ruby/vile.vim)
+* [vile_rails_best_practices](https://github.com/forthright/syntastic/blob/master/syntax_checkers/ruby/vile.vim)
 * [vile_sass_lint](https://github.com/forthright/syntastic/blob/master/syntax_checkers/sass/vile.vim)
 * [vile_slim_lint](https://github.com/forthright/syntastic/blob/master/syntax_checkers/slim/vile.vim)
 * [vile_eslint]()
@@ -192,20 +196,24 @@ passive mode enabled:
   let g:syntastic_always_populate_loc_list = 1
   let g:syntastic_auto_loc_list = 1
   let g:syntastic_enable_signs = 1
-  let g:syntastic_aggregate_errors = 1
+  let g:syntastic_aggregate_errors = 0
   let g:syntastic_check_on_open = 1
   let g:syntastic_auto_jump = 0
 
   " Put into passive mode, and set desired checkers
   let g:syntastic_mode_map = { "mode": "passive" }
-  let g:syntastic_ruby_checkers=["mri", "vile_rubycritic", "vile_rubocop"]
-  let g:syntastic_slim_checkers=["vile_slim_lint"]
+  let g:syntastic_ruby_checkers=["mri", "vile_rubycritic", "vile_rubocop", "vile_rails_best_practices"]
+  let g:syntastic_slim_checkers=["vile_slim_lint", "vile_rails_best_practices"]
   let g:syntastic_sass_checkers=["vile_sass_lint"]
 ```
 
 ### Atom
 
-Coming soon...
+Coming soon... (link to issue)
+
+### Sublime
+
+Coming soon... (link to issue)
 
 ## Formatting
 
