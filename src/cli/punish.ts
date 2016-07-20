@@ -178,6 +178,9 @@ var create = (cli : any) =>
               "alternatively, you can set a VILE_PROJECT env var")
     .option("-s, --scores",
             "show file scores and detailed stats")
+    .option("-x, --combine [combine_def]",
+            "combine file data from two directories into one path- " +
+              "example: [src:lib,test:.test]")
     .option("-i, --snippets",
             "add code snippets to issues")
     .option("-d, --dontpostprocess",

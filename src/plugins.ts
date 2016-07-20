@@ -364,6 +364,49 @@ var check_for_uninstalled_plugins = (
   if (errors) process.exit(1)
 }
 
+var combine_paths = (
+  combine_str : string,
+  issues : Vile.Issue[]
+) : Vile.Issue[] => {
+  let combine_paths = _.map(combine_str.split(","),
+                            (def : string) => def.split(":"))
+
+  // TODO: don't be lazy with perf here- still preserve layered path changing
+  _.each(combine_paths, (paths : string[]) => {
+    let [ base_path, merge_path ] = paths
+    let merge_path_regexp = new RegExp(`^${merge_path}/`, "i")
+
+    _.each(issues, (issue : Vile.Issue, idx : number) =>  {
+      let issue_path = _.get(issue, "path", "")
+      let issue_type = _.get(issue, "type")
+      // TODO: way to fuzzy of a match with indexOf (use minimatch, etc)
+      // TODO: Windows support
+      if (merge_path_regexp.test(issue_path)) {
+        // if no dupe displayable issue exists with this path
+        // then remove issue
+        let potential_data_dupe : boolean = !_.some(
+          util.displayable_issues,
+          (t : string) => t == issue_type)
+        // HACK: ugh, such perf issue
+        let base_data_exists = _.some(issues,
+          (i : Vile.Issue) =>
+            i && i.path == issue_path && i.type == issue_type)
+
+        // HACK: If a lang,stat,comp issue and on base already, drop it
+        if (potential_data_dupe && base_data_exists) {
+          issues[idx] = undefined
+        } else {
+          // TODO: need to discard right amount of issues here (ex: lang)
+          let new_path = issue_path.replace(merge_path_regexp, base_path + "/")
+          _.set(issue, "path", new_path)
+        }
+      }
+    })
+  })
+
+  return _.filter(issues)
+}
+
 var execute_plugins = (
   allowed : Vile.PluginList = [],
   config : Vile.YMLConfig = null,
@@ -413,6 +456,10 @@ var execute_plugins = (
       .then(_.flatten)
       .then((issues : Vile.Issue[]) => {
         if (spin) spin.stop(true)
+
+        if (!_.isEmpty(opts.combine)) {
+          issues = combine_paths(opts.combine, issues)
+        }
 
         if (opts.format == "syntastic") {
           log_syntastic_applicable_messages(issues)
