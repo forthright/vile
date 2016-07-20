@@ -70,7 +70,9 @@ comment:
   ignore: [ "/lib" ]
 
 stat:
-  ignore: [ "/lib" ]
+  ignore:
+    - /lib
+    - bin
 
 coverage:
   config:
