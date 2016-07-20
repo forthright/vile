@@ -32,7 +32,7 @@
     "test-cov": "node bin/test-cov",
     "test-ci-build": "node bin/test-ci-build",
     "tsc": "tsc",
-    "vile": "vile p -usi --nodecorations"
+    "vile": "vile p -usi -x src:lib --nodecorations"
   },
   "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
@@ -76,7 +76,7 @@
     "request": "^2.73.0"
   },
   "devDependencies": {
-    "@forthright/vile": ">=0.9.5",
+    "@forthright/vile": ">=0.9.6",
     "@forthright/vile-coffeelint": ">=0.1.13",
     "@forthright/vile-comment": ">=0.1.16",
     "@forthright/vile-coverage": ">=0.2.13",
