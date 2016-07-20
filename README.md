@@ -344,6 +344,18 @@ on top of [Babel](http://babeljs.io).
 
 The test code is written in [CoffeeScript](http://coffeescript.org).
 
+### Why NodeJS?
+
+Node has, in the creator's humble opinion at this time of creation, the
+ideal balance of nix/windows support, barrier to entry, quality and
+size of community and tooling, and the relative, per project requirements
+of data manipulation and speed needed at this point in time.
+
+However, Vile as a project, overall, should not be considered to be
+written in (mainly) one language. It is open ended how/when the project
+should make use of other, possibly better suited languages/tooling, and
+how to coordinate it.
+
 ### Directory Structure
 
 - `src` - typescript lib
