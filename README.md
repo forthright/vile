@@ -24,15 +24,18 @@ a unified, project focused context.
 Since Vile's core is written in JS, the main project
 is distributed via [npm](http://npmjs.org).
 
-#### Node CLI
+### Node CLI
 
     npm i -g vile
+    vile -h
 
-See usage with:
+#### Fast Setup
 
-    vile --help
+    vile init
 
-#### Node API
+### Node API
+
+    npm i vile
 
 ```javascript
 require("vile")

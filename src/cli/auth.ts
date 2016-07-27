@@ -7,6 +7,7 @@ var log = logger.create("cli")
 var create = (cli : any) =>
   cli
     .command("auth")
+      .alias("a")
       .action(() => {
         log.info("To authenticate, first go to " +
             "https://vile.io and create a project AuthToken.")

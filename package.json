@@ -32,7 +32,7 @@
     "test-cov": "node bin/test-cov",
     "test-ci-build": "node bin/test-ci-build",
     "tsc": "tsc",
-    "vile": "vile p -usi -x src.ts:lib.js --nodecorations"
+    "vile": "vile p -usi -x src.ts:lib.js -n"
   },
   "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
@@ -68,7 +68,9 @@
     "extend": "^3.0.0",
     "git-diff-tree": "^1.0.0",
     "ignore-file": "^1.1.2",
+    "inquirer": "^1.1.2",
     "js-yaml": "^3.6.1",
+    "language-detect": "^1.1.0",
     "linez": "^4.1.1",
     "lodash": "^4.13.x",
     "minilog": "^3.0.1",

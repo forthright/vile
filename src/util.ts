@@ -115,7 +115,7 @@ var spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
     log.debug(`${bin} ${opts.args.join(" ")}`)
 
     let proc = child_process.spawn(bin, opts.args, {
-      stdio: [process.stdin, "pipe", "pipe"],
+      stdio: opts.stdio || [process.stdin, "pipe", "pipe"],
       env: env
     })
 
@@ -129,7 +129,7 @@ var spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
       log.warn(error)
     })
 
-    proc.on("exit", (code) => {
+    proc.on("close", (code) => {
       let content : string = chunks
         .map((chunk) => chunk.toString("utf-8")).join("")
       if (!content) log.warn(`no data was returned from ${bin}`)

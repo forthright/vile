@@ -1,3 +1,5 @@
+/// <reference path="bluebird.d.ts" />
+
 // vile.d.ts
 // The go to definition for Vile data
 
@@ -131,7 +133,9 @@ declare module Vile {
   //
 
   export interface Plugin {
-    punish : (config? : PluginConfig) => IssueList | Promise<IssueList>;
+    punish : (
+      config? : PluginConfig
+    ) => IssueList | bluebird.Promise<IssueList>;
   }
 
   export interface PluginConfig {
@@ -187,7 +191,7 @@ declare module Vile {
         p : PluginList,
         config : YMLConfig,
         opts : any
-      ) => Promise<IssueList>;
+      ) => bluebird.Promise<IssueList>;
     }
 
     export interface Logger {
@@ -202,12 +206,12 @@ declare module Vile {
         issues : IssueList,
         cli_time : number,
         auth : any
-      ) => Promise<any>;
+      ) => bluebird.Promise<any>;
 
       commit_status : (
         commit_id : number,
         auth : any
-      ) => Promise<any>;
+      ) => bluebird.Promise<any>;
 
       log : (
         post_json : any,
