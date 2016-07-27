@@ -4,6 +4,7 @@ var _                          = require("lodash")
 var cli                        = require("commander")
 var cli_punish                 = require("./cli/punish")
 var cli_auth                   = require("./cli/auth")
+var cli_init                   = require("./cli/init")
 var pkg     : Vile.Lib.Package = require("./../package")
 
 var no_args = () : boolean => !process.argv.slice(2).length
@@ -15,7 +16,8 @@ var configure = () => {
 
   _.each([
     cli_punish,
-    cli_auth
+    cli_auth,
+    cli_init
   ], (command : any) => {
     command.create(cli)
   })

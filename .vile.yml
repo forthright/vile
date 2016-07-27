@@ -57,21 +57,9 @@ length:
   config:
     file: 120
     line: 80
-  ignore: [ "/lib" ]
-
-eslint:
-  # allow:  [ "src/**/*.ts" ] - weird logging from ts eslint module?
-  ignore: [ "/lib" ]
-
-eclint:
-  ignore: [ "/lib" ]
-
-comment:
-  ignore: [ "/lib" ]
 
 stat:
   ignore:
-    - /lib
     - bin
 
 coverage:
