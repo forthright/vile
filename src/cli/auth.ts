@@ -10,7 +10,7 @@ var create = (cli : any) =>
       .alias("a")
       .action(() => {
         log.info("To authenticate, first go to " +
-            "https://vile.io and create a project AuthToken.")
+            "https://vile.io and get a user token.")
         log.info()
         log.info("Then:")
         log.info()
