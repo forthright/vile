@@ -34,24 +34,13 @@ vile:
 
 depcheck:
   config:
-    ignore_dev_deps: false
+    ignore_dev_deps: true
     ignore_dirs:
       - src
       - typings
       - node_modules
       - coverage
       - tmp
-    ignore_deps:
-      - mocha
-      - babel-cli
-      - coffee-script
-      - istanbul
-      - release-it
-      - typescript
-      - wrench
-      - pryjs
-      - shelljs
-      - "@forthright/*"
 
 length:
   config:
