@@ -14,7 +14,7 @@ var create = (cli : any) =>
         log.info()
         log.info("Then:")
         log.info()
-        log.info("  ~$ export VILE_API_TOKEN=project_auth_token")
+        log.info("  ~$ VILE_API_TOKEN=token VILE_PROJECT=my-project vile p -u")
       })
 
 module.exports = {

@@ -167,12 +167,12 @@ var create = (cli : any) =>
     .command("punish [paths...]")
     .alias("p")
     .option("-p, --plugins [plugin_list]",
-            `unless specified in config, this can be a comma delimited` +
+            `unless specified in config, this can be a comma delimited ` +
             `string, else run all installed plugins`)
     .option("-c, --config [path]",
             "specify a custom config file")
     .option("-f, --format [type]",
-            "specify output format (default,json,syntastic)")
+            "specify output format (console,json,syntastic)")
     .option("-u, --upload [project_name]",
             "publish to vile.io (disables --gitdiff)- " +
               "alternatively, you can set a VILE_PROJECT env var")

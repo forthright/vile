@@ -10,9 +10,14 @@ var pkg     : Vile.Lib.Package = require("./../package")
 var no_args = () : boolean => !process.argv.slice(2).length
 
 var configure = () => {
-  cli
-    .version(pkg.version)
-    .usage("[options] [cmd] [args]")
+  cli.version(pkg.version)
+
+  cli.on("--help", () => {
+    console.log("  Command specific help:")
+    console.log()
+    console.log("    {cmd} -h, --help")
+    console.log()
+  })
 
   _.each([
     cli_punish,
