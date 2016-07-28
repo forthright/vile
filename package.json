@@ -1,6 +1,6 @@
 {
   "name": "@forthright/vile",
-  "version": "0.9.9",
+  "version": "0.9.10",
   "description": "A punishing, yet easy to use tool for writing insightful code.",
   "main": "lib/index.js",
   "files": [
