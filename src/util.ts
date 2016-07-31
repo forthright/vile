@@ -125,6 +125,7 @@ var spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
 
     proc.stderr.on("data", (data : Buffer) => {
       let error = data.toString("utf-8")
+      // TODO: log errors after running (do something with them)
       errors.push(error)
       log.warn(error)
     })
@@ -132,10 +133,7 @@ var spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
     proc.on("close", (code) => {
       let content : string = chunks
         .map((chunk) => chunk.toString("utf-8")).join("")
-      if (!content) log.warn(`no data was returned from ${bin}`)
       resolve(content)
-      // TODO: be able to send along with content
-      //       for now.. hack log after spinner stops
     })
   })
 }
