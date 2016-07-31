@@ -6,7 +6,7 @@ const PLUGIN_MAP = {
   frameworks: {
     coverage: [ "coverage" ],
     rails: [ "brakeman", "rails-best-practices" ],
-    nodejs: [ "nsp", "ncu" ],
+    nodejs: [ "retire", "ncu" ],
     bundler: [ "bundler-outdated", "bundler-audit" ],
     editorconfig: [ "eclint" ],
     eslint: [ "eslint" ],
@@ -29,7 +29,8 @@ const PLUGIN_MAP = {
     "slim-lint": { gem: "slim_lint" },
     "sass-lint": { npm: "sass-lint" },
     "scss-lint": { gem: "scss_lint" },
-    rubocop: { gem: "rubocop" }
+    rubocop: { gem: "rubocop" },
+    retirejs: { npm: "retire" }
   },
   langs: {
     ruby: [ "rubocop", "rubycritic" ],

@@ -32,6 +32,8 @@ var check_for_project_frameworks = (
 
   if (exists(".editorconfig")) frameworks.push("editorconfig")
 
+  if (exists(".retireignore")) frameworks.push("retirejs")
+
   if (exists(".eslintrc") ||
       exists(".eslintrc.yml") ||
       exists(".eslintrc.yaml") ||
