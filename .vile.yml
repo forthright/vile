@@ -71,6 +71,7 @@ license:
       - uri-templates
       - parsimmon
       - tweetnacl
+      - retire
       - split
       - tv4
       - forthright/vile-comment
