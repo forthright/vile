@@ -66,6 +66,7 @@ describe "git", ->
               git_diff_tree.should.have.been
                 .calledWith git_repo_path, { originalRev: "--root" }
               done()
+          return
 
         it "uses custom one if given", (done) ->
           git.changed_files("master").should.be.fulfilled.notify ->
@@ -73,6 +74,7 @@ describe "git", ->
               git_diff_tree.should.have.been
                 .calledWith git_repo_path, { originalRev: "master" }
               done()
+          return
 
       describe "repo path", ->
         it "uses cwd by default", (done) ->
@@ -81,6 +83,7 @@ describe "git", ->
               git_diff_tree.should.have.been
                 .calledWith path.join(process.cwd(), ".git")
               done()
+          return
 
         it "uses custom one if given", (done) ->
           git.changed_files(undefined, "foo").should.be.fulfilled.notify ->
@@ -88,6 +91,7 @@ describe "git", ->
               git_diff_tree.should.have.been
                 .calledWith "foo"
               done()
+          return
 
       describe "when a file has been deleted", ->
         beforeEach ->
@@ -120,3 +124,4 @@ describe "git", ->
               git_log.warn.should.have.been
                 .calledWith "diffs not shown because files were too big"
               done()
+          return
