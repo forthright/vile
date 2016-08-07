@@ -37,12 +37,12 @@
   "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/brentlintner/vile/issues"
+    "url": "https://github.com/forthright/vile/issues"
   },
-  "homepage": "https://github.com/brentlintner/vile",
+  "homepage": "https://github.com/forthright/vile",
   "repository": {
     "type": "git",
-    "url": "https://github.com/brentlintner/vile.git"
+    "url": "https://github.com/forthright/vile.git"
   },
   "keywords": [
     "quality",
