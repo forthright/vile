@@ -25,6 +25,7 @@ vile:
     - tags
     - tmp
     - tsconfig.json
+    - retire-report.json
     - tslint.json
     - tsd.json
     - vendor
