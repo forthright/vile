@@ -98,17 +98,19 @@ var to_console = (
     return `${ issue.path }:${ h_line }:${ h_char }: ` +
       `${synastic_type}: ${ details }`
   } else {
-    let h_line = humanize_line_num(issue)
-    let h_char = humanize_line_char(issue)
-    let details = _.has(issue, "title") &&
+    let h_line : string = humanize_line_num(issue)
+    let h_char : string = humanize_line_char(issue)
+    let details : string = _.has(issue, "title") &&
                   issue.message != issue.title ?
                     `${issue.title} => ${issue.message}` :
                       (issue.message || issue.title)
-    let loc = h_line || h_char ?
+    let loc : string = h_line || h_char ?
       `${ h_line ? "line " + h_line + ", " : "" }` +
       `${ h_char ? "col " + h_char + ", " : "" }` : ""
 
-    return `${ issue.path }: ${ loc }${ details }`
+    let msg : string = `${ issue.path }: ${ loc }${ details }`
+
+    return msg
   }
 }
 
@@ -175,29 +177,32 @@ var log_issue_messages = (
     let t = issue.type
     if (!nlogs[t]) nlogs[t] = logger.create(t)
 
+    let plugin_name : string = _.get(issue, "plugin")
+    let msg_postfix = plugin_name ? ` (vile-${ plugin_name })` : ""
+
     if (_.some(util.errors, (t) => issue.type == t)) {
-      nlogs[t].error(to_console(issue))
+      nlogs[t].error(to_console(issue) + msg_postfix)
     } else if (_.some(util.warnings, (t) => issue.type == t)) {
       if (issue.type == util.COMP) {
-        nlogs[t].info(to_console_comp(issue))
+        nlogs[t].info(to_console_comp(issue) + msg_postfix)
       } else if (issue.type == util.CHURN) {
-        nlogs[t].info(to_console_churn(issue))
+        nlogs[t].info(to_console_churn(issue) + msg_postfix)
       } else if (issue.type == util.DUPE) {
-        nlogs[t].warn(to_console_duplicate(issue))
+        nlogs[t].warn(to_console_duplicate(issue) + msg_postfix)
       } else {
-        nlogs[t].warn(to_console(issue))
+        nlogs[t].warn(to_console(issue) + msg_postfix)
       }
     } else {
       if (issue.type == util.LANG) {
-        nlogs[t].info(to_console_lang(issue))
+        nlogs[t].info(to_console_lang(issue) + msg_postfix)
       } else if (issue.type == util.GIT) {
-        nlogs[t].info(to_console_git(issue))
+        nlogs[t].info(to_console_git(issue) + msg_postfix)
       } else if (issue.type == util.STAT) {
-        nlogs[t].info(to_console_stat(issue))
+        nlogs[t].info(to_console_stat(issue) + msg_postfix)
       } else if (issue.type == util.OK) {
-        nlogs[t].info(issue.path)
+        nlogs[t].info(issue.path + msg_postfix)
       } else {
-        nlogs[t].info(to_console(issue))
+        nlogs[t].info(to_console(issue) + msg_postfix)
       }
     }
   })
@@ -266,6 +271,11 @@ var run_plugins_in_fork = (
 
     worker.on("exit", (code, signal) => {
       let name = plugins.join(",")
+
+      _.each(plugins, (plugin : string) => {
+        log.info(`${ plugin.replace("vile-", "") }:finish`)
+      })
+
       if (signal) {
         let msg = `${name} worker was killed by signal: ${signal}`
         log.warn(msg)
@@ -442,7 +452,7 @@ var execute_plugins = (
       cluster.on("fork", (worker) => {
         if (spin) spin.stop(true)
         log.info(
-          `multitasking ${workers[worker.id]} ` +
+          `${workers[worker.id]}:start ` +
           `(${worker.id}/${plugin_count})`)
         if (spin) spin.start()
       })
