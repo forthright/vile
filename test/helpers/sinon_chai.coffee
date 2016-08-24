@@ -7,3 +7,5 @@ chai.use sinon_chai
     .use chai.should
     .use chai_as_promised
     .should()
+
+module.exports = chai
