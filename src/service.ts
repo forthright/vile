@@ -33,7 +33,7 @@ var commit = (
   auth : any
 ) =>
   new Bluebird((resolve, reject) => {
-    let url = api_path(`${auth.project}/commits`)
+    let url = api_path(`projects/${auth.project}/commits`)
     log.debug(`POST ${url}`)
     request.post({
       url: url,
@@ -51,7 +51,8 @@ var commit_status = (
   auth : any
 ) =>
   new Bluebird((resolve, reject) => {
-    let url = api_path(`${auth.project}/commits/${commit_id}/status`)
+    let url = api_path(
+      `projects/${auth.project}/commits/${commit_id}/status`)
     log.debug(`GET ${url}`)
     request.get({
       url: url,
