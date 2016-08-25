@@ -1,7 +1,8 @@
-node_modules
+/node_modules
 bower_components
 coverage
 npm-debug.log
+.nyc_output
 .test
 web/report/*.js
 web/report/*.css

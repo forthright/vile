@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+var path = require("path")
+var wrench = require("wrench")
+var Mocha = require("mocha")
+var specs = path.join(__dirname, "..", ".test")
+
+function find(spec_type) {
+  return wrench
+    .readdirSyncRecursive(path.join(specs, spec_type))
+    .map(function(p) {
+      return path.resolve(path.join(specs, spec_type, p))
+    })
+}
+
+function run() {
+  var runner = new Mocha({
+    ui: "bdd",
+    reporter: "spec",
+    timeout: 6000,
+    slow: 3000
+  })
+  runner.files = find("system")
+  return runner.run(process.exit)
+}
+
+run()

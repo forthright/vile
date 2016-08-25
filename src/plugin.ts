@@ -304,60 +304,6 @@ var normalize_paths = (issues) =>
     }
   })
 
-var set_ignore_list = (plugin_config, base) => {
-  let list = _.get(plugin_config, "ignore", [])
-
-  if (_.isString(list)) list = [list]
-
-  if (_.isEmpty(list)) {
-    _.set(plugin_config, "ignore", base)
-  } else if (is_array(list)) {
-    _.set(plugin_config, "ignore", _.uniq(list.concat(base)))
-  }
-}
-
-var set_allow_list = (plugin_config, base) => {
-  if (!_.isEmpty(base)) {
-    if (_.isString(base)) base = [base]
-    _.set(plugin_config, "allow", base)
-  } else {
-    let list = _.get(plugin_config, "allow", [])
-    if (_.isString(list)) list = [list]
-    _.set(plugin_config, "allow", list)
-  }
-}
-
-var get_plugin_config = (name : string, config : Vile.YMLConfig) => {
-  let plugin_config : any = _.get(config, name, {})
-  let vile_ignore : string[] = _.get(config, "vile.ignore", [])
-  let vile_allow : string[] = _.get(config, "vile.allow", [])
-
-  set_ignore_list(plugin_config, vile_ignore)
-  set_allow_list(plugin_config, vile_allow)
-
-  return plugin_config
-}
-
-var ping_parent = (process : any) => process.send("")
-
-var handle_worker_request = (data) => {
-  let plugins : string[] = data.plugins
-  let config : Vile.YMLConfig = data.config
-
-  Bluebird.map(plugins, (plugin : string) => {
-    let name : string = plugin.replace("vile-", "")
-    let plugin_config = get_plugin_config(name, config)
-    return run_plugin(name, plugin_config)
-      .catch((err) => {
-        console.log() // newline because spinner is running
-        log.error(err.stack || err)
-        process.exit(1)
-      })
-  })
-  .then(_.flatten)
-  .then((issues) => process.send(issues))
-}
-
 var check_for_uninstalled_plugins = (
   allowed : string[],
   plugins : Vile.PluginList
@@ -437,64 +383,63 @@ var execute_plugins = (
   new Bluebird((resolve : any, reject) : any => {
     check_for_uninstalled_plugins(allowed, plugins)
 
-    if (cluster.isMaster) {
-      // TODO: own method
-      if (allowed.length > 0) {
-        plugins = _.filter(plugins, (p) =>
-          _.some(allowed, (a) => p.replace("vile-", "") == a))
-      }
+    cluster.setupMaster({
+      exec: path.join(__dirname, "plugin", "worker.js")
+    })
 
-      let spin
-      let workers = {}
-      let plugin_count : number = plugins.length
-      let concurrency : number = os.cpus().length || 1
-
-      cluster.on("fork", (worker) => {
-        if (spin) spin.stop(true)
-        log.info(
-          `${workers[worker.id]}:start ` +
-          `(${worker.id}/${plugin_count})`)
-        if (spin) spin.start()
-      })
-
-      if (opts.spinner && opts.format != "json") {
-        spin = new Spinner("PUNISH")
-        spin.setSpinnerDelay(60)
-        spin.start()
-      }
-
-      (<any>Bluebird).map(plugins, (plugin : string) => {
-        let worker = cluster.fork()
-        workers[worker.id] = plugin.replace("vile-", "")
-        return run_plugins_in_fork([ plugin ], config, worker)
-          .then((issues : Vile.Issue[]) =>
-            (normalize_paths(issues), issues))
-          .catch((err) => {
-            if (spin) spin.stop(true)
-            log.error(err.stack || err)
-            reject(err)
-          })
-      }, { concurrency: concurrency })
-      .then(_.flatten)
-      .then((issues : Vile.Issue[]) => {
-        if (spin) spin.stop(true)
-
-        if (!_.isEmpty(opts.combine)) {
-          issues = combine_paths(opts.combine, issues)
-        }
-
-        if (opts.format == "syntastic") {
-          log_syntastic_applicable_messages(issues)
-        } else if (opts.format != "json") {
-          log_issue_messages(issues)
-        }
-
-        resolve(issues)
-      })
-    } else {
-      process.on("message", handle_worker_request)
-      ping_parent(process)
+    // TODO: own method
+    if (allowed.length > 0) {
+      plugins = _.filter(plugins, (p) =>
+        _.some(allowed, (a) => p.replace("vile-", "") == a))
     }
+
+    let spin
+    let workers = {}
+    let plugin_count : number = plugins.length
+    let concurrency : number = os.cpus().length || 1
+
+    cluster.on("fork", (worker) => {
+      if (spin) spin.stop(true)
+      log.info(
+        `${workers[worker.id]}:start ` +
+        `(${worker.id}/${plugin_count})`)
+      if (spin) spin.start()
+    })
+
+    if (opts.spinner && opts.format != "json") {
+      spin = new Spinner("PUNISH")
+      spin.setSpinnerDelay(60)
+      spin.start()
+    }
+
+    (<any>Bluebird).map(plugins, (plugin : string) => {
+      let worker = cluster.fork()
+      workers[worker.id] = plugin.replace("vile-", "")
+      return run_plugins_in_fork([ plugin ], config, worker)
+        .then((issues : Vile.Issue[]) =>
+          (normalize_paths(issues), issues))
+        .catch((err) => {
+          if (spin) spin.stop(true)
+          log.error(err.stack || err)
+          reject(err)
+        })
+    }, { concurrency: concurrency })
+    .then(_.flatten)
+    .then((issues : Vile.Issue[]) => {
+      if (spin) spin.stop(true)
+
+      if (!_.isEmpty(opts.combine)) {
+        issues = combine_paths(opts.combine, issues)
+      }
+
+      if (opts.format == "syntastic") {
+        log_syntastic_applicable_messages(issues)
+      } else if (opts.format != "json") {
+        log_issue_messages(issues)
+      }
+
+      resolve(issues)
+    })
   })
 
 var passthrough = (value : any) => value

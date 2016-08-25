@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+require("shelljs/global")
+
+exec(
+  "npm run test-non-system",
+  function (code) {
+    if (code !== 0) exit(code)
+
+    exec(
+      "npm run test-system",
+      function (code) {
+        if (code !== 0) exit(code)
+      })
+  })

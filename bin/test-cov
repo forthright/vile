@@ -1,14 +1,25 @@
 #!/usr/bin/env node
 require("shelljs/global")
 
-process.env["npm_config_coverage"] = "1"
-
 rm("-r", "coverage")
+rm("-r", ".nyc-output")
 
 mkdir("coverage")
 
 exec(
-  "npm run istanbul -- test --dir coverage bin/test",
+  "nyc -r json --report-dir coverage/non-system bin/test-non-system",
   function(code) {
     if (code !== 0) exit(code)
+
+    exec(
+      "TEST_COV=1 npm run test-system",
+      function(code) {
+        if (code !== 0) exit(code)
+
+        exec(
+          "istanbul report --dir coverage",
+          function(code) {
+            if (code !== 0) exit(code)
+          })
+      })
   })

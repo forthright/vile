@@ -48,7 +48,7 @@ You can also do more complex things:
 ```javascript
 let vile_config = { } // your .vile.yml
 require("vile")
-  .exec(null, vile_config)
+  .exec([], vile_config)
   .then((issues) => { })
 ```
 

@@ -5,8 +5,6 @@ var plugins = require("./plugin")
 var util = require("./util")
 var logger : Vile.Lib.Logger  = require("./logger")
 
-// TODO: flush out
-// TODO: require in config now?!
 const library = extend(
   {},
   plugins,

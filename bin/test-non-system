@@ -12,19 +12,14 @@ function find(spec_type) {
     })
 }
 
-function all_specs() {
-  return find("unit")
-    .concat(find("integration"))
-    .concat(find("system"))
-}
-
 function run() {
   var runner = new Mocha({
     ui: "bdd",
     reporter: "spec",
-    timeout: 10000
+    timeout: 2000
   })
   runner.files = find("unit")
+    .concat(find("integration"))
   return runner.run(process.exit)
 }
 

@@ -12,6 +12,7 @@ vile:
     - .travis.yml
     - .vim.custom
     - node_modules
+    - .nyc_output
     - lib
     - tags
     - .test
@@ -22,6 +23,7 @@ vile:
     - .eslintrc
     - .gitignore
     - .npmrc
+    - npm-debug.log
     - tags
     - tmp
     - tsconfig.json
@@ -47,10 +49,12 @@ length:
   config:
     file: 120
     line: 80
+  ignore:
+    - test
 
 stat:
-  ignore:
-    - bin
+  allow:
+    - src
 
 coverage:
   config:
