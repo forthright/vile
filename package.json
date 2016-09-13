@@ -95,6 +95,7 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
     "coffee-script": "^1.10.0",
+    "cross-env": "^2.0.1",
     "istanbul": "^0.4.5",
     "mimus": "^0.2.3",
     "mocha": "^3.0.2",

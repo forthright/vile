@@ -2,24 +2,22 @@
 require("shelljs/global")
 
 rm("-r", "coverage")
-rm("-r", ".nyc-output")
+rm("-r", ".nyc_output")
 
 mkdir("coverage")
 
 exec(
   "nyc -r json --report-dir coverage/non-system bin/test-non-system",
   function(code) {
-    if (code !== 0) exit(code)
+    code !== 0 && exit(code)
 
     exec(
-      "TEST_COV=1 npm run test-system",
+      "cross-env TEST_COV=1 npm run test-system",
       function(code) {
-        if (code !== 0) exit(code)
+        code !== 0 && exit(code)
 
         exec(
-          "istanbul report --dir coverage",
-          function(code) {
-            if (code !== 0) exit(code)
-          })
+          "istanbul report --dir coverage lcov text",
+          function(code) { code !== 0 && exit(code) })
       })
   })
