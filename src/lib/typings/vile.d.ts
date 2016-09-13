@@ -171,6 +171,11 @@ declare module Vile {
   //
 
   export module Lib {
+    export interface PluginWorkerData {
+      plugins : string[];
+      config : YMLConfig;
+    }
+
     export interface JsonApiResponse {
       message : string;
       data? : any;

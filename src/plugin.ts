@@ -262,7 +262,7 @@ var run_plugins_in_fork = (
         worker.disconnect()
         resolve(issues)
       } else {
-        worker.send({
+        worker.send(<Vile.Lib.PluginWorkerData>{
           plugins: plugins,
           config: config
         })

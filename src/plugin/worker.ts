@@ -46,7 +46,7 @@ var get_plugin_config = (name : string, config : Vile.YMLConfig) => {
   return plugin_config
 }
 
-var handle_worker_request = (data) => {
+var handle_worker_request = (data : Vile.Lib.PluginWorkerData) => {
   let plugins : string[] = data.plugins
   let config : Vile.YMLConfig = data.config
 
