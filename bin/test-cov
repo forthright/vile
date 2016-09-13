@@ -7,7 +7,7 @@ rm("-r", ".nyc_output")
 mkdir("coverage")
 
 exec(
-  "nyc -r json --report-dir coverage/non-system bin/test-non-system",
+  "npm run nyc -- -r json --report-dir coverage/non-system bin/test-non-system",
   function(code) {
     code !== 0 && exit(code)
 

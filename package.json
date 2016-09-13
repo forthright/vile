@@ -27,6 +27,7 @@
     "lint-cov": "node bin/lint-cov",
     "mocha": "mocha",
     "ncu": "ncu -a",
+    "nyc": "nyc",
     "release-it": "release-it",
     "test": "node bin/test-all",
     "test-system": "node bin/test-system",
