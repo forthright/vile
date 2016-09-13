@@ -77,9 +77,23 @@ Example, install the `eslint` plugin:
 
 Then just run:
 
+    vile punish
+
+Or, more tersely:
+
     vile p
 
-The CLI will look up any installed plugins and automatically
+Note: If you don't also have `vile` installed globally, you can access
+the locally installed CLI via:
+
+    ./node_modules/.bin/vile punish
+
+Or, if you add `"vile": "vile"` to your `package.json` scripts section, you can
+run:
+
+    npm run vile -- punish
+
+After calling `vile punish`, the CLI will look up any installed plugins and automatically
 pull them in and run their checks.
 
 You can also specify a white-list of installed plugins to only run:
@@ -264,9 +278,9 @@ API, which provides some helpers.
 ### Filtering
 
 Plugins are expected to support both the `ignore` and `allow` lists.
-There are some helper methods to abstract away the onerous work:
+There are some helper methods to abstract away the onerous work.
 
-`vile.filter` is great for using with `vile.promise_each`, or in general.
+For example: `vile.filter` is great for using with `vile.promise_each`, or in general.
 
 ```javascript
 let vile = require("vile")
@@ -275,18 +289,20 @@ module.exports = {
   punish: (config) => {
     let filtered = vile.filter(config.ignore, config.allow)
 
-    get_some_filepaths()
+    return get_some_filepaths_to_check()
       .filter((filepath) => filtered(filepath))
       .each(determine_issues)
   }
 }
-
 ```
 
 ### Files Without Issues
 
 Any files that are not ignored globally via `vile.ignore` and have no
 issues are sent along with any reported issues.
+
+You can disable this with the `--dontpostprocess` option. Currently,
+this does not post process anything, including code snippets.
 
 ## Versioning
 
