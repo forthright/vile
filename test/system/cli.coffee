@@ -17,20 +17,18 @@ ASYNC_DIR = path.resolve(path.join(SYSTEM_TESTS, "async"))
 sys_test_count = 0
 
 exec = (args, cb) ->
-  cli_bin = VILE_BIN
   cmd = undefined
   sys_test_count += 1
   cov_dir = path.join CWD, "coverage", "system-#{sys_test_count}"
 
   if process.env.TEST_COV == "1"
-    cmd = "-r json --report-dir #{cov_dir} #{VILE_BIN} #{args}"
-    cli_bin = NYC_BIN
+    cmd = "#{NYC_BIN} -r json --report-dir #{cov_dir} #{VILE_BIN} #{args}"
   else
-    cmd = args
+    cmd = "#{VILE_BIN} #{args}"
 
   cli_args = cmd.split(" ").concat("--nodecorations")
 
-  proc = child_process.spawn cli_bin, cli_args, env: process.env
+  proc = child_process.spawn "node", cli_args, env: process.env
 
   out = ""
   err = ""
