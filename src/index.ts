@@ -1,13 +1,13 @@
 /// <reference path="lib/typings/index.d.ts" />
 
 var extend = require("extend")
-var plugins = require("./plugin")
+var plugin = require("./plugin")
 var util = require("./util")
 var logger : Vile.Lib.Logger  = require("./logger")
 
 const library = extend(
   {},
-  plugins,
+  plugin,
   util,
   { logger: logger }
 )

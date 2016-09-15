@@ -11,8 +11,8 @@ var plugin_map = require("./map")
 var check_for_test_coverage_step = (
   config : Vile.YMLConfig
 ) : bluebird.Promise<Vile.YMLConfig> => {
-  let exists = (file : string) =>
-    fs.existsSync(path.join(process.cwd(), file))
+  let exists = (target : string) =>
+    fs.existsSync(path.join(process.cwd(), target))
 
   if (exists("coverage") ||
       exists("test") ||

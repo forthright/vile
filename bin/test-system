@@ -16,8 +16,9 @@ function run() {
   var runner = new Mocha({
     ui: "bdd",
     reporter: "spec",
-    timeout: 10000,
-    slow: 3000
+    timeout: 20000,
+    slow: 4000,
+    grep: process.argv[2]
   })
   runner.files = find("system")
   return runner.run(process.exit)

@@ -56,8 +56,7 @@ var get_any_extra_directories_from_user = () : bluebird.Promise<string[]> =>
   ])
   .then((answers : any) => {
     let dirs : string = answers.extra_ignore_dirs
-    return !_.isEmpty(dirs) ?
-      dirs.split(",") : []
+    return _.compact(_.toString(dirs).split(","))
   })
 
 var get_any_extra_directories = () : bluebird.Promise<string[]> =>

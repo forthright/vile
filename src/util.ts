@@ -100,7 +100,10 @@ var collect_files = (target, allowed) : string[] => {
 
 // TODO: better typing
 // TODO: add mem limit to child process
-var spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
+var spawn = (
+  bin : string,
+  opts : any = {}
+) : bluebird.Promise<any> => {
   return new Bluebird((resolve : any, reject) => {
     let log = logger.create(bin)
     let chunks : Buffer[] = []
@@ -111,8 +114,6 @@ var spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
       cwd: process.cwd(),
       path: env.PATH
     })
-
-    log.debug(`${bin} ${opts.args.join(" ")}`)
 
     let proc = child_process.spawn(bin, opts.args, {
       stdio: opts.stdio || [process.stdin, "pipe", "pipe"],
@@ -138,8 +139,6 @@ var spawn = (bin : string, opts : any = {}) : bluebird.Promise<any> => {
   })
 }
 
-// TODO: uber complex
-// TODO: check for app specific ignore (to ignore files plugin ignores)
 var promise_each_file = (
   dirpath : string,
   allow : (file_or_dir_path : string, is_dir : boolean) => boolean,
@@ -172,7 +171,7 @@ var promise_each_file = (
       }
 
     }))
-    .then((errors) => _.flatten(errors))
+    .then((targets) => _.flatten(targets))
     .catch(log_error)
   })
 }

@@ -74,11 +74,8 @@ var check_for_project_languages = (
         _.get(answers, "langs", []),
         (lang : string) => {
           let lcase = lang.toLowerCase()
-          let plugins = plugin_map.langs[lcase]
-
-          if (plugins) {
-            config.vile.plugins = config.vile.plugins.concat(plugins)
-          }
+          let plugins = plugin_map.langs[lcase] || []
+          config.vile.plugins = config.vile.plugins.concat(plugins)
         })
 
       return config

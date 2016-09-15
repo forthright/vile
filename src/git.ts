@@ -23,10 +23,13 @@ var changed_files = (
 
     git_diff_tree(repo_path, { originalRev: original_rev })
       .on("data", (type : string, data : any) => {
-        if (type == "raw") {
-          stats.push(data)
-        } else if (type == "noshow") {
-          log.warn("diffs not shown because files were too big")
+        switch(type) {
+          case "raw":
+            stats.push(data)
+            break
+          case "noshow":
+            log.warn("diffs not shown because files were too big")
+            break
         }
       })
       .on("error", (err) => reject(err))

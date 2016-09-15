@@ -16,7 +16,8 @@ function run() {
   var runner = new Mocha({
     ui: "bdd",
     reporter: "spec",
-    timeout: 2000
+    timeout: 2000,
+    grep: process.argv[2]
   })
   runner.files = find("unit")
     .concat(find("integration"))

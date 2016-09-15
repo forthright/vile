@@ -1,0 +1,8 @@
+vile:
+  ignore:
+    - src/sub
+    - src/ignore.js
+    - foo.bar
+    - node_modules
+    - npm-debug.log
+    - .vile.yml

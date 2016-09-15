@@ -1,14 +1,13 @@
 /// <reference path="../../lib/typings/index.d.ts" />
 
 var fs = require("fs")
-var path = require("path")
 var Bluebird : typeof bluebird.Promise = require("bluebird")
 var inquirer = require("inquirer")
 var _ = require("lodash")
 var plugin_map = require("./map")
 
 var exists = (file : string) =>
-  fs.existsSync(path.join(process.cwd(), file))
+  fs.existsSync(file)
 
 var read = (file : string) =>
   fs.readFileSync(file).toString()
@@ -18,7 +17,7 @@ var check_for_project_frameworks = (
 ) : bluebird.Promise<Vile.YMLConfig> => {
   let frameworks = []
 
-  if (exists("config.ru") && /Rails/.test(read("config.ru"))) {
+  if (exists("config.ru") && /Rails/g.test(read("config.ru"))) {
     frameworks.push("rails")
   }
 
@@ -61,7 +60,7 @@ var check_for_project_frameworks = (
   return inquirer.prompt({
     type: "checkbox",
     message: "Looks like you have a number of frameworks and tooling." +
-      " Please uncheck any that don't apply?",
+      " Please uncheck any that don't apply.",
     name: "frameworks",
     choices: _.map(frameworks, (name : string) => {
       return { name: name, checked: true }

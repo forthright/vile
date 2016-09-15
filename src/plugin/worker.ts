@@ -9,29 +9,17 @@ var log = logger.create("worker")
 
 var ping_parent = (process : any) => process.send("")
 
-// TODO: duped
-var is_array = (list) => list && typeof list.forEach == "function"
-
 var set_ignore_list = (plugin_config, base) => {
-  let list = _.get(plugin_config, "ignore", [])
-
-  if (_.isString(list)) list = [list]
-
-  if (_.isEmpty(list)) {
-    _.set(plugin_config, "ignore", base)
-  } else if (is_array(list)) {
-    _.set(plugin_config, "ignore", _.uniq(list.concat(base)))
-  }
+  let list = _.compact(_.concat([], _.get(plugin_config, "ignore", [])))
+  _.set(plugin_config, "ignore", _.uniq(list.concat(base)))
 }
 
 var set_allow_list = (plugin_config, base) => {
   if (!_.isEmpty(base)) {
-    if (_.isString(base)) base = [base]
-    _.set(plugin_config, "allow", base)
+    _.set(plugin_config, "allow", _.compact(_.concat([], base)))
   } else {
     let list = _.get(plugin_config, "allow", [])
-    if (_.isString(list)) list = [list]
-    _.set(plugin_config, "allow", list)
+    _.set(plugin_config, "allow", _.compact(_.concat([], list)))
   }
 }
 

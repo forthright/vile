@@ -1,4 +1,5 @@
 /// <reference path="bluebird.d.ts" />
+/// <reference path="../../../typings/node/node.d.ts" />
 
 // vile.d.ts
 // The go to definition for Vile data
@@ -150,6 +151,13 @@ declare module Vile {
     allow?   : AllowList;
   }
 
+  interface Auth {
+    token : AuthToken;
+    project : string;
+  }
+
+  export type AuthToken = string
+
   export type PluginList = string[]
 
   export type IgnoreList = string[]
@@ -170,21 +178,29 @@ declare module Vile {
   // let config  : Vile.Lib.Config  = require("./config")
   //
 
+  export module API {
+    export interface HTTPResponse {
+      error?     : NodeJS.ErrnoException
+      body?      : JSONResponse
+      response?  : any
+    }
+
+    export interface JSONResponse {
+      message : string;
+      data?   : any;
+    }
+  }
+
   export module Lib {
     export interface PluginWorkerData {
       plugins : string[];
       config : YMLConfig;
     }
 
-    export interface JsonApiResponse {
-      message : string;
-      data? : any;
-    }
-
     export interface Config {
       load      : (f : string) => any;
       get       : () => any;
-      get_auth  : () => any;
+      get_auth  : () => Auth;
     }
 
     export interface Package {
@@ -210,12 +226,12 @@ declare module Vile {
       commit : (
         issues : IssueList,
         cli_time : number,
-        auth : any
+        auth : Auth
       ) => bluebird.Promise<any>;
 
       commit_status : (
         commit_id : number,
-        auth : any
+        auth : Auth
       ) => bluebird.Promise<any>;
 
       log : (

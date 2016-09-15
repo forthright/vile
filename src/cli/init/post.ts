@@ -64,27 +64,6 @@ var install_plugin_args = (plugins : string[]) =>
 
 var install_plugins = (
   config : Vile.YMLConfig
-) : bluebird.Promise<Vile.YMLConfig> =>
-  new Bluebird((resolve, reject) => {
-    let args = install_plugin_args(config.vile.plugins)
-
-    log.info("Installing plugins... this could take a while.")
-    log.info("npm", args.join(" "))
-
-    child_process
-      .spawn("npm", args, { stdio: [0, 1, 2] })
-      .on("close", (code : number) => {
-        if (code != 0) {
-          reject("Exit code was " + code)
-        } else {
-          log.info("Updated: package.json")
-          resolve(config)
-        }
-      })
-  })
-
-var install_peer_and_alt_lang_dependencies = (
-  config : Vile.YMLConfig
 ) : bluebird.Promise<Vile.YMLConfig> => {
   // TODO: move to method
   let by_bin = _.reduce(
@@ -108,16 +87,18 @@ var install_peer_and_alt_lang_dependencies = (
     {
       type: "confirm",
       name: "ok_to_continue",
-      message: "Install required plugin peer dependencies? " +
+      message: "Install required plugins and their peer dependencies? " +
         `(requires ${Object.keys(by_bin).join(",")})`,
-      default: true
+      default: false
     }
   ]).then((answers : any) => {
-    if (!answers.ok_to_continue) return Bluebird.resolve(config)
+    let install = answers.ok_to_continue
 
     let deps = _.map(by_bin, (deps : any, bin : string) => [ bin, deps ])
 
-    log.info("Installing peer dependencies... this could take a while.")
+    if (install) {
+      log.info("Installing peer dependencies... this could take a while.")
+    }
 
     return (<any>Bluebird).each(deps, (info : any[]) => {
       let [ bin, deps] = info
@@ -125,23 +106,49 @@ var install_peer_and_alt_lang_dependencies = (
         _.concat("install", "--save-dev", deps) :
         _.concat("install", deps)
 
-      log.info(bin, args.join(" "))
+      if (!install) {
+        log.warn("skipping:", bin, args.join(" "))
+        return Bluebird.resolve(config)
+      } else {
+        log.info(bin, args.join(" "))
 
-      return new (<any>Bluebird)((resolve, reject) => {
-        child_process
-          .spawn(bin, args, { stdio: [0, 1, 2] })
-          .on("close", (code : number) => {
-            if (code != 0) {
-              let msg = `${bin} died with code: ${code}`
-              reject(msg)
-            } else {
-              log.info(bin, "finished installing dependencies")
-              resolve()
-            }
-          })
-      })
+        return new (<any>Bluebird)((resolve, reject) => {
+          child_process
+            .spawn(bin, args, { stdio: [0, 1, 2] })
+            .on("close", (code : number) => {
+              if (code != 0) {
+                let msg = `${bin} died with code: ${code}`
+                reject(msg)
+              } else {
+                log.info(bin, "finished installing dependencies")
+                resolve()
+              }
+            })
+        })
       }
-    ).then(() => config)
+    })
+    .then(() =>
+      new Bluebird((resolve, reject) => {
+        let args = install_plugin_args(config.vile.plugins)
+
+        if (install) {
+          log.info("Installing plugins... this could take a while.")
+          log.info("npm", args.join(" "))
+          child_process
+            .spawn("npm", args, { stdio: [0, 1, 2] })
+            .on("close", (code : number) => {
+              if (code != 0) {
+                reject("Exit code was " + code)
+              } else {
+                log.info("Updated: package.json")
+                resolve(config)
+              }
+            })
+        } else {
+          log.warn("skipping:", "npm", args.join(" "))
+          resolve(config)
+        }
+      }))
   })
 }
 
@@ -177,7 +184,6 @@ module.exports = {
   init: (config : Vile.YMLConfig) =>
     confirm_vile_config_is_ok(config)
       .then(create_config)
-      .then(install_peer_and_alt_lang_dependencies)
       .then(install_plugins)
       .then(ready_to_punish)
 }

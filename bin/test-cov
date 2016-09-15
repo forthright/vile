@@ -17,7 +17,7 @@ exec(
         code !== 0 && exit(code)
 
         exec(
-          "istanbul report --dir coverage lcov text",
+          "istanbul report --dir coverage lcov text json",
           function(code) { code !== 0 && exit(code) })
       })
   })

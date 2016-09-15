@@ -7,6 +7,7 @@ const PLUGIN_MAP = {
     coverage: [ "coverage" ],
     rails: [ "brakeman", "rails-best-practices" ],
     nodejs: [ "retire", "ncu" ],
+    bower: [ "constable" ],
     bundler: [ "bundler-outdated", "bundler-audit" ],
     editorconfig: [ "eclint" ],
     eslint: [ "eslint" ],
@@ -16,6 +17,7 @@ const PLUGIN_MAP = {
     slim_lint: [ "slim-lint" ],
     brakeman: [ "brakeman" ],
     coffeelint: [ "coffeelint" ],
+    retirejs: [ "retire" ],
     git: [ "git" ],
     core: [ "language", "stat" ]
   },

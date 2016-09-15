@@ -16,6 +16,7 @@ vile:
     - lib
     - tags
     - .test
+    - test/fixtures/**
     - .ctags
     - .git
     - circle.yml
@@ -98,8 +99,10 @@ license:
       - Public Domain
       - PSF
       - BSD
+      - BSD-4-clause
       - BSD-3-Clause
       - BSD-2-Clause
+      - WTFPL OR MIT
       - BSD-3-Clause AND MIT
       - BSD-2-Clause OR MIT
       - BSD-2-Clause OR WTFPL

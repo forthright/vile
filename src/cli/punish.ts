@@ -1,6 +1,5 @@
 /// <reference path="../lib/typings/index.d.ts" />
 
-var Bluebird : typeof bluebird.Promise = require("bluebird")
 var _                          = require("lodash")
 var fs                         = require("fs")
 var service : Vile.Lib.Service = require("./../service")
@@ -16,44 +15,55 @@ var service_log = logger.create("vile.io")
 var COMMIT_STATUS_INTERVAL_TIME = 2000 // 2s
 var DEFAULT_VILE_YML            = ".vile.yml"
 
-var wait_for_done_status = (commit_id : number, auth : any) =>
-  new Bluebird((resolve, reject) => {
-    // HACK: this is not consistent, and network latency will mess this
-    let id = setInterval(() => {
-      service
-        .commit_status(commit_id, auth)
-        .then((http) => {
-          let status_code = _.get(http, "response.statusCode")
-          let body_json = _.attempt(
-            JSON.parse.bind(null, _.get(http, "body", "{}")))
-          let message = _.get(body_json, "message")
-          let data = _.get(body_json, "data")
+var wait_for = (ms : number, cb : (t : any) => void) => {
+  let timer  = setInterval(() => {
+    cb(timer)
+  }, ms)
+}
 
-          if (status_code != 200) {
-            if (message) {
-              service_log.info(`Commit: ${commit_id} ${message}`)
-            } else {
-              service_log.error("http status:", status_code)
-              service_log.error(http.body)
-            }
-            clearInterval(id)
-            reject(data)
-          } else {
-            service_log.info(`Commit ${commit_id} ${message}`)
+var wait_for_done_status_and_log = (
+  commit_id : number,
+  auth : any,
+  verbose : boolean
+) => {
+  wait_for(COMMIT_STATUS_INTERVAL_TIME, (timer) => {
+    service
+      .commit_status(commit_id, auth)
+      .then((http) => {
+        let api_body : Vile.API.HTTPResponse = _.get(http, "body")
+        let response : Vile.API.JSONResponse = _.get(http, "response")
 
-            if (message == util.API.COMMIT.FINISHED) {
-              clearInterval(id)
-              resolve(data)
-            } else if (message == util.API.COMMIT.FAILED) {
-              clearInterval(id)
-              reject(data)
-            }
-          }
-        })
-    }, COMMIT_STATUS_INTERVAL_TIME)
+        let status_code = _.get(response, "statusCode")
+        let body_json = _.attempt(
+          JSON.parse.bind(null, api_body))
+        let message = _.get(body_json, "message")
+        let data = _.get(body_json, "data")
+
+        if (status_code != 200) {
+          service_log.error("http status:", status_code)
+          service_log.error(api_body)
+          clearInterval(timer)
+        } else {
+          service_log.info(`Commit ${commit_id} ${message}`)
+
+          // TODO: handle when message is garbage (don't assume processing)
+          if (message == util.API.COMMIT.FINISHED) {
+            clearInterval(timer)
+            service.log(data, verbose)
+          } else if (message == util.API.COMMIT.FAILED) {
+            clearInterval(timer)
+            service_log.error(data)
+        }
+      }
+    })
   })
+}
 
-var publish = (issues : Vile.IssueList, cli_time : number, opts : any) => {
+var publish = (
+  issues : Vile.IssueList,
+  cli_time : number,
+  opts : any
+) => {
   let auth = config.get_auth()
 
   // HACK: can pass in project via cli arg, or via env var
@@ -63,7 +73,6 @@ var publish = (issues : Vile.IssueList, cli_time : number, opts : any) => {
     .commit(issues, cli_time, auth)
     .then((http) => {
       if (_.get(http, "response.statusCode") != 200) {
-        // TODO: move log and error handling to inside service module
         service_log.error(_.get(http, "body"))
         return
       }
@@ -76,25 +85,16 @@ var publish = (issues : Vile.IssueList, cli_time : number, opts : any) => {
       service_log.info(`Commit ${commit_id} ${commit_state}`)
 
       if (!commit_id) {
-        throw new Error("No commit uid was provided on commit. " +
+        service_log.error("No commit uid was provided on commit. " +
                         "Can't check status.")
       } else if (!commit_state) {
-        throw new Error("No commit state was provided upon creation. " +
+        service_log.error("No commit state was provided upon creation. " +
                         "Can't check status.")
       } else if (commit_state == util.API.COMMIT.FAILED) {
-        throw new Error("Creating commit state is failed.")
+        service_log.error("Creating commit state is failed.")
       } else {
-        return wait_for_done_status(commit_id, auth)
-          .then((data) =>
-            service.log(data, opts.scores))
+        wait_for_done_status_and_log(commit_id, auth, opts.scores)
       }
-    })
-    .catch((err) => {
-      console.log() // newline because spinner is running
-      // HACK: not the best logging of errors here
-      service_log.error(_.get(err, "stack") ||
-                _.get(err, "message") ||
-                JSON.stringify(err))
     })
 }
 
@@ -107,6 +107,7 @@ var set_log_levels = (logs? : string) => {
   if (logs.split) logs.split(",").forEach(logger.level)
 }
 
+// HACK: This method and above uses promises haphazardly- needs rewrite
 var punish = (app : any, paths : string[]) => {
   let plugins : string = app.plugins
 
@@ -192,13 +193,9 @@ var create = (cli : any) =>
             "specify the log level (info|warn|error|debug)")
     .option("-q, --quiet",
             "log nothing")
-    .option("-v, --verbose",
-            "log all the things")
     .option("-n, --nodecorations", "disable color and progress bar")
     .action((paths, app) => {
       load_config(app)
-      // TODO: do this globally
-      if (app.verbose) logger.verbose(true)
       if (app.quiet || app.format == "json" ||
           app.format == "syntastic") logger.quiet()
       if (app.log) set_log_levels(app.log)

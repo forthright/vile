@@ -18,19 +18,16 @@ var http_authentication = (auth_token : string) : any => {
 var api_path = (endpoint : string) : string =>
   `${VILE_APP}/${API_TARGET}/${endpoint}`
 
-var handle_response = (resolve, reject) =>
-  (err, response, body : Vile.Lib.JsonApiResponse) =>
+var handle_response = (resolve, reject) : Vile.API.HTTPResponse =>
+  (err, response, body : Vile.API.JSONResponse) =>
     err ?
-      reject({error: err}) :
-      resolve(<any>{
-        body: body,
-        response: response
-      })
+      reject({ error: err }) :
+      resolve({ body: body, response: response })
 
 var commit = (
   issues : any[],
   cli_time : number,
-  auth : any
+  auth : Vile.Auth
 ) =>
   new Bluebird((resolve, reject) => {
     let url = api_path(`projects/${auth.project}/commits`)
@@ -48,7 +45,7 @@ var commit = (
 
 var commit_status = (
   commit_id : number,
-  auth : any
+  auth : Vile.Auth
 ) =>
   new Bluebird((resolve, reject) => {
     let url = api_path(
@@ -64,7 +61,7 @@ var commit_status = (
 var padded_file_score = (score : number) =>
   (score < 100 ? " " : "") + String(score) + "%"
 
-var log_summary = (post_json : any, verbose : boolean) => {
+var log_summary = (post_json : any, verbose : boolean = false) => {
   let score : number = _.get(post_json, "score")
   let files : any[] = _.get(post_json, "files")
   let time : number = _.get(post_json, "time")
@@ -75,10 +72,11 @@ var log_summary = (post_json : any, verbose : boolean) => {
     .replace(/\.0*$/, "")
 
   if (verbose) {
-    _.each(files, (file : any) =>
+    _.each(files, (file : any) => {
       log.info(
         `${padded_file_score(_.get(file, "score"))} => ` +
-        `${_.get(file, "path")}`))
+        `${_.get(file, "path")}`)
+    })
   }
 
   log.info()

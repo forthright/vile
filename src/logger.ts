@@ -15,15 +15,6 @@ var quiet = () => filter.clear()
 var log_level = (level : string) =>
   filter.allow(/.*/, level)
 
-var verbose = (is_verbose : boolean) => {
-  if (is_verbose) {
-    quiet()
-    filter.allow(/.*/, "debug")
-  }
-
-  default_filter()
-}
-
 var init = () => {
   // HACK!
   let nocolor = _.includes(process.argv, "--nodecorations") ||
@@ -46,7 +37,6 @@ var init = () => {
 
 module.exports = {
   create: minilog,
-  verbose: verbose,
   default: default_filter,
   quiet: quiet,
   level: log_level
