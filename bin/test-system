@@ -16,7 +16,7 @@ function run() {
   var runner = new Mocha({
     ui: "bdd",
     reporter: "spec",
-    timeout: 6000,
+    timeout: 10000,
     slow: 3000
   })
   runner.files = find("system")
