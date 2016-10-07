@@ -37,7 +37,7 @@
     "test-cov": "node bin/test-cov",
     "test-ci-build": "node bin/test-ci-build",
     "tsc": "tsc",
-    "vile": "vile p -usi -x src.ts:lib.js -n"
+    "vile": "vile p -usi -x src.ts:lib.js,test.coffee:.test.js -n"
   },
   "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
