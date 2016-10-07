@@ -7,12 +7,12 @@ rm("-r", ".nyc_output")
 mkdir("coverage")
 
 exec(
-  "nyc -r json --report-dir coverage/non-system bin/test-non-system",
+  "npm run test-non-system-cov",
   function(code) {
     code !== 0 && exit(code)
 
     exec(
-      "cross-env TEST_COV=1 npm run test-system",
+      "npm run test-system-cov",
       function(code) {
         code !== 0 && exit(code)
 
