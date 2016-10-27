@@ -62,7 +62,7 @@ describe "cli/punish", ->
         expect(timer).to.be.ok
         clearInterval timer
         t2 = new Date().getTime()
-        expect(t2 - t1).to.be.within 25, 30
+        expect(t2 - t1).to.be.within 25, 100 # slow VMs...
         done()
       return
 
