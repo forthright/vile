@@ -53,9 +53,9 @@ var wait_for_done_status_and_log = (
           } else if (message == util.API.COMMIT.FAILED) {
             clearInterval(timer)
             service_log.error(data)
+          }
         }
-      }
-    })
+      })
   })
 }
 
