@@ -18,6 +18,10 @@ exec(
 
         exec(
           "istanbul report --dir coverage lcov text json",
-          function(code) { code !== 0 && exit(code) })
+          function(code) {
+            code !== 0 && exit(code)
+
+            console.log("See: coverage/lcov-report/index.html")
+          })
       })
   })
