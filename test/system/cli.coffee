@@ -65,14 +65,18 @@ describe "cli blackbox testing", ->
         process.chdir CLI_INIT_EMPTY_DIR
 
       afterEach (done) ->
-        rimraf CLI_INIT_EMPTY_DIR + "/{.vile.yml,*}", (err) ->
+        rimraf path.join(CLI_INIT_EMPTY_DIR, ".vile.yml"), (err) ->
           throw err if err
-          fs.writeFileSync(
-            path.join(CLI_INIT_EMPTY_DIR, ".keep"), '\n', "utf-8")
-          expect(fs.existsSync("package.json")).to.eql false
-          expect(fs.existsSync(".vile.yml")).to.eql false
-          process.chdir CWD
-          process.nextTick -> done()
+          rimraf path.join(CLI_INIT_EMPTY_DIR, "package.json"), (err) ->
+            throw err if err
+            rimraf path.join(CLI_INIT_EMPTY_DIR, "node_modules"), (err) ->
+              throw err if err
+              fs.writeFileSync(
+                path.join(CLI_INIT_EMPTY_DIR, ".keep"), '', "utf-8")
+              expect(fs.existsSync("package.json")).to.eql false
+              expect(fs.existsSync(".vile.yml")).to.eql false
+              process.chdir CWD
+              process.nextTick -> done()
 
       it "can go through a default sequence", (done) ->
         answers = [
@@ -131,13 +135,16 @@ describe "cli blackbox testing", ->
         process.chdir CLI_INIT_LANGS_DIR
 
       afterEach (done) ->
-        rimraf CLI_INIT_LANGS_DIR + "/{.vile.yml,package.json,node_modules/*}",
-          (err) ->
+        rimraf path.join(CLI_INIT_LANGS_DIR, ".vile.yml"), (err) ->
+          throw err if err
+          rimraf path.join(CLI_INIT_LANGS_DIR, "package.json"), (err) ->
             throw err if err
-            expect(fs.existsSync("package.json")).to.eql false
-            expect(fs.existsSync(".vile.yml")).to.eql false
-            process.chdir CWD
-            process.nextTick -> done()
+            rimraf path.join(CLI_INIT_LANGS_DIR, "node_modules"), (err) ->
+              throw err if err
+              expect(fs.existsSync("package.json")).to.eql false
+              expect(fs.existsSync(".vile.yml")).to.eql false
+              process.chdir CWD
+              process.nextTick -> done()
 
       it "has the expected directories ignore in .vile.yml", (done) ->
         answers = [
@@ -197,16 +204,18 @@ describe "cli blackbox testing", ->
         process.chdir CLI_INIT_IGNORES_DIR
 
       afterEach (done) ->
-        rimraf CLI_INIT_IGNORES_DIR +
-          "/{.vile.yml,package.json,node_modules/*}",
-          (err) ->
+        rimraf path.join(CLI_INIT_IGNORES_DIR, ".vile.yml"), (err) ->
+          throw err if err
+          rimraf path.join(CLI_INIT_IGNORES_DIR, "package.json"), (err) ->
             throw err if err
-            expect(fs.existsSync("package.json")).to.eql false
-            expect(fs.existsSync(".vile.yml")).to.eql false
-            fs.writeFileSync(
-              path.join(CLI_INIT_IGNORES_DIR, ".vile.yml"), '\n', "utf-8")
-            process.chdir CWD
-            process.nextTick -> done()
+            rimraf path.join(CLI_INIT_IGNORES_DIR, "node_modules"), (err) ->
+              throw err if err
+              expect(fs.existsSync("package.json")).to.eql false
+              expect(fs.existsSync(".vile.yml")).to.eql false
+              fs.writeFileSync(
+                path.join(CLI_INIT_IGNORES_DIR, ".vile.yml"), '', "utf-8")
+              process.chdir CWD
+              process.nextTick -> done()
 
       it "has the expected directories ignore in .vile.yml", (done) ->
         answers = [
@@ -255,7 +264,6 @@ describe "cli blackbox testing", ->
                     allow: []
                     ignore: [
                       "node_modules"
-                      ".build"
                       "coverage"
                       "tmp"
                       "vendor"

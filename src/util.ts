@@ -1,5 +1,6 @@
 /// <reference path="lib/typings/index.d.ts" />
 
+var unixify = require("unixify")
 var fs = require("fs")
 var path = require("path")
 var child_process = require("child_process")
@@ -53,12 +54,14 @@ var is_ignored = (
   filepath : string,
   ignore_config : any = []
 ) : boolean =>
-  matches(filepath, "vile.ignore", ignore_config)
+  matches(unixify(filepath), "vile.ignore", ignore_config)
 
 var is_allowed = (
   filepath : string,
   allow_config : any = []
 ) : boolean => {
+  filepath = unixify(filepath)
+
   if (_.isEmpty(allow_config)) {
     return true
 

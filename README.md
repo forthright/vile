@@ -295,6 +295,11 @@ module.exports = {
   }
 }
 ```
+### Windows/Unix Paths
+
+Plugins should stick to using unix style paths in issues and where
+ever else. Library utilities such as ignore and allow attempt to auto convert
+windows style paths, but not necessarily from things like config lists.
 
 ### Files Without Issues
 

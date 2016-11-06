@@ -72,7 +72,8 @@
     "lodash": "^4.16.x",
     "minilog": "^3.0.1",
     "npm-run-path": "^2.0.2",
-    "request": "^2.76.0"
+    "request": "^2.76.0",
+    "unixify": "^0.2.1"
   },
   "devDependencies": {
     "@forthright/vile": ">=0.10.1",
@@ -110,6 +111,7 @@
     "shelljs": "^0.7.5",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
+    "slash": "^1.0.0",
     "typescript": "^2.0.6",
     "wrench": "^1.5.9"
   }

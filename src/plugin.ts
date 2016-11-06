@@ -2,6 +2,7 @@
 
 var Bluebird : typeof bluebird.Promise = require("bluebird")
 var fs = require("fs")
+var unixify = require("unixify")
 var path = require("path")
 var os = require("os")
 var cluster = require("cluster")
@@ -121,12 +122,12 @@ var run_plugins_in_fork = (
 var normalize_paths = (issues) =>
   _.each(issues, (issue) => {
     if (_.has(issue, "path")) {
-      issue.path = issue.path
+      issue.path = unixify(issue.path)
         .replace(process.cwd(), "")
 
       // HACK: see above todo
       if (!/windows/i.test(os.type())) {
-        issue.path = issue.path
+        issue.path = unixify(issue.path)
           .replace(/^\.\/?/, "")
           .replace(/^\/?/, "")
       }
@@ -170,7 +171,7 @@ var combine_paths = (
 
     // TODO: Windows support, better matching
     issues.forEach((issue : Vile.Issue, idx : number) =>  {
-      let issue_path = _.get(issue, "path", "")
+      let issue_path = unixify(_.get(issue, "path", ""))
       let issue_type = _.get(issue, "type")
 
       // if folder base is not same, return
@@ -191,7 +192,7 @@ var combine_paths = (
         (t : string) => t == issue_type)
       let same_data_exists = potential_data_dupe &&
         _.some(issues, (i : Vile.Issue) =>
-          i && i.path == new_path && i.type == issue_type)
+          i && unixify(i.path) == new_path && i.type == issue_type)
 
       // HACK: If a lang,stat,comp issue and on base already, drop it
       if (same_data_exists) {
@@ -353,7 +354,7 @@ var add_ok_issues = (
         !util.ignored(p, vile_ignore) ,
       (filepath) => util.issue({
         type: util.OK,
-        path: filepath
+        path: unixify(filepath)
       }),
       { read_data: false })
     .then((ok_issues : Vile.IssueList) => {
