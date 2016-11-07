@@ -1,11 +1,11 @@
-/// <reference path="../../lib/typings/index.d.ts" />
+/// <reference path="../../@types/index.d.ts" />
 
-var detect = require("language-detect")
-var inquirer = require("inquirer")
-var _ = require("lodash")
-var Bluebird : typeof bluebird.Promise = require("bluebird")
-var util = require("./../../util")
-var plugin_map = require("./map")
+import detect = require("language-detect")
+import inquirer = require("inquirer")
+import _ = require("lodash")
+import Bluebird = require("bluebird")
+import util = require("./../../util")
+import plugin_map = require("./map")
 
 const KNOWN_PROJECT_DIRS = [
   "app/controllers",
@@ -21,9 +21,9 @@ const KNOWN_PROJECT_DIRS = [
   "spec"
 ]
 
-var detect_language = (
+const detect_language = (
   filepath : string
-) : bluebird.Promise<any> =>
+) : Bluebird<any> =>
   new Bluebird((resolve, reject) => {
     detect(filepath, function (err, language) {
       err ?
@@ -32,9 +32,9 @@ var detect_language = (
     })
   })
 
-var check_for_project_languages = (
-  config : Vile.YMLConfig
-) : bluebird.Promise<Vile.YMLConfig> => {
+const check_for_project_languages = (
+  config : vile.YMLConfig
+) : Bluebird<vile.YMLConfig> => {
   let langs = []
 
   return util.promise_each(
@@ -52,15 +52,13 @@ var check_for_project_languages = (
         })
     , { read_data: false })
   .then(() => {
-    let uniq_langs = _.chain(langs)
-      .uniq()
-      .filter()
+    let uniq_langs : string[] = _.chain(_.filter(_.uniq(langs)))
       .map((lang : string) => lang.toLowerCase())
       .value()
 
     if (_.isEmpty(uniq_langs)) return Bluebird.resolve(config)
 
-    return inquirer.prompt({
+    return (<any>inquirer).prompt({
       type: "checkbox",
       message: "It appears you speak our language. Select any that apply!",
       name: "langs",
@@ -83,6 +81,6 @@ var check_for_project_languages = (
   })
 }
 
-module.exports = {
+export = {
   init: check_for_project_languages
 }

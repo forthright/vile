@@ -1,14 +1,16 @@
-/// <reference path="../lib/typings/index.d.ts" />
+/// <reference path="../@types/index.d.ts" />
 
-var plugin_map = require("./init/map")
-var pre = require("./init/pre")
-var language = require("./init/language")
-var framework = require("./init/framework")
-var ignore = require("./init/ignore")
-var coverage = require("./init/coverage")
-var post = require("./init/post")
+import Bluebird = require("bluebird")
+import commander = require("commander")
+import plugin_map = require("./init/map")
+import pre = require("./init/pre")
+import language = require("./init/language")
+import framework = require("./init/framework")
+import ignore = require("./init/ignore")
+import coverage = require("./init/coverage")
+import post = require("./init/post")
 
-var vile_config_base = () : Vile.YMLConfig => {
+const vile_config_base = () : vile.YMLConfig => {
   return {
     vile: {
       ignore: [],
@@ -18,9 +20,9 @@ var vile_config_base = () : Vile.YMLConfig => {
   }
 }
 
-var initialize_vile_project = (
-  cli : Commander.CLI
-) : bluebird.Promise<Vile.YMLConfig> =>
+const initialize_vile_project = (
+  cli : commander.IExportedCommand
+) : Bluebird<vile.YMLConfig> =>
   pre.init(vile_config_base())
     .then(ignore.init)
     .then(language.init)
@@ -28,12 +30,12 @@ var initialize_vile_project = (
     .then(coverage.init)
     .then(post.init)
 
-var create = (cli : any) =>
+const create = (cli : any) =>
   cli
     .command("init")
     .alias("i")
     .action(initialize_vile_project)
 
-module.exports = {
+export = {
   create: create
 }

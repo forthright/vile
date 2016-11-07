@@ -1,44 +1,50 @@
-/// <reference path="lib/typings/index.d.ts" />
+/// <reference path="@types/index.d.ts" />
 
-var Bluebird : typeof bluebird.Promise = require("bluebird")
-var fs = require("fs")
-var unixify = require("unixify")
-var path = require("path")
-var os = require("os")
-var cluster = require("cluster")
-var linez = require("linez")
-var _ = require("lodash")
-var spinner = require("cli-spinner")
-var Spinner = spinner.Spinner
-var logger : Vile.Lib.Logger  = require("./logger")
-var util = require("./util")
-var log = logger.create("plugin")
-var log_helper = require("./plugin/log_helper")
+import path = require("path")
+import os = require("os")
+import cluster = require("cluster")
+import Bluebird = require("bluebird")
+import fs = require("fs")
+import unixify = require("unixify")
+import _ = require("lodash")
+import linez = require("linez")
+import spinner = require("cli-spinner")
+import logger = require("./logger")
+import util = require("./util")
+import log_helper = require("./plugin/log_helper")
 
 Bluebird.promisifyAll(fs)
 
+const log = logger.create("plugin")
+
+const Spinner = spinner.Spinner
+
 const FILE_EXT = /\.[^\.]*$/
 
-var is_plugin = (name) => /^vile-/.test(name)
+const is_plugin = (name) =>
+  /^vile-/.test(name)
 
-var valid_plugin = (api) => api && typeof api.punish == "function"
+const valid_plugin = (api) =>
+  api && typeof api.punish == "function"
 
-var is_array = (list) => list && typeof list.forEach == "function"
+const is_array = (list) =>
+  list && typeof list.forEach == "function"
 
-var is_promise = (list) => list && typeof list.then == "function"
+const is_promise = (list) =>
+  list && typeof list.then == "function"
 
-var log_error = (e : NodeJS.ErrnoException) => {
+const log_error = (e : NodeJS.ErrnoException) => {
   console.log()
   log.error(e.stack || e)
 }
 
-var error_executing_plugins = (err : NodeJS.ErrnoException) => {
+const error_executing_plugins = (err : NodeJS.ErrnoException) => {
   log.error("Error executing plugins")
   log.error(err.stack || err)
   process.exit(1)
 }
 
-var require_plugin = (name : string) : Vile.Plugin => {
+const require_plugin = (name : string) : vile.Plugin => {
   let cwd_node_modules = path.join(process.cwd(), "node_modules")
 
   try {
@@ -48,19 +54,19 @@ var require_plugin = (name : string) : Vile.Plugin => {
   }
 }
 
-var map_plugin_name_to_issues = (name : string) => (issues : Vile.Issue[]) =>
-  _.map(issues, (issue : Vile.Issue) =>
+const map_plugin_name_to_issues = (name : string) => (issues : vile.Issue[]) =>
+  _.map(issues, (issue : vile.Issue) =>
     (issue.plugin = name, issue))
 
-var run_plugin = (
+const run_plugin = (
   name : string,
-  config : Vile.PluginConfig = {
+  config : vile.PluginConfig = {
     config: {},
     ignore: []
   }
-) : bluebird.Promise<any> =>
+) : Bluebird<any> =>
   new Bluebird((resolve, reject) => {
-    let api : Vile.Plugin = require_plugin(name)
+    let api : vile.Plugin = require_plugin(name)
 
     if (!valid_plugin(api)) {
       return Bluebird.reject(`invalid plugin API: ${name}`)
@@ -81,9 +87,9 @@ var run_plugin = (
     }
   })
 
-var run_plugins_in_fork = (
+const run_plugins_in_fork = (
   plugins : string[],
-  config : Vile.YMLConfig,
+  config : vile.YMLConfig,
   worker : any
 ) =>
   new Bluebird((resolve, reject) => {
@@ -92,7 +98,7 @@ var run_plugins_in_fork = (
         worker.disconnect()
         resolve(issues)
       } else {
-        worker.send(<Vile.Lib.PluginWorkerData>{
+        worker.send(<vile.Lib.PluginWorkerData>{
           plugins: plugins,
           config: config
         })
@@ -119,7 +125,7 @@ var run_plugins_in_fork = (
   })
 
 // TODO: test this to be Windows friendly!
-var normalize_paths = (issues) =>
+const normalize_paths = (issues) =>
   _.each(issues, (issue) => {
     if (_.has(issue, "path")) {
       issue.path = unixify(issue.path)
@@ -134,9 +140,9 @@ var normalize_paths = (issues) =>
     }
   })
 
-var check_for_uninstalled_plugins = (
+const check_for_uninstalled_plugins = (
   allowed : string[],
-  plugins : Vile.PluginList
+  plugins : vile.PluginList
 ) => {
   let errors = false
 
@@ -152,10 +158,10 @@ var check_for_uninstalled_plugins = (
   if (errors) process.exit(1)
 }
 
-var combine_paths = (
+const combine_paths = (
   combine_str : string,
-  issues : Vile.Issue[]
-) : Vile.Issue[] => {
+  issues : vile.Issue[]
+) : vile.Issue[] => {
   let combine_paths = _.map(combine_str.split(","),
                             (def : string) => def.split(":"))
 
@@ -170,7 +176,7 @@ var combine_paths = (
     let merge_path_regexp = new RegExp(`^${merge_path}/`, "i")
 
     // TODO: Windows support, better matching
-    issues.forEach((issue : Vile.Issue, idx : number) =>  {
+    issues.forEach((issue : vile.Issue, idx : number) =>  {
       let issue_path = unixify(_.get(issue, "path", ""))
       let issue_type = _.get(issue, "type")
 
@@ -178,8 +184,8 @@ var combine_paths = (
       if (!merge_path_regexp.test(issue_path)) return
 
       // if lib.js is given, make sure .js is issue path ext
-      if (merge_path_ext &&
-          !_.first(issue_path.match(FILE_EXT)) == merge_path_ext) return
+      if (!!merge_path_ext &&
+          !_.first(issue_path.match(FILE_EXT)) == !!merge_path_ext) return
 
       let new_path = issue_path.replace(merge_path_regexp, base_path + "/")
       if (base_path_ext) {
@@ -191,7 +197,7 @@ var combine_paths = (
         util.displayable_issues,
         (t : string) => t == issue_type)
       let same_data_exists = potential_data_dupe &&
-        _.some(issues, (i : Vile.Issue) =>
+        _.some(issues, (i : vile.Issue) =>
           i && unixify(i.path) == new_path && i.type == issue_type)
 
       // HACK: If a lang,stat,comp issue and on base already, drop it
@@ -206,11 +212,11 @@ var combine_paths = (
   return _.filter(issues)
 }
 
-var execute_plugins = (
-  allowed : Vile.PluginList = [],
-  config : Vile.YMLConfig = null,
+const execute_plugins = (
+  allowed : vile.PluginList = [],
+  config : vile.YMLConfig = null,
   opts : any = {}
-) => (plugins : string[]) : bluebird.Promise<any> =>
+) => (plugins : string[]) : Bluebird<any> =>
   new Bluebird((resolve : any, reject) : any => {
     check_for_uninstalled_plugins(allowed, plugins)
 
@@ -247,7 +253,7 @@ var execute_plugins = (
       let worker = cluster.fork()
       workers[worker.id] = plugin.replace("vile-", "")
       return run_plugins_in_fork([ plugin ], config, worker)
-        .then((issues : Vile.Issue[]) =>
+        .then((issues : vile.Issue[]) =>
           (normalize_paths(issues), issues))
         .catch((err) => {
           if (spin) spin.stop(true)
@@ -256,7 +262,7 @@ var execute_plugins = (
         })
     }, { concurrency: concurrency })
     .then(_.flatten)
-    .then((issues : Vile.Issue[]) => {
+    .then((issues : vile.Issue[]) => {
       if (spin) spin.stop(true)
 
       if (!_.isEmpty(opts.combine)) {
@@ -273,10 +279,10 @@ var execute_plugins = (
     })
   })
 
-var passthrough = (value : any) => value
+const passthrough = (value : any) => value
 
 // TODO: use Linez typings
-var into_snippet = (lines : any, start : number, end : number) =>
+const into_snippet = (lines : any, start : number, end : number) =>
   _.reduce(lines, (snippets, line, num) => {
     if ((num > (start - 4) && num < (end + 2))) {
       snippets.push({
@@ -289,8 +295,8 @@ var into_snippet = (lines : any, start : number, end : number) =>
     return snippets
   }, [])
 
-var add_code_snippets = () =>
-  (issues : Vile.IssueList) =>
+const add_code_snippets = () =>
+  (issues : vile.IssueList) =>
     (<any>Bluebird).map(_.uniq(_.map(issues, "path")), (filepath : string) => {
       if (!(filepath &&
             fs.existsSync(filepath) &&
@@ -301,16 +307,16 @@ var add_code_snippets = () =>
         "utf-8"
       )).lines
 
-      _.each(_.filter(issues, (i : Vile.Issue) => i.path == filepath),
-        (issue : Vile.Issue) => {
+      _.each(_.filter(issues, (i : vile.Issue) => i.path == filepath),
+        (issue : vile.Issue) => {
           let start = Number(_.get(issue, "where.start.line", 0))
           let end = Number(_.get(issue, "where.end.line", start))
 
           if (issue.type == util.DUPE) {
-            let locations : Vile.DuplicateLocations[] = _.
+            let locations : vile.DuplicateLocations[] = _.
               get(issue, "duplicate.locations", [])
 
-            _.each(locations, (loc : Vile.DuplicateLocations) => {
+            _.each(locations, (loc : vile.DuplicateLocations) => {
               let start = Number(_.get(loc, "where.start.line", 0))
               let end = Number(_.get(loc, "where.end.line", start))
               if (start === 0 && end === start) return
@@ -337,15 +343,15 @@ var add_code_snippets = () =>
     })
     .then(() => issues)
 
-var cwd_plugins_path = () =>
+const cwd_plugins_path = () =>
   path.resolve(path.join(process.cwd(), "node_modules", "@forthright"))
 
-var add_ok_issues = (
-  vile_allow  : Vile.AllowList = [],
-  vile_ignore : Vile.IgnoreList = [],
+const add_ok_issues = (
+  vile_allow : vile.AllowList = [],
+  vile_ignore : vile.IgnoreList = [],
   log_distinct_ok_issues = false
 ) =>
-  (issues : Vile.IssueList) =>
+  (issues : vile.IssueList) =>
     util.promise_each(
       process.cwd(),
       // TODO: don't compile ignore/allow every time
@@ -357,8 +363,8 @@ var add_ok_issues = (
         path: unixify(filepath)
       }),
       { read_data: false })
-    .then((ok_issues : Vile.IssueList) => {
-      let distinct_ok_issues = _.reject(ok_issues, (issue : Vile.Issue) =>
+    .then((ok_issues : vile.IssueList) => {
+      let distinct_ok_issues = _.reject(ok_issues, (issue : vile.Issue) =>
         _.some(issues, (i) => i.path == issue.path))
 
       if (log_distinct_ok_issues) {
@@ -368,22 +374,22 @@ var add_ok_issues = (
       return distinct_ok_issues.concat(issues)
     })
 
-var run_plugins = (
-  custom_plugins : Vile.PluginList = [],
-  config : Vile.YMLConfig = {},
+const run_plugins = (
+  custom_plugins : vile.PluginList = [],
+  config : vile.YMLConfig = {},
   opts : any = {}
-) : bluebird.Promise<Vile.IssueList> => {
-  let app_config = _.get(config, "vile", {})
-  let ignore = _.get(app_config, "ignore")
-  let allow = _.get(app_config, "allow")
-  let plugins : Vile.PluginList = custom_plugins
+) : Bluebird<vile.IssueList> => {
+  let app_config = _.get(config, "vile", { plugins: [] })
+  let ignore = _.get(app_config, "ignore", null)
+  let allow = _.get(app_config, "allow", null)
+  let plugins : vile.PluginList = custom_plugins
   let lookup_ok_issues = !opts.dontpostprocess
 
   if (app_config.plugins) {
     plugins = _.uniq(plugins.concat(app_config.plugins))
   }
 
-  return fs.readdirAsync(cwd_plugins_path())
+  return (<any>fs).readdirAsync(cwd_plugins_path())
     .filter(is_plugin)
     .then(execute_plugins(plugins, config, opts))
     .then(opts.snippets ? add_code_snippets() : passthrough)
@@ -392,7 +398,7 @@ var run_plugins = (
     .catch(error_executing_plugins)
 }
 
-module.exports = {
+export = <vile.Lib.Plugin>{
   exec: run_plugins,
   exec_plugin: run_plugin
 }

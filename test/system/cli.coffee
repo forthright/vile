@@ -533,9 +533,9 @@ describe "cli blackbox testing", ->
           expect(stdout).to.match(
             new RegExp("a.ext:1:1: W: undefined", "gi"))
           expect(stdout).to.match(
-            new RegExp("a.ext:1:1: W: error msg", "gi"))
+            new RegExp("a.ext:1:1: E: error msg", "gi"))
           expect(stdout).to.match(
-            new RegExp("a.ext:1:1: W: sec msg", "gi"))
+            new RegExp("a.ext:1:1: E: sec msg", "gi"))
           done()
         return
 

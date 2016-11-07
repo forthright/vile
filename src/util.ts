@@ -1,27 +1,27 @@
-/// <reference path="lib/typings/index.d.ts" />
+/// <reference path="@types/index.d.ts" />
 
-var unixify = require("unixify")
-var fs = require("fs")
-var path = require("path")
-var child_process = require("child_process")
-var npm_run_path = require("npm-run-path")
-var extend = require("extend")
-var _ = require("lodash")
-var Bluebird : typeof bluebird.Promise = require("bluebird")
-var ignore = require("ignore-file")
-var logger : Vile.Lib.Logger  = require("./logger")
-var config : Vile.Lib.Config = require("./config")
+import unixify = require("unixify")
+import fs = require("fs")
+import path = require("path")
+import child_process = require("child_process")
+import npm_run_path = require("npm-run-path")
+import extend = require("extend")
+import _ = require("lodash")
+import Bluebird = require("bluebird")
+import ignore = require("ignore-file")
+import logger = require("./logger")
+import config = require("./config")
 
 // TODO: make a constants file or something
-var DEFAULT_VILE_YML         = ".vile.yml"
+const DEFAULT_VILE_YML         = ".vile.yml"
 
 Bluebird.promisifyAll(fs)
 
-var log_error = (e : NodeJS.ErrnoException) => {
+const log_error = (e : NodeJS.ErrnoException) => {
   console.log(e)
 }
 
-var matches = (
+const matches = (
   filepath : string,
   key : string,
   list_or_string : any
@@ -31,7 +31,7 @@ var matches = (
   if (!list_or_string) {
     let conf : any = config.get()
     // HACK: this is fragile, perhaps config should be in this module
-    config = conf == {} ? _.get(
+    list_or_string = _.isEmpty(conf) ? _.get(
       config.load(DEFAULT_VILE_YML),
       key
     ) : conf
@@ -50,13 +50,13 @@ var matches = (
 
 // TODO: what to do about dirs (expecting called to know that)
 
-var is_ignored = (
+const is_ignored = (
   filepath : string,
   ignore_config : any = []
 ) : boolean =>
   matches(unixify(filepath), "vile.ignore", ignore_config)
 
-var is_allowed = (
+const is_allowed = (
   filepath : string,
   allow_config : any = []
 ) : boolean => {
@@ -77,7 +77,7 @@ var is_allowed = (
   }
 }
 
-var filter_promise_each = (
+const filter_promise_each = (
   ignore_config : any,
   allow_config : any
 ) => (
@@ -87,7 +87,7 @@ var filter_promise_each = (
     !is_ignored(file_or_dir, ignore_config)
 
 // TODO: make io async
-var collect_files = (target, allowed) : string[] => {
+const collect_files = (target, allowed) : string[] => {
   let at_root = !path.relative(process.cwd(), target)
   let rel_path = at_root ? target : path.relative(process.cwd(), target)
   let is_dir = fs.lstatSync(rel_path).isDirectory();
@@ -103,10 +103,10 @@ var collect_files = (target, allowed) : string[] => {
 
 // TODO: better typing
 // TODO: add mem limit to child process
-var spawn = (
+const spawn = (
   bin : string,
   opts : any = {}
-) : bluebird.Promise<any> => {
+) : Bluebird<any> => {
   return new Bluebird((resolve : any, reject) => {
     let log = logger.create(bin)
     let chunks : Buffer[] = []
@@ -142,12 +142,12 @@ var spawn = (
   })
 }
 
-var promise_each_file = (
+const promise_each_file = (
   dirpath : string,
   allow : (file_or_dir_path : string, is_dir : boolean) => boolean,
   parse_file : (file : string, data? : string) => void,
   opts : any = {}
-) : bluebird.Promise<any> => {
+) : Bluebird<any> => {
   if (!opts.hasOwnProperty("read_data")) opts.read_data = true
 
   let readdir = new Bluebird((resolve, reject) => {
@@ -164,7 +164,7 @@ var promise_each_file = (
     return Bluebird.all(files.map((target) => {
       if (fs.lstatSync(target).isFile()) {
         if (opts.read_data) {
-          return fs.readFileAsync(target, { encoding: "utf-8" })
+          return (<any>fs).readFileAsync(target, { encoding: "utf-8" })
             .then((data) => parse_file(target, data))
         } else {
           return parse_file(target)
@@ -180,9 +180,9 @@ var promise_each_file = (
 }
 
 // TODO: validate issue objects as it comes in
-var into_issue = (data : any) : Vile.Issue => data
+const into_issue = (data : any) : vile.Issue => data
 
-module.exports = {
+export = {
   promise_each: promise_each_file,
   filter: filter_promise_each,
   issue: into_issue,

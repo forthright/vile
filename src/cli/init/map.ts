@@ -1,4 +1,4 @@
-/// <reference path="../../lib/typings/index.d.ts" />
+/// <reference path="../../@types/index.d.ts" />
 
 // TODO: write framework detector lib
 
@@ -47,4 +47,4 @@ const PLUGIN_MAP = {
   }
 }
 
-module.exports = PLUGIN_MAP
+export = PLUGIN_MAP

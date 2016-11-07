@@ -1,22 +1,24 @@
-/// <reference path="../../lib/typings/index.d.ts" />
+/// <reference path="../../@types/index.d.ts" />
 
-var fs = require("fs")
-var child_process = require("child_process")
-var yaml = require("js-yaml")
-var inquirer = require("inquirer")
-var _ = require("lodash")
-var Bluebird : typeof bluebird.Promise = require("bluebird")
-var logger : Vile.Lib.Logger = require("./../../logger")
-var plugin_map = require("./map")
-var log = logger.create("cli")
+import fs = require("fs")
+import child_process = require("child_process")
+import yaml = require("js-yaml")
+import inquirer = require("inquirer")
+import _ = require("lodash")
+import Bluebird = require("bluebird")
+import logger = require("./../../logger")
 
-var confirm_vile_config_is_ok = (
-  config : Vile.YMLConfig
-) : bluebird.Promise<Vile.YMLConfig> => {
+const plugin_map = require("./map")
+
+const log = logger.create("cli")
+
+const confirm_vile_config_is_ok = (
+  config : vile.YMLConfig
+) : Bluebird<vile.YMLConfig> => {
   console.log()
   console.log(config)
   console.log()
-  return inquirer.prompt([
+  return (<any>inquirer).prompt([
     {
       type: "confirm",
       name: "ok_to_continue",
@@ -32,13 +34,13 @@ var confirm_vile_config_is_ok = (
   })
 }
 
-var create_config = (
-  config : Vile.YMLConfig
-) : bluebird.Promise<Vile.YMLConfig> => {
+const create_config = (
+  config : vile.YMLConfig
+) : Bluebird<vile.YMLConfig> => {
   let config_without_plugins = _.cloneDeep(config)
   delete config_without_plugins.vile.plugins
 
-  return fs.writeFileAsync(
+  return (<any>fs).writeFileAsync(
     ".vile.yml",
     new Buffer(yaml.safeDump(config_without_plugins))
   ).then((err : NodeJS.ErrnoException) => {
@@ -51,7 +53,7 @@ var create_config = (
   })
 }
 
-var install_plugin_args = (plugins : string[]) =>
+const install_plugin_args = (plugins : string[]) =>
   _.concat(
     "install",
     "--save-dev",
@@ -62,14 +64,15 @@ var install_plugin_args = (plugins : string[]) =>
       return cmd
     }, []))
 
-var install_plugins = (
-  config : Vile.YMLConfig
-) : bluebird.Promise<Vile.YMLConfig> => {
+const install_plugins = (
+  config : vile.YMLConfig
+) : Bluebird<vile.YMLConfig> => {
   // TODO: move to method
   let by_bin = _.reduce(
     plugin_map.peer,
     (bins : any, deps_def : any, plugin : string) => {
-      _.each(deps_def, (deps : any, bin : string) => {
+      // HACK: this is an annoying thing I left for now
+      (<any>_.each)(deps_def, (deps : any, bin : string) => {
         if (!_.some(config.vile.plugins, (p : string) => p == plugin)) {
           return bins
         }
@@ -83,7 +86,7 @@ var install_plugins = (
 
   if (_.isEmpty(by_bin)) return Bluebird.resolve(config)
 
-  return inquirer.prompt([
+  return (<any>inquirer).prompt([
     {
       type: "confirm",
       name: "ok_to_continue",
@@ -152,7 +155,7 @@ var install_plugins = (
   })
 }
 
-var ready_to_punish = (config : Vile.YMLConfig) => {
+const ready_to_punish = (config : vile.YMLConfig) => {
   log.info()
   log.info("Looks like we are good to go!")
   log.info()
@@ -180,8 +183,8 @@ var ready_to_punish = (config : Vile.YMLConfig) => {
   log.info("Happy punishing!")
 }
 
-module.exports = {
-  init: (config : Vile.YMLConfig) =>
+export = {
+  init: (config : vile.YMLConfig) =>
     confirm_vile_config_is_ok(config)
       .then(create_config)
       .then(install_plugins)

@@ -1,15 +1,15 @@
-/// <reference path="lib/typings/index.d.ts" />
+/// <reference path="@types/index.d.ts" />
 
-var extend = require("extend")
-var plugin = require("./plugin")
-var util = require("./util")
-var logger : Vile.Lib.Logger  = require("./logger")
+import extend = require("extend")
+import plugin = require("./plugin")
+import util = require("./util")
+import logger = require("./logger")
 
-const library = extend(
+const library : vile.Lib.Index = extend(
   {},
   plugin,
   util,
   { logger: logger }
 )
 
-module.exports = library
+export = library

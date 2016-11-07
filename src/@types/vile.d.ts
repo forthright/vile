@@ -1,10 +1,10 @@
-/// <reference path="bluebird.d.ts" />
-/// <reference path="../../../typings/node/node.d.ts" />
-
 // vile.d.ts
 // The go to definition for Vile data
 
-declare module Vile {
+declare namespace vile {
+  // HACK: this should be bluebird
+  // ...trying to get compiler to work right..
+  type Bluebird<T> = any
 
   // -------------------------------------------------
   // Issue
@@ -38,7 +38,7 @@ declare module Vile {
   }
 
   export interface IssueLine {
-    line       : number;
+    line?      : number;
     character? : number;
   }
 
@@ -136,7 +136,7 @@ declare module Vile {
   export interface Plugin {
     punish : (
       config? : PluginConfig
-    ) => IssueList | bluebird.Promise<IssueList>;
+    ) => IssueList | Bluebird<IssueList>;
   }
 
   export interface PluginConfig {
@@ -169,13 +169,8 @@ declare module Vile {
   // -------------------------------------------------
   // Library API
   //
-  // let vile    : Vile.Lib.Index   = require("vile")
-  //
-  // or...
-  //
-  // let vile    : Vile.Lib.Index   = require("./index")
-  // let service : Vile.Lib.Service = require("./service")
-  // let config  : Vile.Lib.Config  = require("./config")
+  // # in src/module_name.ts
+  // module.exports = <Vile.Lib.ModuleName>{...}
   //
 
   export module API {
@@ -207,19 +202,32 @@ declare module Vile {
       version : string;
     }
 
+    export interface Plugin {
+      exec : (
+        p : PluginList,
+        config : YMLConfig,
+        opts : any
+      ) => Bluebird<IssueList>;
+
+      exec_plugin : (
+        name : string,
+        config : YMLConfig
+      ) => Bluebird<any>;
+    }
+
     export interface Index {
       exec   : (
         p : PluginList,
         config : YMLConfig,
         opts : any
-      ) => bluebird.Promise<IssueList>;
+      ) => Bluebird<IssueList>;
     }
 
     export interface Logger {
       quiet   : () => any;
-      level   : () => any;
-      create  : (m ? : string) => any;
-      verbose : (s : boolean) => void;
+      level   : (l : string) => any;
+      create  : (l : string) => any;
+      default : () => any;
     }
 
     export interface Service {
@@ -227,12 +235,12 @@ declare module Vile {
         issues : IssueList,
         cli_time : number,
         auth : Auth
-      ) => bluebird.Promise<any>;
+      ) => Bluebird<any>;
 
       commit_status : (
         commit_id : number,
         auth : Auth
-      ) => bluebird.Promise<any>;
+      ) => Bluebird<any>;
 
       log : (
         post_json : any,

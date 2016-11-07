@@ -1,9 +1,9 @@
-/// <reference path="../../lib/typings/index.d.ts" />
+/// <reference path="../../@types/index.d.ts" />
 
-var inquirer = require("inquirer")
-var fs = require("fs")
-var Bluebird : typeof bluebird.Promise = require("bluebird")
-var _ = require("lodash")
+import inquirer = require("inquirer")
+import fs = require("fs")
+import Bluebird = require("bluebird")
+import _ = require("lodash")
 
 const IGNORE_DIRECTORIES = [
   "node_modules",
@@ -19,16 +19,17 @@ const IGNORE_DIRECTORIES = [
   "coverage"
 ]
 
-var get_chosen_ignored_directories = (
+const get_chosen_ignored_directories = (
   dirs : string[]
-) : bluebird.Promise<string[]> => {
+) : Bluebird<string[]> => {
   if (_.isEmpty(dirs)) return Bluebird.resolve(dirs)
 
   let choices : any[] = _.map(dirs, (dir : string) => {
     return { name: dir }
   })
 
-  return inquirer.prompt({
+  // HACK: then is not on type Prompt?
+  return (<any>inquirer).prompt({
     type: "checkbox",
     message: "Select any directories or files to ignore.",
     name: "dirs",
@@ -38,16 +39,16 @@ var get_chosen_ignored_directories = (
   .then((answers : any) => answers.dirs)
 }
 
-var ignored_directories = (directory : string) : bluebird.Promise<string[]> =>
-  fs.readdirAsync(directory)
+const ignored_directories = (directory : string) : Bluebird<string[]> =>
+  (<any>fs).readdirAsync(directory)
     .then((targets : string[]) =>
       _.filter(targets, (target : string) =>
         fs.statSync(target).isDirectory() &&
           _.some(IGNORE_DIRECTORIES, (dir : string) => dir == target)))
     .then(get_chosen_ignored_directories)
 
-var get_any_extra_directories_from_user = () : bluebird.Promise<string[]> =>
-  inquirer.prompt([
+const get_any_extra_directories_from_user = () : Bluebird<string[]> =>
+  (<any>inquirer.prompt)([
     {
       type: "input",
       name: "extra_ignore_dirs",
@@ -59,8 +60,8 @@ var get_any_extra_directories_from_user = () : bluebird.Promise<string[]> =>
     return _.compact(_.toString(dirs).split(","))
   })
 
-var get_any_extra_directories = () : bluebird.Promise<string[]> =>
-  inquirer.prompt([
+const get_any_extra_directories = () : Bluebird<string[]> =>
+  (<any>inquirer).prompt([
     {
       type: "confirm",
       name: "get_extra_dirs",
@@ -75,9 +76,9 @@ var get_any_extra_directories = () : bluebird.Promise<string[]> =>
     }
   })
 
-var check_for_ignored_directories = (
-  config : Vile.YMLConfig
-) : bluebird.Promise<Vile.YMLConfig> =>
+const check_for_ignored_directories = (
+  config : vile.YMLConfig
+) : Bluebird<vile.YMLConfig> =>
   ignored_directories(process.cwd())
     .then((ignored_dirs : string[]) =>
       get_any_extra_directories()
@@ -91,6 +92,6 @@ var check_for_ignored_directories = (
           return config
         }))
 
-module.exports = {
+export = {
   init: check_for_ignored_directories
 }

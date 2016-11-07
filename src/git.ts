@@ -1,23 +1,24 @@
-/// <reference path="lib/typings/index.d.ts" />
+/// <reference path="@types/index.d.ts" />
 
-var git_diff_tree = require("git-diff-tree")
-var path = require("path")
-var _ = require("lodash")
-var Bluebird : typeof bluebird.Promise = require("bluebird")
-var logger : Vile.Lib.Logger  = require("./logger")
-var log = logger.create("git")
+import git_diff_tree = require("git-diff-tree")
+import path = require("path")
+import _ = require("lodash")
+import Bluebird = require("bluebird")
+import logger = require("./logger")
 
-var into_file_paths = (gtd_raw : any[]) =>
+const log = logger.create("git")
+
+const into_file_paths = (gtd_raw : any[]) =>
   _.map(_.filter(gtd_raw,
     (raw : any) => _.get(raw, "status", "").toUpperCase() != "D"),
     (raw : any) => _.get(raw, "toFile"))
 
 // TODO: clean up strings in this method
 // TODO: upp the threshold for streams and diff size
-var changed_files = (
+const changed_files = (
   original_rev : string = "--root",
   repo_path : string = path.join(process.cwd(), ".git")
-) : bluebird.Promise<any> =>
+) : Bluebird<any> =>
   new Bluebird((resolve, reject) => {
     let stats : any[] = []
 
@@ -37,6 +38,6 @@ var changed_files = (
       .on("end", () => resolve(into_file_paths(stats)))
   })
 
-module.exports = {
+export = {
   changed_files: changed_files
 }

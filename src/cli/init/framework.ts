@@ -1,20 +1,20 @@
-/// <reference path="../../lib/typings/index.d.ts" />
+/// <reference path="../../@types/index.d.ts" />
 
-var fs = require("fs")
-var Bluebird : typeof bluebird.Promise = require("bluebird")
-var inquirer = require("inquirer")
-var _ = require("lodash")
-var plugin_map = require("./map")
+import fs = require("fs")
+import Bluebird = require("bluebird")
+import inquirer = require("inquirer")
+import _ = require("lodash")
+import plugin_map = require("./map")
 
-var exists = (file : string) =>
+const exists = (file : string) =>
   fs.existsSync(file)
 
-var read = (file : string) =>
+const read = (file : string) =>
   fs.readFileSync(file).toString()
 
-var check_for_project_frameworks = (
-  config : Vile.YMLConfig
-) : bluebird.Promise<Vile.YMLConfig> => {
+const check_for_project_frameworks = (
+  config : vile.YMLConfig
+) : Bluebird<vile.YMLConfig> => {
   let frameworks = []
 
   if (exists("config.ru") && /Rails/g.test(read("config.ru"))) {
@@ -57,7 +57,7 @@ var check_for_project_frameworks = (
 
   if (exists(".git")) frameworks.push("git")
 
-  return inquirer.prompt({
+  return (<any>inquirer).prompt({
     type: "checkbox",
     message: "Looks like you have a number of frameworks and tooling." +
       " Please uncheck any that don't apply.",
@@ -85,6 +85,6 @@ var check_for_project_frameworks = (
   })
 }
 
-module.exports = {
+export = {
   init: check_for_project_frameworks
 }

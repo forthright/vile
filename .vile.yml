@@ -104,6 +104,7 @@ license:
       - BSD-2-Clause
       - WTFPL OR MIT
       - BSD-3-Clause AND MIT
+      - BSD-3-Clause OR MIT
       - BSD-2-Clause OR MIT
       - BSD-2-Clause OR WTFPL
       - BSD-2-Clause OR MIT OR Apache-2.0

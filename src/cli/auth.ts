@@ -1,10 +1,11 @@
-/// <reference path="../lib/typings/index.d.ts" />
+/// <reference path="../@types/index.d.ts" />
 
-var logger  : Vile.Lib.Logger  = require("./../logger")
-var log = logger.create("cli")
+import logger = require("./../logger")
+
+const log = logger.create("cli")
 
 // TODO: any is Commander.js
-var create = (cli : any) =>
+const create = (cli : any) =>
   cli
     .command("auth")
       .alias("a")
@@ -17,6 +18,6 @@ var create = (cli : any) =>
         log.info("  ~$ VILE_API_TOKEN=token VILE_PROJECT=my-project vile p -u")
       })
 
-module.exports = {
+export = {
   create: create
 }

@@ -1,34 +1,34 @@
-/// <reference path="lib/typings/index.d.ts" />
+/// <reference path="@types/index.d.ts" />
 
-var Bluebird : typeof bluebird.Promise = require("bluebird")
-var request : any = require("request")
-var logger : Vile.Lib.Logger = require("./logger")
-var _ = require("lodash")
+import Bluebird = require("bluebird")
+import request = require("request")
+import logger = require("./logger")
+import _ = require("lodash")
 
-var HOST = "vile.io"
-var PROD_URL = `https://${HOST}`
-var API_TARGET = "api/v0"
-var VILE_APP = process.env.VILE_APP || PROD_URL
-var log = logger.create(HOST)
+const HOST = "vile.io"
+const PROD_URL = `https://${HOST}`
+const API_TARGET = "api/v0"
+const VILE_APP = process.env.VILE_APP || PROD_URL
+const log = logger.create(HOST)
 
-var http_authentication = (auth_token : string) : any => {
+const http_authentication = (auth_token : string) : any => {
   return { "Authorization": `Token token=${auth_token}` }
 }
 
-var api_path = (endpoint : string) : string =>
+const api_path = (endpoint : string) : string =>
   `${VILE_APP}/${API_TARGET}/${endpoint}`
 
-var handle_response = (resolve, reject) : Vile.API.HTTPResponse =>
-  (err, response, body : Vile.API.JSONResponse) =>
+const handle_response = (resolve, reject) : request.RequestCallback =>
+  (err, response, body : vile.API.JSONResponse) =>
     err ?
       reject({ error: err }) :
       resolve({ body: body, response: response })
 
-var commit = (
+const commit = (
   issues : any[],
   cli_time : number,
-  auth : Vile.Auth
-) =>
+  auth : vile.Auth
+) : Bluebird<any> =>
   new Bluebird((resolve, reject) => {
     let url = api_path(`projects/${auth.project}/commits`)
     log.debug(`POST ${url}`)
@@ -43,9 +43,9 @@ var commit = (
     handle_response(resolve, reject))
   })
 
-var commit_status = (
+const commit_status = (
   commit_id : number,
-  auth : Vile.Auth
+  auth : vile.Auth
 ) =>
   new Bluebird((resolve, reject) => {
     let url = api_path(
@@ -58,14 +58,14 @@ var commit_status = (
     handle_response(resolve, reject))
   })
 
-var padded_file_score = (score : number) =>
+const padded_file_score = (score : number) =>
   (score < 100 ? " " : "") + String(score) + "%"
 
-var log_summary = (post_json : any, verbose : boolean = false) => {
-  let score : number = _.get(post_json, "score")
-  let files : any[] = _.get(post_json, "files")
-  let time : number = _.get(post_json, "time")
-  let url : string = _.get(post_json, "url")
+const log_summary = (post_json : any, verbose : boolean = false) => {
+  let score : number = _.get(post_json, "score", 100)
+  let files : any[] = _.get(post_json, "files", [])
+  let time : number = _.get(post_json, "time", 0)
+  let url : string = _.get(post_json, "url", "")
   let time_in_seconds : string = (time / 1000)
     .toFixed(2)
     .toString()
@@ -74,7 +74,7 @@ var log_summary = (post_json : any, verbose : boolean = false) => {
   if (verbose) {
     _.each(files, (file : any) => {
       log.info(
-        `${padded_file_score(_.get(file, "score"))} => ` +
+        `${padded_file_score(_.get(file, "score", 0))} => ` +
         `${_.get(file, "path")}`)
     })
   }
@@ -85,7 +85,7 @@ var log_summary = (post_json : any, verbose : boolean = false) => {
   log.info(url)
 }
 
-module.exports = {
+export = <vile.Lib.Service>{
   commit: commit,
   commit_status: commit_status,
   log: log_summary

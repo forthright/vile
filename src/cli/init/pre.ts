@@ -1,14 +1,14 @@
-/// <reference path="../../lib/typings/index.d.ts" />
+/// <reference path="../../@types/index.d.ts" />
 
-var fs = require("fs")
-var path = require("path")
-var inquirer = require("inquirer")
-var Bluebird : typeof bluebird.Promise = require("bluebird")
+import fs = require("fs")
+import path = require("path")
+import inquirer = require("inquirer")
+import Bluebird = require("bluebird")
 
-var welcome_confirm = (
-  config : Vile.YMLConfig
-) : bluebird.Promise<Vile.YMLConfig> =>
-  inquirer.prompt([
+const welcome_confirm = (
+  config : vile.YMLConfig
+) : Bluebird<vile.YMLConfig> =>
+  (<any>inquirer).prompt([
     {
       type: "confirm",
       name: "ok_to_proceed",
@@ -24,13 +24,13 @@ var welcome_confirm = (
     }
   })
 
-var check_for_existing_config = (
-  config : Vile.YMLConfig
-) : bluebird.Promise<Vile.YMLConfig> => {
+const check_for_existing_config = (
+  config : vile.YMLConfig
+) : Bluebird<vile.YMLConfig> => {
   let vile_yml_path = path.join(process.cwd(), ".vile.yml")
 
   if (fs.existsSync(vile_yml_path)) {
-    return inquirer.prompt([
+    return (<any>inquirer).prompt([
       {
         type: "confirm",
         name: "ok_to_overwrite",
@@ -49,9 +49,9 @@ var check_for_existing_config = (
   }
 }
 
-var check_for_existing_package_json = (
-  config : Vile.YMLConfig
-) : bluebird.Promise<Vile.YMLConfig> => {
+const check_for_existing_package_json = (
+  config : vile.YMLConfig
+) : Bluebird<vile.YMLConfig> => {
   let pkg_json_path = path.join(process.cwd(), "package.json")
 
   if (fs.existsSync(pkg_json_path)) return Bluebird.resolve(config)
@@ -69,7 +69,7 @@ var check_for_existing_package_json = (
 
   let file_data = new Buffer(JSON.stringify(pkg_json_shell, null, "  "))
 
-  return fs.writeFileAsync(pkg_json_path, file_data)
+  return (<any>fs).writeFileAsync(pkg_json_path, file_data)
     .then((err) => {
       return err ?
         Bluebird.reject(err) :
@@ -77,8 +77,8 @@ var check_for_existing_package_json = (
     })
 }
 
-module.exports = {
-  init: (config : Vile.YMLConfig) =>
+export = {
+  init: (config : vile.YMLConfig) =>
     welcome_confirm(config)
     .then(check_for_existing_config)
     .then(check_for_existing_package_json)

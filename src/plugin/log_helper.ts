@@ -1,15 +1,15 @@
-/// <reference path="../lib/typings/index.d.ts" />
+/// <reference path="../@types/index.d.ts" />
 
-var _ = require("lodash")
-var logger : Vile.Lib.Logger  = require("./../logger")
-var util = require("./../util")
+import _ = require("lodash")
+import logger = require("./../logger")
+import util = require("./../util")
 
 // TODO: DRY both methods
 // TODO: move logging out of plugins?
 
-var humanize_line_char = (issue : Vile.Issue) : string => {
-  let start : Vile.IssueLine = _.get(issue, "where.start", {})
-  let end : Vile.IssueLine = _.get(issue, "where.end", {})
+const humanize_line_char = (issue : vile.Issue) : string => {
+  let start : vile.IssueLine = _.get(issue, "where.start", {})
+  let end : vile.IssueLine = _.get(issue, "where.end", {})
 
   let start_character : string = (
       typeof start.character == "number" || typeof start.character == "string"
@@ -23,9 +23,9 @@ var humanize_line_char = (issue : Vile.Issue) : string => {
     `${start_character}${end_character}` : start_character
 }
 
-var humanize_line_num = (issue) : string => {
-  let start : Vile.IssueLine = _.get(issue, "where.start", {})
-  let end : Vile.IssueLine = _.get(issue, "where.end", {})
+const humanize_line_num = (issue) : string => {
+  let start : vile.IssueLine = _.get(issue, "where.start", {})
+  let end : vile.IssueLine = _.get(issue, "where.end", {})
 
   let start_line : string = (
       typeof start.line == "number" || typeof start.line == "string"
@@ -39,17 +39,17 @@ var humanize_line_num = (issue) : string => {
     `${start_line}${end_line}` : start_line
 }
 
-var to_console = (
-  issue : Vile.Issue,
+const to_console = (
+  issue : vile.Issue,
   format : string = "default"
 ) : string => {
   if (format == "syntastic") {
-    let t : string = issue.type
-    let start_info : Vile.IssueLine
+    let issue_type : string = issue.type
+    let start_info : vile.IssueLine
     let synastic_type : string = _
-      .some(util.errors, (i) => i.type == t) ? "E" : "W"
+      .some(util.errors, (name) => name == issue_type) ? "E" : "W"
 
-    if (t == util.DUPE) {
+    if (issue_type == util.DUPE) {
       let locs = _.get(issue, "duplicate.locations", [])
       start_info = _.get(_.first(locs), "where.start", {})
     } else {
@@ -82,31 +82,29 @@ var to_console = (
   }
 }
 
-var to_console_duplicate = (
-  issue : Vile.Issue
+const to_console_duplicate = (
+  issue : vile.Issue
 ) => {
-  let files = _.chain(issue)
-    .get("duplicate.locations", [])
-    .map("path")
-    .uniq()
-    .join(", ")
+  let files = _.chain(
+    _.get(issue, "duplicate.locations", [])
+  ).map("path").uniq().join(", ")
   return `${ issue.path }: Similar code in ${ files }`
 }
 
-var to_console_churn = (
-  issue : Vile.Issue
+const to_console_churn = (
+  issue : vile.Issue
 ) => `${ issue.path }: ${ issue.churn }`
 
-var to_console_comp = (
-  issue : Vile.Issue
+const to_console_comp = (
+  issue : vile.Issue
 ) => `${ issue.path }: ${ issue.complexity }`
 
-var to_console_lang = (
-  issue : Vile.Issue
+const to_console_lang = (
+  issue : vile.Issue
 ) => `${ issue.path }: ${ issue.language }`
 
-var to_console_git = (
-  issue : Vile.Issue
+const to_console_git = (
+  issue : vile.Issue
 ) => {
   let date = _.get(issue, "commit.commit_date") ||
               _.get(issue, "commit.author_date")
@@ -114,19 +112,20 @@ var to_console_git = (
   return `${ sha }: ${ date }`
 }
 
-var to_console_stat = (
-  issue : Vile.Issue
+const to_console_stat = (
+  issue : vile.Issue
 ) => {
   let size = _.get(issue, "stat.size", "?")
   let loc = _.get(issue, "stat.loc", "?")
   let lines = _.get(issue, "stat.lines", "?")
   let comments = _.get(issue, "stat.comments", "?")
-  return `${ issue.path } (${ size ? (size / 1024).toFixed(3) + "KB" : "" })` +
+  return `${ issue.path } ` +
+    `(${ size ? (Number(size) / 1024).toFixed(3) + "KB" : "" })` +
     `: ${ lines } lines, ${ loc } loc, ${ comments } comments`
 }
 
-var to_console_dep = (
-  issue : Vile.Issue
+const to_console_dep = (
+  issue : vile.Issue
 ) : string => {
   let name = _.get(issue, "dependency.name", "?")
   let current = _.get(issue, "dependency.current", "?")
@@ -134,17 +133,17 @@ var to_console_dep = (
   return `New release for ${name}: ${current} < ${latest}`
 }
 
-var to_console_cov = (
-  issue : Vile.Issue
+const to_console_cov = (
+  issue : vile.Issue
 ) : string => {
   let cov = _.get(issue, "coverage.total", "?")
   return `${ issue.path }: ${ cov }% lines covered`
 }
 
-var log_syntastic_applicable_messages = (
-  issues : Vile.Issue[] = []
+const log_syntastic_applicable_messages = (
+  issues : vile.Issue[] = []
 ) => {
-  issues.forEach((issue : Vile.Issue, index : number) => {
+  issues.forEach((issue : vile.Issue, index : number) => {
     let issue_type : string = issue.type
     if (_.some(util.displayable_issues, (t) => issue_type == t)) {
       console.log(to_console(issue, "syntastic"))
@@ -152,16 +151,16 @@ var log_syntastic_applicable_messages = (
   })
 }
 
-var log_issue_messages = (
-  issues : Vile.Issue[] = []
+const log_issue_messages = (
+  issues : vile.Issue[] = []
 ) => {
   let nlogs = {}
 
-  issues.forEach((issue : Vile.Issue, index : number) => {
+  issues.forEach((issue : vile.Issue, index : number) => {
     let t = issue.type
     if (!nlogs[t]) nlogs[t] = logger.create(t)
 
-    let plugin_name : string = _.get(issue, "plugin")
+    let plugin_name : string = _.get(issue, "plugin", "")
     let msg_postfix = plugin_name ? ` (vile-${ plugin_name })` : ""
 
     if (_.some(util.errors, (t) => issue.type == t)) {
@@ -196,7 +195,7 @@ var log_issue_messages = (
   })
 }
 
-module.exports = {
+export = {
   issues: log_issue_messages,
   syntastic_issues: log_syntastic_applicable_messages,
 }

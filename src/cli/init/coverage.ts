@@ -1,23 +1,23 @@
-/// <reference path="../../lib/typings/index.d.ts" />
+/// <reference path="../../@types/index.d.ts" />
 
-var fs = require("fs")
-var path = require("path")
-var Bluebird : typeof bluebird.Promise = require("bluebird")
-var inquirer = require("inquirer")
-var _ = require("lodash")
-var plugin_map = require("./map")
+import fs = require("fs")
+import path = require("path")
+import Bluebird = require("bluebird")
+import inquirer = require("inquirer")
+import _ = require("lodash")
+import plugin_map = require("./map")
 
 // TODO: be more in depth, vs generically suggesting coverage plugin
-var check_for_test_coverage_step = (
-  config : Vile.YMLConfig
-) : bluebird.Promise<Vile.YMLConfig> => {
+const check_for_test_coverage_step = (
+  config : vile.YMLConfig
+) : Bluebird<vile.YMLConfig> => {
   let exists = (target : string) =>
     fs.existsSync(path.join(process.cwd(), target))
 
   if (exists("coverage") ||
       exists("test") ||
       exists("spec")) {
-    return inquirer.prompt([
+    return (<any>inquirer).prompt([
       {
         type: "confirm",
         name: "ok_to_add",
@@ -37,6 +37,6 @@ var check_for_test_coverage_step = (
   }
 }
 
-module.exports = {
+export = {
   init: check_for_test_coverage_step
 }

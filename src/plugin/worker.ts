@@ -1,20 +1,21 @@
-/// <reference path="../lib/typings/index.d.ts" />
+/// <reference path="../@types/index.d.ts" />
 
 // TODO: make a bin/ shim to make this a pure module?
-var Bluebird : typeof bluebird.Promise = require("bluebird")
-var _ = require("lodash")
-var plugin = require("./../plugin")
-var logger : Vile.Lib.Logger  = require("./../logger")
-var log = logger.create("worker")
+import Bluebird = require("bluebird")
+import _ = require("lodash")
+import plugin = require("./../plugin")
+import logger = require("./../logger")
 
-var ping_parent = (process : any) => process.send("")
+const log = logger.create("worker")
 
-var set_ignore_list = (plugin_config, base) => {
+const ping_parent = (process : any) => process.send("")
+
+const set_ignore_list = (plugin_config, base) => {
   let list = _.compact(_.concat([], _.get(plugin_config, "ignore", [])))
   _.set(plugin_config, "ignore", _.uniq(list.concat(base)))
 }
 
-var set_allow_list = (plugin_config, base) => {
+const set_allow_list = (plugin_config, base) => {
   if (!_.isEmpty(base)) {
     _.set(plugin_config, "allow", _.compact(_.concat([], base)))
   } else {
@@ -23,7 +24,7 @@ var set_allow_list = (plugin_config, base) => {
   }
 }
 
-var get_plugin_config = (name : string, config : Vile.YMLConfig) => {
+const get_plugin_config = (name : string, config : vile.YMLConfig) => {
   let plugin_config : any = _.get(config, name, {})
   let vile_ignore : string[] = _.get(config, "vile.ignore", [])
   let vile_allow : string[] = _.get(config, "vile.allow", [])
@@ -34,9 +35,9 @@ var get_plugin_config = (name : string, config : Vile.YMLConfig) => {
   return plugin_config
 }
 
-var handle_worker_request = (data : Vile.Lib.PluginWorkerData) => {
+const handle_worker_request = (data : vile.Lib.PluginWorkerData) => {
   let plugins : string[] = data.plugins
-  let config : Vile.YMLConfig = data.config
+  let config : vile.YMLConfig = data.config
 
   Bluebird.map(plugins, (plugin_name : string) => {
     let name : string = plugin_name.replace("vile-", "")

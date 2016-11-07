@@ -1,28 +1,28 @@
-/// <reference path="../lib/typings/index.d.ts" />
+/// <reference path="../@types/index.d.ts" />
 
-var _                          = require("lodash")
-var fs                         = require("fs")
-var service : Vile.Lib.Service = require("./../service")
-var vile    : Vile.Lib.Index   = require("./../index")
-var path                       = require("path")
-var config  : Vile.Lib.Config  = require("./../config")
-var git                        = require("./../git")
-var util                       = require("./../util")
-var logger  : Vile.Lib.Logger  = require("./../logger")
+import _ = require("lodash")
+import fs = require("fs")
+import service = require("./../service")
+import path = require("path")
+import config = require("./../config")
+import git = require("./../git")
+import util = require("./../util")
+import logger = require("./../logger")
+import lib = require("./../index")
 
-var service_log = logger.create("vile.io")
+const service_log = logger.create("vile.io")
 
-var COMMIT_STATUS_INTERVAL_TIME = 2000 // 2s
-var DEFAULT_VILE_YML            = ".vile.yml"
+const COMMIT_STATUS_INTERVAL_TIME = 2000 // 2s
+const DEFAULT_VILE_YML            = ".vile.yml"
 
-var wait_for = (ms : number, cb : (t : any) => void) => {
+const wait_for = (ms : number, cb : (t : any) => void) => {
   let timer  = setInterval(() => {
     cb(timer)
   }, ms)
 }
 
-var wait_for_done_status_and_log = (
-  commit_id : number,
+const wait_for_done_status_and_log = (
+  commit_id : number | null,
   auth : any,
   verbose : boolean
 ) => {
@@ -30,8 +30,9 @@ var wait_for_done_status_and_log = (
     service
       .commit_status(commit_id, auth)
       .then((http) => {
-        let api_body : Vile.API.HTTPResponse = _.get(http, "body")
-        let response : Vile.API.JSONResponse = _.get(http, "response")
+        let api_body : vile.API.HTTPResponse = _.get(http, "body")
+        let response : vile.API.JSONResponse = _.get(
+          http, "response", { message: null })
 
         let status_code = _.get(response, "statusCode")
         let body_json = _.attempt(
@@ -59,8 +60,8 @@ var wait_for_done_status_and_log = (
   })
 }
 
-var publish = (
-  issues : Vile.IssueList,
+const publish = (
+  issues : vile.IssueList,
   cli_time : number,
   opts : any
 ) => {
@@ -80,7 +81,7 @@ var publish = (
       let body_json = _.attempt(
         JSON.parse.bind(null, _.get(http, "body", "{}")))
       let commit_state = _.get(body_json, "message")
-      let commit_id = _.get(body_json, "data.commit_id")
+      let commit_id = _.get(body_json, "data.commit_id", null)
 
       service_log.info(`Commit ${commit_id} ${commit_state}`)
 
@@ -99,16 +100,16 @@ var publish = (
 }
 
 // TODO: plugin interface
-var parse_plugins = (plugins : string) : Vile.PluginList =>
+const parse_plugins = (plugins : string) : vile.PluginList =>
   plugins && plugins.split ? plugins.split(",") : undefined
 
-var set_log_levels = (logs? : string) => {
+const set_log_levels = (logs? : string) => {
   logger.quiet()
   if (logs.split) logs.split(",").forEach(logger.level)
 }
 
 // HACK: This method and above uses promises haphazardly- needs rewrite
-var punish = (app : any, paths : string[]) => {
+const punish = (app : any, paths : string[]) => {
   let plugins : string = app.plugins
 
   // TODO: not ideal to mutate the app
@@ -123,9 +124,9 @@ var punish = (app : any, paths : string[]) => {
 
   let cli_start_time = new Date().getTime()
 
-  let exec = () => vile
+  let exec = () => lib
     .exec(parse_plugins(plugins), app.config, app)
-    .then((issues : Vile.IssueList) => {
+    .then((issues : vile.IssueList) => {
       let cli_end_time = new Date().getTime()
       let cli_time = cli_end_time - cli_start_time
       if (app.upload) return publish(issues, cli_time, app)
@@ -146,7 +147,7 @@ var punish = (app : any, paths : string[]) => {
 }
 
 // TODO: move into config.ts
-var load_config = (app : any) => {
+const load_config = (app : any) => {
   let app_config : string
 
   if (typeof app.config == "string") {
@@ -163,7 +164,7 @@ var load_config = (app : any) => {
 }
 
 // TODO: any is Commander.js
-var create = (cli : any) =>
+const create = (cli : any) =>
   cli
     .command("punish [paths...]")
     .alias("p")
@@ -202,6 +203,6 @@ var create = (cli : any) =>
       punish(app, paths)
     })
 
-module.exports = {
+export = {
   create: create
 }
