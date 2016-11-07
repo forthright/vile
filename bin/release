@@ -15,4 +15,4 @@ npm test
 
 git add -f lib
 
-npm run -- release-it -p -i $level -m "v%s"
+npm run -- release-it -n -p -m 'v%s' -i $level
