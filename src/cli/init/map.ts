@@ -2,7 +2,7 @@
 
 // TODO: write framework detector lib
 
-const PLUGIN_MAP = {
+const PLUGIN_MAP : vile.Lib.PluginMap = {
   frameworks: {
     coverage: [ "coverage" ],
     rails: [ "brakeman", "rails-best-practices" ],

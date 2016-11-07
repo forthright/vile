@@ -15,7 +15,7 @@ const read = (file : string) =>
 const check_for_project_frameworks = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> => {
-  let frameworks = []
+  let frameworks : string[] = []
 
   if (exists("config.ru") && /Rails/g.test(read("config.ru"))) {
     frameworks.push("rails")
@@ -65,7 +65,7 @@ const check_for_project_frameworks = (
     choices: _.map(frameworks, (name : string) => {
       return { name: name, checked: true }
     }),
-    validate: (answer) => true
+    validate: (answer : string[]) => true
   })
   .then((answers : any) => {
     _.each(

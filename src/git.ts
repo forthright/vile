@@ -8,8 +8,8 @@ import logger = require("./logger")
 
 const log = logger.create("git")
 
-const into_file_paths = (gtd_raw : any[]) =>
-  _.map(_.filter(gtd_raw,
+const into_file_paths = (gtd_raw : any[]) : string[] =>
+  <string[]>_.map(_.filter(gtd_raw,
     (raw : any) => _.get(raw, "status", "").toUpperCase() != "D"),
     (raw : any) => _.get(raw, "toFile"))
 
@@ -18,8 +18,11 @@ const into_file_paths = (gtd_raw : any[]) =>
 const changed_files = (
   original_rev : string = "--root",
   repo_path : string = path.join(process.cwd(), ".git")
-) : Bluebird<any> =>
-  new Bluebird((resolve, reject) => {
+) : Bluebird<string[]> =>
+  new Bluebird((
+    resolve : (files : string[]) => void,
+    reject : (error : string | NodeJS.ErrnoException) => void
+  ) => {
     let stats : any[] = []
 
     git_diff_tree(repo_path, { originalRev: original_rev })
@@ -33,7 +36,7 @@ const changed_files = (
             break
         }
       })
-      .on("error", (err) => reject(err))
+      .on("error", (err : NodeJS.ErrnoException) => reject(err))
       .on("cut", () => reject("diff too big to parse"))
       .on("end", () => resolve(into_file_paths(stats)))
   })

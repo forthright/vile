@@ -17,30 +17,32 @@ Bluebird.promisifyAll(fs)
 
 const log = logger.create("plugin")
 
-const Spinner = spinner.Spinner
-
 const FILE_EXT = /\.[^\.]*$/
 
-const is_plugin = (name) =>
-  /^vile-/.test(name)
+const is_plugin = (name : string) : boolean =>
+  !!/^vile-/.test(name)
 
-const valid_plugin = (api) =>
-  api && typeof api.punish == "function"
+const valid_plugin = (api : vile.Plugin) : boolean =>
+  !!(api && typeof api.punish == "function")
 
-const is_array = (list) =>
-  list && typeof list.forEach == "function"
+const is_array = (list : any[]) : boolean =>
+  !!(list && typeof list.forEach == "function")
 
-const is_promise = (list) =>
-  list && typeof list.then == "function"
+const is_promise = (list : Bluebird<any>) : boolean =>
+  !!(list && typeof list.then == "function")
 
-const require_plugin = (name : string) : vile.Plugin => {
+const require_plugin = (name : string) : vile.Plugin | null => {
   let cwd_node_modules = path.join(process.cwd(), "node_modules")
 
+  let plugin : vile.Plugin
+
   try {
-    return require(`${cwd_node_modules}/@forthright/vile-${name}`)
+    plugin = require(`${cwd_node_modules}/@forthright/vile-${name}`)
   } catch (error) {
     log.error(_.get(error, "stack", error))
   }
+
+  return plugin
 }
 
 const map_plugin_name_to_issues = (name : string) => (issues : vile.Issue[]) =>
@@ -53,13 +55,14 @@ const run_plugin = (
     config: {},
     ignore: []
   }
-) : Bluebird<any> =>
-  new Bluebird((resolve, reject) => {
+) : Bluebird<vile.IssueList> =>
+  new Bluebird((
+    resolve : (i : vile.IssueList) => void,
+    reject : (e : string) => void
+  ) => {
     let api : vile.Plugin = require_plugin(name)
 
-    if (!valid_plugin(api)) {
-      reject(`invalid plugin API: ${name}`)
-    }
+    if (!valid_plugin(api)) reject(`invalid plugin API: ${name}`)
 
     let issues : any = api.punish(config)
 
@@ -83,12 +86,15 @@ const log_plugins_finished = (pkg_names : string[]) => {
 }
 
 const run_plugins_in_fork = (
-  plugins : string[],
-  config : vile.YMLConfig,
-  worker : any
-) =>
-  new Bluebird((resolve, reject) => {
-    worker.on("message", (issues) => {
+  plugins : vile.PluginList,
+  config  : vile.YMLConfig,
+  worker  : cluster.Worker
+) : Bluebird<vile.IssueList> =>
+  new Bluebird((
+    resolve : (issue : vile.IssueList) => void,
+    reject : (error : string) => void
+  ) => {
+    worker.on("message", (issues : vile.IssueList) => {
       if (issues) {
         worker.disconnect()
         log_plugins_finished(plugins)
@@ -110,8 +116,7 @@ const run_plugins_in_fork = (
     })
   })
 
-// TODO: test this to be Windows friendly!
-const normalize_paths = (issues) =>
+const normalize_paths = (issues : vile.IssueList) =>
   _.each(issues, (issue) => {
     if (_.has(issue, "path")) {
       issue.path = unixify(issue.path)
@@ -204,9 +209,12 @@ const combine_paths = (
 const execute_plugins = (
   allowed : vile.PluginList = [],
   config : vile.YMLConfig = null,
-  opts : any = {}
-) => (plugins : string[]) : Bluebird<any> =>
-  new Bluebird((resolve : any, reject) : any => {
+  opts : vile.PluginExecOptions = {}
+) => (plugins : string[]) : Bluebird<vile.IssueList> =>
+  new Bluebird((
+    resolve : (issue : vile.IssueList) => void,
+    reject : (error : string) => void
+  ) => {
     check_for_uninstalled_plugins(allowed, plugins)
 
     cluster.setupMaster({
@@ -219,21 +227,20 @@ const execute_plugins = (
         _.some(allowed, (a) => p.replace("vile-", "") == a))
     }
 
-    let spin
-    let workers = {}
+    let spin : spinner.Spinner
+    let workers : { [ id : string ] : string } = {}
     let plugin_count : number = plugins.length
     let concurrency : number = os.cpus().length || 1
 
-    cluster.on("fork", (worker) => {
+    cluster.on("fork", (worker : cluster.Worker) => {
       if (spin) spin.stop(true)
-      log.info(
-        `${workers[worker.id]}:start ` +
-        `(${worker.id}/${plugin_count})`)
+      let name = workers[worker.id]
+      log.info(`${name}:start(${worker.id}/${plugin_count})`)
       if (spin) spin.start()
     })
 
     if (opts.spinner && opts.format != "json") {
-      spin = new Spinner("PUNISH")
+      spin = new spinner.Spinner("PUNISH")
       spin.setSpinnerDelay(60)
       spin.start()
     }
@@ -264,7 +271,7 @@ const execute_plugins = (
     .catch(reject)
   })
 
-const passthrough = (value : any) => value
+const passthrough = (issues : vile.IssueList) => issues
 
 // TODO: use Linez typings
 const into_snippet = (lines : any, start : number, end : number) =>
@@ -362,7 +369,7 @@ const add_ok_issues = (
 const run_plugins = (
   custom_plugins : vile.PluginList = [],
   config : vile.YMLConfig = {},
-  opts : any = {}
+  opts : vile.PluginExecOptions = {}
 ) : Bluebird<vile.IssueList> => {
   let app_config = _.get(config, "vile", { plugins: [] })
   let ignore = _.get(app_config, "ignore", null)

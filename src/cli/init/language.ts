@@ -23,9 +23,12 @@ const KNOWN_PROJECT_DIRS = [
 
 const detect_language = (
   filepath : string
-) : Bluebird<any> =>
-  new Bluebird((resolve, reject) => {
-    detect(filepath, function (err, language) {
+) : Bluebird<string> =>
+  new Bluebird((
+    resolve : (s : string) => void,
+    reject : (s : string) => void
+  ) => {
+    detect(filepath, function (err : string, language : string) {
       err ?
         reject(err) :
         resolve(language)
@@ -35,7 +38,7 @@ const detect_language = (
 const check_for_project_languages = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> => {
-  let langs = []
+  let langs : string[] = []
 
   return util.promise_each(
     process.cwd(),
@@ -65,7 +68,7 @@ const check_for_project_languages = (
       choices: _.map(uniq_langs, (lang : string) => {
         return { name: lang }
       }),
-      validate: (answer) => true
+      validate: (answer : string[]) => true
     })
     .then((answers : any) => {
       _.each(

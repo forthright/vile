@@ -23,7 +23,7 @@ const humanize_line_char = (issue : vile.Issue) : string => {
     `${start_character}${end_character}` : start_character
 }
 
-const humanize_line_num = (issue) : string => {
+const humanize_line_num = (issue : vile.Issue) : string => {
   let start : vile.IssueLine = _.get(issue, "where.start", {})
   let end : vile.IssueLine = _.get(issue, "where.end", {})
 
@@ -154,10 +154,10 @@ const log_syntastic_applicable_messages = (
 const log_issue_messages = (
   issues : vile.Issue[] = []
 ) => {
-  let nlogs = {}
+  let nlogs : { [issue_type : string] : Minilog } = {}
 
   issues.forEach((issue : vile.Issue, index : number) => {
-    let t = issue.type
+    let t : string = issue.type
     if (!nlogs[t]) nlogs[t] = logger.create(t)
 
     let plugin_name : string = _.get(issue, "plugin", "")

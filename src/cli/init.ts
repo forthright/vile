@@ -15,7 +15,7 @@ const vile_config_base = () : vile.YMLConfig => {
     vile: {
       ignore: [],
       allow: [],
-      plugins: plugin_map.frameworks.core
+      plugins: plugin_map.frameworks["core"]
     }
   }
 }

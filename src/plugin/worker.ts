@@ -7,12 +7,18 @@ import plugin = require("./../plugin")
 
 const ping_parent = (process : any) : void => process.send("")
 
-const set_ignore_list = (plugin_config, base) : void => {
+const set_ignore_list = (
+  plugin_config : vile.PluginConfig,
+  base : vile.IgnoreList
+) : void => {
   let list = _.compact(_.concat([], _.get(plugin_config, "ignore", [])))
   _.set(plugin_config, "ignore", _.uniq(list.concat(base)))
 }
 
-const set_allow_list = (plugin_config, base) : void => {
+const set_allow_list = (
+  plugin_config : vile.PluginConfig,
+  base : vile.AllowList
+) : void => {
   if (!_.isEmpty(base)) {
     _.set(plugin_config, "allow", _.compact(_.concat([], base)))
   } else {

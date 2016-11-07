@@ -29,7 +29,7 @@ const confirm_vile_config_is_ok = (
     if (answers.ok_to_continue) {
       return Bluebird.resolve(config)
     } else {
-      process.exit(0)
+      return Bluebird.resolve(process.exit(0))
     }
   })
 }
@@ -115,7 +115,10 @@ const install_plugins = (
       } else {
         log.info(bin, args.join(" "))
 
-        return new (<any>Bluebird)((resolve, reject) => {
+        return new (<any>Bluebird)((
+          resolve : () => void,
+          reject : (err : string) => void
+        ) => {
           child_process
             .spawn(bin, args, { stdio: [0, 1, 2] })
             .on("close", (code : number) => {

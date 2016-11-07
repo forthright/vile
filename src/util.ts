@@ -78,21 +78,24 @@ const is_allowed = (
 }
 
 const filter_promise_each = (
-  ignore_config : any,
-  allow_config : any
+  ignore_config : vile.IgnoreList,
+  allow_config : vile.AllowList
 ) => (
   file_or_dir : string
-) =>
+) : boolean =>
   is_allowed(file_or_dir, allow_config) &&
     !is_ignored(file_or_dir, ignore_config)
 
 // TODO: make io async
-const collect_files = (target, allowed) : string[] => {
+const collect_files = (
+  target : string,
+  allowed : (p : string, i : boolean) => boolean
+) : string[] => {
   let at_root = !path.relative(process.cwd(), target)
   let rel_path = at_root ? target : path.relative(process.cwd(), target)
-  let is_dir = fs.lstatSync(rel_path).isDirectory();
+  let is_dir = fs.lstatSync(rel_path).isDirectory()
 
-  if (!at_root && !allowed(rel_path, is_dir)) return;
+  if (!at_root && !allowed(rel_path, is_dir)) return []
 
   if (is_dir) {
     return _.flatten(fs.readdirSync(target).map((subpath) => {
@@ -105,12 +108,15 @@ const collect_files = (target, allowed) : string[] => {
 // TODO: add mem limit to child process
 const spawn = (
   bin : string,
-  opts : any = {}
-) : Bluebird<any> => {
-  return new Bluebird((resolve : any, reject) => {
+  opts : vile.Lib.SpawnOptions = {}
+) : Bluebird<string> =>
+  new Bluebird((
+    resolve : (buffer : string) => void,
+    reject : (e : string) => void
+  ) => {
     let log = logger.create(bin)
     let chunks : Buffer[] = []
-    let errors = []
+    let errors : string[] = []
     let env = extend({}, process.env)
 
     env.PATH = npm_run_path({
@@ -134,13 +140,16 @@ const spawn = (
       log.warn(error)
     })
 
-    proc.on("close", (code) => {
+    proc.on("close", (code : number) => {
       let content : string = chunks
         .map((chunk) => chunk.toString("utf-8")).join("")
-      resolve(content)
+      if (code != 0) {
+        reject(`Exited with code: ${code}`)
+      } else {
+        resolve(content)
+      }
     })
   })
-}
 
 const promise_each_file = (
   dirpath : string,
@@ -165,7 +174,7 @@ const promise_each_file = (
       if (fs.lstatSync(target).isFile()) {
         if (opts.read_data) {
           return (<any>fs).readFileAsync(target, { encoding: "utf-8" })
-            .then((data) => parse_file(target, data))
+            .then((data : string) => parse_file(target, data))
         } else {
           return parse_file(target)
         }

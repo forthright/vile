@@ -2,6 +2,8 @@
 
 import _ = require("lodash")
 import fs = require("fs")
+import commander = require("commander")
+import http = require("http")
 import service = require("./../service")
 import path = require("path")
 import config = require("./../config")
@@ -31,7 +33,7 @@ const wait_for_done_status_and_log = (
   wait_for(COMMIT_STATUS_INTERVAL_TIME, (timer) => {
     service
       .commit_status(commit_id, auth)
-      .then((http) => {
+      .then((http : http.IncomingMessage) => {
         let api_body : vile.API.HTTPResponse = _.get(http, "body")
         let response : vile.API.JSONResponse = _.get(
           http, "response", { message: null })
@@ -74,7 +76,7 @@ const publish = (
 
   return service
     .commit(issues, cli_time, auth)
-    .then((http) => {
+    .then((http : http.IncomingMessage) => {
       if (_.get(http, "response.statusCode") != 200) {
         service_log.error(_.get(http, "body"))
         return
@@ -173,8 +175,7 @@ const load_config = (app : any) => {
   }
 }
 
-// TODO: any is Commander.js
-const create = (cli : any) =>
+const create = (cli : commander.ICommand) =>
   cli
     .command("punish [paths...]")
     .alias("p")
@@ -205,7 +206,7 @@ const create = (cli : any) =>
     .option("-q, --quiet",
             "log nothing")
     .option("-n, --nodecorations", "disable color and progress bar")
-    .action((paths, app) => {
+    .action((paths : string[], app : vile.Lib.CLIApp) => {
       load_config(app)
       if (app.quiet || app.format == "json" ||
           app.format == "syntastic") logger.quiet()

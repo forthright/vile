@@ -1,5 +1,6 @@
 /// <reference path="@types/index.d.ts" />
 
+import http = require("http")
 import Bluebird = require("bluebird")
 import request = require("request")
 import logger = require("./logger")
@@ -18,11 +19,17 @@ const http_authentication = (auth_token : string) : any => {
 const api_path = (endpoint : string) : string =>
   `${VILE_APP}/${API_TARGET}/${endpoint}`
 
-const handle_response = (resolve, reject) : request.RequestCallback =>
-  (err, response, body : vile.API.JSONResponse) =>
-    err ?
-      reject({ error: err }) :
-      resolve({ body: body, response: response })
+const handle_response = (
+  resolve : (r : vile.API.HTTPResponse) => void,
+  reject : (e : { error: NodeJS.ErrnoException }) => void
+) : request.RequestCallback => (
+  err : NodeJS.ErrnoException,
+  response : http.IncomingMessage,
+  body : vile.API.JSONResponse
+) =>
+  err ?
+    reject({ error: err }) :
+    resolve({ body: body, response: response })
 
 const commit = (
   issues : any[],

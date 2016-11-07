@@ -20,7 +20,7 @@ const welcome_confirm = (
     if (answers.ok_to_proceed) {
       return Bluebird.resolve(config)
     } else {
-      process.exit(0)
+      return Bluebird.resolve(process.exit(0))
     }
   })
 
@@ -41,7 +41,7 @@ const check_for_existing_config = (
       if (answers.ok_to_overwrite) {
         return Bluebird.resolve(config)
       } else {
-        process.exit(0)
+        return Bluebird.resolve(process.exit(0))
       }
     })
   } else {
@@ -70,7 +70,7 @@ const check_for_existing_package_json = (
   let file_data = new Buffer(JSON.stringify(pkg_json_shell, null, "  "))
 
   return (<any>fs).writeFileAsync(pkg_json_path, file_data)
-    .then((err) => {
+    .then((err : NodeJS.ErrnoException) => {
       return err ?
         Bluebird.reject(err) :
         Bluebird.resolve(config)

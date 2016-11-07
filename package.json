@@ -3,9 +3,11 @@
   "version": "0.10.3",
   "description": "A punishing, yet easy to use tool for writing insightful code.",
   "main": "lib/index.js",
+  "types": "src/@types/vile.d.ts",
   "files": [
     "bin/vile",
     "lib",
+    "src/@types/vile.d.ts",
     "LICENSE",
     "README.md"
   ],

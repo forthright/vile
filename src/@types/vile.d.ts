@@ -2,7 +2,7 @@
 // The go to definition for Vile data
 
 declare namespace vile {
-  // HACK: this should be bluebird
+  // HACK: this should be bluebird, minilog, etc
   // ...trying to get compiler to work right..
   type Bluebird<T> = any
 
@@ -145,6 +145,15 @@ declare namespace vile {
     allow?   : AllowList;
   }
 
+  export interface PluginExecOptions {
+    spinner? : boolean;
+    format?  : string;
+    combine? : string;
+    dontpostprocess? : boolean;
+    snippets? : boolean;
+    scores? : boolean;
+  }
+
   interface VileConfig {
     plugins? : PluginList;
     ignore?  : IgnoreList;
@@ -186,7 +195,27 @@ declare namespace vile {
     }
   }
 
+  // TODO: remove Lib namespace
   export module Lib {
+    export type PluginMap = {
+      frameworks? : {
+        [k : string] : string[] | string;
+      }
+      peer? : {
+        [k : string] : {
+          [pkg_manager : string] : string[] | string;
+        }
+      }
+      langs? : {
+        [k : string] : string[] | string;
+      }
+    }
+
+    export interface SpawnOptions {
+      args? : string[];
+      stdio? : string[];
+    }
+
     export interface PluginWorkerData {
       plugins : string[];
       config : YMLConfig;
@@ -226,8 +255,15 @@ declare namespace vile {
     export interface Logger {
       quiet   : () => any;
       level   : (l : string) => any;
-      create  : (l : string) => any;
+      create  : (l : string) => Minilog;
       default : () => any;
+    }
+
+    // TODO:mix app options
+    export type CLIApp = any
+
+    export interface CLIModule {
+      create : (commander : any) => void
     }
 
     export interface Service {

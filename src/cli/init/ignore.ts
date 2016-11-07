@@ -34,7 +34,7 @@ const get_chosen_ignored_directories = (
     message: "Select any directories or files to ignore.",
     name: "dirs",
     choices: choices,
-    validate: (answer) => true
+    validate: (answer : string[]) => true
   })
   .then((answers : any) => answers.dirs)
 }

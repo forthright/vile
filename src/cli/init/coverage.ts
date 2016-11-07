@@ -26,7 +26,7 @@ const check_for_test_coverage_step = (
       }
     ]).then((answers : any) => {
       if (answers.ok_to_add) {
-        _.each(plugin_map.frameworks.coverage, (plugin : string) =>
+        _.each(plugin_map.frameworks["coverage"], (plugin : string) =>
           config.vile.plugins.push(plugin))
       }
 
