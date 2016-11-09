@@ -10,6 +10,8 @@ import util = require("./../util")
 import logger = require("./../logger")
 import lib = require("./../index")
 
+const log = logger.create("cli")
+
 const service_log = logger.create("vile.io")
 
 const COMMIT_STATUS_INTERVAL_TIME = 2000 // 2s
@@ -108,6 +110,13 @@ const set_log_levels = (logs? : string) => {
   if (logs.split) logs.split(",").forEach(logger.level)
 }
 
+const log_and_exit = (error : any) : void => {
+  console.log() // next line if spinner
+  log.error("executing plugins")
+  console.error(_.get(error, "stack", error))
+  process.exit(1)
+}
+
 // HACK: This method and above uses promises haphazardly- needs rewrite
 const punish = (app : any, paths : string[]) => {
   let plugins : string = app.plugins
@@ -133,6 +142,7 @@ const punish = (app : any, paths : string[]) => {
       if (app.format == "json")
         process.stdout.write(JSON.stringify(issues))
     })
+    .catch(log_and_exit) // since we are running as a cli
 
   if (app.gitdiff) {
     let rev = typeof app.gitdiff == "string" ?

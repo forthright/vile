@@ -4,18 +4,15 @@
 import Bluebird = require("bluebird")
 import _ = require("lodash")
 import plugin = require("./../plugin")
-import logger = require("./../logger")
 
-const log = logger.create("worker")
+const ping_parent = (process : any) : void => process.send("")
 
-const ping_parent = (process : any) => process.send("")
-
-const set_ignore_list = (plugin_config, base) => {
+const set_ignore_list = (plugin_config, base) : void => {
   let list = _.compact(_.concat([], _.get(plugin_config, "ignore", [])))
   _.set(plugin_config, "ignore", _.uniq(list.concat(base)))
 }
 
-const set_allow_list = (plugin_config, base) => {
+const set_allow_list = (plugin_config, base) : void => {
   if (!_.isEmpty(base)) {
     _.set(plugin_config, "allow", _.compact(_.concat([], base)))
   } else {
@@ -24,7 +21,7 @@ const set_allow_list = (plugin_config, base) => {
   }
 }
 
-const get_plugin_config = (name : string, config : vile.YMLConfig) => {
+const get_plugin_config = (name : string, config : vile.YMLConfig) : void => {
   let plugin_config : any = _.get(config, name, {})
   let vile_ignore : string[] = _.get(config, "vile.ignore", [])
   let vile_allow : string[] = _.get(config, "vile.allow", [])
@@ -35,7 +32,13 @@ const get_plugin_config = (name : string, config : vile.YMLConfig) => {
   return plugin_config
 }
 
-const handle_worker_request = (data : vile.Lib.PluginWorkerData) => {
+const log_and_exit = (error : any) : void => {
+  console.log() // next line if spinner
+  console.error(_.get(error, "stack", error))
+  process.exit(1)
+}
+
+const handle_worker_request = (data : vile.Lib.PluginWorkerData) : void => {
   let plugins : string[] = data.plugins
   let config : vile.YMLConfig = data.config
 
@@ -43,14 +46,10 @@ const handle_worker_request = (data : vile.Lib.PluginWorkerData) => {
     let name : string = plugin_name.replace("vile-", "")
     let plugin_config = get_plugin_config(name, config)
     return plugin.exec_plugin(name, plugin_config)
-      .catch((err) => {
-        console.log() // newline because spinner is running
-        log.error(err.stack || err)
-        process.exit(1)
-      })
   })
   .then(_.flatten)
   .then((issues) => process.send(issues))
+  .catch(log_and_exit) // since we could be in a forked proc
 }
 
 process.on("message", handle_worker_request)

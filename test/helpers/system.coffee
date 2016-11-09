@@ -11,7 +11,10 @@ NYC_BIN = path.resolve(path.join(
 
 sys_test_count = 0
 
-exec = (args, cb, stdio) ->
+exec_err = (args, cb, stdio) ->
+  exec args, cb, stdio, true
+
+exec = (args, cb, stdio, pass_err) ->
   cmd = undefined
   sys_test_count += 1
   cov_dir = path.join CWD, "coverage", "system-#{sys_test_count}"
@@ -40,9 +43,15 @@ exec = (args, cb, stdio) ->
   proc.on "error", (e) -> throw e
 
   proc.on "close", (code) ->
-    expect(err).to.be.falsy
-    console.log(err) if err
-    cb new Buffer(out).toString("utf-8")
+    if pass_err
+      cb(
+        new Buffer(out).toString("utf-8"),
+        new Buffer(err).toString("utf-8"),
+        code)
+    else
+      expect(err).to.be.falsy
+      console.log(err) if err
+      cb new Buffer(out).toString("utf-8")
 
   proc
 
@@ -65,4 +74,5 @@ exec_interactive = (args, cb, done) ->
 
 module.exports =
   exec: exec
+  exec_err: exec_err
   exec_interactive: exec_interactive

@@ -34,6 +34,20 @@ describe "cli", ->
     sub_modules.forEach (mod) ->
       mimus.stub mimus.get(cli, mod), "create"
 
+  describe "process.onUnhandledRejection", ->
+    describe "when an event is emitted", ->
+      it "logs and exits the process", ->
+        mimus.stub process, "exit"
+        mimus.stub console, "error"
+        mimus.stub console, "log"
+        process.emit("unhandledRejection", "some reason")
+        expect(console.error).to.have.been
+          .calledWith "some reason"
+        expect(process.exit).to.have.been.calledWith 1
+        process.exit.restore()
+        console.error.restore()
+        console.log.restore()
+
   describe ".interpret", ->
     describe "setting the version", ->
       beforeEach -> interpret()

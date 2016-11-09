@@ -8,6 +8,14 @@ import cli_init = require("./cli/init")
 
 const pkg = require("./../package")
 
+// Note: This only registers for non-worker forked processes
+process.on("unhandledRejection", function (error, promise) {
+  console.log() // next line if spinner
+  console.error("[Unhandled rejection]")
+  console.error(_.get(error, "stack", error))
+  process.exit(1)
+})
+
 const no_args = (argv : string[]) : boolean =>
   !argv.slice(2).length
 
@@ -18,6 +26,7 @@ const log_additional_help = () => {
   console.log()
 }
 
+// TODO: map submodule to a type
 const sub_modules = () : any[] => [
   cli_punish,
   cli_auth,

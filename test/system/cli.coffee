@@ -30,6 +30,9 @@ LOGGING_DIR = path.join SYSTEM_TESTS, "logging"
 SPAWN_DIR = path.join SYSTEM_TESTS, "spawn"
 SPAWN_STDERR_DIR = path.join SYSTEM_TESTS, "spawn_stderr"
 LOGGING_DIR = path.join SYSTEM_TESTS, "logging"
+PLUGIN_EXCEPTION_DIR = path.join SYSTEM_TESTS, "err_plugin_exception"
+PLUGIN_BAD_API_DIR = path.join SYSTEM_TESTS, "err_plugin_bad_api"
+PLUGIN_INVALID_DATA_DIR = path.join SYSTEM_TESTS, "err_plugin_invalid_data"
 
 press =
   ENTER: '\x0D'
@@ -341,7 +344,7 @@ describe "cli blackbox testing", ->
           expect(stdout).to.eql JSON.stringify([
             { type: "ok", path:".vile.yml" }
             {
-              type: "test",
+              type: "warning",
               signature: "sync",
               plugin: "test-sync-plugin"
             }
@@ -353,7 +356,7 @@ describe "cli blackbox testing", ->
           cli.exec "p -d -f json", (stdout) ->
             expect(stdout).to.eql JSON.stringify([
               {
-                type: "test",
+                type: "warning",
                 signature: "sync",
                 plugin: "test-sync-plugin"
               }
@@ -374,6 +377,11 @@ describe "cli blackbox testing", ->
           expect(stdout).to.eql JSON.stringify([
             { type: "ok", path:".vile.yml" }
             {
+              type: "warning",
+              signature: "async",
+              plugin: "test-async-plugin"
+            }
+            {
               type: "test",
               signature: "async",
               plugin: "test-async-plugin"
@@ -385,6 +393,11 @@ describe "cli blackbox testing", ->
         it "does not include any ok issues", (done) ->
           cli.exec "p -n -d -f json", (stdout) ->
             expect(stdout).to.eql JSON.stringify([
+              {
+                type: "warning",
+                signature: "async",
+                plugin: "test-async-plugin"
+              }
               {
                 type: "test",
                 signature: "async",
@@ -400,7 +413,7 @@ describe "cli blackbox testing", ->
         cli.exec "p -p test-plugin-check-plugin-two -n -d -f json", (stdout) ->
           expect(stdout).to.eql JSON.stringify([
             {
-              type: "test",
+              type: "warning",
               signature: "two",
               plugin: "test-plugin-check-plugin-two"
             }
@@ -519,13 +532,59 @@ describe "cli blackbox testing", ->
           done()
         return
 
+    describe "when a plugin throws a synchronous error", ->
+      beforeEach -> process.chdir PLUGIN_EXCEPTION_DIR
+
+      it "logs to stderr and exits (1) process", (done) ->
+        cli.exec_err "p -n", (stdout, stderr, code) ->
+          expect(stderr).to.match /Error: huzzah!/ig
+          expect(stderr).to.match /at Object\.punish/ig
+          expect(stderr).to
+            .match new RegExp("vile-test-err-plugin-exception-plugin " +
+            "worker exited", "ig")
+          expect(stdout).to.match /error executing plugins/ig
+          expect(code).to.eql 1
+          done()
+
+    describe "when a plugin has an invalid api", ->
+      beforeEach -> process.chdir PLUGIN_BAD_API_DIR
+
+      it "logs to stderr and exits (1) process", (done) ->
+        cli.exec_err "p -n", (stdout, stderr, code) ->
+          expect(stderr).to.match /invalid plugin API/ig
+          expect(stderr).to
+            .match new RegExp("vile-test-err-plugin-bad-api-plugin " +
+            "worker exited", "ig")
+          expect(stdout).to.match /error executing plugins/ig
+          expect(code).to.eql 1
+          done()
+
+    describe "when a plugin returns bad data", ->
+      beforeEach -> process.chdir PLUGIN_INVALID_DATA_DIR
+
+      it "logs an empty array of issues", (done) ->
+        cli.exec_err "p -n -d -f json", (stdout, stderr, code) ->
+          expect(stdout).to.eql "[]"
+          done()
+
+      it "logs to stderr and exits (0) process", (done) ->
+        cli.exec_err "p -n", (stdout, stderr, code) ->
+          expect(_.trim(stderr)).to.eql "test-err-plugin-invalid-data-" +
+            "plugin plugin did not return [] or Promise<[]>"
+          expect(stdout).to
+            .match new RegExp("test-err-plugin-invalid-data-plugin:start")
+          expect(stdout).to
+            .match new RegExp("test-err-plugin-invalid-data-plugin:finish")
+          expect(code).to.eql 0
+          done()
+
     describe "logging real issues", ->
       beforeEach -> process.chdir LOGGING_DIR
 
       it "logs the output to console as syntastic output", (done) ->
         cli.exec "p -n -d -f syntastic", (stdout) ->
           expect(stdout).to.match(
-            new RegExp("a.ext:1:1: W: warning msg", "gi"))
+            new RegExp("a.ext:1:1: W: a title header => warning msg", "gi"))
           expect(stdout).to.match(
             new RegExp("a.ext:1:1: W: maintainability msg", "gi"))
           expect(stdout).to.match(
@@ -535,7 +594,7 @@ describe "cli blackbox testing", ->
           expect(stdout).to.match(
             new RegExp("a.ext:1:1: E: error msg", "gi"))
           expect(stdout).to.match(
-            new RegExp("a.ext:1:1: E: sec msg", "gi"))
+            new RegExp("a.ext:1:1: E: sec msg => undefined", "gi"))
           done()
         return
 
@@ -544,7 +603,8 @@ describe "cli blackbox testing", ->
           expect(stdout).to.match(
             new RegExp("plugin info test-logging-plugin:start", "gi"))
           expect(stdout).to.match(
-            new RegExp("warning warn a.ext: line 1-2, warning msg", "gi"))
+            new RegExp("warning warn a.ext: line 1-2, a " +
+              "title header => warning msg", "gi"))
           expect(stdout).to.match(new RegExp(
             "maintainability warn a.ext: line 1-2, col 1, maintainability msg",
             "gi"
@@ -562,7 +622,7 @@ describe "cli blackbox testing", ->
           expect(stdout).to.match(
             new RegExp("error error a.ext: error msg", "gi"))
           expect(stdout).to.match(
-            new RegExp("security error a.ext: sec msg", "gi"))
+            new RegExp("security error a.ext: sec msg => undefined", "gi"))
           expect(stdout).to.match(
             new RegExp(
               "0\.097KB.*100 lines\, 80 loc\, 3 comments",

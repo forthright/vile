@@ -38,9 +38,17 @@ describe "cli/punish", ->
     mimus.stub git, "changed_files"
     mimus.stub lib, "exec"
     lib_exec_promise = mimus.stub()
-    lib_exec_promise.returns lib.exec
+    catch_promise = mimus.stub()
+    catch_promise.returns {
+      then: lib_exec_promise,
+      catch: catch_promise }
+    lib_exec_promise.returns {
+      then: lib_exec_promise,
+      catch: catch_promise }
     lib_exec_promise.callsArgWith 0, exec_issues
-    lib.exec.returns { then: lib_exec_promise }
+    lib.exec.returns {
+      then: lib_exec_promise,
+      catch: catch_promise }
     commander.command = mimus.stub()
     commander.command.returns commander
     commander.alias = mimus.stub()

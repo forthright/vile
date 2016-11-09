@@ -33,24 +33,13 @@ const is_array = (list) =>
 const is_promise = (list) =>
   list && typeof list.then == "function"
 
-const log_error = (e : NodeJS.ErrnoException) => {
-  console.log()
-  log.error(e.stack || e)
-}
-
-const error_executing_plugins = (err : NodeJS.ErrnoException) => {
-  log.error("Error executing plugins")
-  log.error(err.stack || err)
-  process.exit(1)
-}
-
 const require_plugin = (name : string) : vile.Plugin => {
   let cwd_node_modules = path.join(process.cwd(), "node_modules")
 
   try {
     return require(`${cwd_node_modules}/@forthright/vile-${name}`)
-  } catch (e) {
-    log_error(e)
+  } catch (error) {
+    log.error(_.get(error, "stack", error))
   }
 }
 
@@ -69,7 +58,7 @@ const run_plugin = (
     let api : vile.Plugin = require_plugin(name)
 
     if (!valid_plugin(api)) {
-      return Bluebird.reject(`invalid plugin API: ${name}`)
+      reject(`invalid plugin API: ${name}`)
     }
 
     let issues : any = api.punish(config)
@@ -82,10 +71,16 @@ const run_plugin = (
     } else if (is_array(issues)) {
       resolve(map_plugin_name_to_issues(name)(issues))
     } else {
-      log.warn(`${name} plugin did not return [] or Promise<[]>`)
+      console.warn(`${name} plugin did not return [] or Promise<[]>`)
       resolve(<any>[]) // TODO: ?
     }
   })
+
+const log_plugins_finished = (pkg_names : string[]) => {
+  _.each(pkg_names, (plugin_name : string) => {
+    log.info(`${ plugin_name.replace("vile-", "") }:finish`)
+  })
+}
 
 const run_plugins_in_fork = (
   plugins : string[],
@@ -96,6 +91,7 @@ const run_plugins_in_fork = (
     worker.on("message", (issues) => {
       if (issues) {
         worker.disconnect()
+        log_plugins_finished(plugins)
         resolve(issues)
       } else {
         worker.send(<vile.Lib.PluginWorkerData>{
@@ -108,18 +104,8 @@ const run_plugins_in_fork = (
     worker.on("exit", (code, signal) => {
       let name = plugins.join(",")
 
-      _.each(plugins, (plugin : string) => {
-        log.info(`${ plugin.replace("vile-", "") }:finish`)
-      })
-
-      if (signal) {
-        let msg = `${name} worker was killed by signal: ${signal}`
-        log.warn(msg)
-        reject(msg)
-      } else if (code !== 0) {
-        let msg = `${name} worker exited with error code: ${code}`
-        log.error(msg)
-        reject(msg)
+       if (signal || code !== 0) {
+        reject(`${name} worker exited [code = ${code} | sig = ${signal}]`)
       }
     })
   })
@@ -155,6 +141,7 @@ const check_for_uninstalled_plugins = (
     }
   })
 
+  // Hack: should be doing this in cli modules
   if (errors) process.exit(1)
 }
 
@@ -196,9 +183,11 @@ const combine_paths = (
       let potential_data_dupe : boolean = !_.some(
         util.displayable_issues,
         (t : string) => t == issue_type)
+      // TODO: test this explicitly, especially unixify with non string
       let same_data_exists = potential_data_dupe &&
         _.some(issues, (i : vile.Issue) =>
-          i && unixify(i.path) == new_path && i.type == issue_type)
+          i && _.has(i, "path") && unixify(i.path) == new_path &&
+            i.type == issue_type)
 
       // HACK: If a lang,stat,comp issue and on base already, drop it
       if (same_data_exists) {
@@ -255,11 +244,6 @@ const execute_plugins = (
       return run_plugins_in_fork([ plugin ], config, worker)
         .then((issues : vile.Issue[]) =>
           (normalize_paths(issues), issues))
-        .catch((err) => {
-          if (spin) spin.stop(true)
-          log.error(err.stack || err)
-          reject(err)
-        })
     }, { concurrency: concurrency })
     .then(_.flatten)
     .then((issues : vile.Issue[]) => {
@@ -277,6 +261,7 @@ const execute_plugins = (
 
       resolve(issues)
     })
+    .catch(reject)
   })
 
 const passthrough = (value : any) => value
@@ -395,7 +380,6 @@ const run_plugins = (
     .then(opts.snippets ? add_code_snippets() : passthrough)
     .then(lookup_ok_issues ?
           add_ok_issues(allow, ignore, opts.scores) : passthrough)
-    .catch(error_executing_plugins)
 }
 
 export = <vile.Lib.Plugin>{
