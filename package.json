@@ -122,7 +122,7 @@
     "shelljs": "^0.7.5",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
-    "typescript": "^2.0.8",
+    "typescript": "^2.0.9",
     "wrench": "^1.5.9"
   }
 }
