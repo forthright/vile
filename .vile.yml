@@ -25,6 +25,7 @@ vile:
     - .gitignore
     - .npmrc
     - npm-debug.log
+    - src/@types
     - tags
     - tmp
     - tsconfig.json
@@ -33,7 +34,6 @@ vile:
     - tsd.json
     - vendor
     - README.md
-    - typings
     - .vile.yml
 
 depcheck:
@@ -41,7 +41,6 @@ depcheck:
     ignore_dev_deps: true
     ignore_dirs:
       - src
-      - typings
       - node_modules
       - coverage
       - tmp
@@ -56,6 +55,8 @@ length:
 stat:
   allow:
     - src
+  ignore:
+    - src/@types/**
 
 coverage:
   config:
