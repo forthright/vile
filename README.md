@@ -58,7 +58,7 @@ to find out more about the main library. The
 along with the [main library](src/index.ts) module.
 
 For type definitions for using the library, building
-plugins, and creating issues, see [here](https://github.com/forthright/vile/blob/master/src/lib/typings/vile.d.ts).
+plugins, and creating issues, see [here](https://github.com/forthright/vile/blob/master/src/@types/vile.d.ts).
 
 ## Plugins
 
@@ -270,7 +270,7 @@ module.exports = {
 }
 ```
 
-See [vile.d.ts](src/lib/typings/vile.d.ts) for how Issues are structured.
+See [vile.d.ts](src/@types/vile.d.ts) for how Issues are structured.
 
 You can also `require("vile")` in your plugin and use its
 API, which provides some helpers.
