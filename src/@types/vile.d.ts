@@ -46,7 +46,6 @@ declare namespace vile {
 
   export interface Snippet {
     line     : number;
-    offset?  : number;
     text     : string;
     ending?  : string;
   }

@@ -278,10 +278,9 @@ const into_snippet = (lines : any, start : number, end : number) =>
   _.reduce(lines, (snippets, line, num) => {
     if ((num > (start - 4) && num < (end + 2))) {
       snippets.push({
-        offset: _.get(line, "offset"),
         line: _.get(line, "number"),
         text: _.get(line, "text", " "),
-        ending: _.get(line, "ending")
+        ending: "\n" // normalize for web
       })
     }
     return snippets
