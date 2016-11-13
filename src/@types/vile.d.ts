@@ -13,8 +13,8 @@ declare namespace vile {
   //
   export interface Issue {
     type        : string;
-    path        : string;
-    message     : string;
+    message?    : string;
+    path?       : string;
     title?      : string;
     name?       : string;
     signature?  : string;

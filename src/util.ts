@@ -189,7 +189,7 @@ const promise_each_file = (
 }
 
 // TODO: validate issue objects as it comes in
-const into_issue = (data : any) : vile.Issue => data
+const into_issue = (data : vile.Issue) : vile.Issue => data
 
 export = {
   promise_each: promise_each_file,

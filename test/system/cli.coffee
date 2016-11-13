@@ -33,6 +33,8 @@ LOGGING_DIR = path.join SYSTEM_TESTS, "logging"
 PLUGIN_EXCEPTION_DIR = path.join SYSTEM_TESTS, "err_plugin_exception"
 PLUGIN_BAD_API_DIR = path.join SYSTEM_TESTS, "err_plugin_bad_api"
 PLUGIN_INVALID_DATA_DIR = path.join SYSTEM_TESTS, "err_plugin_invalid_data"
+SCM_EXISTS_DIR = path.join SYSTEM_TESTS, "scm_exists"
+SCM_NO_EXISTS_DIR = path.join SYSTEM_TESTS, "scm_no_exists"
 
 press =
   ENTER: '\x0D'
@@ -339,17 +341,21 @@ describe "cli blackbox testing", ->
           expect(stdout).to.match /test\-sync\-plugin\:finish/i
           done()
 
-      it "returns a list of issues", (done) ->
-        cli.exec "p -n -f json", (stdout) ->
-          expect(stdout).to.eql JSON.stringify([
-            { type: "ok", path:".vile.yml" }
-            {
+      describe "with post processing", ->
+        it "returns a list of issues", (done) ->
+          cli.exec "p -n -f json", (stdout) ->
+            issues = JSON.parse(stdout)
+            expect(issues.length).to.eql 3
+            expect(issues[0]).to.eql {
+              type: "ok", path: ".vile.yml"
+            }
+            expect(issues[1]).to.eql {
               type: "warning",
               signature: "sync",
               plugin: "test-sync-plugin"
             }
-          ])
-          done()
+            expect(issues[2].type).to.eql "git"
+            done()
 
       describe "without post processing", ->
         it "does not include any ok issues", (done) ->
@@ -372,22 +378,26 @@ describe "cli blackbox testing", ->
           expect(stdout).to.match /test\-async\-plugin\:finish/i
           done()
 
-      it "returns a list of issues", (done) ->
-        cli.exec "p -n -f json", (stdout) ->
-          expect(stdout).to.eql JSON.stringify([
-            { type: "ok", path:".vile.yml" }
-            {
+      describe "with post processing", ->
+        it "returns a list of issues", (done) ->
+          cli.exec "p -n -f json", (stdout) ->
+            issues = JSON.parse(stdout)
+            expect(issues.length).to.eql 4
+            expect(issues[0]).to.eql {
+              type: "ok", path: ".vile.yml"
+            }
+            expect(issues[1]).to.eql {
               type: "warning",
               signature: "async",
               plugin: "test-async-plugin"
             }
-            {
+            expect(issues[2]).to.eql {
               type: "test",
               signature: "async",
               plugin: "test-async-plugin"
             }
-          ])
-          done()
+            expect(issues[3].type).to.eql "git"
+            done()
 
       describe "without post processing", ->
         it "does not include any ok issues", (done) ->
@@ -429,7 +439,7 @@ describe "cli blackbox testing", ->
       beforeEach -> process.chdir SNIPPET_DIR
 
       it "passes it as expected", (done) ->
-        cli.exec "p -i -n -f json", (stdout) ->
+        cli.exec "p -i -d -n -f json", (stdout) ->
           expect(stdout).to.eql JSON.stringify(issues_snippets)
           done()
 
@@ -529,6 +539,40 @@ describe "cli blackbox testing", ->
           expect(stdout).to.match new RegExp("node warn OH NO!")
           expect(stdout).to.match new RegExp("test-spawn-stderr-plugin:start")
           expect(stdout).to.match new RegExp("test-spawn-stderr-plugin:finish")
+          done()
+        return
+
+    describe "when an scm issue does not exist", ->
+      beforeEach -> process.chdir SCM_NO_EXISTS_DIR
+
+      it "it generates a placeholder", (done) ->
+        # TODO: this is brittle
+        cli.exec "p -f json -n", (stdout) ->
+          date = new Date()
+          issue = JSON.parse(stdout)[1]
+          expect(issue.type).to.eql "git"
+          expect(issue.signature).to.match /git::master::[\w\d\-]/
+          expect(issue.commit.branch).to.eql "master"
+          expect(issue.commit.message).to.match /commit: [\w\d\-]/
+          expect(issue.commit.sha).to.match /[\w\d\-]/
+          expect(new Date(issue.commit_date)).not.to.eql "invalid date"
+          expect(new Date(issue.author_date)).not.to.eql "invalid date"
+          done()
+        return
+
+    describe "when an scm issue exists", ->
+      beforeEach -> process.chdir SCM_EXISTS_DIR
+
+      it "it only includes that one", (done) ->
+        cli.exec "p -f json -n -d", (stdout) ->
+          expect(JSON.parse(stdout)).to.eql [
+            {
+              type: "git",
+              commit: { sha: "666" },
+              signature: "scm-exists",
+              plugin:"test-scm-exists-plugin"
+            }
+          ]
           done()
         return
 

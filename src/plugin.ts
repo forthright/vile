@@ -4,6 +4,7 @@ import path = require("path")
 import os = require("os")
 import cluster = require("cluster")
 import Bluebird = require("bluebird")
+import uuid = require("uuid")
 import fs = require("fs")
 import unixify = require("unixify")
 import _ = require("lodash")
@@ -337,6 +338,38 @@ const add_code_snippets = () =>
 const cwd_plugins_path = () =>
   path.resolve(path.join(process.cwd(), "node_modules", "@forthright"))
 
+const ensure_scm_issue_exists = (
+  issues : vile.IssueList
+) : Bluebird<vile.IssueList> =>
+  new Bluebird((
+    resolve : (issues : vile.IssueList) => void,
+    reject : (error : string) => void
+  ) => {
+    let scm_issue_exists : boolean = _
+      .some(issues, (i : vile.Issue) => i.type == util.GIT)
+
+    if (scm_issue_exists) {
+      resolve(issues)
+      return
+    }
+
+    let date : string = new Date().toISOString()
+    let id : string = uuid.v4()
+    let branch : string = "master"
+
+    resolve(issues.concat(util.issue({
+      type: util.GIT,
+      signature: `git::${branch}::${id}`,
+      commit: {
+        branch: branch,
+        sha: id,
+        message: "commit: " + id,
+        author_date: date,
+        commit_date: date
+      }
+    })))
+  })
+
 const add_ok_issues = (
   vile_allow : vile.AllowList = [],
   vile_ignore : vile.IgnoreList = [],
@@ -374,7 +407,7 @@ const run_plugins = (
   let ignore = _.get(app_config, "ignore", null)
   let allow = _.get(app_config, "allow", null)
   let plugins : vile.PluginList = custom_plugins
-  let lookup_ok_issues = !opts.dontpostprocess
+  let post_process = !opts.dontpostprocess
 
   if (app_config.plugins) {
     plugins = _.uniq(plugins.concat(app_config.plugins))
@@ -384,7 +417,8 @@ const run_plugins = (
     .filter(is_plugin)
     .then(execute_plugins(plugins, config, opts))
     .then(opts.snippets ? add_code_snippets() : passthrough)
-    .then(lookup_ok_issues ?
+    .then(post_process ? ensure_scm_issue_exists : passthrough)
+    .then(post_process ?
           add_ok_issues(allow, ignore, opts.scores) : passthrough)
 }
 
