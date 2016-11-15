@@ -245,12 +245,12 @@ export = {
   ],
 
   STAT: "stat",
-  GIT: "git",
+  SCM: "scm",
   LANG: "lang",
   COV : "cov",
   infos: [
     "stat",
-    "git",
+    "scm",
     "lang",
     "cov"
   ]

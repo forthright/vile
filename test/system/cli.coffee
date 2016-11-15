@@ -635,7 +635,7 @@ describe "cli blackbox testing", ->
               "gi"
             ))
           expect(stdout).to.match new RegExp("lang info a.ext: ruby", "gi")
-          expect(stdout).to.match new RegExp("git info sha: commit_date", "gi")
+          expect(stdout).to.match new RegExp("scm info sha: commit_date", "gi")
           expect(stdout).to.match(
             new RegExp("cov info a.ext: 90% lines covered", "gi"))
           expect(stdout).to.match new RegExp("ok info b.ext", "gi")

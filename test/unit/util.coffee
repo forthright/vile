@@ -52,13 +52,13 @@ describe "util", ->
       ]
 
       expect(util.STAT).to.eql "stat"
-      expect(util.GIT).to.eql "git"
+      expect(util.SCM).to.eql "scm"
       expect(util.LANG).to.eql "lang"
       expect(util.COV).to.eql "cov"
 
       expect(util.infos).to.eql [
         "stat"
-        "git"
+        "scm"
         "lang"
         "cov"
       ]

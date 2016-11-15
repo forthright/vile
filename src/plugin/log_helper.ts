@@ -103,7 +103,7 @@ const to_console_lang = (
   issue : vile.Issue
 ) => `${ issue.path }: ${ issue.language }`
 
-const to_console_git = (
+const to_console_scm = (
   issue : vile.Issue
 ) => {
   let date = _.get(issue, "commit.commit_date") ||
@@ -180,8 +180,8 @@ const log_issue_messages = (
     } else {
       if (issue.type == util.LANG) {
         nlogs[t].info(to_console_lang(issue) + msg_postfix)
-      } else if (issue.type == util.GIT) {
-        nlogs[t].info(to_console_git(issue) + msg_postfix)
+      } else if (issue.type == util.SCM) {
+        nlogs[t].info(to_console_scm(issue) + msg_postfix)
       } else if (issue.type == util.STAT) {
         nlogs[t].info(to_console_stat(issue) + msg_postfix)
       } else if (issue.type == util.COV) {
