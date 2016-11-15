@@ -97,7 +97,6 @@ const run_plugins_in_fork = (
     worker.on("message", (issues : vile.IssueList) => {
       if (issues) {
         worker.disconnect()
-        log_plugins_finished(plugins)
         resolve(issues)
       } else {
         worker.send(<vile.Lib.PluginWorkerData>{
@@ -247,10 +246,16 @@ const execute_plugins = (
 
     (<any>Bluebird).map(plugins, (plugin : string) => {
       let worker = cluster.fork()
+      let plugins_to_run : string[] = [ plugin ]
       workers[worker.id] = plugin.replace("vile-", "")
-      return run_plugins_in_fork([ plugin ], config, worker)
-        .then((issues : vile.Issue[]) =>
-          (normalize_paths(issues), issues))
+      return run_plugins_in_fork(plugins_to_run, config, worker)
+        .then((issues : vile.Issue[]) => {
+          if (spin) spin.stop(true)
+          log_plugins_finished(plugins_to_run)
+          if (spin) spin.start()
+          normalize_paths(issues)
+          return issues
+        })
     }, { concurrency: concurrency })
     .then(_.flatten)
     .then((issues : vile.Issue[]) => {
