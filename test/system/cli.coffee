@@ -29,6 +29,7 @@ FILTER_ALLOW_DIR_VIA_CLI_ARGS = path
 LOGGING_DIR = path.join SYSTEM_TESTS, "logging"
 SPAWN_DIR = path.join SYSTEM_TESTS, "spawn"
 SPAWN_STDERR_DIR = path.join SYSTEM_TESTS, "spawn_stderr"
+SPAWN_NON_ZERO_DIR = path.join SYSTEM_TESTS, "spawn_non_zero"
 LOGGING_DIR = path.join SYSTEM_TESTS, "logging"
 PLUGIN_EXCEPTION_DIR = path.join SYSTEM_TESTS, "err_plugin_exception"
 PLUGIN_BAD_API_DIR = path.join SYSTEM_TESTS, "err_plugin_bad_api"
@@ -512,7 +513,7 @@ describe "cli blackbox testing", ->
             ])
             done()
 
-    describe "spawning an external file/app that returns data", ->
+    describe "spawning a file that returns data", ->
       beforeEach -> process.chdir SPAWN_DIR
 
       it "returns a list of filtered issues", (done) ->
@@ -527,15 +528,31 @@ describe "cli blackbox testing", ->
           done()
         return
 
-    describe "spawning an external file/app that logs to stderr", ->
+    describe "spawning a file that exits with non zero status", ->
+      beforeEach -> process.chdir SPAWN_NON_ZERO_DIR
+
+      it "finishes gracefully", (done) ->
+        cli.exec_err "p -n -d", (stdout, stderr, code) ->
+          expect(code).to.eql 0
+          expect(stdout).to.match /code is: 10/
+          expect(stdout)
+            .to.match new RegExp("test-spawn-non-zero-plugin:start")
+          expect(stdout)
+            .to.match new RegExp("test-spawn-non-zero-plugin:finish")
+          done()
+        return
+
+    describe "spawning a file that logs to stderr", ->
       beforeEach -> process.chdir SPAWN_STDERR_DIR
 
-      it "logs the output to console", (done) ->
-        cli.exec "p -n -d", (stdout) ->
-          expect(stdout).to.match new RegExp("node warn OH NO!")
+      it "logs the output to stderr and finishes gracefully", (done) ->
+        cli.exec_err "p -n -d", (stdout, stderr, code) ->
+          expect(code).to.eql 0
+          expect(stderr).to.match new RegExp("OH NO!")
           expect(stdout).to.match new RegExp("test-spawn-stderr-plugin:start")
           expect(stdout).to.match new RegExp("test-spawn-stderr-plugin:finish")
           done()
+        , [ process.stdin, "pipe", null ]
         return
 
     describe "when a plugin throws a synchronous error", ->

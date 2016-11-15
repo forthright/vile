@@ -9,7 +9,6 @@ import extend = require("extend")
 import _ = require("lodash")
 import Bluebird = require("bluebird")
 import ignore = require("ignore-file")
-import logger = require("./logger")
 import config = require("./config")
 
 // TODO: make a constants file or something
@@ -104,17 +103,15 @@ const collect_files = (
   } else { return [ rel_path ] }
 }
 
-// TODO: better typing
 // TODO: add mem limit to child process
 const spawn = (
   bin : string,
   opts : vile.Lib.SpawnOptions = {}
-) : Bluebird<string> =>
+) : Bluebird<vile.Lib.SpawnData> =>
   new Bluebird((
-    resolve : (buffer : string) => void,
+    resolve : (r : vile.Lib.SpawnData) => void,
     reject : (e : string) => void
   ) => {
-    let log = logger.create(bin)
     let chunks : Buffer[] = []
     let errors : string[] = []
     let env = extend({}, process.env)
@@ -135,19 +132,21 @@ const spawn = (
 
     proc.stderr.on("data", (data : Buffer) => {
       let error = data.toString("utf-8")
-      // TODO: log errors after running (do something with them)
       errors.push(error)
-      log.warn(error)
+      console.warn(error)
     })
 
     proc.on("close", (code : number) => {
-      let content : string = chunks
+      let stdout : string = chunks
         .map((chunk) => chunk.toString("utf-8")).join("")
-      if (code != 0) {
-        reject(`Exited with code: ${code}`)
-      } else {
-        resolve(content)
-      }
+
+      let stderr : string = errors.join("")
+
+      resolve(<vile.Lib.SpawnData>{
+        code: code,
+        stdout: stdout,
+        stderr: stderr
+      })
     })
   })
 
@@ -155,7 +154,7 @@ const promise_each_file = (
   dirpath : string,
   allow : (file_or_dir_path : string, is_dir : boolean) => boolean,
   parse_file : (file : string, data? : string) => void,
-  opts : any = {}
+  opts : vile.Lib.PromiseEachFileOptions = {}
 ) : Bluebird<any> => {
   if (!opts.hasOwnProperty("read_data")) opts.read_data = true
 

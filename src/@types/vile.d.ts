@@ -134,7 +134,7 @@ declare namespace vile {
 
   export interface Plugin {
     punish : (
-      config? : PluginConfig
+      config : PluginConfig
     ) => IssueList | Bluebird<IssueList>;
   }
 
@@ -210,13 +210,23 @@ declare namespace vile {
       }
     }
 
+    export interface PromiseEachFileOptions {
+      read_data? : boolean;
+    }
+
     export interface SpawnOptions {
       args? : string[];
       stdio? : string[];
     }
 
+    export interface SpawnData {
+      code   : number;
+      stdout : string;
+      stderr : string;
+    }
+
     export interface PluginWorkerData {
-      plugins : string[];
+      plugins : PluginList;
       config : YMLConfig;
     }
 
