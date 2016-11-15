@@ -2,6 +2,14 @@ _ = require "lodash"
 
 issues_snippets = [
   {
+    "type": "ok",
+    "path": ".vile.yml"
+  },
+  {
+    "type": "ok",
+    "path": "lib/foo.js"
+  },
+  {
     "type": "warning",
     "path": "lib/index.js",
     "message": "foo",
