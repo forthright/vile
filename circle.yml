@@ -1,6 +1,8 @@
 machine:
   node:
     version: 7.1.0
+  post:
+    - curl -o- -L https://yarnpkg.com/install.sh | bash
 
 checkout:
   post:
@@ -8,11 +10,18 @@ checkout:
     - git checkout -f $CIRCLE_BRANCH
 
 dependencies:
+  cache_directories:
+    - "~/.yarn-cache"
+
   pre:
     - sh bin/list-env-versions
+
+  override:
+    - yarn install
 
 test:
   override:
     - npm run test-ci-build
+
   post:
     - time npm run vile

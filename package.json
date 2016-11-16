@@ -39,7 +39,8 @@
     "test-cov": "node bin/test-cov",
     "test-ci-build": "node bin/test-ci-build",
     "tsc": "tsc",
-    "vile": "vile p -usi -x src.ts:lib.js,test.coffee:.test.js -n"
+    "vile": "vile p -usi -x src.ts:lib.js,test.coffee:.test.js -n",
+    "yarn": "yarn"
   },
   "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
@@ -123,6 +124,7 @@
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
     "typescript": "^2.0.10",
-    "wrench": "^1.5.9"
+    "wrench": "^1.5.9",
+    "yarn": "^0.17.3"
   }
 }

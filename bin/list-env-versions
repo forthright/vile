@@ -5,3 +5,4 @@ set -x
 uname -a
 node --version
 npm --version
+yarn --version

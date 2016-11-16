@@ -348,8 +348,8 @@ This project ascribes to CoralineAda's [Contributor Covenant](https://github.com
 
     git clone git@github.com:brentlintner/vile.git
     cd vile
-    npm i
-    npm run tsd
+    npm i -g yarn
+    yarn
     npm run compile
     npm run compile-dev
 

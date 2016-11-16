@@ -35,6 +35,7 @@ vile:
     - vendor
     - README.md
     - .vile.yml
+    - yarn.lock
 
 depcheck:
   config:
