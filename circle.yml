@@ -1,6 +1,8 @@
 machine:
   node:
     version: 7.1.0
+  pre:
+    - mkdir ~/.yarn-cache
 
 checkout:
   post:
@@ -9,13 +11,13 @@ checkout:
 
 dependencies:
   cache_directories:
-    - "~/.yarn-cache"
+    - ~/.yarn-cache
 
   pre:
-    - npm i -g yarn
     - sh bin/list-env-versions
 
   override:
+    - npm i -g yarn
     - yarn install --no-progress
 
 test:
