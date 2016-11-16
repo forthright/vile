@@ -1,8 +1,6 @@
 machine:
   node:
     version: 7.1.0
-  post:
-    - curl -o- -L https://yarnpkg.com/install.sh | bash
 
 checkout:
   post:
@@ -14,10 +12,11 @@ dependencies:
     - "~/.yarn-cache"
 
   pre:
+    - npm i -g yarn
     - sh bin/list-env-versions
 
   override:
-    - yarn install
+    - yarn install --no-progress
 
 test:
   override:
