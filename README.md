@@ -21,7 +21,7 @@ a unified, project focused context.
 
 ## Installation
 
-Since Vile's core is written in [JavaScript](README.md#why-nodejs),
+Since Vile's core is written in [JavaScript](#why-nodejs),
 the main project is distributed via [npm](http://npmjs.org).
 
 ### Node CLI
