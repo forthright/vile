@@ -261,6 +261,8 @@ const execute_plugins = (
     .then((issues : vile.Issue[]) => {
       if (spin) spin.stop(true)
 
+      log.info(`plugins:finish`)
+
       if (!_.isEmpty(opts.combine)) {
         issues = combine_paths(opts.combine, issues)
       }
@@ -370,6 +372,12 @@ const add_ok_issues = (
       return distinct_ok_issues.concat(issues)
     })
 
+const log_post_process = (state : string) =>
+  (issues : vile.IssueList) : vile.IssueList => {
+    log.info(`postprocess:${state}`)
+    return issues
+  }
+
 const run_plugins = (
   custom_plugins : vile.PluginList = [],
   config : vile.YMLConfig = {},
@@ -388,9 +396,11 @@ const run_plugins = (
   return (<any>fs).readdirAsync(cwd_plugins_path())
     .filter(is_plugin)
     .then(execute_plugins(plugins, config, opts))
+    .then(post_process ? log_post_process("start") : passthrough)
     .then(opts.snippets ? add_code_snippets() : passthrough)
     .then(post_process ?
           add_ok_issues(allow, ignore, opts.scores) : passthrough)
+    .then(post_process ? log_post_process("finish") : passthrough)
 }
 
 export = <vile.Lib.Plugin>{
