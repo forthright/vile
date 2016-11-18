@@ -1,4 +1,4 @@
-/// <reference path="@types/index.d.ts" />
+/// <reference path="@types/index" />
 
 import git_diff_tree = require("git-diff-tree")
 import path = require("path")

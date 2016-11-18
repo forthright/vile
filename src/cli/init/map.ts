@@ -1,4 +1,4 @@
-/// <reference path="../../@types/index.d.ts" />
+/// <reference path="../../@types/index" />
 
 // TODO: write framework detector lib
 

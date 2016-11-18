@@ -1,4 +1,4 @@
-/// <reference path="../../@types/index.d.ts" />
+/// <reference path="../../@types/index" />
 
 import detect = require("language-detect")
 import inquirer = require("inquirer")

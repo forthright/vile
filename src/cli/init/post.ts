@@ -1,4 +1,4 @@
-/// <reference path="../../@types/index.d.ts" />
+/// <reference path="../../@types/index" />
 
 import fs = require("fs")
 import child_process = require("child_process")

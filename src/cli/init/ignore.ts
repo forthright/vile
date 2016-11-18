@@ -1,4 +1,4 @@
-/// <reference path="../../@types/index.d.ts" />
+/// <reference path="../../@types/index" />
 
 import inquirer = require("inquirer")
 import fs = require("fs")

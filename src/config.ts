@@ -1,4 +1,4 @@
-/// <reference path="@types/index.d.ts" />
+/// <reference path="@types/index" />
 
 import yaml = require("js-yaml")
 import fs = require("fs")
