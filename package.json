@@ -84,11 +84,11 @@
     "lodash": "^4.17.x",
     "minilog": "^3.0.1",
     "npm-run-path": "^2.0.2",
-    "request": "^2.78.0",
+    "request": "^2.79.0",
     "unixify": "^0.2.1"
   },
   "devDependencies": {
-    "@forthright/vile": ">=0.11.0",
+    "@forthright/vile": ">=0.11.1",
     "@forthright/vile-coffeelint": ">=0.1.13",
     "@forthright/vile-comment": ">=0.1.16",
     "@forthright/vile-coverage": ">=0.2.13",
@@ -125,6 +125,6 @@
     "sinon-chai": "^2.8.0",
     "typescript": "^2.0.10",
     "wrench": "^1.5.9",
-    "yarn": "^0.17.3"
+    "yarn": "^0.17.6"
   }
 }
