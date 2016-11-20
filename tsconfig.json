@@ -11,7 +11,11 @@
     "outDir": ".build",
     "removeComments": true,
     "rootDir": "src",
-    "target": "ES6"
+    "target": "ES6",
+    "typeRoots": [
+      "node_modules/@types",
+      "src/@types"
+    ]
   },
   "exclude": [
     "node_modules",

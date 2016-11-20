@@ -1,8 +1,9 @@
-/// <reference path="cli-spinner.d.ts" />
-/// <reference path="git-diff-tree.d.ts" />
-/// <reference path="ignore-file.d.ts" />
-/// <reference path="language-detect.d.ts" />
-/// <reference path="linez.d.ts" />
-/// <reference path="npm-run-path.d.ts" />
-/// <reference path="unixify.d.ts" />
-/// <reference path="vile.d.ts" />
+// see: node_modules/@types
+/// <reference types="cli-spinner" />
+/// <reference types="git-diff-tree" />
+/// <reference types="ignore-file" />
+/// <reference types="language-detect" />
+/// <reference types="linez" />
+/// <reference types="npm-run-path" />
+/// <reference types="unixify" />
+/// <reference types="vile" />
