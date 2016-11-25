@@ -1,5 +1,3 @@
-/// <reference path="../@types/index" />
-
 import Bluebird = require("bluebird")
 import commander = require("commander")
 import plugin_map = require("./init/map")

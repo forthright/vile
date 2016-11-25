@@ -1,5 +1,3 @@
-/// <reference path="@types/index" />
-
 import yaml = require("js-yaml")
 import fs = require("fs")
 import logger = require("./logger")

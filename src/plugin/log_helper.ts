@@ -1,5 +1,3 @@
-/// <reference path="../@types/index" />
-
 import _ = require("lodash")
 import logger = require("./../logger")
 import util = require("./../util")

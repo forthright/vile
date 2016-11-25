@@ -1,5 +1,3 @@
-/// <reference path="@types/index" />
-
 import _ = require("lodash")
 import minilog = require("minilog")
 

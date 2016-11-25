@@ -1,5 +1,3 @@
-/// <reference path="../@types/index" />
-
 // TODO: make a bin/ shim to make this a pure module?
 import Bluebird = require("bluebird")
 import _ = require("lodash")

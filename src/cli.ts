@@ -1,5 +1,3 @@
-/// <reference path="@types/index" />
-
 import Bluebird = require("bluebird")
 import _ = require("lodash")
 import cli = require("commander")

@@ -1,5 +1,3 @@
-/// <reference path="../../@types/index" />
-
 import inquirer = require("inquirer")
 import fs = require("fs")
 import Bluebird = require("bluebird")

@@ -1,5 +1,3 @@
-/// <reference path="@types/index" />
-
 import unixify = require("unixify")
 import fs = require("fs")
 import path = require("path")

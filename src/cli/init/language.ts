@@ -1,5 +1,3 @@
-/// <reference path="../../@types/index" />
-
 import detect = require("language-detect")
 import inquirer = require("inquirer")
 import _ = require("lodash")

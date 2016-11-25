@@ -1,5 +1,3 @@
-/// <reference path="../@types/index" />
-
 import logger = require("./../logger")
 
 const log = logger.create("cli")

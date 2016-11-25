@@ -1,5 +1,3 @@
-/// <reference path="../../@types/index" />
-
 import fs = require("fs")
 import child_process = require("child_process")
 import yaml = require("js-yaml")

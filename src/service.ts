@@ -1,5 +1,3 @@
-/// <reference path="@types/index" />
-
 import http = require("http")
 import Bluebird = require("bluebird")
 import request = require("request")

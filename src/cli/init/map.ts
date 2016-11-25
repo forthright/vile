@@ -1,5 +1,3 @@
-/// <reference path="../../@types/index" />
-
 // TODO: write framework detector lib
 
 const PLUGIN_MAP : vile.Lib.PluginMap = {
