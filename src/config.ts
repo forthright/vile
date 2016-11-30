@@ -1,8 +1,5 @@
 import yaml = require("js-yaml")
 import fs = require("fs")
-import logger = require("./logger")
-
-const log = logger.create("config")
 
 let conf : vile.YMLConfig = {}
 
@@ -12,7 +9,8 @@ const load_config_from_file = (
   try {
     return conf = yaml.safeLoad(fs.readFileSync(filepath, "utf-8"))
   } catch(e) {
-    log.error(e)
+    console.error(e)
+    process.exit(1)
   }
 }
 

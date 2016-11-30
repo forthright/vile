@@ -3,7 +3,6 @@ mimus = require "mimus"
 config = mimus.require "./../../lib/config", __dirname, []
 chai = require "./../helpers/sinon_chai"
 yaml = mimus.get config, "yaml"
-config_log = mimus.get config, "log"
 expect = chai.expect
 
 describe "config", ->
@@ -36,16 +35,18 @@ describe "config", ->
     describe "when an exception is thrown during load", ->
       beforeEach ->
         mimus.stub yaml, "safeLoad"
-        mimus.stub config_log, "error"
         yaml.safeLoad.throws new Error "foo"
+
+      it "logs the error to stderr and exist process", ->
+        mimus.stub console, "error"
+        mimus.stub process, "exit"
         config.load filepath
-
-      it "logs the error", ->
-        expect(config_log.error)
+        expect(console.error)
           .to.have.been.calledWith new Error "foo"
-
-      it "sets conf to an empty object", ->
         expect(config.get()).to.eql {}
+        expect(process.exit).to.have.been.calledWith 1
+        console.error.restore()
+        process.exit.restore()
 
   describe ".get_auth", ->
     beforeEach ->
