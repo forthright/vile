@@ -23,6 +23,7 @@
     "coffee": "coffee",
     "compile": "node bin/compile",
     "compile-dev": "node bin/compile-dev",
+    "clean": "rm -r {.build,.test,lib}",
     "dev": "sh bin/dev",
     "dev-setup": "sh bin/dev-setup",
     "istanbul": "istanbul",
