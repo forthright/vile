@@ -12,6 +12,7 @@ declare namespace vile {
   // Type defs for vile issue object creation
   //
   export interface Issue {
+    // NOTE: See src/util.ts for type value mappings
     type        : string;
     message?    : string;
     path?       : string;

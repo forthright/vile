@@ -272,7 +272,10 @@ module.exports = {
 
 See [vile.d.ts](src/@types/vile/index.d.ts) for how Issues are structured.
 
-You can also `require("vile")` in your plugin and use its
+Also, for now, see `exports` in [util.ts](src/util.ts#L191-L254) for what keys
+to use when setting an Issue's `type` property.
+
+You can also [require("vile")](src/index.ts) in your plugin and use its
 API, which provides some helpers.
 
 ### Filtering
