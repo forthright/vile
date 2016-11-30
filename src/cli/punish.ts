@@ -194,6 +194,9 @@ const create = (cli : commander.ICommand) =>
               "example: [src:lib,...] or [src.ts:lib.js,...]")
     .option("-i, --snippets",
             "add code snippets to issues")
+    .option("-t, --concurrency [number]",
+            "specify the max number of plugins to run at any one " +
+            "time (default=cpu_num)")
     .option("-d, --dontpostprocess",
             "don't post process data in any way (ex: adding ok issues)- " +
             "useful for per file checking- don't use with --upload")

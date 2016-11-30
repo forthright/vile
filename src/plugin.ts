@@ -227,7 +227,7 @@ const execute_plugins = (
     let spin : spinner.Spinner
     let workers : { [ id : string ] : string } = {}
     let plugin_count : number = plugins.length
-    let concurrency : number = os.cpus().length || 1
+    let concurrency : number = Number(opts.concurrency) || os.cpus().length || 1
 
     cluster.on("fork", (worker : cluster.Worker) => {
       if (spin) spin.stop(true)
