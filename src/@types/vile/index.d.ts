@@ -27,8 +27,8 @@ declare namespace vile {
     plugin?     : string;
     snippet?    : Snippet[];
     language?   : string;
-    complexity? : string;
-    churn?      : string;
+    complexity? : Complexity;
+    churn?      : Churn;
     where?      : IssueLocation;
   }
 
@@ -43,6 +43,10 @@ declare namespace vile {
   }
 
   export type IssueList = Issue[]
+
+  export type Complexity = number
+
+  export type Churn = number
 
   export interface Snippet {
     line     : number;
