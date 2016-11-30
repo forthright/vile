@@ -89,7 +89,7 @@
     "unixify": "^0.2.1"
   },
   "devDependencies": {
-    "@forthright/vile": ">=0.11.1",
+    "@forthright/vile": ">=0.11.2",
     "@forthright/vile-coffeelint": ">=0.1.13",
     "@forthright/vile-comment": ">=0.1.16",
     "@forthright/vile-coverage": ">=0.2.13",
