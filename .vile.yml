@@ -13,9 +13,8 @@ vile:
     - .vim.custom
     - node_modules
     - .nyc_output
-    - lib
     - tags
-    - .test
+    - .test/fixtures/**
     - test/fixtures/**
     - .ctags
     - .git
@@ -48,18 +47,34 @@ depcheck:
       - coverage
       - tmp
 
+escomplex:
+  config:
+    use_maintainability_index: false
+
+language:
+  ignore:
+    - lib
+    - .test
+
 length:
   config:
     file: 120
     line: 80
   ignore:
+    - lib
     - test
+    - .test
 
 stat:
   allow:
     - src
   ignore:
     - src/@types/**
+
+eslint:
+  ignore:
+    - lib
+    - .test
 
 coverage:
   config:

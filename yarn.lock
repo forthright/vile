@@ -43,6 +43,14 @@
     gulp "^3.9.1"
     lodash "^4.13.1"
 
+"@forthright/vile-escomplex@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@forthright/vile-escomplex/-/vile-escomplex-0.1.0.tgz#3f4c3ada0a3d21580e2d4f2161946361c8c5007d"
+  dependencies:
+    bluebird "^3.4.6"
+    escomplex "^2.0.0-alpha"
+    lodash "^4.17.2"
+
 "@forthright/vile-eslint@>=0.1.12":
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/@forthright/vile-eslint/-/vile-eslint-0.1.12.tgz#0f0ff373c64cb51474330f80559f66a380c369f9"
@@ -1077,6 +1085,10 @@ check-error@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/check-error/-/check-error-1.0.2.tgz#574d312edd88bb5dd8912e9286dd6c0aed4aac82"
 
+check-types@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/check-types/-/check-types-5.1.0.tgz#37394dd3b6042a51155e926c3a91753d499e5dc8"
+
 chokidar@^1.0.0:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-1.6.1.tgz#2f4447ab5e96e50fb3d789fd90d4c72e0e4c70c2"
@@ -1700,6 +1712,12 @@ escodegen@1.8.x:
     optionator "^0.8.1"
   optionalDependencies:
     source-map "~0.2.0"
+
+escomplex@^2.0.0-alpha:
+  version "2.0.0-alpha"
+  resolved "https://registry.yarnpkg.com/escomplex/-/escomplex-2.0.0-alpha.tgz#fd6a79865d9baf57c4c3ed1b2fe677714e449606"
+  dependencies:
+    check-types "^5.1.0"
 
 escope@^3.6.0:
   version "3.6.0"
@@ -3274,7 +3292,7 @@ lodash@^3.4.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.0, lodash@^4.17.1, lodash@^4.17.x, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.5.1:
+lodash@^4.0.0, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.0, lodash@^4.17.1, lodash@^4.17.2, lodash@^4.17.x, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.5.1:
   version "4.17.2"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.2.tgz#34a3055babe04ce42467b607d700072c7ff6bf42"
 
