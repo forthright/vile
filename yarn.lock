@@ -43,9 +43,9 @@
     gulp "^3.9.1"
     lodash "^4.13.1"
 
-"@forthright/vile-escomplex@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@forthright/vile-escomplex/-/vile-escomplex-0.1.0.tgz#3f4c3ada0a3d21580e2d4f2161946361c8c5007d"
+"@forthright/vile-escomplex@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@forthright/vile-escomplex/-/vile-escomplex-0.1.1.tgz#6685e193f18fbe5ed05a1b5513a5fdc735bd7669"
   dependencies:
     bluebird "^3.4.6"
     escomplex "^2.0.0-alpha"
