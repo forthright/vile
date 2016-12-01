@@ -39,7 +39,7 @@ const PLUGIN_MAP : vile.Lib.PluginMap = {
     scss: [ "scss-lint" ],
     slim: [ "slim-lint" ],
     typescript: [ "tslint" ],
-    javascript: [ "eslint" ],
+    javascript: [ "eslint", "escomplex" ],
     php: [ "phpmd" ],
     coffeescript: [ "coffeelint" ]
   }
