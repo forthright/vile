@@ -1,8 +1,6 @@
 machine:
   node:
     version: 6.9.1
-  pre:
-    - mkdir ~/.yarn-cache
 
 checkout:
   post:
@@ -10,15 +8,8 @@ checkout:
     - git checkout -f $CIRCLE_BRANCH
 
 dependencies:
-  cache_directories:
-    - ~/.yarn-cache
-
   pre:
     - sh bin/list-env-versions
-
-  override:
-    - npm i -g yarn
-    - yarn install --no-progress
 
 test:
   override:
