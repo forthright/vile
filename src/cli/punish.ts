@@ -17,6 +17,13 @@ const service_log = logger.create("vile.io")
 const COMMIT_STATUS_INTERVAL_TIME = 2000 // 2s
 const DEFAULT_VILE_YML            = ".vile.yml"
 
+const log_and_exit = (error : any) : void => {
+  console.log() // next line if spinner
+  log.error("executing plugins")
+  console.error(_.get(error, "stack", error))
+  process.exit(1)
+}
+
 const wait_for = (ms : number, cb : (t : any) => void) => {
   let timer  = setInterval(() => {
     cb(timer)
@@ -43,9 +50,9 @@ const wait_for_done_status_and_log = (
         let data = _.get(body_json, "data")
 
         if (status_code != 200) {
-          service_log.error("http status:", status_code)
-          service_log.error(api_body)
           clearInterval(timer)
+          console.error("http status:", status_code)
+          log_and_exit(api_body)
         } else {
           service_log.info(`Commit ${commit_id} ${message}`)
 
@@ -55,7 +62,7 @@ const wait_for_done_status_and_log = (
             service.log(data, verbose)
           } else if (message == util.API.COMMIT.FAILED) {
             clearInterval(timer)
-            service_log.error(data)
+            log_and_exit(data)
           }
         }
       })
@@ -76,7 +83,7 @@ const publish = (
     .commit(issues, cli_time, auth)
     .then((http : http.IncomingMessage) => {
       if (_.get(http, "response.statusCode") != 200) {
-        service_log.error(_.get(http, "body"))
+        log_and_exit(_.get(http, "body"))
         return
       }
 
@@ -88,13 +95,13 @@ const publish = (
       service_log.info(`Commit ${commit_id} ${commit_state}`)
 
       if (!commit_id) {
-        service_log.error("No commit uid was provided on commit. " +
+        log_and_exit("No commit uid was provided on commit. " +
                         "Can't check status.")
       } else if (!commit_state) {
-        service_log.error("No commit state was provided upon creation. " +
+        log_and_exit("No commit state was provided upon creation. " +
                         "Can't check status.")
       } else if (commit_state == util.API.COMMIT.FAILED) {
-        service_log.error("Creating commit state is failed.")
+        log_and_exit("Creating commit state is failed.")
       } else {
         wait_for_done_status_and_log(commit_id, auth, opts.scores)
       }
@@ -108,13 +115,6 @@ const parse_plugins = (plugins : string) : vile.PluginList =>
 const set_log_levels = (logs? : string) => {
   logger.quiet()
   if (logs.split) logs.split(",").forEach(logger.level)
-}
-
-const log_and_exit = (error : any) : void => {
-  console.log() // next line if spinner
-  log.error("executing plugins")
-  console.error(_.get(error, "stack", error))
-  process.exit(1)
 }
 
 // HACK: This method and above uses promises haphazardly- needs rewrite

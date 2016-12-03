@@ -12,6 +12,7 @@ original_wait_for = mimus.get cli_punish, "wait_for"
 fake_timer = {}
 wait_for_stub = mimus.stub()
 mimus.set cli_punish, "wait_for", wait_for_stub
+cli_log = mimus.get cli_punish, "log"
 
 git_changed_promise = undefined
 service_commit_promise = undefined
@@ -29,6 +30,16 @@ commander = undefined
 cli_cmd_args = undefined
 auth_example = undefined
 exec_issues = []
+
+stub_log_and_exit = ->
+  mimus.stub process, "exit"
+  mimus.stub console, "error"
+  mimus.stub console, "log"
+
+restore_log_and_exit = ->
+  process.exit.restore()
+  console.error.restore()
+  console.log.restore()
 
 describe "cli/punish", ->
   beforeEach ->
@@ -81,6 +92,7 @@ describe "cli/punish", ->
       mimus.stub service, "commit"
       mimus.stub service, "commit_status"
       mimus.stub service, "log"
+      mimus.stub cli_log, "error"
       mimus.stub service_log, "info"
       mimus.stub service_log, "error"
 
@@ -154,19 +166,26 @@ describe "cli/punish", ->
               body: commit_status_failure_body }
             service_commit_status_promise
               .callsArgWith 0, commit_status_failure_data
+
+          it "logs body info and exits process", ->
+            mimus.stub process, "exit"
+            mimus.stub console, "error"
+            mimus.stub console, "log"
             cli_punish.create commander
-
-          it "logs the status code", ->
-            expect(service_log.error).to.have.been
+            expect(console.error).to.have.been
               .calledWith "http status:", 404
-
-          it "logs the http body", ->
-            expect(service_log.error).to.have.been
+            expect(console.error).to.have.been
               .calledWith commit_status_failure_body
+            process.exit.restore()
+            console.error.restore()
+            console.log.restore()
 
           it "clears the interval", ->
+            stub_log_and_exit()
+            cli_punish.create commander
             expect(clear_interval).to.have.been
               .calledWith fake_timer
+            restore_log_and_exit()
 
         describe "if status is 200", ->
           beforeEach ->
@@ -233,18 +252,27 @@ describe "cli/punish", ->
                 body: commit_status_success_body }
               service_commit_status_promise
                 .callsArgWith 0, commit_status_success_data
-              cli_punish.create commander
 
             it "mentions the commit has failed", ->
+              stub_log_and_exit()
+              cli_punish.create commander
               expect(service_log.info).to.have.been
                 .calledWith "Commit 2 failed"
+              restore_log_and_exit()
 
             it "clears the interval", ->
+              stub_log_and_exit()
+              cli_punish.create commander
               expect(clear_interval).to.have.been.calledWith fake_timer
+              restore_log_and_exit()
 
-            it "error logs the data packet", ->
-              expect(service_log.error).to.have.been
+            it "logs packet and exits process", ->
+              stub_log_and_exit()
+              cli_punish.create commander
+              expect(console.error).to.have.been
                 .calledWith JSON.parse(commit_status_success_body).data
+              expect(process.exit).to.have.been.calledWith 1
+              restore_log_and_exit()
 
       describe "when there is no commit id", ->
         beforeEach ->
@@ -257,13 +285,19 @@ describe "cli/punish", ->
             body: commit_success_body }
 
           service_commit_promise.callsArgWith 0, commit_success_data
+
+        it "logs an error and exits process", ->
+          stub_log_and_exit()
+
           cli_punish.create commander
 
-        it "logs a descriptive error", ->
-          expect(service_log.error).to.have.been
+          expect(console.error).to.have.been
             .calledWith(
               "No commit uid was provided on commit. " +
               "Can't check status.")
+          expect(process.exit).to.have.been.calledWith 1
+
+          restore_log_and_exit()
 
       describe "when there is no commit state", ->
         beforeEach ->
@@ -276,12 +310,17 @@ describe "cli/punish", ->
 
           service_commit_promise.callsArgWith 0, commit_success_data
 
+        it "logs an error and exits process", ->
+          stub_log_and_exit()
+
           cli_punish.create commander
 
-        it "logs a descriptive error", ->
           err = "No commit state was provided upon creation. " +
             "Can't check status."
-          expect(service_log.error).to.have.been.calledWith err
+          expect(process.exit).to.have.been.calledWith 1
+          expect(console.error).to.have.been.calledWith err
+
+          restore_log_and_exit()
 
       describe "when commit state is failed", ->
         beforeEach ->
@@ -294,11 +333,17 @@ describe "cli/punish", ->
             body: commit_success_body }
 
           service_commit_promise.callsArgWith 0, commit_success_data
+
+        it "logs an error and exits process", ->
+          stub_log_and_exit()
+
           cli_punish.create commander
 
-        it "logs a descriptive error", ->
           err = "Creating commit state is failed."
-          expect(service_log.error).to.have.been.calledWith err
+          expect(console.error).to.have.been.calledWith err
+          expect(process.exit).to.have.been.calledWith 1
+
+          restore_log_and_exit()
 
       describe "when status code is non 200", ->
         beforeEach ->
@@ -311,12 +356,18 @@ describe "cli/punish", ->
             body: commit_failure_body }
 
           service_commit_promise.callsArgWith 0, commit_failure_data
-          cli_punish.create commander
 
         it "logs an error and nothing else", ->
-          expect(service_log.error).to.have.been
+          stub_log_and_exit()
+
+          cli_punish.create commander
+
+          expect(console.error).to.have.been
             .calledWith commit_failure_body
+          expect(process.exit).to.have.been.calledWith 1
           expect(service.commit_status).to.not.have.been.called
+
+          restore_log_and_exit()
 
   describe "when gitdiff is set", ->
     beforeEach ->
