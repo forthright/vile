@@ -14,10 +14,6 @@ const DEFAULT_VILE_YML         = ".vile.yml"
 
 Bluebird.promisifyAll(fs)
 
-const log_error = (e : NodeJS.ErrnoException) => {
-  console.log(e)
-}
-
 const matches = (
   filepath : string,
   key : string,
@@ -181,7 +177,6 @@ const promise_each_file = (
 
     }))
     .then((targets) => _.flatten(targets))
-    .catch(log_error)
   })
 }
 
