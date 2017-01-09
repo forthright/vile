@@ -11,7 +11,7 @@ It can be used to run all types of analysis and checks via one top level package
 `build -> test -> analyze`
 
 The goal of the project is not to compete with or replace existing
-analysis tools, but to support them unobstrusively as possible,
+analysis tools, but to support them unobtrusively as possible,
 and even complement them, while presenting the information in
 a unified, project focused context.
 
