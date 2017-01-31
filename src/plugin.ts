@@ -107,7 +107,7 @@ const run_plugins_in_fork = (
     worker.on("exit", (code, signal) => {
       let name = plugins.join(",")
 
-       if (signal || code !== 0) {
+      if (signal || code !== 0) {
         reject(`${name} worker exited [code = ${code} | sig = ${signal}]`)
       }
     })
