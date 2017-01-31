@@ -47,6 +47,9 @@ depcheck:
       - coverage
       - tmp
 
+eclint:
+  ignore: lib
+
 escomplex:
   config:
     use_maintainability_index: false
@@ -66,9 +69,9 @@ length:
     - .test
 
 stat:
-  allow:
-    - src
   ignore:
+    - lib
+    - .test
     - src/@types/**
 
 eslint:
