@@ -156,6 +156,7 @@ declare namespace vile {
     dontpostprocess? : boolean;
     snippets? : boolean;
     scores? : boolean;
+    concurrency? : number;
   }
 
   interface VileConfig {
