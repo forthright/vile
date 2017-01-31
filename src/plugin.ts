@@ -117,14 +117,13 @@ const normalize_paths = (issues : vile.IssueList) =>
   _.each(issues, (issue) => {
     if (_.has(issue, "path")) {
       issue.path = unixify(issue.path)
-        .replace(process.cwd(), "")
 
-      // HACK: see above todo
-      if (!/windows/i.test(os.type())) {
-        issue.path = unixify(issue.path)
-          .replace(/^\.\/?/, "")
-          .replace(/^\/?/, "")
+      if (process.cwd() !== ".") {
+        issue.path = issue.path
+          .replace(process.cwd(), "")
       }
+
+      issue.path = issue.path.replace(/^\.\//, "")
     }
   })
 
