@@ -113,6 +113,8 @@ const run_plugins_in_fork = (
     })
   })
 
+const on_windows = () : boolean => /windows/i.test(os.type())
+
 const normalize_paths = (issues : vile.IssueList) =>
   _.each(issues, (issue) => {
     if (_.has(issue, "path")) {
@@ -123,7 +125,11 @@ const normalize_paths = (issues : vile.IssueList) =>
           .replace(process.cwd(), "")
       }
 
-      issue.path = issue.path.replace(/^\.\//, "")
+      if (!on_windows) {
+        issue.path = issue.path
+          .replace(/^\.\//, "")
+          .replace(/^\//, "")
+      }
     }
   })
 
