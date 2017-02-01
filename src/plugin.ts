@@ -125,7 +125,7 @@ const normalize_paths = (issues : vile.IssueList) =>
           .replace(process.cwd(), "")
       }
 
-      if (!on_windows) {
+      if (!on_windows()) {
         issue.path = issue.path
           .replace(/^\.\//, "")
           .replace(/^\//, "")
