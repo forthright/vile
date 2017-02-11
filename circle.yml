@@ -13,7 +13,7 @@ dependencies:
 
 test:
   override:
-    - npm run test-ci-build
+    - npm run -s test-ci-build
 
   post:
-    - time npm run vile
+    - time npm run -s vile

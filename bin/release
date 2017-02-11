@@ -7,12 +7,12 @@ if [ -z "${level}" ]; then
   level=patch
 fi
 
-npm run compile
+npm run -s compile
 
-npm run compile-dev
+npm run -s compile-dev
 
 npm test
 
 git add -f lib
 
-npm run -- release-it -n -p -m 'v%s' -i $level
+npm run -s -- release-it -n -p -m 'v%s' -i $level

@@ -7,12 +7,12 @@ rm("-r", ".nyc_output")
 mkdir("coverage")
 
 exec(
-  "npm run test-non-system-cov",
+  "npm run -s test-non-system-cov",
   function(code) {
     code !== 0 && exit(code)
 
     exec(
-      "npm run test-system-cov",
+      "npm run -s test-system-cov",
       function(code) {
         code !== 0 && exit(code)
 

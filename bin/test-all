@@ -2,12 +2,12 @@
 require("shelljs/global")
 
 exec(
-  "npm run test-non-system",
+  "npm run -s test-non-system",
   function (code) {
     if (code !== 0) exit(code)
 
     exec(
-      "npm run test-system",
+      "npm run -s test-system",
       function (code) {
         if (code !== 0) exit(code)
       })

@@ -2,7 +2,7 @@
 require("shelljs/global")
 
 exec(
-  "npm run coffee -- -cbo .test test",
+  "npm run -s coffee -- -cbo .test test",
   function (code, stderr, stdout) {
     if (code !== 0) exit(code)
   })

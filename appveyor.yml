@@ -47,9 +47,9 @@ install:
   - npm install
 
 test_script:
-  - npm run compile
-  - npm run compile-dev
-  - npm run test
+  - npm run -s compile
+  - npm run -s compile-dev
+  - npm run -s test
 
 notifications:
   - provider: Slack
