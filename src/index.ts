@@ -3,7 +3,7 @@ import plugin = require("./plugin")
 import util = require("./util")
 import logger = require("./logger")
 
-const library : vile.Lib.Index = extend(
+const library : vile.Vile = extend(
   {},
   plugin,
   util,

@@ -21,7 +21,7 @@ a unified, project focused context.
 
 ## Installation
 
-Since Vile's core is written in [JavaScript](#why-nodejs),
+Since Vile's core is written in [TypeScript](#why-nodejs),
 the main project is distributed via [npm](http://npmjs.org).
 
 ### Node CLI
@@ -277,6 +277,8 @@ to use when setting an Issue's `type` property.
 
 You can also [require("vile")](src/index.ts) in your plugin and use its
 API, which provides some helpers.
+
+Want to write your plugin in TypeScript to make use of vile type defs? Checkout this [example](https://github.com/forthright/vile-rubycritic).
 
 ### Filtering
 

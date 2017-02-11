@@ -1,3 +1,5 @@
+/// <reference types="bluebird" />
+
 declare module "git-diff-tree" {
   interface Config {
     originalRev : string;

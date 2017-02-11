@@ -1,6 +1,7 @@
 import _ = require("lodash")
 import fs = require("fs")
 import commander = require("commander")
+import Bluebird = require("bluebird")
 import http = require("http")
 import service = require("./../service")
 import path = require("path")
@@ -118,7 +119,7 @@ const set_log_levels = (logs? : string) => {
 }
 
 // HACK: This method and above uses promises haphazardly- needs rewrite
-const punish = (app : any, paths : string[]) => {
+const punish = (app : any, paths : string[]) : void => {
   let plugins : string = app.plugins
 
   // TODO: not ideal to mutate the app
@@ -141,6 +142,7 @@ const punish = (app : any, paths : string[]) => {
       if (app.upload) return publish(issues, cli_time, app)
       if (app.format == "json")
         process.stdout.write(JSON.stringify(issues))
+        return Bluebird.resolve()
     })
     .catch(log_and_exit) // since we are running as a cli
 
