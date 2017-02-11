@@ -57,7 +57,6 @@ const is_allowed = (
 
   if (_.isEmpty(allow_config)) {
     return true
-
   // HACK: not ideal way of doing this (need to do better matching)
   } else {
     if (typeof allow_config == "string") allow_config = [ allow_config ]
@@ -183,7 +182,29 @@ const promise_each_file = (
 // TODO: validate issue objects as it comes in
 const into_issue = (data : vile.Issue) : vile.Issue => data
 
-export = {
+// TODO: can we just assign with types at compile time?
+const types : vile.Lib.UtilKeyTypes = {
+  OK    :  "ok",
+
+  WARN  :  "warning",
+  STYL  :  "style",
+  MAIN  :  "maintainability",
+  COMP  :  "complexity",
+  CHURN :  "churn",
+  DUPE  :  "duplicate",
+  DEP   :  "dependency",
+
+  ERR   :  "error",
+  SEC   :  "security",
+
+  STAT  :  "stat",
+  SCM   :  "scm",
+  LANG  :  "lang",
+  COV   :  "cov"
+}
+
+
+const api : vile.Lib.Util = extend({}, types, {
   promise_each: promise_each_file,
   filter: filter_promise_each,
   issue: into_issue,
@@ -199,8 +220,6 @@ export = {
     }
   },
 
-  OK: "ok",
-
   displayable_issues: [
     "warning",
     "style",
@@ -210,15 +229,6 @@ export = {
     "security",
     "dependency"
   ],
-
-  WARN: "warning",
-  STYL: "style",
-  MAIN: "maintainability",
-  COMP: "complexity",
-  CHURN: "churn",
-  DUPE: "duplicate",
-  DEP: "dependency",
-  // TODO: map dynamically
   warnings: [
     "warning",
     "style",
@@ -228,22 +238,16 @@ export = {
     "duplicate",
     "dependency"
   ],
-
-  ERR: "error",
-  SEC: "security",
   errors: [
     "error",
     "security"
   ],
-
-  STAT: "stat",
-  SCM: "scm",
-  LANG: "lang",
-  COV : "cov",
   infos: [
     "stat",
     "scm",
     "lang",
     "cov"
   ]
-}
+})
+
+export = api

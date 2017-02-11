@@ -6,14 +6,15 @@ declare namespace vile {
   // ...trying to get compiler to work right..
   type Bluebird<T> = any
 
+  // TODO: use keyof in Index/Util to map src/util.ts types
+
   // -------------------------------------------------
   // Issue
   //
   // Type defs for vile issue object creation
   //
   export interface Issue {
-    // NOTE: See src/util.ts for type value mappings
-    type        : string;
+    type        : IssueType.All;
     message?    : string;
     path?       : string;
     title?      : string;
@@ -53,6 +54,31 @@ declare namespace vile {
     line     : number;
     text     : string;
     ending?  : string;
+  }
+
+  export module IssueType {
+    export type Ok    = "ok";
+    export type Warn  = "warning";
+    export type Styl  = "style";
+    export type Main  = "maintainability";
+    export type Comp  = "complexity";
+    export type Churn = "churn";
+    export type Dupe  = "duplicate";
+    export type Dep   = "dependency";
+    export type Err   = "error";
+    export type Sec   = "security";
+    export type Stat  = "stat";
+    export type Scm   = "scm";
+    export type Lang  = "lang";
+    export type Cov   = "cov";
+
+    export type Warnings = Warn | Styl | Main | Comp | Churn | Dupe | Dep
+
+    export type Errors = Err | Sec
+
+    export type Infos = Stat | Scm | Lang | Cov
+
+    export type All = Ok | Warnings | Errors | Infos
   }
 
   // -------------------------------------------------
@@ -264,6 +290,48 @@ declare namespace vile {
         config : YMLConfig,
         opts : any
       ) => Bluebird<IssueList>;
+    }
+
+    export interface UtilKeyTypes {
+      OK    :  IssueType.Ok;
+
+      WARN  :  IssueType.Warn;
+      STYL  :  IssueType.Styl;
+      MAIN  :  IssueType.Main;
+      COMP  :  IssueType.Comp;
+      CHURN :  IssueType.Churn;
+      DUPE  :  IssueType.Dupe;
+      DEP   :  IssueType.Dep;
+
+      ERR   :  IssueType.Err;
+      SEC   :  IssueType.Sec;
+
+      STAT  :  IssueType.Stat;
+      SCM   :  IssueType.Scm;
+      LANG  :  IssueType.Lang;
+      COV   :  IssueType.Cov;
+    }
+
+    export type Spec = any; // TODO
+
+    export interface UtilObjects extends UtilKeyTypes {
+      API: Spec;
+
+      displayable_issues: IssueType.All[]; // TODO enforce/make uniq
+
+      warnings: IssueType.Warnings[];
+      errors:   IssueType.Errors[];
+      infos:    IssueType.Infos[];
+    }
+
+    // TODO: flush out util method sigs
+    export interface Util extends UtilObjects {
+      promise_each : any;
+      filter       : any;
+      issue        : any;
+      ignored      : any;
+      allowed      : any;
+      spawn        : any;
     }
 
     export interface Logger {

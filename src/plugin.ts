@@ -357,9 +357,11 @@ const add_ok_issues = (
       process.cwd(),
       // TODO: don't compile ignore/allow every time
       // NOTE: need to fallthrough if is_dir, in case --gitdiff is set
-      (p, is_dir) => (util.allowed(p, vile_allow) || is_dir) &&
-        !util.ignored(p, vile_ignore) ,
-      (filepath) => util.issue({
+      (p : string, is_dir : boolean) =>
+        (util.allowed(p, vile_allow) || is_dir) &&
+          !util.ignored(p, vile_ignore)
+      ,
+      (filepath : string) => util.issue({
         type: util.OK,
         path: unixify(filepath)
       }),
