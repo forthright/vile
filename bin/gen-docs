@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+echo "Compiling..."
+
+build_dir=.docs
+deploy_dir=../vile-docs/public
+
+npm run -s -- \
+  typedoc \
+  --mode modules \
+  --readme doc/index.md \
+  --theme doc/theme \
+  --out $build_dir \
+  --tsconfig tsconfig.json \
+  --includeDeclarations \
+  --externalPattern "**/@types/*/*.d.ts"
+
+cp -rf $build_dir/* $deploy_dir/.
+
+echo "Copied to $deploy_dir"
+echo "Please manually commit a release on that branch."

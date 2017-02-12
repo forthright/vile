@@ -1,6 +1,6 @@
 /node_modules
 bower_components
-doc
+.docs
 coverage
 npm-debug.log
 .nyc_output

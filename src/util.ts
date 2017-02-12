@@ -203,7 +203,6 @@ const types : vile.Lib.UtilKeyTypes = {
   COV   :  "cov"
 }
 
-
 const api : vile.Lib.Util = extend({}, types, {
   promise_each: promise_each_file,
   filter: filter_promise_each,
