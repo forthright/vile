@@ -11,7 +11,9 @@ npm run -s compile
 
 npm run -s compile-dev
 
-npm test
+npm t
+
+npm run -s gen-docs
 
 git add -f lib
 
