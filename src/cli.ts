@@ -4,6 +4,7 @@ import cli = require("commander")
 import cli_punish = require("./cli/punish")
 import cli_auth = require("./cli/auth")
 import cli_init = require("./cli/init")
+import cli_docs = require("./cli/docs")
 
 const pkg = require("./../package")
 
@@ -31,7 +32,8 @@ const log_additional_help = () => {
 const sub_modules = () : vile.Lib.CLIModule[] => [
   cli_punish,
   cli_auth,
-  cli_init
+  cli_init,
+  cli_docs
 ]
 
 const bind_sub_module = (cli_sub_mod : vile.Lib.CLIModule) => {
