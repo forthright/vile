@@ -1,20 +1,36 @@
-#!/usr/bin/env sh
-echo "Compiling..."
+#!/usr/bin/env node
+require("shelljs/global")
 
-build_dir=.docs
-deploy_dir=../vile-docs/public
+var path = require("path")
+var pkg = require("./../package")
 
-npm run -s -- \
-  typedoc \
-  --mode modules \
-  --readme doc/index.md \
-  --theme doc/theme \
-  --out $build_dir \
-  --tsconfig tsconfig.json \
-  --includeDeclarations \
-  --externalPattern "**/@types/*/*.d.ts"
+var build_dir = path.join(__dirname, "..", ".docs")
+var deploy_dir = path.join(__dirname, "..", "..", "vile-docs", "public")
 
-cp -rf $build_dir/* $deploy_dir/.
+console.log("compiling to: " + build_dir)
 
-echo "Copied to $deploy_dir"
-echo "Please manually commit a release on that branch."
+var generate = "npm run -s -- typedoc " +
+  "--mode modules " +
+  "--readme doc/index.md " +
+  "--theme doc/theme " +
+  "--out " + build_dir + " " +
+  "--name 'v" + pkg.version + "' " +
+  "--tsconfig tsconfig.json " +
+  "--includeDeclarations " +
+  "--externalPattern '**/@types/*/*.d.ts'"
+
+var copy_over = "cp -rf " + build_dir + "/* " + deploy_dir + "/."
+
+exec(
+  generate,
+  function(code, stdout, stderr) {
+    if (code !== 0) exit(code)
+
+    exec(
+      copy_over,
+      function(code, stdout, stderr) {
+        if (code !== 0) exit(code)
+        console.log("Copied to: " + deploy_dir)
+        console.log("Please manually commit a release on that branch.")
+      })
+  })
