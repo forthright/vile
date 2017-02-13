@@ -65,6 +65,16 @@
     "tool"
   ],
   "dependencies": {
+    "@types/bluebird": "^3.0.37",
+    "@types/commander": "^2.3.31",
+    "@types/extend": "^2.0.30",
+    "@types/inquirer": "0.0.32",
+    "@types/js-yaml": "^3.5.29",
+    "@types/lodash": "^4.14.52",
+    "@types/minilog": "^2.0.29",
+    "@types/node": "^7.0.5",
+    "@types/opn": "^3.0.28",
+    "@types/request": "0.0.39",
     "bluebird": "^3.4.7",
     "cli-spinner": "0.2.6",
     "commander": "^2.9.0",
@@ -81,18 +91,6 @@
     "opn": "^4.0.2",
     "request": "^2.79.0",
     "unixify": "^0.2.1"
-  },
-  "peerDependencies": {
-    "@types/bluebird": "^3.0.37",
-    "@types/commander": "^2.3.31",
-    "@types/extend": "^2.0.30",
-    "@types/inquirer": "0.0.32",
-    "@types/js-yaml": "^3.5.29",
-    "@types/lodash": "^4.14.52",
-    "@types/minilog": "^2.0.29",
-    "@types/node": "^7.0.5",
-    "@types/opn": "^3.0.28",
-    "@types/request": "0.0.39"
   },
   "devDependencies": {
     "@forthright/vile": ">=0.11.8",
