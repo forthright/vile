@@ -11,6 +11,7 @@
     "outDir": ".build",
     "removeComments": true,
     "rootDir": "src",
+    "skipLibCheck": true,
     "target": "ES6",
     "typeRoots": [
       "node_modules/@types",
