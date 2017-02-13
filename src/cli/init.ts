@@ -28,7 +28,7 @@ const initialize_vile_project = (
     .then(coverage.init)
     .then(post.init)
 
-const create = (cli : any) =>
+const create = (cli : commander.ICommand) =>
   cli
     .command("init")
     .alias("i")

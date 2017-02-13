@@ -78,6 +78,7 @@
     "lodash": "^4.17.x",
     "minilog": "^3.1.0",
     "npm-run-path": "^2.0.2",
+    "opn": "^4.0.2",
     "request": "^2.79.0",
     "unixify": "^0.2.1"
   },
@@ -90,6 +91,7 @@
     "@types/lodash": "^4.14.52",
     "@types/minilog": "^2.0.29",
     "@types/node": "^7.0.5",
+    "@types/opn": "^3.0.28",
     "@types/request": "0.0.39"
   },
   "devDependencies": {

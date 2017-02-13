@@ -1,9 +1,9 @@
+import commander = require("commander")
 import logger = require("./../logger")
 
 const log = logger.create("cli")
 
-// TODO: any is Commander.js
-const create = (cli : any) =>
+const create = (cli : commander.ICommand) =>
   cli
     .command("auth")
       .alias("a")
