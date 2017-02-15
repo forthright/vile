@@ -264,7 +264,7 @@ module.exports = {
 You can also [require("vile")](interfaces/_src__types_index_d_.vile.vile.html) in your plugin and use its
 API, which provides some helpers.
 
-See [vile.Issue](modules/_src__types_index_d_.vile.html) for how Issues are structured.
+See [vile.Issue](https://vile-docs.herokuapp.com/interfaces/_src__types_index_d_.vile.issue.html) for how Issues are structured.
 
 ### Writing Non-JavaScript Plugins
 
