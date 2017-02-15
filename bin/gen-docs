@@ -7,7 +7,7 @@ var pkg = require("./../package")
 var build_dir = path.join(__dirname, "..", ".docs")
 var deploy_dir = path.join(__dirname, "..", "..", "vile-docs", "public")
 
-console.log("compiling to: " + build_dir)
+console.log("target: " + build_dir)
 
 var generate = "npm run -s -- typedoc " +
   "--mode modules " +
