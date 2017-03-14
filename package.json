@@ -133,7 +133,6 @@
     "sloc": "^0.2.0",
     "tslint": "^4.4.2",
     "typedoc": "^0.5.5",
-    "typescript": "^2.1.6",
-    "wrench": "^1.5.9"
+    "typescript": "^2.1.6"
   }
 }
