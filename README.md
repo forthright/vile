@@ -6,7 +6,7 @@ A punishing yet easy to use tool for writing insightful code.
 
 ## Documentation
 
-See the [docs](https://vile-docs.herokuapp.com) site.
+See the [docs](https://docs.vile.io) site.
 
 ## Versioning
 

@@ -25,15 +25,34 @@ the main project is distributed via [npm](http://npmjs.org).
 
 *install*
 
-    npm i -g vile
+```sh
+npm i -g vile
+```
 
 *help*
 
-    vile -h
+```sh
+vile -h
+```
+
+*authenticate*
+
+```sh
+vile auth
+```
 
 *fast setup*
 
-    vile init
+```sh
+vile init
+```
+
+*upload*
+
+```sh
+export VILE_API_TOKEN=my-all-token
+vile p -si -u project_name
+```
 
 **API**
 
@@ -176,9 +195,9 @@ Or, in the case of this project's code:
 vile p -x src.ts:lib.js
 ```
 
-## vile.io
+## Publishing
 
-If you like, you can publish and further analyze your
+If you like, you can routinely publish and further analyze your
 project on [vile.io](https://vile.io).
 
 *create a user account, then*

@@ -45,9 +45,14 @@ depcheck:
       - "@types/**"
     ignore_dirs:
       - src
+      - .docs
       - node_modules
       - coverage
       - tmp
+
+retire:
+  ignore:
+    - .docs/**
 
 eclint:
   ignore:
