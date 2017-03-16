@@ -5,6 +5,18 @@ a { color: #98A187; text-decoration: none; }
 
 .tsd-signature-type { font-style: normal; font-weight: bold; }
 
+.tsd-panel > :first-child {
+  text-align: center;
+}
+
+.tsd-panel > :nth-child(2) {
+  text-align: center;
+}
+
+img[alt="vile_full"] {
+  max-width: 25%;
+}
+
 #tsd-widgets {
   display: none !important;
 }

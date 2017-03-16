@@ -1,4 +1,4 @@
-# Vile
+![vile_full](https://cloud.githubusercontent.com/assets/93340/23980691/aba34a1a-09d7-11e7-85b2-12d1403b5686.png)
 
 A punishing yet easy to use tool for writing insightful code.
 
