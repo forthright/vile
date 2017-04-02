@@ -131,7 +131,7 @@
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
     "sloc": "^0.2.0",
-    "tslint": "^5.0.0",
+    "tslint": "^4.5.1",
     "typedoc": "^0.5.9",
     "typescript": "^2.2.2"
   }
