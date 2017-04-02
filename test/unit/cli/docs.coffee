@@ -30,4 +30,4 @@ describe "cli/docs", ->
 
     it "opens the docs url in the user's browser", ->
       expect(opn).to.have.been
-        .calledWith "https://vile-docs.herokuapp.com"
+        .calledWith "https://docs.vile.io"
