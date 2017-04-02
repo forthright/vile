@@ -15,7 +15,7 @@ promise_stub = undefined
 commander = undefined
 
 describe "cli/init", ->
-  before ->
+  beforeEach ->
     promise_stub = { then: mimus.stub() }
     promise_stub.then.returns promise_stub
     mimus.stub pre, "init"

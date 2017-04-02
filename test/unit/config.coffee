@@ -37,12 +37,10 @@ describe "config", ->
         mimus.stub yaml, "safeLoad"
         yaml.safeLoad.throws new Error "foo"
 
-      it "logs the error to stderr and exist process", ->
+      it "logs the error to stderr and exits process", ->
         mimus.stub console, "error"
         mimus.stub process, "exit"
         config.load filepath
-        expect(console.error)
-          .to.have.been.calledWith new Error "foo"
         expect(config.get()).to.eql {}
         expect(process.exit).to.have.been.calledWith 1
         console.error.restore()
