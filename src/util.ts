@@ -109,10 +109,9 @@ const spawn = (
     let errors : string[] = []
     let env = extend({}, process.env)
 
-    env.PATH = npm_run_path({
-      cwd: process.cwd(),
-      path: env.PATH
-    })
+    // Be sure to *append* the npm run path (ex: don't clobber rbenv ruby)
+    env.PATH = env.PATH + ":" +
+      npm_run_path({ cwd: process.cwd(), path: "" })
 
     let proc = child_process.spawn(bin, opts.args, {
       stdio: opts.stdio || [process.stdin, "pipe", "pipe"],

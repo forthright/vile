@@ -4,7 +4,7 @@ chai = require "./../helpers/sinon_chai"
 expect = chai.expect
 
 describe "util", ->
-  # TODO: test spawn sets npm_run_path
+  # TODO: test spawn *appends* (not prepends) npm_run_path
 
   describe "constants", ->
     it "are defined", ->
