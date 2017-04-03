@@ -13,8 +13,8 @@ npm run -s compile-dev
 
 npm t
 
-npm run -s gen-docs
-
 git add -f lib
 
 npm run -s -- release-it -n -p -m 'v%s' -i $level
+
+npm run -s gen-docs
