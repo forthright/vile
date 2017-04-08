@@ -1,5 +1,7 @@
 /* Note: other color overrides are in main.css still */
-a { color: #98A187; text-decoration: none; }
+a { color: #98A187; text-decoration: underline; }
+
+a:hover, a:focus, a:active { text-decoration: none; }
 
 .tsd-signature-symbol { color: #818181; font-weight: normal; }
 

@@ -4,11 +4,11 @@ A punishing yet easy to use tool for writing insightful code.
 
 ## Goal
 
-Vile can be used to run all types of analysis and checks
+Vile can be used to run all types of static analysis and other checks
 via one top level package, and ultimately aims to provide:
 
 * A simple and robust API
-* A powerful plugin system
+* An easy to use plugin system
 * Multi language/OS support
 * A unified data spec
 
@@ -47,11 +47,10 @@ vile auth
 vile init
 ```
 
-*upload*
+*upload to vile.io*
 
 ```sh
-export VILE_API_TOKEN=my-all-token
-vile p -si -u project_name
+vile p -u
 ```
 
 **API**
@@ -199,8 +198,7 @@ vile p -x src.ts:lib.js
 
 ## Publishing
 
-If you like, you can routinely publish and further analyze your
-project on [vile.io](https://vile.io).
+You can routinely publish and further analyze your project on [vile.io](https://vile.io).
 
 *create a user account, then*
 
@@ -211,7 +209,13 @@ vile auth
 *then*
 
 ```sh
-vile p -u project_name
+VILE_TOKEN=my-all-token VILE_PROJECT=project-name vile p -u
+```
+
+*to include code snippets and print scores*
+
+```sh
+VILE_TOKEN=my-all-token VILE_PROJECT=project-name vile p -usi
 ```
 
 ## CI/CD Examples
