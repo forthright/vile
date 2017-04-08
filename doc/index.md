@@ -130,8 +130,10 @@ A config file is named `.vile.yml` and should reside in your project root.
 
 ```yaml
 vile:
-  ignore: ["custom ignore list"]
-  allow: ["or a custom allow list"]
+  ignore:
+    - "custom ignore list"
+  allow:
+    - "or a custom allow list"
 
 some_plugin:
   config: plugin_config
@@ -211,6 +213,138 @@ vile auth
 ```sh
 vile p -u project_name
 ```
+
+## CI/CD Examples
+
+While you should be able to integrate vile into any
+CI/CD process, here are some mainstream config examples.
+
+As a base, consider a `package.json` like this:
+
+```json
+{
+  "name": "my_pkg",
+  "version": "x.x.x",
+  "scripts": {
+    "vile": "VILE_TOKEN=xxxxxx VILE_PROJECT=xxxxxx vile p -usi -n"
+  },
+  "devDependencies": {
+    "test": "...",
+    "vile": "^x.x.x"
+  }
+}
+```
+
+### Circle
+
+Example config:
+
+```yaml
+machine:
+  node:
+    version: 6.10.1
+
+# https://github.com/forthright/vile-git#cicd-issues
+checkout:
+  post:
+    - "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
+    - git checkout -f $CIRCLE_BRANCH
+
+test:
+  override:
+    - npm run -s test
+  post:
+    - npm run -s vile
+```
+
+### Appveyor
+
+Example config:
+
+```yaml
+cache:
+  - node_modules -> package.json
+
+environment:
+  matrix:
+    - nodejs_version: 6
+      npm_version: 3.x.x
+    - nodejs_version: 6
+      npm_version: 4.x.x
+
+platform:
+  - x64
+
+# if you are using unix style line endings
+init:
+  - git config --global core.autocrlf input
+
+skip_tags: true
+
+# note: might need higher value for better churn calculation
+clone_depth: 10
+
+build: off
+
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - ps: npm install -g npm@$env:npm_version
+  - npm install
+
+test_script:
+  - npm run -s test
+  - npm run -s vile
+```
+
+### Travis
+
+Example config:
+
+```yaml
+os:
+  - osx
+  - linux
+
+sudo: false
+
+cache:
+  directories:
+    - node_modules
+
+env:
+  - NODE_VER=6 NPM_VER=3.x.x
+  - NODE_VER=6 NPM_VER=4.x.x
+
+# need to install nvm is on osx (does not ship with currently?)
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install nvm; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source $(brew --prefix nvm)/nvm.sh; fi
+  - nvm install $NODE_VER
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then nvm use --delete-prefix v$NODE_VER; fi
+  - npm install -g npm@$NPM_VER
+
+install:
+  - npm install
+
+# note: might need higher value for better churn calculation
+git:
+  depth: 10
+
+before_script:
+  - echo ""
+
+script:
+  - npm run -s test
+  - npm run -s vile
+```
+
+### Codeship
+
+If you run into issues reporting `churn` or generating `git` data, you may need to do this
+prior to analyzing:
+
+    git checkout -f $CI_BRANCH
 
 ## Editor Integration
 
