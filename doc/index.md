@@ -226,10 +226,10 @@ As a base, consider a `package.json` like this:
   "name": "my_pkg",
   "version": "x.x.x",
   "scripts": {
+    "test": "...",
     "vile": "VILE_TOKEN=xxxxxx VILE_PROJECT=xxxxxx vile p -usi -n"
   },
   "devDependencies": {
-    "test": "...",
     "vile": "^x.x.x"
   }
 }
