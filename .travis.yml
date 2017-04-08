@@ -1,6 +1,5 @@
 os:
   - osx
-  - linux
 
 sudo: false
 
@@ -18,20 +17,6 @@ env:
 
 matrix:
   fast_finish: true
-
-notifications:
-  slack:
-    rooms:
-      - vile-team:7m87AOerZQ1inYwPxxh5kBJs
-    on_success: change
-    on_failure: always
-    on_start: never
-  email:
-    recipients:
-      - brent.lintner@gmail.com
-    on_success: change
-    on_failure: always
-    on_start: never
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
@@ -56,7 +41,7 @@ branches:
     - master
 
 before_script:
-  - echo ""
+  - echo "no-op"
 
 script:
-  - npm run test-ci-build
+  - npm run -s test-ci-build
