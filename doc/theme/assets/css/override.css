@@ -31,13 +31,12 @@ img[alt="vile_full"] {
   width: 40px;
 }
 
-.tsd-search-label-li:after {
-  content: "" !important;
+.tsd-search-label-li {
+  margin-left: -10px;
 }
 
-.tsd-breadcrumb {
-  position: relative;
-  left: -10px;
+.tsd-search-label-li:after {
+  content: "" !important;
 }
 
 #tsd-search-label:before {
@@ -88,4 +87,30 @@ img[alt="vile_full"] {
 
 .tsd-generator {
   text-align: center;
+}
+
+#tsd-search {
+  display: block;
+}
+
+#tsd-docs-link {
+  display: none;
+}
+
+#tsd-docs-link a {
+  text-decoration: underline;
+}
+
+#tsd-docs-link a:hover {
+  text-decoration: none;
+}
+
+@media only screen and (max-width: 900px) {
+  .tsd-search-label-li {
+    display: none !important;
+  }
+
+  #tsd-docs-link {
+    display: inline-block;
+  }
 }
