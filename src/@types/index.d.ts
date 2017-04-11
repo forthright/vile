@@ -8,6 +8,7 @@
 // Unlike Minilog, these need to be explicitly pulled in?
 import * as Bluebird from "bluebird";
 import * as commander from "commander";
+import * as http from "http";
 
 // So can freely reference vile.Issue, etc (type shows as 'Vile')
 declare var vile : vile.Vile
@@ -228,16 +229,28 @@ declare namespace vile {
     export interface HTTPResponse {
       error?     : NodeJS.ErrnoException
       body?      : JSONResponse
-      response?  : any
+      response?  : http.IncomingMessage
     }
 
+    // TODO: mape to API spec in Util interface
     export interface JSONResponse {
       message : string;
-      data?   : any;
+      data?   : CommitStatus | any;
+    }
+
+    export interface CommitStatus {
+      score? : number;
+      files? : CommitStatusFile[];
+      time?  : number;
+      url?   : string;
+    }
+
+    export interface CommitStatusFile {
+      path?  : string;
+      score? : number;
     }
   }
 
-  // TODO: remove Lib namespace
   export module Lib {
     export type PluginMap = {
       frameworks? : {
@@ -274,8 +287,8 @@ declare namespace vile {
     }
 
     export interface Config {
-      load      : (f : string) => any;
-      get       : () => any;
+      load      : (f : string) => YMLConfig;
+      get       : () => YMLConfig;
       get_auth  : () => Auth;
     }
 
@@ -285,15 +298,15 @@ declare namespace vile {
 
     export interface Plugin {
       exec : (
-        p : PluginList,
-        config : YMLConfig,
-        opts : any
+        p?      : PluginList,
+        config? : YMLConfig,
+        opts?   : PluginExecOptions
       ) => Bluebird<IssueList>;
 
       exec_plugin : (
         name : string,
-        config : YMLConfig
-      ) => Bluebird<any>;
+        config? : YMLConfig
+      ) => Bluebird<IssueList>;
     }
 
     export interface Index extends Util, Plugin {
@@ -320,42 +333,61 @@ declare namespace vile {
       COV   :  IssueType.Cov;
     }
 
-    export type Spec = any; // TODO
-
     export interface UtilObjects {
-      API: Spec;
+      API: {
+        [api_context : string] : {
+          [status_name : string] : string;
+        }
+      }
 
-      displayable_issues: IssueType.All[]; // TODO enforce/make uniq
+      displayable_issues: IssueType.All[];
 
       warnings: IssueType.Warnings[];
       errors:   IssueType.Errors[];
       infos:    IssueType.Infos[];
     }
 
-    // TODO: flush out util method sigs
+    type PromiseEachParsedData = any;
+    type RawIssueData = { [k : string]: any; }
+
     export interface Util extends UtilObjects, UtilKeyTypes {
-      promise_each : any;
-      filter       : any;
-      issue        : any;
-      ignored      : any;
-      allowed      : any;
-      spawn        : any;
+      promise_each : (
+        d : string,
+        a : (f_or_d : string, i_d: boolean) => boolean,
+        p : (p : string, data? : string) => PromiseEachParsedData,
+        opts? : PromiseEachFileOptions
+      ) => Bluebird<PromiseEachParsedData[]>;
+
+      filter : (i : IgnoreList, a : AllowList) => (p : string) => boolean;
+
+      issue        : (d : RawIssueData) => Issue;
+
+      ignored      : (f : string, i? : IgnoreList) => boolean;
+      allowed      : (f : string, a? : AllowList) => boolean;
+
+      spawn        : (b : string, o? : SpawnOptions) => Bluebird<SpawnData>;
     }
 
     export interface Logger {
-      quiet   : () => any;
-      level   : (l : string) => any;
+      quiet   : () => void;
+      level   : (l : string) => void;
       create  : (l : string) => Minilog;
-      default : () => any;
+      default : () => void;
     }
 
-    // TODO:mix app options
-    export type CLIApp = any
+    export interface CLIApp extends commander.ICommand {
+      quiet?  : boolean;
+      format? : string;
+      log?    : string;
+      upload? : string;
+      scores? : boolean;
+    }
 
     export interface CLIModule {
       create : (commander : commander.ICommand) => void
     }
 
+    // TODO: flush any any here
     export interface Service {
       commit : (
         issues : IssueList,
@@ -369,7 +401,7 @@ declare namespace vile {
       ) => Bluebird<any>;
 
       log : (
-        post_json : any,
+        post_json : API.CommitStatus,
         verbose : boolean
       ) => void;
     }

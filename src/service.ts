@@ -30,7 +30,7 @@ const handle_response = (
     resolve({ body: body, response: response })
 
 const commit = (
-  issues : any[],
+  issues : vile.IssueList,
   cli_time : number,
   auth : vile.Auth
 ) : Bluebird<any> =>
@@ -66,9 +66,13 @@ const commit_status = (
 const padded_file_score = (score : number) =>
   (score < 100 ? " " : "") + String(score) + "%"
 
-const log_summary = (post_json : any, verbose : boolean = false) => {
+const log_summary = (
+  post_json : vile.API.CommitStatus,
+  verbose : boolean = false
+) => {
   let score : number = _.get(post_json, "score", 100)
-  let files : any[] = _.get(post_json, "files", [])
+  let files : vile.API.CommitStatusFile[][] = _.get(
+    post_json, "files", [])
   let time : number = _.get(post_json, "time", 0)
   let url : string = _.get(post_json, "url", "")
   let time_in_seconds : string = (time / 1000)
@@ -77,7 +81,7 @@ const log_summary = (post_json : any, verbose : boolean = false) => {
     .replace(/\.0*$/, "")
 
   if (verbose) {
-    _.each(files, (file : any) => {
+    _.each(files, (file : vile.API.CommitStatusFile) => {
       log.info(
         `${padded_file_score(_.get(file, "score", 0))} => ` +
         `${_.get(file, "path")}`)

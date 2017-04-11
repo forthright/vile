@@ -45,38 +45,38 @@ const matches = (
 
 const is_ignored = (
   filepath : string,
-  ignore_config : any = []
+  ignore_list : vile.IgnoreList = []
 ) : boolean =>
-  matches(unixify(filepath), "vile.ignore", ignore_config)
+  matches(unixify(filepath), "vile.ignore", ignore_list)
 
 const is_allowed = (
   filepath : string,
-  allow_config : any = []
+  allow_list : vile.AllowList = []
 ) : boolean => {
   filepath = unixify(filepath)
 
-  if (_.isEmpty(allow_config)) {
+  if (_.isEmpty(allow_list)) {
     return true
   // HACK: not ideal way of doing this (need to do better matching)
   } else {
-    if (typeof allow_config == "string") allow_config = [ allow_config ]
+    if (typeof allow_list == "string") allow_list = [ allow_list ]
     // HACK: not totally correct (ex: /fo is not within /foo)
     return _
-      .some(allow_config, (pattern : string) =>
+      .some(allow_list, (pattern : string) =>
         pattern.indexOf(filepath) == 0 ||
           filepath.indexOf(pattern) == 0) ||
-            matches(filepath, "vile.allow", allow_config)
+            matches(filepath, "vile.allow", allow_list)
   }
 }
 
 const filter_promise_each = (
-  ignore_config : vile.IgnoreList,
-  allow_config : vile.AllowList
+  ignore_list : vile.IgnoreList,
+  allow_list : vile.AllowList
 ) => (
   file_or_dir : string
 ) : boolean =>
-  is_allowed(file_or_dir, allow_config) &&
-    !is_ignored(file_or_dir, ignore_config)
+  is_allowed(file_or_dir, allow_list) &&
+    !is_ignored(file_or_dir, ignore_list)
 
 // TODO: make io async
 const collect_files = (
@@ -145,9 +145,9 @@ const spawn = (
 const promise_each_file = (
   dirpath : string,
   allow : (file_or_dir_path : string, is_dir : boolean) => boolean,
-  parse_file : (file : string, data? : string) => void,
+  parse_file : (file : string, data? : string) => string,
   opts : vile.Lib.PromiseEachFileOptions = {}
-) : Bluebird<any> => {
+) : Bluebird<string[]> => {
   if (!opts.hasOwnProperty("read_data")) opts.read_data = true
 
   let readdir = new Bluebird((resolve, reject) => {

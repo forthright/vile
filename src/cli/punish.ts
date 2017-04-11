@@ -33,7 +33,7 @@ const wait_for = (ms : number, cb : (t : any) => void) => {
 
 const wait_for_done_status_and_log = (
   commit_id : number | null,
-  auth : any,
+  auth : vile.Auth,
   verbose : boolean
 ) => {
   wait_for(COMMIT_STATUS_INTERVAL_TIME, (timer) => {
@@ -73,7 +73,7 @@ const wait_for_done_status_and_log = (
 const publish = (
   issues : vile.IssueList,
   cli_time : number,
-  opts : any
+  opts : vile.Lib.CLIApp
 ) => {
   let auth = config.get_auth()
 
