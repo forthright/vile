@@ -231,7 +231,7 @@ As a base, consider a `package.json` like this:
   "version": "x.x.x",
   "scripts": {
     "test": "...",
-    "vile": "VILE_TOKEN=xxxxxx VILE_PROJECT=xxxxxx vile p -usi -n"
+    "vile": "vile p -usi -n"
   },
   "devDependencies": {
     "vile": "^x.x.x"
@@ -239,7 +239,9 @@ As a base, consider a `package.json` like this:
 }
 ```
 
-### Circle
+*Also, don't forget to set `VILE_TOKEN` and `VILE_PROJECT` on your build server!*
+
+### CircleCI
 
 Example config:
 
@@ -261,7 +263,7 @@ test:
     - npm run -s vile
 ```
 
-### Appveyor
+### AppVeyor
 
 Example config:
 
@@ -300,7 +302,7 @@ test_script:
   - npm run -s vile
 ```
 
-### Travis
+### TravisCI
 
 Example config:
 
