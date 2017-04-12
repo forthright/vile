@@ -45,33 +45,7 @@ This project ascribes to CoralineAda's [Contributor Covenant](https://github.com
 
 ## Hacking
 
-    git clone git@github.com:forthright/vile.git
-    git clone git@github.com:forthright/vile-docs.git
-    cd vile
-    npm i
-    npm run compile
-    npm run compile-dev
-
-To run the CLI locally:
-
-    node bin/vile -h
-
-To run tests:
-
-    npm -s t
-
-To recompile `src` to `lib`:
-
-    npm run compile
-
-To run compile task with file watch in the background:
-
-    npm run dev
-
-To generate latest docs:
-
-    npm run -s gen-docs
-    [browser] ../vile-docs/public/index.html
+See [HACKING.md](HACKING.md).
 
 ## Architecture
 
@@ -79,6 +53,12 @@ The core of vile is written in `~ES6` Style [TypeScript](http://www.typescriptla
 on top of [Babel](http://babeljs.io).
 
 The test code is written in [CoffeeScript](http://coffeescript.org).
+
+### Directory Structure
+
+- `src` - typescript lib
+- `lib` - compiled js
+- `test` - any test related code, written in coffeescript
 
 ### Why NodeJS?
 
@@ -91,9 +71,3 @@ However, Vile as a project, overall, should not be considered to be
 written in (mainly) one language. It is open ended how/when the project
 should make use of other, possibly better suited languages/tooling, and
 how to coordinate it.
-
-### Directory Structure
-
-- `src` - typescript lib
-- `lib` - compiled js
-- `test` - any test related code, written in coffeescript
