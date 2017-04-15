@@ -3,7 +3,8 @@ version: "#{build}"
 os: Visual Studio 2015
 
 cache:
-  - node_modules -> package.json
+  - node_modules -> yarn.lock
+  - ~/.cache/yarn
 
 environment:
   matrix:
@@ -44,7 +45,8 @@ install:
   - ps: Install-Product node $env:nodejs_version
   - ps: npm install -g npm@$env:npm_version
   - ver && node --version && npm --version
-  - npm install
+  - npm i -g yarn
+  - yarn
 
 test_script:
   - npm run -s compile

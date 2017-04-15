@@ -5,6 +5,7 @@ sudo: false
 
 cache:
   directories:
+    - ~/.cache/yarn
     - node_modules
 
 env:
@@ -27,11 +28,12 @@ before_install:
   - nvm install $NODE_VER
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then nvm use --delete-prefix v$NODE_VER; fi
   - npm install -g npm@$NPM_VER
+  - npm i -g yarn
   - node --version
   - npm --version
 
 install:
-  - npm install
+  - yarn
 
 git:
   depth: 10

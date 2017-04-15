@@ -8,8 +8,11 @@ checkout:
     - git checkout -f $CIRCLE_BRANCH
 
 dependencies:
+  cache_directories:
+    - ~/.cache/yarn
   pre:
     - sh bin/list-env-versions
+    - yarn
 
 test:
   override:
