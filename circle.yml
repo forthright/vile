@@ -12,6 +12,7 @@ dependencies:
     - ~/.cache/yarn
   pre:
     - sh bin/list-env-versions
+  override:
     - yarn
 
 test:
