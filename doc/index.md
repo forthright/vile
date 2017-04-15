@@ -83,7 +83,7 @@ To get started, install a plugin package in your project root:
 
 ```sh
 cd into_my_project
-npm install -D @forthright/vile @forthright/vile-tslint
+npm install -D vile vile-tslint
 ```
 
 *then run*
