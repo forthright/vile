@@ -169,7 +169,7 @@ const ready_to_punish = (config : vile.YMLConfig) => {
   log.info()
   log.info("  3. Upload your first commit:")
   log.info(
-    "    ~$ VILE_API_TOKEN=XXXXXXX vile p " +
+    "    ~$ VILE_TOKEN=XXXXXXX vile p " +
     "-u project_name")
   log.info()
   log.info(

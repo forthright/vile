@@ -17,7 +17,7 @@ const load_config_from_file = (
 const load_auth_config_from_env = () : vile.Auth => {
   let env = process.env
   return {
-    token : env.VILE_API_TOKEN,
+    token : env.VILE_TOKEN,
     project : env.VILE_PROJECT
   }
 }

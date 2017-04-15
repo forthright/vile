@@ -48,7 +48,7 @@ describe "config", ->
 
   describe ".get_auth", ->
     beforeEach ->
-      process.env.VILE_API_TOKEN = "test-token"
+      process.env.VILE_TOKEN = "test-token"
       process.env.VILE_PROJECT = "test-project"
 
     it "sets auth token data based on ENV", ->

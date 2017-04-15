@@ -13,7 +13,7 @@ const create = (cli : commander.ICommand) =>
         log.info()
         log.info("Then:")
         log.info()
-        log.info("  ~$ VILE_API_TOKEN=token VILE_PROJECT=my-project vile p -u")
+        log.info("  ~$ VILE_TOKEN=token VILE_PROJECT=my-project vile p -u")
       })
 
 export = {
