@@ -85,6 +85,8 @@ stat:
     - src/@types/**
 
 eslint:
+  allow:
+    - src/*
   ignore:
     - lib
     - .test
