@@ -4,8 +4,8 @@ A punishing yet easy to use tool for writing insightful code.
 
 ## Goal
 
-Vile can be used to run all types of static analysis and other checks
-via one top level package, and ultimately aims to provide:
+Vile can run all types of static analysis via
+one top level package, and ultimately aims to provide:
 
 * A simple and robust API
 * An easy to use plugin system
