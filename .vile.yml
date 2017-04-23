@@ -10,7 +10,6 @@ vile:
     - .build
     - .npmignore
     - .travis.yml
-    - .vim.custom
     - doc
     - .docs
     - node_modules
@@ -43,6 +42,7 @@ depcheck:
     ignore_dev_deps: true
     ignore_deps:
       - "@types/**"
+      - "@forthright/vile-**"
     ignore_dirs:
       - src
       - .docs
@@ -97,21 +97,19 @@ coverage:
 
 license:
   config:
-    ignored:
-      - classifier   # MIT https://github.com/harthur/classifier/blob/master/LICENSE
-      - event-stream # MIT https://github.com/dominictarr/event-stream/blob/master/LICENCE
-      - map-stream   # MIT https://github.com/dominictarr/map-stream/blob/master/LICENCE
-      - retire       # Apache-2.0 https://github.com/RetireJS/retire.js/blob/master/LICENSE.md
     allowed:
       - MIT
       - ISC
       - MPL
       - BSD
+      - Apache
       - Unlicense
       - Artistic
       - WTFPL
-      - Apache
-      - WTFPL
-      - LGPL
       - Public Domain
       - CC-BY-3.0
+    ignored:
+      - classifier   # MIT https://github.com/harthur/classifier/blob/master/LICENSE
+      - event-stream # MIT https://github.com/dominictarr/event-stream/blob/master/LICENCE
+      - map-stream   # MIT https://github.com/dominictarr/map-stream/blob/master/LICENCE
+      - retire       # Apache-2.0 https://github.com/RetireJS/retire.js/blob/master/LICENSE.md
