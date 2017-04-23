@@ -94,3 +94,24 @@ eslint:
 coverage:
   config:
     path: coverage/lcov.info
+
+license:
+  config:
+    ignored:
+      - classifier   # MIT https://github.com/harthur/classifier/blob/master/LICENSE
+      - event-stream # MIT https://github.com/dominictarr/event-stream/blob/master/LICENCE
+      - map-stream   # MIT https://github.com/dominictarr/map-stream/blob/master/LICENCE
+      - retire       # Apache-2.0 https://github.com/RetireJS/retire.js/blob/master/LICENSE.md
+    allowed:
+      - MIT
+      - ISC
+      - MPL
+      - BSD
+      - Unlicense
+      - Artistic
+      - WTFPL
+      - Apache
+      - WTFPL
+      - LGPL
+      - Public Domain
+      - CC-BY-3.0

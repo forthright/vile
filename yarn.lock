@@ -76,9 +76,9 @@
     language-detect "^1.1.0"
     lodash "^4.17.4"
 
-"@forthright/vile-license@>=0.3.15":
-  version "0.3.15"
-  resolved "https://registry.yarnpkg.com/@forthright/vile-license/-/vile-license-0.3.15.tgz#9b9c274d115810e12086af884a9fd7bcdc6073ae"
+"@forthright/vile-license@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@forthright/vile-license/-/vile-license-0.4.0.tgz#f111a43b344fea56100997206ba356a7cdbef81d"
   dependencies:
     bluebird "^3.5.0"
     bower-license "^0.4.4"
@@ -175,15 +175,9 @@
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.2.tgz#ecf1104217495e50fe0b588d538146cd6f733b89"
 
-"@types/commander@2.3.31":
+"@types/commander@2.3.31", "@types/commander@^2.3.31":
   version "2.3.31"
   resolved "https://registry.yarnpkg.com/@types/commander/-/commander-2.3.31.tgz#c60e5517091f9e2200a5e2063a830eddac4a7036"
-  dependencies:
-    "@types/node" "*"
-
-"@types/commander@^2.3.31":
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/@types/commander/-/commander-2.9.0.tgz#dd07af1fc35d76833e0da26ea67a2be088b5fafc"
   dependencies:
     "@types/node" "*"
 
