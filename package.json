@@ -103,7 +103,6 @@
     "@forthright/vile-eslint": ">=0.1.13",
     "@forthright/vile-git": ">=0.5.1",
     "@forthright/vile-language": ">=0.1.12",
-    "@forthright/vile-license": ">=0.3.15",
     "@forthright/vile-ncu": ">=0.2.1",
     "@forthright/vile-newline": ">=0.1.12",
     "@forthright/vile-nsp": ">=0.2.13",
