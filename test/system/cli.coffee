@@ -35,6 +35,7 @@ SPAWN_STDERR_DIR = path.join SYSTEM_TESTS, "spawn_stderr"
 SPAWN_NON_ZERO_DIR = path.join SYSTEM_TESTS, "spawn_non_zero"
 LOGGING_DIR = path.join SYSTEM_TESTS, "logging"
 PLUGIN_EXCEPTION_DIR = path.join SYSTEM_TESTS, "err_plugin_exception"
+PLUGIN_REJECT_DIR = path.join SYSTEM_TESTS, "err_plugin_reject"
 PLUGIN_BAD_API_DIR = path.join SYSTEM_TESTS, "err_plugin_bad_api"
 PLUGIN_INVALID_DATA_DIR = path.join SYSTEM_TESTS, "err_plugin_invalid_data"
 
@@ -560,6 +561,20 @@ describe "cli blackbox testing", ->
         , [ process.stdin, "pipe", "ignore" ]
 
         return
+
+    describe "when a plugin (worker) has unhandled rejection", ->
+      beforeEach -> process.chdir PLUGIN_REJECT_DIR
+
+      it "logs to stderr and exits (1) process", (done) ->
+        cli.exec_err "p -n", (stdout, stderr, code) ->
+          expect(stderr).to.match /unhandled rejection/ig
+          expect(stderr).to.match /Error: huzzah!/ig
+          expect(stderr).to
+            .match new RegExp("vile-test-err-plugin-reject-plugin " +
+            "worker exited", "ig")
+          expect(stdout).to.match /error executing plugins/ig
+          expect(code).to.eql 1
+          done()
 
     describe "when a plugin throws a synchronous error", ->
       beforeEach -> process.chdir PLUGIN_EXCEPTION_DIR

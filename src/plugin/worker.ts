@@ -3,6 +3,15 @@ import Bluebird = require("bluebird")
 import _ = require("lodash")
 import plugin = require("./../plugin")
 
+// Note: This only registers for worker forked processes
+process.on("unhandledRejection", (
+  error : NodeJS.ErrnoException | string,
+  promise : Bluebird<any>
+) => {
+  console.error("[Unhandled rejection]")
+  log_and_exit(error)
+})
+
 const ping_parent = (process : any) : void => process.send("")
 
 const set_ignore_list = (
