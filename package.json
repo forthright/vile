@@ -70,7 +70,7 @@
     "@types/bluebird": "^3.5.2",
     "@types/commander": "2.3.31",
     "@types/extend": "^2.0.30",
-    "@types/inquirer": "0.0.33",
+    "@types/inquirer": "0.0.34",
     "@types/js-yaml": "^3.5.30",
     "@types/lodash": "^4.14.63",
     "@types/minilog": "^2.0.29",
@@ -132,7 +132,7 @@
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
     "sloc": "^0.2.0",
-    "typedoc": "^0.5.10",
+    "typedoc": "^0.6.0",
     "typescript": "^2.2.2",
     "typescript-eslint-parser": "^2.1.0"
   }
