@@ -1,6 +1,6 @@
 {
   "name": "@forthright/vile",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "A punishing, yet easy to use tool for writing insightful code.",
   "main": "lib/index.js",
   "types": "src/@types/index.d.ts",
