@@ -68,15 +68,6 @@ language:
     - lib
     - .test
 
-length:
-  config:
-    file: 120
-    line: 80
-  ignore:
-    - lib
-    - test
-    - .test
-
 stat:
   allow:
     - src
@@ -100,7 +91,7 @@ license:
     allowed:
       - MIT
       - ISC
-      - MPL
+      - MPL-2.0
       - BSD
       - Apache
       - Unlicense
