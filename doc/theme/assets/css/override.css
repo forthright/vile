@@ -7,6 +7,34 @@ a:hover, a:focus, a:active { text-decoration: none; }
 
 .tsd-signature-type { font-style: normal; font-weight: bold; }
 
+.tsd-page-toolbar {
+  border: none;
+}
+
+.tsd-page-toolbar,
+.tsd-page-title,
+body {
+  box-shadow: none;
+  background-color: #fcfcfc;
+}
+
+.tsd-page-title {
+  margin: 0;
+  padding: 50px 0 30px 0;
+}
+
+.tsd-panel {
+  box-shadow: none;
+}
+
+.container {
+  padding: 0 20px;
+}
+
+.container-main {
+  padding-bottom: 30px;
+}
+
 img[alt="vile_full"] {
   display: block;
   margin: 0 auto;
@@ -105,7 +133,16 @@ img[alt="vile_full"] {
   text-decoration: none;
 }
 
+.tsd-panel {
+  padding: 0 1rem;
+}
+
 @media only screen and (max-width: 900px) {
+  .container-main {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .tsd-search-label-li {
     display: none !important;
   }
