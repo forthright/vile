@@ -192,7 +192,7 @@ describe "cli blackbox testing", ->
             expect(stdout).to.match /created: .vile.yml/i
             expect(stdout).to.match /vile-language/i
             expect(stdout).to.match /vile-stat/i
-            expect(stdout).to.match /vile-eslint/i
+            expect(stdout).to.match /vile-escomplex/i
             expect(stdout).to.match /vile-rubocop/i
             expect(stdout).to.match /vile-rubycritic/i
             expect(stdout).to.match /vile-tslint/i
