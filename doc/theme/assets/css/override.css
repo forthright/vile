@@ -32,6 +32,7 @@ body {
 }
 
 .container-main {
+  overflow-x: hidden;
   padding-bottom: 30px;
 }
 
@@ -133,8 +134,12 @@ img[alt="vile_full"] {
   text-decoration: none;
 }
 
+.row {
+  margin: 0;
+}
+
 .tsd-panel {
-  padding: 0 1rem;
+  padding: 0 .5rem;
 }
 
 @media only screen and (max-width: 900px) {
