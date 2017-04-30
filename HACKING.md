@@ -15,6 +15,10 @@ However, `npm` should work just as well:
 
     npm i
 
+See all available build commands:
+
+    npm run
+
 To build all:
 
     npm run -s compile
