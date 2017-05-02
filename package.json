@@ -104,14 +104,12 @@
     "vile-eslint": ">=0.1.13",
     "vile-git": ">=0.5.1",
     "vile-language": ">=0.1.12",
-    "vile-license": "^0.4.0",
+    "vile-license": ">=0.4.0",
     "vile-ncu": ">=0.2.1",
-    "vile-newline": ">=0.1.12",
     "vile-nsp": ">=0.2.13",
-    "vile-retire": "^0.1.2",
-    "vile-stat": "0.0.14",
-    "vile-tslint": ">=0.2.19",
-    "vile-whitespace": ">=0.1.11"
+    "vile-retire": ">=0.1.2",
+    "vile-stat": ">=0.0.14",
+    "vile-tslint": ">=0.2.19"
   },
   "scripts": {
     "babel": "babel",
