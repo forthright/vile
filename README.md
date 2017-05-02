@@ -64,7 +64,7 @@ The test code is written in [CoffeeScript](http://coffeescript.org).
 
 ### Why NodeJS?
 
-Node has, in the creator's humble opinion at this time of creation, the
+Node has, in the creator's humble opinion at this time of creation (2015), the
 ideal balance of nix/windows support, barrier to entry, quality and
 size of community and tooling, and the relative, per project requirements
 of data manipulation and speed needed at this point in time.
