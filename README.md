@@ -14,7 +14,7 @@ This project ascribes to [semantic versioning](http://semver.org).
 
 ## Licensing
 
-This project is licensed under the [MPL-2.0](https://www.mozilla.org/MPL/2.0) license.
+This project is licensed under the [MPL-2.0](LICENSE) license.
 
 Any contributions made to this project are made under the current license.
 
@@ -37,7 +37,9 @@ Even if you are uncomfortable with code, an issue or question is welcome.
 
 ### Code Of Conduct
 
-This project ascribes to CoralineAda's [Contributor Covenant](https://github.com/CoralineAda/contributor_covenant).
+This project ascribes to [contributor-covenant.org](http://contributor-covenant.org).
+
+By participating in this project you agree to our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ### Maintainers
 

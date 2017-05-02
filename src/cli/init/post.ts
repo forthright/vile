@@ -55,10 +55,9 @@ const install_plugin_args = (plugins : string[]) =>
   _.concat(
     "install",
     "--save-dev",
-    "@forthright/vile",
-    // TODO: when public, shoule not have @forthright prefix
+    "vile",
     _.reduce(plugins, (cmd : string[], plugin : string) => {
-      cmd.push(`@forthright/vile-${plugin}`)
+      cmd.push(`vile-${plugin}`)
       return cmd
     }, []))
 

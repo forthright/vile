@@ -35,7 +35,7 @@ const require_plugin = (name : string) : vile.Plugin | null => {
   let plugin : vile.Plugin
 
   try {
-    plugin = require(`${cwd_node_modules}/@forthright/vile-${name}`)
+    plugin = require(`${cwd_node_modules}/vile-${name}`)
   } catch (error) {
     log.error(_.get(error, "stack", error))
   }
@@ -345,7 +345,7 @@ const add_code_snippets = () =>
     .then(() => issues)
 
 const cwd_plugins_path = () =>
-  path.resolve(path.join(process.cwd(), "node_modules", "@forthright"))
+  path.resolve(path.join(process.cwd(), "node_modules"))
 
 const add_ok_issues = (
   vile_allow : vile.AllowList = [],
