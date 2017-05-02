@@ -21,8 +21,8 @@ environment:
     - nodejs_version: 6
       npm_version: 4.x.x
 
-# TODO: enable once weird permission error stops
-# matrix: fast_finish: true
+matrix:
+  fast_finish: true
 
 platform:
   - x86
