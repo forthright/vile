@@ -4,20 +4,21 @@ os:
 
 language: node_js
 
+node_js:
+  - "4"
+  - "6"
+
 sudo: false
 
 cache:
+  yarn: true
   directories:
-    - ~/.cache/yarn
     - node_modules
 
 env:
-  - NODE_VER=4 NPM_VER=2.x.x
-  - NODE_VER=4 NPM_VER=3.x.x
-  - NODE_VER=4 NPM_VER=4.x.x
-  - NODE_VER=6 NPM_VER=2.x.x
-  - NODE_VER=6 NPM_VER=3.x.x
-  - NODE_VER=6 NPM_VER=4.x.x
+  - NPM_VER=2.x.x
+  - NPM_VER=3.x.x
+  - NPM_VER=4.x.x
 
 matrix:
   fast_finish: true
@@ -25,14 +26,9 @@ matrix:
 before_install:
   - uname -a
   - nvm --version
-  - nvm install $NODE_VER
   - npm install -g npm@$NPM_VER
-  - npm i -g yarn
   - node --version
   - npm --version
-
-install:
-  - yarn
 
 git:
   depth: 10
