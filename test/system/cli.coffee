@@ -122,7 +122,7 @@ describe "cli blackbox testing", ->
             expect(stdout).to
               .match /skipping: npm install \-\-save\-dev npm\-check\-updates/i
             expect(stdout).to
-              .match /skipping: npm install \-\-save\-dev @forthright\/vile/i
+              .match /skipping: npm install \-\-save\-dev vile/i
             expect(stdout).to.match /vile-language/i
             expect(stdout).to.match /vile-stat/i
             expect(stdout).to.match /vile-ncu/i
@@ -201,7 +201,7 @@ describe "cli blackbox testing", ->
             expect(stdout).to
               .match /skipping: npm install \-\-save\-dev npm\-check\-updates/i
             expect(stdout).to
-              .match /skipping: npm install \-\-save\-dev @forthright\/vile/i
+              .match /skipping: npm install \-\-save\-dev vile/i
             expect(stdout).to.match /looks like we are good to go/i
             process.nextTick -> done()
 
@@ -282,7 +282,7 @@ describe "cli blackbox testing", ->
               expect(stdout).to.match(
                 /skipping: npm install \-\-save\-dev npm\-check\-updates/i)
               expect(stdout).to
-                .match /skipping: npm install \-\-save\-dev @forthright\/vile/i
+                .match /skipping: npm install \-\-save\-dev vile/i
               expect(stdout).to.match /looks like we are good to go/i
               expect(stdout).to.match /tips:/i
               expect(stdout).to.match /authenticate/i

@@ -42,7 +42,7 @@ depcheck:
     ignore_dev_deps: true
     ignore_deps:
       - "@types/**"
-      - "@forthright/vile-**"
+      - "vile-**"
     ignore_dirs:
       - src
       - .docs
