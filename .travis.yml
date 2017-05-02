@@ -2,6 +2,8 @@ os:
   - osx
   - linux
 
+language: node_js
+
 sudo: false
 
 cache:
@@ -21,13 +23,9 @@ matrix:
   fast_finish: true
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install nvm; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source $(brew --prefix nvm)/nvm.sh; fi
   - uname -a
   - nvm --version
   - nvm install $NODE_VER
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then nvm use --delete-prefix v$NODE_VER; fi
   - npm install -g npm@$NPM_VER
   - npm i -g yarn
   - node --version
@@ -47,4 +45,6 @@ before_script:
   - echo "no-op"
 
 script:
-  - npm run -s test-ci-build
+  - npm run -s compile
+  - npm run -s compile-dev
+  - npm run -s test
