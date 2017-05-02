@@ -11,39 +11,8 @@
     "LICENSE",
     "README.md"
   ],
-  "engines": {
-    "node": ">= 0.12",
-    "npm": ">= 2.0.0"
-  },
   "bin": {
     "vile": "bin/vile"
-  },
-  "scripts": {
-    "babel": "babel",
-    "coffee": "coffee",
-    "compile": "node bin/compile",
-    "compile-dev": "node bin/compile-dev",
-    "clean": "rm -rf {.build,.test,.nyc_output,coverage,lib} && git checkout -- lib",
-    "dev": "sh bin/dev",
-    "dev-setup": "sh bin/dev-setup",
-    "gen-docs": "node bin/gen-docs",
-    "istanbul": "istanbul",
-    "lint-cov": "node bin/lint-cov",
-    "mocha": "mocha",
-    "ncu": "ncu -a",
-    "nyc": "nyc",
-    "release-it": "release-it",
-    "stats": "sloc -d -f cli-table -k total,source,comment -e 'fixtures|@types' src test",
-    "test": "node bin/test-all",
-    "test-non-system": "_mocha --recursive -u bdd -R spec -t 2000 .test/unit .test/integration",
-    "test-non-system-cov": "nyc -r json -x .test -x **/node_modules/** --report-dir coverage/non-system npm run -s test-non-system",
-    "test-system": "_mocha --recursive -u bdd -R spec -s 10000 -t 40000 .test/system",
-    "test-system-cov": "cross-env TEST_COV=1 npm run -s test-system",
-    "test-cov": "node bin/test-cov",
-    "test-ci-build": "node bin/test-ci-build",
-    "tsc": "tsc",
-    "typedoc": "typedoc",
-    "vile": "vile p -usi -x src.ts:lib.js,test.coffee:.test.js -n"
   },
   "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
@@ -62,8 +31,18 @@
     "lint",
     "check",
     "code",
-    "tool"
+    "tool",
+    "static",
+    "analysis",
+    "dependency",
+    "dependencies",
+    "security",
+    "maintainability"
   ],
+  "engines": {
+    "node": ">= 0.12",
+    "npm": ">= 2.0.0"
+  },
   "dependencies": {
     "@types/bluebird": "^3.5.2",
     "@types/commander": "2.3.31",
@@ -133,5 +112,32 @@
     "vile-stat": "0.0.14",
     "vile-tslint": ">=0.2.19",
     "vile-whitespace": ">=0.1.11"
+  },
+  "scripts": {
+    "babel": "babel",
+    "coffee": "coffee",
+    "compile": "node bin/compile",
+    "compile-dev": "node bin/compile-dev",
+    "clean": "rm -rf {.build,.test,.nyc_output,coverage,lib} && git checkout -- lib",
+    "dev": "sh bin/dev",
+    "dev-setup": "sh bin/dev-setup",
+    "gen-docs": "node bin/gen-docs",
+    "istanbul": "istanbul",
+    "lint-cov": "node bin/lint-cov",
+    "mocha": "mocha",
+    "ncu": "ncu -a",
+    "nyc": "nyc",
+    "release-it": "release-it",
+    "stats": "sloc -d -f cli-table -k total,source,comment -e 'fixtures|@types' src test",
+    "test": "node bin/test-all",
+    "test-non-system": "_mocha --recursive -u bdd -R spec -t 2000 .test/unit .test/integration",
+    "test-non-system-cov": "nyc -r json -x .test -x **/node_modules/** --report-dir coverage/non-system npm run -s test-non-system",
+    "test-system": "_mocha --recursive -u bdd -R spec -s 10000 -t 40000 .test/system",
+    "test-system-cov": "cross-env TEST_COV=1 npm run -s test-system",
+    "test-cov": "node bin/test-cov",
+    "test-ci-build": "node bin/test-ci-build",
+    "tsc": "tsc",
+    "typedoc": "typedoc",
+    "vile": "vile p -usi -x src.ts:lib.js,test.coffee:.test.js -n"
   }
 }
