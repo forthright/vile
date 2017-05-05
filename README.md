@@ -4,9 +4,16 @@
 
 A punishing yet easy to use tool for writing insightful code.
 
-## Documentation
+## TL;DR
 
-See the [docs](https://docs.vile.io) site.
+This is the official [cli](src/cli) and [core lib](src/) for [vile.io](https://vile.io).
+
+Standalone it can be used to run all kinds of [static analysis](#architecture)
+for multiple languages and OSes, all via one top level package.
+
+## Installation & Usage
+
+Please see the [docs](https://docs.vile.io) site.
 
 ## Versioning
 
@@ -51,8 +58,12 @@ See [HACKING.md](HACKING.md).
 
 ## Architecture
 
-The core of vile is written in `~ES6` Style [TypeScript](http://www.typescriptlang.org),
-on top of [Babel](http://babeljs.io).
+Vile is centered around the use of [Plugins](https://docs.vile.io/#creating-a-plugin) that generate [Issues](https://docs.vile.io/interfaces/_src__types_index_d_.vile.issue.html).
+
+A plugin is primarily written in JS, but you can
+easily [shell out](https://docs.vile.io/#writing-non-javascript-plugins) to another script.
+
+The core library and CLI is written in `~ES6` Style [TypeScript](http://www.typescriptlang.org), on top of [Babel](http://babeljs.io).
 
 The test code is written in [CoffeeScript](http://coffeescript.org).
 

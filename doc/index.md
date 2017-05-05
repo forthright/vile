@@ -2,24 +2,11 @@
 
 A punishing yet easy to use tool for writing insightful code.
 
-## Goal
-
-Vile can run all types of static analysis via
-one top level package, and ultimately aims to provide:
-
-* A simple and robust API
-* An easy to use plugin system
-* Multi language/OS support
-* A unified data spec
-
 ## Requirements
 
 - [NodeJS](http://nodejs.org)
 
-## Installation
-
-Since Vile's core is written in [TypeScript](https://www.typescriptlang.org),
-the main project is distributed via [npm](http://npmjs.org).
+## Installation & Usage
 
 **CLI**
 
@@ -41,17 +28,19 @@ vile -h
 vile auth
 ```
 
-*fast setup*
+*setup*
 
 ```sh
 vile init
 ```
 
-*upload to vile.io*
+*analyze*
 
 ```sh
 vile p -u
 ```
+
+See [analyzing your project](#analyzing-your-project) for more details.
 
 **API**
 
@@ -196,76 +185,59 @@ Or, in the case of this project's code:
 vile p -x src.ts:lib.js
 ```
 
-## Publishing
+## Analyzing Your Project
 
-You can routinely publish and further analyze your project on [vile.io](https://vile.io).
+1. Make an account on [vile.io](https://vile.io).
 
-*create a user account, then*
+2. Create a [new project](https://vile.io/new_project).
 
-```sh
-vile auth
-```
+2. Grab an [API token](https://vile.io/auth_tokens).
 
-*then*
+3. Upload your first commit:
 
 ```sh
-VILE_TOKEN=my-all-token VILE_PROJECT=project-name vile p -u
+export VILE_TOKEN=my-all-token
+export VILE_PROJECT=my-project-name
+
+vile p -u
 ```
 
-*to include code snippets and print scores*
+You can also include code snippets and print detailed commit stats:
 
 ```sh
-VILE_TOKEN=my-all-token VILE_PROJECT=project-name vile p -usi
+vile p -usi
 ```
 
-## CI/CD Examples
+### CI/CD Examples
 
 While you should be able to integrate vile into any
 CI/CD process, here are some mainstream config examples.
 
-As a base, consider a `package.json` like this:
-
-```json
-{
-  "name": "my_pkg",
-  "version": "x.x.x",
-  "scripts": {
-    "test": "...",
-    "vile": "vile p -usi -n"
-  },
-  "devDependencies": {
-    "vile": "^x.x.x"
-  }
-}
-```
-
-*Also, don't forget to set `VILE_TOKEN` and `VILE_PROJECT` on your build server!*
+*Note: don't forget to set `VILE_TOKEN` and `VILE_PROJECT` on your build server!*
 
 ### CircleCI
 
-Example config:
+Example `circle.yml`:
 
 ```yaml
 machine:
   node:
     version: 6.10.1
 
-# https://github.com/forthright/vile-git#cicd-issues
+# see: https://github.com/forthright/vile-git#cicd-issues
 checkout:
   post:
     - "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
     - git checkout -f $CIRCLE_BRANCH
 
 test:
-  override:
-    - npm run -s test
   post:
-    - npm run -s vile
+    - vile p -usi -n
 ```
 
 ### AppVeyor
 
-Example config:
+Example `appveyor.yml`:
 
 ```yaml
 cache:
@@ -274,20 +246,17 @@ cache:
 environment:
   matrix:
     - nodejs_version: 6
-      npm_version: 3.x.x
-    - nodejs_version: 6
       npm_version: 4.x.x
 
 platform:
+  - x86
   - x64
 
 # if you are using unix style line endings
 init:
   - git config --global core.autocrlf input
 
-skip_tags: true
-
-# note: might need higher value for better churn calculation
+# might need higher value for better churn calculation
 clone_depth: 10
 
 build: off
@@ -298,51 +267,39 @@ install:
   - npm install
 
 test_script:
-  - npm run -s test
-  - npm run -s vile
+  - # run tests here
+  - vile p -usi -n
 ```
 
 ### TravisCI
 
-Example config:
+Example `.travis.yml`:
 
 ```yaml
 os:
-  - osx
   - linux
 
-sudo: false
+language: node_js
+
+node_js:
+  - "6"
 
 cache:
   directories:
     - node_modules
 
 env:
-  - NODE_VER=6 NPM_VER=3.x.x
-  - NODE_VER=6 NPM_VER=4.x.x
+  - NPM_VER=4.x.x
 
-# need to install nvm is on osx (does not ship with currently?)
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install nvm; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source $(brew --prefix nvm)/nvm.sh; fi
-  - nvm install $NODE_VER
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then nvm use --delete-prefix v$NODE_VER; fi
   - npm install -g npm@$NPM_VER
 
-install:
-  - npm install
-
-# note: might need higher value for better churn calculation
 git:
   depth: 10
 
-before_script:
-  - echo ""
-
 script:
-  - npm run -s test
-  - npm run -s vile
+  - # run tests here
+  - vile p -usi -n
 ```
 
 ### Codeship
