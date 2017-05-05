@@ -354,7 +354,7 @@ prior to analyzing:
 
 ## Editor Integration
 
-There are various text editors that have `vile` integrations.
+You *should* be able to integrate vile into any text editor (ex: via the `-f synastic` flag).
 
 ### Vim
 
@@ -364,7 +364,8 @@ See [forthright/syntastic](https://github.com/forthright/syntastic) for now.
 Just replace the upstream install with the `master` branch.
 
 Note: There is a lot of overlap with current syntax checkers that
-do the same, and in many ways, faster, so be sure check them out too.
+already exist. For the most part they are faster (ex: hlint),
+so check those out first.
 
 Current syntax checkers:
 
