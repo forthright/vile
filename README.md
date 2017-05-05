@@ -6,9 +6,9 @@ A punishing yet easy to use tool for writing insightful code.
 
 ## TL;DR
 
-This is the official [cli](bin/vile) and [core library](src/) for [vile.io](https://vile.io).
+This is the official [cli](bin/vile) and [core lib](src/) for [vile.io](https://vile.io).
 
-Standalone it is a multi language/OS [static analyzer](#architecture) with a unifying data spec.
+[Standalone](#architecture) it is a multi language/OS static analyzer with a unifying data spec.
 
 ## Installation & Usage
 
