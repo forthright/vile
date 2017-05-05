@@ -6,10 +6,9 @@ A punishing yet easy to use tool for writing insightful code.
 
 ## TL;DR
 
-This is the official [cli](src/cli) and [core lib](src/) for [vile.io](https://vile.io).
+This is the official [cli](bin/vile) and [core library](src/) for [vile.io](https://vile.io).
 
-Standalone it can be used to run all kinds of [static analysis](#architecture)
-for multiple languages and OSes, all via one top level package.
+Standalone it is a multi language/OS [static analyzer](#architecture) with a unifying data spec.
 
 ## Installation & Usage
 
@@ -63,7 +62,7 @@ Vile is centered around the use of [Plugins](https://docs.vile.io/#creating-a-pl
 A plugin is primarily written in JS, but you can
 easily [shell out](https://docs.vile.io/#writing-non-javascript-plugins) to another script.
 
-The core library and CLI is written in `~ES6` Style [TypeScript](http://www.typescriptlang.org), on top of [Babel](http://babeljs.io).
+The core library and cli is written in `~ES6` Style [TypeScript](http://www.typescriptlang.org), on top of [Babel](http://babeljs.io).
 
 The test code is written in [CoffeeScript](http://coffeescript.org).
 
@@ -71,7 +70,7 @@ The test code is written in [CoffeeScript](http://coffeescript.org).
 
 - `src` - typescript lib
 - `lib` - compiled js
-- `test` - any test related code, written in coffeescript
+- `test` - any test related code
 
 ### Why NodeJS?
 
