@@ -92,7 +92,7 @@
     "sinon-chai": "^2.9.0",
     "sloc": "^0.2.0",
     "typedoc": "^0.6.0",
-    "typescript": "^2.2.2",
+    "typescript": "^2.3.2",
     "typescript-eslint-parser": "^2.1.0",
     "vile": ">=0.13.1",
     "vile-coffeelint": ">=0.1.14",
