@@ -51,8 +51,9 @@ depcheck:
       - tmp
 
 retire:
-  ignore:
-    - .docs/**
+  config:
+    ignore:
+      - .docs
 
 eclint:
   ignore:
