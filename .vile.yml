@@ -55,6 +55,10 @@ retire:
     ignore:
       - .docs
 
+comment:
+  ignore:
+    - lib
+
 eclint:
   ignore:
     - lib
