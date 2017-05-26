@@ -33,8 +33,7 @@ const wait_for = (ms : number, cb : (t : any) => void) => {
 
 const wait_for_done_status_and_log = (
   commit_id : number | null,
-  auth : vile.Auth,
-  verbose : boolean
+  auth : vile.Auth
 ) => {
   wait_for(COMMIT_STATUS_INTERVAL_TIME, (timer) => {
     service
@@ -60,7 +59,7 @@ const wait_for_done_status_and_log = (
           // TODO: handle when message is garbage (don't assume processing)
           if (message == util.API.COMMIT.FINISHED) {
             clearInterval(timer)
-            service.log(data, verbose)
+            service.log(data)
           } else if (message == util.API.COMMIT.FAILED) {
             clearInterval(timer)
             log_and_exit(data)
@@ -104,7 +103,7 @@ const publish = (
       } else if (commit_state == util.API.COMMIT.FAILED) {
         log_and_exit("Creating commit state is failed.")
       } else {
-        wait_for_done_status_and_log(commit_id, auth, opts.scores)
+        wait_for_done_status_and_log(commit_id, auth)
       }
     })
 }
@@ -190,13 +189,11 @@ const create = (cli : commander.ICommand) =>
     .option("-u, --upload [project_name]",
             "publish to vile.io (disables --gitdiff)- " +
               "alternatively, you can set a VILE_PROJECT env var")
-    .option("-s, --scores",
-            "show file scores and detailed stats")
     .option("-x, --combine [combine_def]",
             "combine file data from two directories into one path- " +
               "example: [src:lib,...] or [src.ts:lib.js,...]")
-    .option("-i, --snippets",
-            "add code snippets to issues")
+    .option("-s, --skipsnippets",
+            "don't include code snippets")
     .option("-d, --dontpostprocess",
             "don't post process data in any way (ex: adding ok issues)- " +
             "useful for per file checking- don't use with --upload")

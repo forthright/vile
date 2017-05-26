@@ -137,6 +137,6 @@
     "test-ci-build": "node bin/test-ci-build",
     "tsc": "tsc",
     "typedoc": "typedoc",
-    "vile": "vile p -usi -x src.ts:lib.js,test.coffee:.test.js -n"
+    "vile": "vile p -u -x src.ts:lib.js,test.coffee:.test.js -n"
   }
 }

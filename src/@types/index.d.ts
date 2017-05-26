@@ -193,8 +193,7 @@ declare namespace vile {
     format?  : string;
     combine? : string;
     dontpostprocess? : boolean;
-    snippets? : boolean;
-    scores? : boolean;
+    skipsnippets? : boolean;
   }
 
   interface VileConfig {
@@ -380,7 +379,7 @@ declare namespace vile {
       format? : string;
       log?    : string;
       upload? : string;
-      scores? : boolean;
+      skipsnippets? : boolean;
     }
 
     export interface CLIModule {
@@ -400,10 +399,7 @@ declare namespace vile {
         auth : Auth
       ) => Bluebird<any>;
 
-      log : (
-        post_json : API.CommitStatus,
-        verbose : boolean
-      ) => void;
+      log : (post_json : API.CommitStatus) => void;
     }
   }
 }

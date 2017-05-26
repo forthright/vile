@@ -439,10 +439,23 @@ describe "cli blackbox testing", ->
     describe "code snippets", ->
       beforeEach -> process.chdir SNIPPET_DIR
 
-      it "passes it as expected", (done) ->
-        cli.exec "p -i -n -f json", (stdout) ->
-          expect(JSON.parse(stdout)).to.eql issues_snippets
-          done()
+      describe "without any extra options", ->
+        it "appends code snippets to code", (done) ->
+          cli.exec "p -n -f json", (stdout) ->
+            expect(JSON.parse(stdout)).to.eql issues_snippets
+            done()
+
+      describe "when --skipsnippets", ->
+        it "does not include snippets", (done) ->
+          cli.exec "p -n -s -f json", (stdout) ->
+            expect(JSON.parse(stdout)).to.not.match /snippet/
+            done()
+
+      describe "when --dontpostprocess", ->
+        it "does not include snippets", (done) ->
+          cli.exec "p -n -d -f json", (stdout) ->
+            expect(JSON.parse(stdout)).to.not.match /snippet/
+            done()
 
     describe "filtering via ignore", ->
       beforeEach -> process.chdir FILTER_IGNORE_DIR

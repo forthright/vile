@@ -67,8 +67,7 @@ const padded_file_score = (score : number) =>
   (score < 100 ? " " : "") + String(score) + "%"
 
 const log_summary = (
-  post_json : vile.API.CommitStatus,
-  verbose : boolean = false
+  post_json : vile.API.CommitStatus
 ) => {
   const score : number = _.get(post_json, "score", 100)
   const files : vile.API.CommitStatusFile[][] = _.get(
@@ -80,13 +79,11 @@ const log_summary = (
     .toString()
     .replace(/\.0*$/, "")
 
-  if (verbose) {
-    _.each(files, (file : vile.API.CommitStatusFile) => {
-      log.info(
-        `${padded_file_score(_.get(file, "score", 0))} => ` +
-        `${_.get(file, "path")}`)
-    })
-  }
+  _.each(files, (file : vile.API.CommitStatusFile) => {
+    log.info(
+      `${padded_file_score(_.get(file, "score", 0))} => ` +
+      `${_.get(file, "path")}`)
+  })
 
   log.info()
   log.info(`Score: ${score}%`)

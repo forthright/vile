@@ -124,9 +124,9 @@ describe "service", ->
         expect(log.info).to.have.been
           .calledWith commit_status.url
 
-    describe "when verbose", ->
+    describe "by default", ->
       beforeEach ->
-        service.log commit_status, true
+        service.log commit_status
 
       it "logs file info", ->
         expect(log.info).not.to.have.been
@@ -134,16 +134,4 @@ describe "service", ->
             "=> #{commit_status.files[0].path}"
         expect(log.info).not.to.have.been
           .calledWith " #{commit_status.files[1].score}% " +
-            "=> #{commit_status.files[1].path}"
-
-    describe "when not verbose", ->
-      beforeEach ->
-        service.log commit_status
-
-      it "does not log file info", ->
-        expect(log.info).not.to.have.been
-          .calledWith " #{commit_status.files[0].score}% " +
-            "=> #{commit_status.files[0].path}"
-        expect(log.info).not.to.have.been
-          .calledWith " #{commit_status.files[1].score}%  " +
             "=> #{commit_status.files[1].path}"

@@ -202,10 +202,10 @@ export VILE_PROJECT=my-project-name
 vile p -u
 ```
 
-You can also include code snippets and print detailed commit stats:
+To disable code snippet generation:
 
 ```sh
-vile p -usi
+vile p -us
 ```
 
 ### CI/CD Examples
@@ -232,7 +232,7 @@ checkout:
 
 test:
   post:
-    - vile p -usi -n
+    - vile p -u -n
 ```
 
 ### AppVeyor
@@ -268,7 +268,7 @@ install:
 
 test_script:
   - # run tests here
-  - vile p -usi -n
+  - vile p -u -n
 ```
 
 ### TravisCI
@@ -299,7 +299,7 @@ git:
 
 script:
   - # run tests here
-  - vile p -usi -n
+  - vile p -u -n
 ```
 
 ### Codeship

@@ -220,26 +220,12 @@ describe "cli/punish", ->
               service_commit_status_promise
                 .callsArgWith 0, commit_status_success_data
 
-            describe "not verbose logging", ->
-              beforeEach ->
-                commander.scores = false
-                cli_punish.create commander
+            beforeEach ->
+              cli_punish.create commander
 
-              it "clears the interval", ->
-                expect(clear_interval).to.have.been.calledWith fake_timer
-
-              it "logs the data", ->
-                expect(service.log).to.have.been
-                  .calledWith JSON.parse(commit_status_success_body).data, false
-
-            describe "verbose logging", ->
-              beforeEach ->
-                commander.scores = true
-                cli_punish.create commander
-
-              it "is set via opts.scores", ->
-                expect(service.log).to.have.been
-                  .calledWith JSON.parse(commit_status_success_body).data, true
+            it "logs detailed stats by default", ->
+              expect(service.log).to.have.been
+                .calledWith JSON.parse(commit_status_success_body).data
 
           describe "if commit failed", ->
             beforeEach ->
