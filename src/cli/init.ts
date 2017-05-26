@@ -1,3 +1,4 @@
+import _ = require("lodash")
 import Bluebird = require("bluebird")
 import commander = require("commander")
 import plugin_map = require("./init/map")
@@ -11,9 +12,9 @@ import post = require("./init/post")
 const vile_config_base = () : vile.YMLConfig => {
   return {
     vile: {
-      ignore: [],
       allow: [],
-      plugins: plugin_map.frameworks["core"]
+      ignore: [],
+      plugins: _.get(plugin_map.frameworks, "core")
     }
   }
 }
@@ -34,6 +35,4 @@ const create = (cli : commander.ICommand) =>
     .alias("i")
     .action(initialize_vile_project)
 
-export = {
-  create: create
-}
+export = { create }

@@ -7,9 +7,9 @@ import logger = require("./logger")
 const log = logger.create("git")
 
 const into_file_paths = (gtd_raw : any[]) : string[] =>
-  <string[]>_.map(_.filter(gtd_raw,
+  _.map(_.filter(gtd_raw,
     (raw : any) => _.get(raw, "status", "").toUpperCase() != "D"),
-    (raw : any) => _.get(raw, "toFile"))
+    (raw : any) => _.get(raw, "toFile", ""))
 
 // TODO: clean up strings in this method
 // TODO: upp the threshold for streams and diff size
@@ -21,7 +21,7 @@ const changed_files = (
     resolve : (files : string[]) => void,
     reject : (error : string | NodeJS.ErrnoException) => void
   ) => {
-    let stats : any[] = []
+    const stats : any[] = []
 
     git_diff_tree(repo_path, { originalRev: original_rev })
       .on("data", (type : string, data : any) => {
@@ -39,6 +39,4 @@ const changed_files = (
       .on("end", () => resolve(into_file_paths(stats)))
   })
 
-export = {
-  changed_files: changed_files
-}
+export = { changed_files }

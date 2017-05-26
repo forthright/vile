@@ -30,7 +30,7 @@ const is_promise = (list : Bluebird<any>) : boolean =>
   !!(list && typeof list.then == "function")
 
 const require_plugin = (name : string) : vile.Plugin | null => {
-  let cwd_node_modules = path.join(process.cwd(), "node_modules")
+  const cwd_node_modules = path.join(process.cwd(), "node_modules")
 
   let plugin : vile.Plugin
 
@@ -47,7 +47,7 @@ const map_plugin_name_to_issues = (name : string) => (issues : vile.Issue[]) =>
   _.map(issues, (issue : vile.Issue) =>
     (issue.plugin = name, issue))
 
-const run_plugin = (
+const exec_plugin = (
   name : string,
   config : vile.PluginConfig = {
     config: {},
@@ -58,11 +58,11 @@ const run_plugin = (
     resolve : (i : vile.IssueList) => void,
     reject : (e : string) => void
   ) => {
-    let api : vile.Plugin = require_plugin(name)
+    const api : vile.Plugin = require_plugin(name)
 
     if (!valid_plugin(api)) reject(`invalid plugin API: ${name}`)
 
-    let issues : any = api.punish(config)
+    const issues : any = api.punish(config)
 
     if (is_promise(issues)) {
       issues
@@ -73,7 +73,7 @@ const run_plugin = (
       resolve(map_plugin_name_to_issues(name)(issues))
     } else {
       console.warn(`${name} plugin did not return [] or Promise<[]>`)
-      resolve(<any>[]) // TODO: ?
+      resolve([])
     }
   })
 
@@ -83,7 +83,7 @@ const log_plugins_finished = (pkg_names : string[]) => {
   })
 }
 
-const run_plugins_in_fork = (
+const exec_in_fork = (
   plugins : vile.PluginList,
   config  : vile.YMLConfig,
   worker  : cluster.Worker
@@ -97,15 +97,13 @@ const run_plugins_in_fork = (
         worker.disconnect()
         resolve(issues)
       } else {
-        worker.send(<vile.Lib.PluginWorkerData>{
-          plugins: plugins,
-          config: config
-        })
+        const data : vile.Lib.PluginWorkerData = { config, plugins }
+        worker.send(data)
       }
     })
 
     worker.on("exit", (code, signal) => {
-      let name = plugins.join(",")
+      const name = plugins.join(",")
 
       if (signal || code !== 0) {
         reject(`${name} worker exited [code = ${code} | sig = ${signal}]`)
@@ -156,23 +154,23 @@ const combine_paths = (
   combine_str : string,
   issues : vile.Issue[]
 ) : vile.Issue[] => {
-  let combine_paths = _.map(combine_str.split(","),
+  const sanitized_combine_paths = _.map(combine_str.split(","),
                             (def : string) => def.split(":"))
 
   // TODO: don't be lazy with perf here- still preserve layered path changing
-  _.each(combine_paths, (paths : string[]) => {
-    let base = paths[0]
-    let merge = paths[1]
-    let base_path_ext = _.first(base.match(FILE_EXT))
-    let merge_path_ext = _.first(merge.match(FILE_EXT))
-    let base_path = base.replace(FILE_EXT, "")
-    let merge_path = merge.replace(FILE_EXT, "")
-    let merge_path_regexp = new RegExp(`^${merge_path}/`, "i")
+  _.each(sanitized_combine_paths, (paths : string[]) => {
+    const base = paths[0]
+    const merge = paths[1]
+    const base_path_ext = _.first(base.match(FILE_EXT))
+    const merge_path_ext = _.first(merge.match(FILE_EXT))
+    const base_path = base.replace(FILE_EXT, "")
+    const merge_path = merge.replace(FILE_EXT, "")
+    const merge_path_regexp = new RegExp(`^${merge_path}/`, "i")
 
     // TODO: Windows support, better matching
     issues.forEach((issue : vile.Issue, idx : number) =>  {
-      let issue_path = unixify(_.get(issue, "path", ""))
-      let issue_type = _.get(issue, "type")
+      const issue_path = unixify(_.get(issue, "path", ""))
+      const issue_type = _.get(issue, "type")
 
       // if folder base is not same, return
       if (!merge_path_regexp.test(issue_path)) return
@@ -187,11 +185,11 @@ const combine_paths = (
       }
 
       // HACK: ugh, such perf issue below
-      let potential_data_dupe : boolean = !_.some(
+      const potential_data_dupe : boolean = !_.some(
         util.displayable_issues,
         (t : string) => t == issue_type)
       // TODO: test this explicitly, especially unixify with non string
-      let same_data_exists = potential_data_dupe &&
+      const same_data_exists = potential_data_dupe &&
         _.some(issues, (i : vile.Issue) =>
           i && _.has(i, "path") && unixify(i.path) == new_path &&
             i.type == issue_type)
@@ -230,13 +228,13 @@ const execute_plugins = (
     }
 
     let spin : spinner.Spinner
-    let workers : { [ id : string ] : string } = {}
-    let plugin_count : number = plugins.length
-    let concurrency : number = os.cpus().length || 1
+    const workers : { [ id : string ] : string } = {}
+    const plugin_count : number = plugins.length
+    const concurrency : number = os.cpus().length || 1
 
     cluster.on("fork", (worker : cluster.Worker) => {
       if (spin) spin.stop(true)
-      let name = workers[worker.id]
+      const name = workers[worker.id]
       log.info(`${name}:start(${worker.id}/${plugin_count})`)
       if (spin) spin.start()
     })
@@ -247,11 +245,11 @@ const execute_plugins = (
       spin.start()
     }
 
-    (<any>Bluebird).map(plugins, (plugin : string) => {
-      let worker = cluster.fork()
-      let plugins_to_run : string[] = [ plugin ]
+    Bluebird.map(plugins, (plugin : string) => {
+      const worker = cluster.fork()
+      const plugins_to_run : string[] = [ plugin ]
       workers[worker.id] = plugin.replace("vile-", "")
-      return run_plugins_in_fork(plugins_to_run, config, worker)
+      return exec_in_fork(plugins_to_run, config, worker)
         .then((issues : vile.Issue[]) => {
           if (spin) spin.stop(true)
           log_plugins_finished(plugins_to_run)
@@ -259,7 +257,7 @@ const execute_plugins = (
           normalize_paths(issues)
           return issues
         })
-    }, { concurrency: concurrency })
+    }, { concurrency })
     .then(_.flatten)
     .then((issues : vile.Issue[]) => {
       if (spin) spin.stop(true)
@@ -288,9 +286,9 @@ const into_snippet = (lines : any, start : number, end : number) =>
   _.reduce(lines, (snippets, line, num) => {
     if ((num > (start - 4) && num < (end + 2))) {
       snippets.push({
+        ending: "\n", // normalize for web
         line: _.get(line, "number"),
-        text: _.get(line, "text", " "),
-        ending: "\n" // normalize for web
+        text: _.get(line, "text", " ")
       })
     }
     return snippets
@@ -298,39 +296,39 @@ const into_snippet = (lines : any, start : number, end : number) =>
 
 const add_code_snippets = () =>
   (issues : vile.IssueList) =>
-    (<any>Bluebird).map(_.uniq(_.map(issues, "path")), (filepath : string) => {
+    Bluebird.map(_.uniq(_.map(issues, "path")), (filepath : string) => {
       if (!(filepath &&
             fs.existsSync(filepath) &&
               fs.lstatSync(filepath).isFile())) return
 
-      let lines = linez(fs.readFileSync(
+      const lines = linez(fs.readFileSync(
         path.join(process.cwd(), filepath),
         "utf-8"
       )).lines
 
       _.each(_.filter(issues, (i : vile.Issue) => i.path == filepath),
         (issue : vile.Issue) => {
-          let start = Number(_.get(issue, "where.start.line", 0))
-          let end = Number(_.get(issue, "where.end.line", start))
+          const start = Number(_.get(issue, "where.start.line", 0))
+          const end = Number(_.get(issue, "where.end.line", start))
 
           if (issue.type == util.DUPE) {
-            let locations : vile.DuplicateLocations[] = _.
+            const locations : vile.DuplicateLocations[] = _.
               get(issue, "duplicate.locations", [])
 
             _.each(locations, (loc : vile.DuplicateLocations) => {
-              let start = Number(_.get(loc, "where.start.line", 0))
-              let end = Number(_.get(loc, "where.end.line", start))
-              if (start === 0 && end === start) return
+              const sub_start = Number(_.get(loc, "where.start.line", 0))
+              const sub_end = Number(_.get(loc, "where.end.line", sub_start))
+              if (sub_start === 0 && end === sub_end) return
 
               if (loc.path == filepath) {
-                loc.snippet = into_snippet(lines, start, end)
+                loc.snippet = into_snippet(lines, sub_start, sub_end)
               } else {
                 // HACK: dupe reading here to get this to work with right files
-                let alt_lines = linez(fs.readFileSync(
+                const alt_lines = linez(fs.readFileSync(
                   path.join(process.cwd(), loc.path),
                   "utf-8"
                 )).lines
-                loc.snippet = into_snippet(alt_lines, start, end)
+                loc.snippet = into_snippet(alt_lines, sub_start, sub_end)
               }
             })
           } else {
@@ -362,12 +360,12 @@ const add_ok_issues = (
           !util.ignored(p, vile_ignore)
       ,
       (filepath : string) => util.issue({
-        type: util.OK,
-        path: unixify(filepath)
+        path: unixify(filepath),
+        type: util.OK
       }),
       { read_data: false })
     .then((ok_issues : vile.IssueList) => {
-      let distinct_ok_issues = _.reject(ok_issues, (issue : vile.Issue) =>
+      const distinct_ok_issues = _.reject(ok_issues, (issue : vile.Issue) =>
         _.some(issues, (i) => i.path == issue.path))
 
       if (log_distinct_ok_issues) {
@@ -383,22 +381,22 @@ const log_post_process = (state : string) =>
     return issues
   }
 
-const run_plugins = (
+const exec = (
   custom_plugins : vile.PluginList = [],
   config : vile.YMLConfig = {},
   opts : vile.PluginExecOptions = {}
 ) : Bluebird<vile.IssueList> => {
-  let app_config = _.get(config, "vile", { plugins: [] })
-  let ignore = _.get(app_config, "ignore", null)
-  let allow = _.get(app_config, "allow", null)
+  const app_config = _.get(config, "vile", { plugins: [] })
+  const ignore = _.get(app_config, "ignore", null)
+  const allow = _.get(app_config, "allow", null)
   let plugins : vile.PluginList = custom_plugins
-  let post_process = !opts.dontpostprocess
+  const post_process = !opts.dontpostprocess
 
   if (app_config.plugins) {
     plugins = _.uniq(plugins.concat(app_config.plugins))
   }
 
-  return (<any>fs).readdirAsync(cwd_plugins_path())
+  return (fs as any).readdirAsync(cwd_plugins_path())
     .filter(is_plugin)
     .then(execute_plugins(plugins, config, opts))
     .then(post_process ? log_post_process("start") : passthrough)
@@ -408,7 +406,7 @@ const run_plugins = (
     .then(post_process ? log_post_process("finish") : passthrough)
 }
 
-export = <vile.Lib.Plugin>{
-  exec: run_plugins,
-  exec_plugin: run_plugin
-}
+export = {
+  exec,
+  exec_plugin
+} as vile.Lib.Plugin

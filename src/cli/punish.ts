@@ -26,7 +26,7 @@ const log_and_exit = (error : any) : void => {
 }
 
 const wait_for = (ms : number, cb : (t : any) => void) => {
-  let timer  = setInterval(() => {
+  const timer  = setInterval(() => {
     cb(timer)
   }, ms)
 }
@@ -40,15 +40,15 @@ const wait_for_done_status_and_log = (
     service
       .commit_status(commit_id, auth)
       .then((http : http.IncomingMessage) => {
-        let api_body : vile.API.HTTPResponse = _.get(http, "body")
-        let response : vile.API.JSONResponse = _.get(
+        const api_body : vile.API.HTTPResponse = _.get(http, "body")
+        const response : vile.API.JSONResponse = _.get(
           http, "response", { message: null })
 
-        let status_code = _.get(response, "statusCode")
-        let body_json = _.attempt(
+        const status_code = _.get(response, "statusCode")
+        const body_json = _.attempt(
           JSON.parse.bind(null, api_body))
-        let message = _.get(body_json, "message")
-        let data = _.get(body_json, "data")
+        const message = _.get(body_json, "message")
+        const data = _.get(body_json, "data")
 
         if (status_code != 200) {
           clearInterval(timer)
@@ -75,7 +75,7 @@ const publish = (
   cli_time : number,
   opts : vile.Lib.CLIApp
 ) => {
-  let auth = config.get_auth()
+  const auth = config.get_auth()
 
   // HACK: can pass in project via cli arg, or via env var
   if (_.isEmpty(auth.project)) auth.project = opts.upload
@@ -88,10 +88,10 @@ const publish = (
         return
       }
 
-      let body_json = _.attempt(
+      const body_json = _.attempt(
         JSON.parse.bind(null, _.get(http, "body", "{}")))
-      let commit_state = _.get(body_json, "message")
-      let commit_id = _.get(body_json, "data.commit_id", null)
+      const commit_state = _.get(body_json, "message")
+      const commit_id = _.get(body_json, "data.commit_id", null)
 
       service_log.info(`Commit ${commit_id} ${commit_state}`)
 
@@ -120,34 +120,35 @@ const set_log_levels = (logs? : string) => {
 
 // HACK: This method and above uses promises haphazardly- needs rewrite
 const punish = (app : any, paths : string[]) : void => {
-  let plugins : string = app.plugins
+  const plugins : string = app.plugins
 
   // TODO: not ideal to mutate the app
   _.merge(app, {
-    spinner: !(app.quiet || app.nodecorations),
-    config: config.get()
+    config: config.get(),
+    spinner: !(app.quiet || app.nodecorations)
   })
 
   if (!_.isEmpty(paths)) {
     _.set(app, "config.vile.allow", paths)
   }
 
-  let cli_start_time = new Date().getTime()
+  const cli_start_time = new Date().getTime()
 
-  let exec = () => lib
+  const exec = () => lib
     .exec(parse_plugins(plugins), app.config, app)
     .then((issues : vile.IssueList) => {
-      let cli_end_time = new Date().getTime()
-      let cli_time = cli_end_time - cli_start_time
+      const cli_end_time = new Date().getTime()
+      const cli_time = cli_end_time - cli_start_time
       if (app.upload) return publish(issues, cli_time, app)
-      if (app.format == "json")
+      if (app.format == "json") {
         process.stdout.write(JSON.stringify(issues))
-        return Bluebird.resolve()
+      }
+      return Bluebird.resolve()
     })
     .catch(log_and_exit) // since we are running as a cli
 
   if (app.gitdiff) {
-    let rev = typeof app.gitdiff == "string" ?
+    const rev = typeof app.gitdiff == "string" ?
       app.gitdiff : undefined
     git.changed_files(rev).then((changed_paths : string[]) => {
       _.set(app, "config.vile.allow", changed_paths)
@@ -214,6 +215,4 @@ const create = (cli : commander.ICommand) =>
       punish(app, paths)
     })
 
-export = {
-  create: create
-}
+export = { create }

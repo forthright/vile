@@ -16,12 +16,12 @@ const confirm_vile_config_is_ok = (
   console.log()
   console.log(config)
   console.log()
-  return (<any>inquirer).prompt([
+  return (inquirer as any).prompt([
     {
-      type: "confirm",
-      name: "ok_to_continue",
+      default: true,
       message: "Look good?",
-      default: true
+      name: "ok_to_continue",
+      type: "confirm"
     }
   ]).then((answers : any) => {
     if (answers.ok_to_continue) {
@@ -35,10 +35,10 @@ const confirm_vile_config_is_ok = (
 const create_config = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> => {
-  let config_without_plugins = _.cloneDeep(config)
+  const config_without_plugins = _.cloneDeep(config)
   delete config_without_plugins.vile.plugins
 
-  return (<any>fs).writeFileAsync(
+  return (fs as any).writeFileAsync(
     ".vile.yml",
     new Buffer(yaml.safeDump(config_without_plugins))
   ).then((err : NodeJS.ErrnoException) => {
@@ -65,46 +65,47 @@ const install_plugins = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> => {
   // TODO: move to method
-  let by_bin = _.reduce(
+  const by_bin = _.reduce(
     plugin_map.peer,
     (bins : any, deps_def : any, plugin : string) => {
-      // HACK: this is an annoying thing I left for now
-      (<any>_.each)(deps_def, (deps : any, bin : string) => {
+      _.each(deps_def, (deps : any, bin : string) => {
         if (!_.some(config.vile.plugins, (p : string) => p == plugin)) {
           return bins
         }
         if (typeof deps == "string") deps = [ deps ]
         if (!bins[bin]) bins[bin] = []
         bins[bin] = _.uniq(_.concat(bins[bin], deps))
-      }, {})
+      })
       return bins
     },
     {})
 
   if (_.isEmpty(by_bin)) return Bluebird.resolve(config)
 
-  return (<any>inquirer).prompt([
+  return (inquirer as any).prompt([
     {
-      type: "confirm",
-      name: "ok_to_continue",
+      default: false,
       message: "Install required plugins and their peer dependencies? " +
         `(requires ${Object.keys(by_bin).join(",")})`,
-      default: false
+      name: "ok_to_continue",
+      type: "confirm"
     }
   ]).then((answers : any) => {
-    let install = answers.ok_to_continue
+    const install = answers.ok_to_continue
 
-    let deps = _.map(by_bin, (deps : any, bin : string) => [ bin, deps ])
+    const deps = _.map(
+      by_bin,
+      (dep_list : string[], bin : string) => [ bin, dep_list ])
 
     if (install) {
       log.info("Installing peer dependencies... this could take a while.")
     }
 
-    return (<any>Bluebird).each(deps, (info : any[]) => {
-      let [ bin, deps] = info
-      let args = bin == "npm" ?
-        _.concat("install", "--save-dev", deps) :
-        _.concat("install", deps)
+    return Bluebird.each(deps, (info : any[]) => {
+      const [ bin, dep_list] = info
+      const args = bin == "npm" ?
+        _.concat("install", "--save-dev", dep_list) :
+        _.concat("install", dep_list)
 
       if (!install) {
         log.warn("skipping:", bin, args.join(" "))
@@ -112,7 +113,7 @@ const install_plugins = (
       } else {
         log.info(bin, args.join(" "))
 
-        return new (<any>Bluebird)((
+        return new Bluebird((
           resolve : () => void,
           reject : (err : string) => void
         ) => {
@@ -120,7 +121,7 @@ const install_plugins = (
             .spawn(bin, args, { stdio: [0, 1, 2] })
             .on("close", (code : number) => {
               if (code != 0) {
-                let msg = `${bin} died with code: ${code}`
+                const msg = `${bin} died with code: ${code}`
                 reject(msg)
               } else {
                 log.info(bin, "finished installing dependencies")
@@ -132,7 +133,7 @@ const install_plugins = (
     })
     .then(() =>
       new Bluebird((resolve, reject) => {
-        let args = install_plugin_args(config.vile.plugins)
+        const args = install_plugin_args(config.vile.plugins)
 
         if (install) {
           log.info("Installing plugins... this could take a while.")

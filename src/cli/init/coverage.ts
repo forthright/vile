@@ -9,22 +9,23 @@ import plugin_map = require("./map")
 const check_for_test_coverage_step = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> => {
-  let exists = (target : string) =>
+  const exists = (target : string) =>
     fs.existsSync(path.join(process.cwd(), target))
 
   if (exists("coverage") ||
       exists("test") ||
       exists("spec")) {
-    return (<any>inquirer).prompt([
+    return (inquirer as any).prompt([
       {
-        type: "confirm",
-        name: "ok_to_add",
+        default: true,
         message: "Looks like you have tests. Install plugin?",
-        default: true
+        name: "ok_to_add",
+        type: "confirm"
       }
     ]).then((answers : any) => {
       if (answers.ok_to_add) {
-        _.each(plugin_map.frameworks["coverage"], (plugin : string) =>
+        const cov_map = _.get(plugin_map.frameworks, "coverage")
+        _.each(cov_map, (plugin : string) =>
           config.vile.plugins.push(plugin))
       }
 

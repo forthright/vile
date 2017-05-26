@@ -1,48 +1,54 @@
 // TODO: write framework detector lib
 
+const frameworks = {
+  bower: [ "constable" ],
+  brakeman: [ "brakeman" ],
+  bundler: [ "bundler-outdated", "bundler-audit" ],
+  coffeelint: [ "coffeelint" ],
+  core: [ "language", "stat" ],
+  coverage: [ "coverage" ],
+  editorconfig: [ "eclint" ],
+  eslint: [ "eslint" ],
+  git: [ "git" ],
+  jshint: [ "jshint" ],
+  nodejs: [ "retire", "ncu" ],
+  rails: [ "brakeman", "rails-best-practices" ],
+  retirejs: [ "retire" ],
+  rubocop: [ "rubocop" ],
+  sass_lint: ["sass-lint" ],
+  slim_lint: [ "slim-lint" ]
+}
+
+const langs = {
+  coffeescript: [ "coffeelint" ],
+  haskell: [ "hlint" ],
+  javascript: [ "escomplex" ],
+  php: [ "phpmd" ],
+  ruby: [ "rubocop", "rubycritic" ],
+  sass: [ "sass-lint" ],
+  scss: [ "scss-lint" ],
+  slim: [ "slim-lint" ],
+  typescript: [ "tslint" ]
+}
+
+const peer = {
+  "brakeman": { gem: "brakeman" },
+  "bundler-audit": { gem: [ "bundler", "bundler-audit" ] },
+  "bundler-outdated": { gem: "bundler" },
+  "hlint": { cabal: "hlint" },
+  "ncu": { npm: "npm-check-updates" },
+  "rails-best-practices": { gem: "rails_best_practices" },
+  "retire": { npm: "retire" },
+  "rubocop": { gem: "rubocop" },
+  "sass-lint": { npm: "sass-lint" },
+  "scss-lint": { gem: "scss_lint" },
+  "slim-lint": { gem: "slim_lint" }
+}
+
 const PLUGIN_MAP : vile.Lib.PluginMap = {
-  frameworks: {
-    coverage: [ "coverage" ],
-    rails: [ "brakeman", "rails-best-practices" ],
-    nodejs: [ "retire", "ncu" ],
-    bower: [ "constable" ],
-    bundler: [ "bundler-outdated", "bundler-audit" ],
-    editorconfig: [ "eclint" ],
-    eslint: [ "eslint" ],
-    jshint: [ "jshint" ],
-    sass_lint: ["sass-lint" ],
-    rubocop: [ "rubocop" ],
-    slim_lint: [ "slim-lint" ],
-    brakeman: [ "brakeman" ],
-    coffeelint: [ "coffeelint" ],
-    retirejs: [ "retire" ],
-    git: [ "git" ],
-    core: [ "language", "stat" ]
-  },
-  peer: {
-    brakeman: { gem: "brakeman" },
-    "rails-best-practices": { gem: "rails_best_practices" },
-    ncu: { npm: "npm-check-updates" },
-    hlint: { cabal: "hlint" },
-    "bundler-outdated": { gem: "bundler" },
-    "bundler-audit": { gem: [ "bundler", "bundler-audit" ] },
-    "slim-lint": { gem: "slim_lint" },
-    "sass-lint": { npm: "sass-lint" },
-    "scss-lint": { gem: "scss_lint" },
-    rubocop: { gem: "rubocop" },
-    retire: { npm: "retire" }
-  },
-  langs: {
-    ruby: [ "rubocop", "rubycritic" ],
-    haskell: [ "hlint" ],
-    sass: [ "sass-lint" ],
-    scss: [ "scss-lint" ],
-    slim: [ "slim-lint" ],
-    typescript: [ "tslint" ],
-    javascript: [ "escomplex" ],
-    php: [ "phpmd" ],
-    coffeescript: [ "coffeelint" ]
-  }
+  frameworks,
+  langs,
+  peer
 }
 
 export = PLUGIN_MAP

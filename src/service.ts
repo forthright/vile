@@ -11,7 +11,7 @@ const VILE_APP = process.env.VILE_APP || PROD_URL
 const log = logger.create(HOST)
 
 const http_authentication = (auth_token : string) : any => {
-  return { "Authorization": `Token token=${auth_token}` }
+  return { Authorization: `Token token=${auth_token}` }
 }
 
 const api_path = (endpoint : string) : string =>
@@ -27,7 +27,7 @@ const handle_response = (
 ) =>
   err ?
     reject({ error: err }) :
-    resolve({ body: body, response: response })
+    resolve({ body, response })
 
 const commit = (
   issues : vile.IssueList,
@@ -35,15 +35,15 @@ const commit = (
   auth : vile.Auth
 ) : Bluebird<any> =>
   new Bluebird((resolve, reject) => {
-    let url = api_path(`projects/${auth.project}/commits`)
+    const url = api_path(`projects/${auth.project}/commits`)
     log.debug(`POST ${url}`)
     request.post({
-      url: url,
-      headers: http_authentication(auth.token),
       form: {
-        issues: JSON.stringify(issues),
-        cli_time: cli_time
-      }
+        cli_time,
+        issues: JSON.stringify(issues)
+      },
+      headers: http_authentication(auth.token),
+      url
     },
     handle_response(resolve, reject))
   })
@@ -53,12 +53,12 @@ const commit_status = (
   auth : vile.Auth
 ) =>
   new Bluebird((resolve, reject) => {
-    let url = api_path(
+    const url = api_path(
       `projects/${auth.project}/commits/${commit_id}/status`)
     log.debug(`GET ${url}`)
     request.get({
-      url: url,
-      headers: http_authentication(auth.token)
+      headers: http_authentication(auth.token),
+      url
     },
     handle_response(resolve, reject))
   })
@@ -70,12 +70,12 @@ const log_summary = (
   post_json : vile.API.CommitStatus,
   verbose : boolean = false
 ) => {
-  let score : number = _.get(post_json, "score", 100)
-  let files : vile.API.CommitStatusFile[][] = _.get(
+  const score : number = _.get(post_json, "score", 100)
+  const files : vile.API.CommitStatusFile[][] = _.get(
     post_json, "files", [])
-  let time : number = _.get(post_json, "time", 0)
-  let url : string = _.get(post_json, "url", "")
-  let time_in_seconds : string = (time / 1000)
+  const time : number = _.get(post_json, "time", 0)
+  const url : string = _.get(post_json, "url", "")
+  const time_in_seconds : string = (time / 1000)
     .toFixed(2)
     .toString()
     .replace(/\.0*$/, "")
@@ -94,8 +94,8 @@ const log_summary = (
   log.info(url)
 }
 
-export = <vile.Lib.Service>{
-  commit: commit,
-  commit_status: commit_status,
+export = {
+  commit,
+  commit_status,
   log: log_summary
-}
+} as vile.Lib.Service

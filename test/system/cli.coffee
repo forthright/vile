@@ -441,7 +441,7 @@ describe "cli blackbox testing", ->
 
       it "passes it as expected", (done) ->
         cli.exec "p -i -n -f json", (stdout) ->
-          expect(stdout).to.eql JSON.stringify(issues_snippets)
+          expect(JSON.parse(stdout)).to.eql issues_snippets
           done()
 
     describe "filtering via ignore", ->

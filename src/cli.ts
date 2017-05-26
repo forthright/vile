@@ -51,6 +51,4 @@ const interpret = (argv : string[]) =>
   (configure(argv),
     cli.parse(argv))
 
-export = {
-  interpret: interpret
-}
+export = { interpret }

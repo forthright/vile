@@ -13,7 +13,7 @@ const read = (file : string) =>
 const check_for_project_frameworks = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> => {
-  let frameworks : string[] = []
+  const frameworks : string[] = []
 
   if (exists("config.ru") && /Rails/g.test(read("config.ru"))) {
     frameworks.push("rails")
@@ -55,14 +55,14 @@ const check_for_project_frameworks = (
 
   if (exists(".git")) frameworks.push("git")
 
-  return (<any>inquirer).prompt({
-    type: "checkbox",
+  return (inquirer as any).prompt({
+    choices: _.map(frameworks, (name : string) => {
+      return { name, checked: true }
+    }),
     message: "Looks like you have a number of frameworks and tooling." +
       " Please uncheck any that don't apply.",
     name: "frameworks",
-    choices: _.map(frameworks, (name : string) => {
-      return { name: name, checked: true }
-    }),
+    type: "checkbox",
     validate: (answer : string[]) => true
   })
   .then((answers : any) => {

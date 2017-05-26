@@ -7,7 +7,7 @@ const library : vile.Vile = extend(
   {},
   plugin,
   util,
-  { logger: logger }
+  { logger }
 )
 
 export = library

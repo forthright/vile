@@ -6,14 +6,14 @@ import util = require("./../util")
 // TODO: move logging out of plugins?
 
 const humanize_line_char = (issue : vile.Issue) : string => {
-  let start : vile.IssueLine = _.get(issue, "where.start", {})
-  let end : vile.IssueLine = _.get(issue, "where.end", {})
+  const start : vile.IssueLine = _.get(issue, "where.start", {})
+  const end : vile.IssueLine = _.get(issue, "where.end", {})
 
-  let start_character : string = (
+  const start_character : string = (
       typeof start.character == "number" || typeof start.character == "string"
     ) ? String(start.character) : ""
 
-  let end_character : string = (
+  const end_character : string = (
       typeof end.character == "number" || typeof end.character == "string"
     ) && end.character != start.character ? `-${String(end.character)}` : ""
 
@@ -22,14 +22,14 @@ const humanize_line_char = (issue : vile.Issue) : string => {
 }
 
 const humanize_line_num = (issue : vile.Issue) : string => {
-  let start : vile.IssueLine = _.get(issue, "where.start", {})
-  let end : vile.IssueLine = _.get(issue, "where.end", {})
+  const start : vile.IssueLine = _.get(issue, "where.start", {})
+  const end : vile.IssueLine = _.get(issue, "where.end", {})
 
-  let start_line : string = (
+  const start_line : string = (
       typeof start.line == "number" || typeof start.line == "string"
     ) ? String(start.line) : ""
 
-  let end_line : string = (
+  const end_line : string = (
       typeof end.line == "number" || typeof end.line == "string"
     ) && end.line != start.line ? `-${String(end.line)}` : ""
 
@@ -42,21 +42,21 @@ const to_console = (
   format : string = "default"
 ) : string => {
   if (format == "syntastic") {
-    let issue_type : string = issue.type
+    const issue_type : string = issue.type
     let start_info : vile.IssueLine
-    let synastic_type : string = _
+    const synastic_type : string = _
       .some(util.errors, (name) => name == issue_type) ? "E" : "W"
 
     if (issue_type == util.DUPE) {
-      let locs = _.get(issue, "duplicate.locations", [])
+      const locs = _.get(issue, "duplicate.locations", [])
       start_info = _.get(_.first(locs), "where.start", {})
     } else {
       start_info = _.get(issue, "where.start", {})
     }
 
-    let h_line = _.get(start_info, "line", 1)
-    let h_char = _.get(start_info, "character", 1)
-    let details = _.has(issue, "title") &&
+    const h_line = _.get(start_info, "line", 1)
+    const h_char = _.get(start_info, "character", 1)
+    const details = _.has(issue, "title") &&
                   issue.message != issue.title ?
                     `${issue.title} => ${issue.message}` :
                       (issue.message || issue.title)
@@ -64,17 +64,17 @@ const to_console = (
     return `${ issue.path }:${ h_line }:${ h_char }: ` +
       `${synastic_type}: ${ details }`
   } else {
-    let h_line : string = humanize_line_num(issue)
-    let h_char : string = humanize_line_char(issue)
-    let details : string = _.has(issue, "title") &&
+    const h_line : string = humanize_line_num(issue)
+    const h_char : string = humanize_line_char(issue)
+    const details : string = _.has(issue, "title") &&
                   issue.message != issue.title ?
                     `${issue.title} => ${issue.message}` :
                       (issue.message || issue.title)
-    let loc : string = h_line || h_char ?
+    const loc : string = h_line || h_char ?
       `${ h_line ? "line " + h_line + ", " : "" }` +
       `${ h_char ? "col " + h_char + ", " : "" }` : ""
 
-    let msg : string = `${ issue.path }: ${ loc }${ details }`
+    const msg : string = `${ issue.path }: ${ loc }${ details }`
 
     return msg
   }
@@ -83,7 +83,7 @@ const to_console = (
 const to_console_duplicate = (
   issue : vile.Issue
 ) => {
-  let files = _.chain(
+  const files = _.chain(
     _.get(issue, "duplicate.locations", [])
   ).map("path").uniq().join(", ")
   return `${ issue.path }: Similar code in ${ files }`
@@ -104,19 +104,19 @@ const to_console_lang = (
 const to_console_scm = (
   issue : vile.Issue
 ) => {
-  let date = _.get(issue, "commit.commit_date") ||
+  const date = _.get(issue, "commit.commit_date") ||
               _.get(issue, "commit.author_date")
-  let sha = _.get(issue, "commit.sha")
+  const sha = _.get(issue, "commit.sha")
   return `${ sha }: ${ date }`
 }
 
 const to_console_stat = (
   issue : vile.Issue
 ) => {
-  let size = _.get(issue, "stat.size", "?")
-  let loc = _.get(issue, "stat.loc", "?")
-  let lines = _.get(issue, "stat.lines", "?")
-  let comments = _.get(issue, "stat.comments", "?")
+  const size = _.get(issue, "stat.size", "?")
+  const loc = _.get(issue, "stat.loc", "?")
+  const lines = _.get(issue, "stat.lines", "?")
+  const comments = _.get(issue, "stat.comments", "?")
   return `${ issue.path } ` +
     `(${ size ? (Number(size) / 1024).toFixed(3) + "KB" : "" })` +
     `: ${ lines } lines, ${ loc } loc, ${ comments } comments`
@@ -125,16 +125,16 @@ const to_console_stat = (
 const to_console_dep = (
   issue : vile.Issue
 ) : string => {
-  let name = _.get(issue, "dependency.name", "?")
-  let current = _.get(issue, "dependency.current", "?")
-  let latest = _.get(issue, "dependency.latest", "?")
+  const name = _.get(issue, "dependency.name", "?")
+  const current = _.get(issue, "dependency.current", "?")
+  const latest = _.get(issue, "dependency.latest", "?")
   return `New release for ${name}: ${current} < ${latest}`
 }
 
 const to_console_cov = (
   issue : vile.Issue
 ) : string => {
-  let cov = _.get(issue, "coverage.total", "?")
+  const cov = _.get(issue, "coverage.total", "?")
   return `${ issue.path }: ${ cov }% lines covered`
 }
 
@@ -142,7 +142,7 @@ const log_syntastic_applicable_messages = (
   issues : vile.Issue[] = []
 ) => {
   issues.forEach((issue : vile.Issue, index : number) => {
-    let issue_type : string = issue.type
+    const issue_type : string = issue.type
     if (_.some(util.displayable_issues, (t) => issue_type == t)) {
       console.log(to_console(issue, "syntastic"))
     }
@@ -152,42 +152,46 @@ const log_syntastic_applicable_messages = (
 const log_issue_messages = (
   issues : vile.Issue[] = []
 ) => {
-  let nlogs : { [issue_type : string] : Minilog } = {}
+  const nlogs : { [issue_type : string] : Minilog } = {}
 
   issues.forEach((issue : vile.Issue, index : number) => {
-    let t : string = issue.type
-    if (!nlogs[t]) nlogs[t] = logger.create(t)
+    const logger_type : string = issue.type
 
-    let plugin_name : string = _.get(issue, "plugin", "")
-    let msg_postfix = plugin_name ? ` (vile-${ plugin_name })` : ""
+    if (!nlogs[logger_type]) {
+      nlogs[logger_type] = logger.create(logger_type)
+    }
 
-    if (_.some(util.errors, (t) => issue.type == t)) {
-      nlogs[t].error(to_console(issue) + msg_postfix)
-    } else if (_.some(util.warnings, (t) => issue.type == t)) {
+    const log = nlogs[logger_type]
+    const plugin_name : string = _.get(issue, "plugin", "")
+    const msg_postfix = plugin_name ? ` (vile-${ plugin_name })` : ""
+
+    if (_.some(util.errors, (i_type) => issue.type == i_type)) {
+      log.error(to_console(issue) + msg_postfix)
+    } else if (_.some(util.warnings, (i_type) => issue.type == i_type)) {
       if (issue.type == util.COMP) {
-        nlogs[t].info(to_console_comp(issue) + msg_postfix)
+        log.info(to_console_comp(issue) + msg_postfix)
       } else if (issue.type == util.CHURN) {
-        nlogs[t].info(to_console_churn(issue) + msg_postfix)
+        log.info(to_console_churn(issue) + msg_postfix)
       } else if (issue.type == util.DEP) {
-        nlogs[t].warn(to_console_dep(issue) + msg_postfix)
+        log.warn(to_console_dep(issue) + msg_postfix)
       } else if (issue.type == util.DUPE) {
-        nlogs[t].warn(to_console_duplicate(issue) + msg_postfix)
+        log.warn(to_console_duplicate(issue) + msg_postfix)
       } else {
-        nlogs[t].warn(to_console(issue) + msg_postfix)
+        log.warn(to_console(issue) + msg_postfix)
       }
     } else {
       if (issue.type == util.LANG) {
-        nlogs[t].info(to_console_lang(issue) + msg_postfix)
+        log.info(to_console_lang(issue) + msg_postfix)
       } else if (issue.type == util.SCM) {
-        nlogs[t].info(to_console_scm(issue) + msg_postfix)
+        log.info(to_console_scm(issue) + msg_postfix)
       } else if (issue.type == util.STAT) {
-        nlogs[t].info(to_console_stat(issue) + msg_postfix)
+        log.info(to_console_stat(issue) + msg_postfix)
       } else if (issue.type == util.COV) {
-        nlogs[t].info(to_console_cov(issue) + msg_postfix)
+        log.info(to_console_cov(issue) + msg_postfix)
       } else if (issue.type == util.OK) {
-        nlogs[t].info(issue.path + msg_postfix)
+        log.info(issue.path + msg_postfix)
       } else {
-        nlogs[t].info(to_console(issue) + msg_postfix)
+        log.info(to_console(issue) + msg_postfix)
       }
     }
   })

@@ -22,7 +22,7 @@ const matches = (
   let matched : (a : string) => boolean
 
   if (!list_or_string) {
-    let conf : any = config.get()
+    const conf : any = config.get()
     // HACK: this is fragile, perhaps config should be in this module
     list_or_string = _.isEmpty(conf) ? _.get(
       config.load(DEFAULT_VILE_YML),
@@ -83,9 +83,9 @@ const collect_files = (
   target : string,
   allowed : (p : string, i : boolean) => boolean
 ) : string[] => {
-  let at_root = !path.relative(process.cwd(), target)
-  let rel_path = at_root ? target : path.relative(process.cwd(), target)
-  let is_dir = fs.lstatSync(rel_path).isDirectory()
+  const at_root = !path.relative(process.cwd(), target)
+  const rel_path = at_root ? target : path.relative(process.cwd(), target)
+  const is_dir = fs.lstatSync(rel_path).isDirectory()
 
   if (!at_root && !allowed(rel_path, is_dir)) return []
 
@@ -105,17 +105,17 @@ const spawn = (
     resolve : (r : vile.Lib.SpawnData) => void,
     reject : (e : string) => void
   ) => {
-    let chunks : Buffer[] = []
-    let errors : string[] = []
-    let env = extend({}, process.env)
+    const chunks : Buffer[] = []
+    const errors : string[] = []
+    const env = extend({}, process.env)
 
     // Be sure to *append* the npm run path (ex: don't clobber rbenv ruby)
     env.PATH = env.PATH + ":" +
       npm_run_path({ cwd: process.cwd(), path: "" })
 
-    let proc = child_process.spawn(bin, opts.args, {
-      stdio: opts.stdio || [process.stdin, "pipe", "pipe"],
-      env: env
+    const proc = child_process.spawn(bin, opts.args, {
+      env,
+      stdio: opts.stdio || [process.stdin, "pipe", "pipe"]
     })
 
     proc.stdout.on("data", (chunk : Buffer) => {
@@ -123,22 +123,17 @@ const spawn = (
     })
 
     proc.stderr.on("data", (data : Buffer) => {
-      let error = data.toString("utf-8")
+      const error = data.toString("utf-8")
       errors.push(error)
       console.warn(error)
     })
 
     proc.on("close", (code : number) => {
-      let stdout : string = chunks
+      const stdout : string = chunks
         .map((chunk) => chunk.toString("utf-8")).join("")
-
-      let stderr : string = errors.join("")
-
-      resolve(<vile.Lib.SpawnData>{
-        code: code,
-        stdout: stdout,
-        stderr: stderr
-      })
+      const stderr : string = errors.join("")
+      const http : vile.Lib.SpawnData = { code, stderr, stdout }
+      resolve(http)
     })
   })
 
@@ -150,10 +145,10 @@ const promise_each_file = (
 ) : Bluebird<string[]> => {
   if (!opts.hasOwnProperty("read_data")) opts.read_data = true
 
-  let readdir = new Bluebird((resolve, reject) => {
-    let files = collect_files(dirpath, allow)
+  const readdir = new Bluebird((resolve, reject) => {
+    const files = collect_files(dirpath, allow)
 
-    let checkable = _.chain(_.flatten(files))
+    const checkable = _.chain(_.flatten(files))
       .filter((f) => fs.existsSync(f) && fs.lstatSync(f).isFile())
       .value()
 
@@ -164,7 +159,7 @@ const promise_each_file = (
     return Bluebird.all(files.map((target) => {
       if (fs.lstatSync(target).isFile()) {
         if (opts.read_data) {
-          return (<any>fs).readFileAsync(target, { encoding: "utf-8" })
+          return (fs as any).readFileAsync(target, { encoding: "utf-8" })
             .then((data : string) => parse_file(target, data))
         } else {
           return parse_file(target)
@@ -183,69 +178,72 @@ const into_issue = (data : vile.Issue) : vile.Issue => data
 
 // TODO: can we just assign with types at compile time?
 const types : vile.Lib.UtilKeyTypes = {
-  OK    :  "ok",
-
-  WARN  :  "warning",
-  STYL  :  "style",
-  MAIN  :  "maintainability",
-  COMP  :  "complexity",
   CHURN :  "churn",
-  DUPE  :  "duplicate",
+  COMP  :  "complexity",
+  COV   :  "cov",
   DEP   :  "dependency",
-
+  DUPE  :  "duplicate",
   ERR   :  "error",
-  SEC   :  "security",
-
-  STAT  :  "stat",
-  SCM   :  "scm",
   LANG  :  "lang",
-  COV   :  "cov"
+  MAIN  :  "maintainability",
+  OK    :  "ok",
+  SCM   :  "scm",
+  SEC   :  "security",
+  STAT  :  "stat",
+  STYL  :  "style",
+  WARN  :  "warning"
 }
 
-const api : vile.Lib.Util = extend({}, types, {
-  promise_each: promise_each_file,
-  filter: filter_promise_each,
-  issue: into_issue,
-  ignored: is_ignored,
+const displayable_issues : vile.IssueType.All[] = [
+  "warning",
+  "style",
+  "maintainability",
+  "duplicate",
+  "error",
+  "security",
+  "dependency"
+]
+
+const warnings : vile.IssueType.Warnings[] = [
+  "warning",
+  "style",
+  "maintainability",
+  "complexity",
+  "churn",
+  "duplicate",
+  "dependency"
+]
+
+const errors : vile.IssueType.Errors[] = [
+  "error",
+  "security"
+]
+
+const infos : vile.IssueType.Infos[] = [
+  "stat",
+  "scm",
+  "lang",
+  "cov"
+]
+
+const API = {
+  COMMIT: {
+    FAILED: "failed",
+    FINISHED: "finished",
+    PROCESSING: "processing"
+  }
+}
+
+export = extend({}, types, {
+  API,
   allowed: is_allowed,
-  spawn: spawn,
-
-  API: {
-    COMMIT: {
-      FINISHED: "finished",
-      PROCESSING: "processing",
-      FAILED: "failed"
-    }
-  },
-
-  displayable_issues: [
-    "warning",
-    "style",
-    "maintainability",
-    "duplicate",
-    "error",
-    "security",
-    "dependency"
-  ],
-  warnings: [
-    "warning",
-    "style",
-    "maintainability",
-    "complexity",
-    "churn",
-    "duplicate",
-    "dependency"
-  ],
-  errors: [
-    "error",
-    "security"
-  ],
-  infos: [
-    "stat",
-    "scm",
-    "lang",
-    "cov"
-  ]
-})
-
-export = api
+  displayable_issues,
+  errors,
+  filter: filter_promise_each,
+  ignored: is_ignored,
+  infos,
+  issue: into_issue,
+  promise_each: promise_each_file,
+  spawn,
+  warnings
+}) as vile.Lib.Util

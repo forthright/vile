@@ -16,6 +16,4 @@ const create = (cli : commander.ICommand) =>
         log.info("  ~$ VILE_TOKEN=token VILE_PROJECT=my-project vile p -u")
       })
 
-export = {
-  create: create
-}
+export = { create }

@@ -15,17 +15,17 @@ const load_config_from_file = (
 }
 
 const load_auth_config_from_env = () : vile.Auth => {
-  let env = process.env
+  const env = process.env
   return {
-    token : env.VILE_TOKEN,
-    project : env.VILE_PROJECT
+    project : env.VILE_PROJECT,
+    token : env.VILE_TOKEN
   }
 }
 
-const get : vile.YMLConfig = () => conf
+const get_conf : vile.YMLConfig = () => conf
 
-export = <vile.Lib.Config>{
-  load: load_config_from_file,
-  get: get,
-  get_auth: load_auth_config_from_env
-}
+export = {
+  get: get_conf,
+  get_auth: load_auth_config_from_env,
+  load: load_config_from_file
+} as vile.Lib.Config

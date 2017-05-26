@@ -6,13 +6,13 @@ import Bluebird = require("bluebird")
 const welcome_confirm = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> =>
-  (<any>inquirer).prompt([
+  (inquirer as any).prompt([
     {
-      type: "confirm",
-      name: "ok_to_proceed",
+      default: true,
       message: "Hello friend. Please follow the prompts and " +
         "answer as best you can.",
-      default: true
+      name: "ok_to_proceed",
+      type: "confirm"
     }
   ]).then((answers : any) => {
     if (answers.ok_to_proceed) {
@@ -25,15 +25,15 @@ const welcome_confirm = (
 const check_for_existing_config = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> => {
-  let vile_yml_path = path.join(process.cwd(), ".vile.yml")
+  const vile_yml_path = path.join(process.cwd(), ".vile.yml")
 
   if (fs.existsSync(vile_yml_path)) {
-    return (<any>inquirer).prompt([
+    return (inquirer as any).prompt([
       {
-        type: "confirm",
-        name: "ok_to_overwrite",
+        default: true,
         message: "Found an existing .vile.yml. OK to overwrite?",
-        default: true
+        name: "ok_to_overwrite",
+        type: "confirm"
       }
     ]).then((answers : any) => {
       if (answers.ok_to_overwrite) {
@@ -50,24 +50,24 @@ const check_for_existing_config = (
 const check_for_existing_package_json = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> => {
-  let pkg_json_path = path.join(process.cwd(), "package.json")
+  const pkg_json_path = path.join(process.cwd(), "package.json")
 
   if (fs.existsSync(pkg_json_path)) return Bluebird.resolve(config)
 
-  let pkg_json_shell = {
-    private: true,
-    name: "vile-project-dependency-config",
-    scripts: {
-      "vile-publish": "vile p -u project_name -si --nodecorations"
-    },
+  const pkg_json_shell = {
     description: "Run `npm install` in a freshly cloned " +
       "project to install vile. This does not include non-npm " +
-      "based peer dependency requirements. See plugin readme(s) for details."
+      "based peer dependency requirements. See plugin readme(s) for details.",
+    name: "vile-project-dependency-config",
+    private: true,
+    scripts: {
+      "vile-publish": "vile p -u project_name -si --nodecorations"
+    }
   }
 
-  let file_data = new Buffer(JSON.stringify(pkg_json_shell, null, "  "))
+  const file_data = new Buffer(JSON.stringify(pkg_json_shell, null, "  "))
 
-  return (<any>fs).writeFileAsync(pkg_json_path, file_data)
+  return (fs as any).writeFileAsync(pkg_json_path, file_data)
     .then((err : NodeJS.ErrnoException) => {
       return err ?
         Bluebird.reject(err) :

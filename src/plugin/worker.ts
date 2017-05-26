@@ -18,7 +18,7 @@ const set_ignore_list = (
   plugin_config : vile.PluginConfig,
   base : vile.IgnoreList
 ) : void => {
-  let list = _.compact(_.concat([], _.get(plugin_config, "ignore", [])))
+  const list = _.compact(_.concat([], _.get(plugin_config, "ignore", [])))
   _.set(plugin_config, "ignore", _.uniq(list.concat(base)))
 }
 
@@ -29,15 +29,15 @@ const set_allow_list = (
   if (!_.isEmpty(base)) {
     _.set(plugin_config, "allow", _.compact(_.concat([], base)))
   } else {
-    let list = _.get(plugin_config, "allow", [])
+    const list = _.get(plugin_config, "allow", [])
     _.set(plugin_config, "allow", _.compact(_.concat([], list)))
   }
 }
 
 const get_plugin_config = (name : string, config : vile.YMLConfig) : void => {
-  let plugin_config : any = _.get(config, name, {})
-  let vile_ignore : string[] = _.get(config, "vile.ignore", [])
-  let vile_allow : string[] = _.get(config, "vile.allow", [])
+  const plugin_config : any = _.get(config, name, {})
+  const vile_ignore : string[] = _.get(config, "vile.ignore", [])
+  const vile_allow : string[] = _.get(config, "vile.allow", [])
 
   set_ignore_list(plugin_config, vile_ignore)
   set_allow_list(plugin_config, vile_allow)
@@ -52,12 +52,12 @@ const log_and_exit = (error : any) : void => {
 }
 
 const handle_worker_request = (data : vile.Lib.PluginWorkerData) : void => {
-  let plugins : string[] = data.plugins
-  let config : vile.YMLConfig = data.config
+  const plugins : string[] = data.plugins
+  const config : vile.YMLConfig = data.config
 
   Bluebird.map(plugins, (plugin_name : string) => {
-    let name : string = plugin_name.replace("vile-", "")
-    let plugin_config = get_plugin_config(name, config)
+    const name : string = plugin_name.replace("vile-", "")
+    const plugin_config = get_plugin_config(name, config)
     return plugin.exec_plugin(name, plugin_config)
   })
   .then(_.flatten)

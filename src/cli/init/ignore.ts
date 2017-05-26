@@ -22,23 +22,23 @@ const get_chosen_ignored_directories = (
 ) : Bluebird<string[]> => {
   if (_.isEmpty(dirs)) return Bluebird.resolve(dirs)
 
-  let choices : any[] = _.map(dirs, (dir : string) => {
+  const choices : any[] = _.map(dirs, (dir : string) => {
     return { name: dir }
   })
 
   // HACK: then is not on type Prompt?
-  return (<any>inquirer).prompt({
-    type: "checkbox",
+  return (inquirer as any).prompt({
+    choices,
     message: "Select any directories or files to ignore.",
     name: "dirs",
-    choices: choices,
+    type: "checkbox",
     validate: (answer : string[]) => true
   })
   .then((answers : any) => answers.dirs)
 }
 
 const ignored_directories = (directory : string) : Bluebird<string[]> =>
-  (<any>fs).readdirAsync(directory)
+  (fs as any).readdirAsync(directory)
     .then((targets : string[]) =>
       _.filter(targets, (target : string) =>
         fs.statSync(target).isDirectory() &&
@@ -46,25 +46,25 @@ const ignored_directories = (directory : string) : Bluebird<string[]> =>
     .then(get_chosen_ignored_directories)
 
 const get_any_extra_directories_from_user = () : Bluebird<string[]> =>
-  (<any>inquirer.prompt)([
+  (inquirer as any).prompt([
     {
-      type: "input",
+      message: "Enter paths (separate with commas):",
       name: "extra_ignore_dirs",
-      message: "Enter paths (separate with commas):"
+      type: "input"
     }
   ])
   .then((answers : any) => {
-    let dirs : string = answers.extra_ignore_dirs
+    const dirs : string = answers.extra_ignore_dirs
     return _.compact(_.toString(dirs).split(","))
   })
 
 const get_any_extra_directories = () : Bluebird<string[]> =>
-  (<any>inquirer).prompt([
+  (inquirer as any).prompt([
     {
-      type: "confirm",
-      name: "get_extra_dirs",
+      default: true,
       message: "Would you like to manually add paths to ignore?",
-      default: true
+      name: "get_extra_dirs",
+      type: "confirm"
     }
   ]).then((answers : any) => {
     if (answers.get_extra_dirs) {

@@ -25,18 +25,17 @@ const detect_language = (
   new Bluebird((
     resolve : (s : string) => void,
     reject : (s : string) => void
-  ) => {
-    detect(filepath, function (err : string, language : string) {
+  ) =>
+    detect(filepath, (err : string, language : string) =>
       err ?
         reject(err) :
         resolve(language)
-    })
-  })
+    ))
 
 const check_for_project_languages = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> => {
-  let langs : string[] = []
+  const langs : string[] = []
 
   return util.promise_each(
     process.cwd(),
@@ -53,27 +52,27 @@ const check_for_project_languages = (
         })
     , { read_data: false })
   .then(() => {
-    let uniq_langs : string[] = _.chain(_.filter(_.uniq(langs)))
+    const uniq_langs : string[] = _.chain(_.filter(_.uniq(langs)))
       .map((lang : string) => lang.toLowerCase())
       .value()
 
     if (_.isEmpty(uniq_langs)) return Bluebird.resolve(config)
 
-    return (<any>inquirer).prompt({
-      type: "checkbox",
-      message: "It appears you speak our language. Select any that apply!",
-      name: "langs",
+    return (inquirer as any).prompt({
       choices: _.map(uniq_langs, (lang : string) => {
         return { name: lang }
       }),
+      message: "It appears you speak our language. Select any that apply!",
+      name: "langs",
+      type: "checkbox",
       validate: (answer : string[]) => true
     })
     .then((answers : any) => {
       _.each(
         _.get(answers, "langs", []),
         (lang : string) => {
-          let lcase = lang.toLowerCase()
-          let plugins = plugin_map.langs[lcase] || []
+          const lcase = lang.toLowerCase()
+          const plugins = plugin_map.langs[lcase] || []
           config.vile.plugins = config.vile.plugins.concat(plugins)
         })
 

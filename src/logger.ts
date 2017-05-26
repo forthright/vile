@@ -1,7 +1,7 @@
 import _ = require("lodash")
 import minilog = require("minilog")
 
-let filter = new minilog.Filter()
+const filter = new minilog.Filter()
 
 const default_filter = () => {
   filter.allow(/.*/, "error")
@@ -16,7 +16,7 @@ const log_level = (level : string) =>
 
 const init = () => {
   // HACK!
-  let nocolor = _.includes(process.argv, "--nodecorations") ||
+  const nocolor = _.includes(process.argv, "--nodecorations") ||
     _.includes(process.argv, "-n")
 
   if (nocolor) {
@@ -34,11 +34,11 @@ const init = () => {
   default_filter()
 }
 
-export = <vile.Lib.Logger>{
+export = {
   create: minilog,
   default: default_filter,
-  quiet: quiet,
-  level: log_level
-}
+  level: log_level,
+  quiet
+} as vile.Lib.Logger
 
 init()

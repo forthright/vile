@@ -11,6 +11,4 @@ const create = (cli : commander.ICommand) =>
         opn(VILE_DOCS_URL)
       })
 
-export = {
-  create: create
-}
+export = { create }
