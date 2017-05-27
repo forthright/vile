@@ -73,13 +73,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/request@0.0.42":
-  version "0.0.42"
-  resolved "https://registry.yarnpkg.com/@types/request/-/request-0.0.42.tgz#e47a53bf0b130464854fb693297746a0c0479c31"
-  dependencies:
-    "@types/form-data" "*"
-    "@types/node" "*"
-
 "@types/request@0.0.43":
   version "0.0.43"
   resolved "https://registry.yarnpkg.com/@types/request/-/request-0.0.43.tgz#fcc59cfd88e63034e813c6884a0aade2d0f7e935"
@@ -4204,13 +4197,6 @@ opener@~1.4.2:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/opener/-/opener-1.4.3.tgz#5c6da2c5d7e5831e8ffa3964950f8d6674ac90b8"
 
-opn@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/opn/-/opn-4.0.2.tgz#7abc22e644dff63b0a96d5ab7f2790c0f01abc95"
-  dependencies:
-    object-assign "^4.0.1"
-    pinkie-promise "^2.0.0"
-
 opn@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/opn/-/opn-5.0.0.tgz#f8870d7cd969b218030cb6ce5a1285e795931df3"
@@ -6114,9 +6100,9 @@ vile-tslint@^0.3.1:
     lodash "^4.17.4"
     tslint "^5.2.0"
 
-vile@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/vile/-/vile-0.14.0.tgz#9fb6f89cd2b96dea47eb4ab2995334621434a939"
+vile@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/vile/-/vile-0.15.0.tgz#a3e4efd662a22940599ce3d2a1b935f9a2d54fca"
   dependencies:
     "@types/bluebird" "^3.5.2"
     "@types/commander" "2.3.31"
@@ -6127,7 +6113,7 @@ vile@^0.14.0:
     "@types/minilog" "^2.0.29"
     "@types/node" "^7.0.13"
     "@types/opn" "^3.0.28"
-    "@types/request" "0.0.42"
+    "@types/request" "0.0.43"
     bluebird "^3.5.0"
     cli-spinner "0.2.6"
     commander "^2.9.0"
@@ -6141,7 +6127,7 @@ vile@^0.14.0:
     lodash "^4.17.x"
     minilog "^3.1.0"
     npm-run-path "^2.0.2"
-    opn "^4.0.2"
+    opn "^5.0.0"
     request "^2.81.0"
     unixify "^1.0.0"
 
