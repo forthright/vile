@@ -41,8 +41,6 @@ const matches = (
   return matched(filepath)
 }
 
-// TODO: what to do about dirs (expecting called to know that)
-
 const is_ignored = (
   filepath : string,
   ignore_list : vile.IgnoreList = []
@@ -69,6 +67,7 @@ const is_allowed = (
   }
 }
 
+// TODO: what to do about dirs (expecting called to know that)
 const filter_promise_each = (
   ignore_list : vile.IgnoreList,
   allow_list : vile.AllowList
