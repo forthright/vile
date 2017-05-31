@@ -6,39 +6,33 @@ import npm_run_path = require("npm-run-path")
 import extend = require("extend")
 import _ = require("lodash")
 import Bluebird = require("bluebird")
-import ignore = require("ignore-file")
+import ignore = require("ignore")
 import config = require("./config")
 
-// TODO: make a constants file or something
-const DEFAULT_VILE_YML         = ".vile.yml"
+const DEFAULT_VILE_YML = ".vile.yml"
 
 Bluebird.promisifyAll(fs)
 
+const get_or_load_config = () : vile.YMLConfig => {
+  let conf : vile.YMLConfig = config.get()
+  if (_.isEmpty(conf)) conf = config.load(DEFAULT_VILE_YML)
+  return conf
+}
+
 const matches = (
   filepath : string,
-  key : string,
-  list_or_string : any
+  config_key : string,
+  to_match : string[] | string
 ) : boolean => {
-  let matched : (a : string) => boolean
+  const matcher = ignore()
 
-  if (!list_or_string) {
-    const conf : any = config.get()
-    // HACK: this is fragile, perhaps config should be in this module
-    list_or_string = _.isEmpty(conf) ? _.get(
-      config.load(DEFAULT_VILE_YML),
-      key
-    ) : conf
+  if (!to_match) {
+    to_match = _.get(get_or_load_config(), config_key, [])
   }
 
-  if (list_or_string) {
-    matched = typeof list_or_string == "string" ?
-      ignore.sync(list_or_string) :
-      ignore.compile(list_or_string)
-  } else {
-    matched = () => false
-  }
-
-  return matched(filepath)
+  return matcher
+    .add(_.concat([], to_match))
+    .ignores(filepath)
 }
 
 const is_ignored = (
@@ -51,7 +45,7 @@ const is_allowed = (
   filepath : string,
   allow_list : vile.AllowList = []
 ) : boolean => {
-  let unixpath : string = unixify(filepath)
+  const unixpath : string = unixify(filepath)
 
   if (_.isEmpty(allow_list)) return true
 

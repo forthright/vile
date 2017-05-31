@@ -59,7 +59,7 @@
     "commander": "^2.9.0",
     "extend": "^3.0.0",
     "git-diff-tree": "^1.0.0",
-    "ignore-file": "^1.1.2",
+    "ignore": "^3.3.3",
     "inquirer": "^3.0.6",
     "js-yaml": "^3.8.3",
     "language-detect": "^1.1.0",

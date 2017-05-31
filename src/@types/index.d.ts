@@ -211,9 +211,9 @@ declare namespace vile {
 
   export type PluginList = string[]
 
-  export type IgnoreList = string[]
+  export type IgnoreList = string[] | string
 
-  export type AllowList = string[]
+  export type AllowList = string[] | string
 
   export type YMLConfig = any
 

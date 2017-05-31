@@ -150,7 +150,7 @@ the provided ignore list.
 However, you can use the `vile.ignored("path", ignore_list)` library
 method to do the matching for you.
 
-For reference, [ignore-file](https://github.com/mafintosh/ignore-file) is currently used for matching.
+For reference, [node-ignore](https://www.npmjs.com/package/ignore) is currently used for matching.
 
 ### Allow Lists
 
