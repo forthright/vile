@@ -51,20 +51,13 @@ const is_allowed = (
   filepath : string,
   allow_list : vile.AllowList = []
 ) : boolean => {
-  filepath = unixify(filepath)
+  let unixpath : string = unixify(filepath)
 
-  if (_.isEmpty(allow_list)) {
-    return true
-  // HACK: not ideal way of doing this (need to do better matching)
-  } else {
-    if (typeof allow_list == "string") allow_list = [ allow_list ]
-    // HACK: not totally correct (ex: /fo is not within /foo)
-    return _
-      .some(allow_list, (pattern : string) =>
-        pattern.indexOf(filepath) == 0 ||
-          filepath.indexOf(pattern) == 0) ||
-            matches(filepath, "vile.allow", allow_list)
-  }
+  if (_.isEmpty(allow_list)) return true
+
+  return _
+    .some(_.concat([], allow_list), (pattern : string) =>
+      matches(unixpath, "vile.allow", allow_list))
 }
 
 // TODO: what to do about dirs (expecting called to know that)
