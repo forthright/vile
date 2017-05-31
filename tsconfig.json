@@ -15,7 +15,6 @@
     "rootDir": "src",
     "target": "ESNext",
     "typeRoots": [
-      "node_modules/@types",
       "src/@types"
     ]
   },
