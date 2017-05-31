@@ -6,8 +6,6 @@ vile:
     - LICENSE
     - coffeelint.json
     - .ackrc
-    - .babelrc
-    - .build
     - .npmignore
     - .travis.yml
     - doc

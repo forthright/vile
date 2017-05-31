@@ -40,8 +40,8 @@
     "maintainability"
   ],
   "engines": {
-    "node": ">= 0.12",
-    "npm": ">= 2.0.0"
+    "node": ">=4.0.0",
+    "npm": ">=2.0.0"
   },
   "dependencies": {
     "@types/bluebird": "^3.5.2",
@@ -72,8 +72,6 @@
     "unixify": "^1.0.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-preset-es2015": "^6.24.1",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "coffee-script": "^1.12.5",
@@ -113,11 +111,10 @@
     "vile-tslint": "^0.3.2"
   },
   "scripts": {
-    "babel": "babel",
     "coffee": "coffee",
-    "compile": "node bin/compile",
-    "compile-dev": "node bin/compile-dev",
-    "clean": "rm -rf {.build,.test,.nyc_output,coverage,lib} && git checkout -- lib",
+    "compile": "tsc",
+    "compile-dev": "coffee -cbo .test test",
+    "clean": "rm -rf {.test,.nyc_output,coverage,lib} && git checkout -- lib",
     "dev": "sh bin/dev",
     "dev-setup": "sh bin/dev-setup",
     "gen-docs": "node bin/gen-docs",

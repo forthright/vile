@@ -4,11 +4,11 @@
 
 A punishing yet easy to use tool for writing insightful code.
 
-## TL;DR
+## Overview
 
-This is the official [cli](bin/vile) and [core lib](src/) for [vile.io](https://vile.io).
+This is the official [library](src/) for [vile.io](https://vile.io).
 
-[Standalone](#architecture) it is a multi language/OS static analyzer with a unifying data spec.
+[Standalone](HACKING.md#architecture) it is a multi language/OS static analyzer with a unifying data spec.
 
 ## Installation & Usage
 
@@ -24,7 +24,7 @@ This project is licensed under the [MPL-2.0](LICENSE) license.
 
 Any contributions made to this project are made under the current license.
 
-## Contributions
+## Contributing
 
 Current list of [Contributors](https://github.com/forthright/vile/graphs/contributors).
 
@@ -51,35 +51,6 @@ By participating in this project you agree to our [Code of Conduct](CODE_OF_COND
 
 - Brent Lintner - [@brentlintner](http://github.com/brentlintner)
 
-## Hacking
+### Hacking
 
 See [HACKING.md](HACKING.md).
-
-## Architecture
-
-Vile is centered around the use of [Plugins](https://docs.vile.io/#creating-a-plugin) that generate [Issues](https://docs.vile.io/interfaces/_src__types_index_d_.vile.issue.html).
-
-A plugin is primarily written in JS, but you can
-easily [shell out](https://docs.vile.io/#writing-non-javascript-plugins) to another script.
-
-The core library and cli is written in `~ES6` Style [TypeScript](http://www.typescriptlang.org), on top of [Babel](http://babeljs.io).
-
-The test code is written in [CoffeeScript](http://coffeescript.org).
-
-### Directory Structure
-
-- `src` - typescript lib
-- `lib` - compiled js
-- `test` - any test related code
-
-### Why NodeJS?
-
-Node has, in the creator's humble opinion at this time of creation (2015), the
-ideal balance of nix/windows support, barrier to entry, quality and
-size of community and tooling, and the relative, per project requirements
-of data manipulation and speed needed at this point in time.
-
-However, Vile as a project, overall, should not be considered to be
-written in (mainly) one language. It is open ended how/when the project
-should make use of other, possibly better suited languages/tooling, and
-how to coordinate it.

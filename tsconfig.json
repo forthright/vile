@@ -10,10 +10,10 @@
     "noImplicitThis": true,
     "alwaysStrict": true,
     "noUnusedLocals": true,
-    "outDir": ".build",
+    "outDir": "lib",
     "removeComments": true,
     "rootDir": "src",
-    "target": "ESNext",
+    "target": "ES3",
     "typeRoots": [
       "src/@types"
     ]

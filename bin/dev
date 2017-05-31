@@ -1,6 +1,3 @@
 #!/usr/bin/env sh
 tsc -w &
-sleep 5
-babel -w -d lib -m common --compact false .build &
-sleep 2
 coffee -cwbo .test test &
