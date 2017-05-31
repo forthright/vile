@@ -95,7 +95,7 @@
     "typedoc": "^0.7.1",
     "typescript": "^2.3.2",
     "typescript-eslint-parser": "^3.0.0",
-    "vile": "^0.15.0",
+    "vile": "^0.16.0",
     "vile-coffeelint": "^0.1.14",
     "vile-comment": "^0.1.17",
     "vile-coverage": "^0.2.14",

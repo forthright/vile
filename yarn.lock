@@ -2725,12 +2725,6 @@ iferr@^0.1.5, iferr@~0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/iferr/-/iferr-0.1.5.tgz#c60eed69e6d8fdb6b3104a1fcbca1c192dc5b501"
 
-ignore-file@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/ignore-file/-/ignore-file-1.1.2.tgz#9a5b20486aa0da83f9317916a86012ba2f8e903c"
-  dependencies:
-    minimatch "^1.0.0"
-
 ignore@^3.0.9, ignore@^3.2.0, ignore@^3.3.3:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.3.tgz#432352e57accd87ab3110e82d3fea0e47812156d"
@@ -3685,13 +3679,6 @@ minimatch@3.0.2:
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.2.tgz#0f398a7300ea441e9c348c83d98ab8c9dbf9c40a"
   dependencies:
     brace-expansion "^1.0.0"
-
-minimatch@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-1.0.0.tgz#e0dd2120b49e1b724ce8d714c520822a9438576d"
-  dependencies:
-    lru-cache "2"
-    sigmund "~1.0.0"
 
 minimatch@^2.0.1:
   version "2.0.10"
@@ -6100,9 +6087,9 @@ vile-tslint@^0.3.2:
     lodash "^4.17.4"
     tslint "^5.3.2"
 
-vile@^0.15.0:
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/vile/-/vile-0.15.0.tgz#a3e4efd662a22940599ce3d2a1b935f9a2d54fca"
+vile@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/vile/-/vile-0.16.0.tgz#3159aa1544d9b8b91b805bb9781a27bd250774cf"
   dependencies:
     "@types/bluebird" "^3.5.2"
     "@types/commander" "2.3.31"
@@ -6119,7 +6106,7 @@ vile@^0.15.0:
     commander "^2.9.0"
     extend "^3.0.0"
     git-diff-tree "^1.0.0"
-    ignore-file "^1.1.2"
+    ignore "^3.3.3"
     inquirer "^3.0.6"
     js-yaml "^3.8.3"
     language-detect "^1.1.0"
