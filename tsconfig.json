@@ -13,7 +13,7 @@
     "outDir": "lib",
     "removeComments": true,
     "rootDir": "src",
-    "target": "ES3",
+    "target": "ES5",
     "typeRoots": [
       "src/@types"
     ]
