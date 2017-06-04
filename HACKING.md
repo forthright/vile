@@ -19,10 +19,9 @@ See all available build commands:
 
     npm run
 
-To build all:
+Compile from `src` to `lib`:
 
     npm run -s compile
-    npm run -s compile-dev
 
 To run the CLI locally:
 
@@ -32,9 +31,17 @@ To run tests:
 
     npm -s t
 
-To recompile `src` to `lib`:
+To run without system level tests:
 
-    npm run -s compile
+    npm run -s test-fast
+
+To run with system level tests:
+
+    npm run -s test-sys
+
+And to run with test coverage:
+
+    npm run -s test-cov
 
 To run compile task with file watch in the background:
 

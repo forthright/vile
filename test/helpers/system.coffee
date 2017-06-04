@@ -4,10 +4,7 @@ child_process = require "child_process"
 chai = require "chai"
 expect = chai.expect
 
-CWD = process.cwd()
 VILE_BIN = path.join(__dirname, "..", "..", "bin", "vile")
-NYC_BIN = path.resolve(path.join(
-  __dirname, "..", "..", "node_modules", ".bin", "nyc"))
 
 sys_test_count = 0
 
@@ -17,14 +14,8 @@ exec_err = (args, cb, stdio) ->
 exec = (args, cb, stdio, pass_err) ->
   cmd = undefined
   sys_test_count += 1
-  cov_dir = path.join CWD, "coverage", "system-#{sys_test_count}"
 
-  if process.env.TEST_COV == "1"
-    cmd = "#{NYC_BIN} -r json " +
-    "-x .test -x **/node_modules/** " +
-    "--report-dir #{cov_dir} #{VILE_BIN} #{args}"
-  else
-    cmd = "#{VILE_BIN} #{args}"
+  cmd = "#{VILE_BIN} #{args}"
 
   cli_args = cmd.split(" ")
   proc = child_process.spawn(

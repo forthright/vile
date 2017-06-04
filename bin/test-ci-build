@@ -8,15 +8,9 @@ exec(
   function(code) {
     if (code !== 0) exit(code)
 
-    exec(
-      "npm run -s compile-dev",
-      function(code) {
-        if (code !== 0) exit(code)
-
-        exec(
-          "npm run -s test-cov",
-          function(code) {
-            if (code !== 0) exit(code)
-          })
-      })
+      exec(
+        "npm run -s test-cov",
+        function(code) {
+          if (code !== 0) exit(code)
+        })
   })

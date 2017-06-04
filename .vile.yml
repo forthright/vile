@@ -1,27 +1,21 @@
 vile:
   ignore:
     - appveyor.yml
-    - bower_components
     - coverage
     - LICENSE
     - coffeelint.json
-    - .ackrc
-    - .npmignore
     - .travis.yml
     - doc
     - .docs
     - node_modules
     - .nyc_output
     - tags
-    - .test/fixtures/**
     - test/fixtures/**
-    - .ctags
     - .git
     - circle.yml
     - .editorconfig
-    - .eslintrc
+    - .eslint.yml
     - .gitignore
-    - .npmrc
     - npm-debug.log
     - src/@types
     - tags
@@ -30,7 +24,6 @@ vile:
     - retire-report.json
     - tslint.json
     - tsd.json
-    - vendor
     - README.md
     - .vile.yml
     - yarn.lock
@@ -60,7 +53,6 @@ comment:
 eclint:
   ignore:
     - lib
-    - .test
 
 escomplex:
   config:
@@ -69,7 +61,6 @@ escomplex:
 language:
   ignore:
     - lib
-    - .test
 
 stat:
   allow:
@@ -83,7 +74,6 @@ eslint:
     - src/*
   ignore:
     - lib
-    - .test
 
 coverage:
   config:

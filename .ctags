@@ -1,8 +1,0 @@
---recurse=yes
---tag-relative=yes
---exclude=.git
---exclude=.build
---exclude=lib
---exclude=node_modules
---exclude=.test
---exclude=vendor

@@ -6,6 +6,8 @@ import logger = require("./logger")
 
 const log = logger.create("git")
 
+const CWD = process.cwd()
+
 const into_file_paths = (gtd_raw : any[]) : string[] =>
   _.map(_.filter(gtd_raw,
     (raw : any) => _.get(raw, "status", "").toUpperCase() != "D"),
@@ -15,7 +17,7 @@ const into_file_paths = (gtd_raw : any[]) : string[] =>
 // TODO: upp the threshold for streams and diff size
 const changed_files = (
   original_rev : string = "--root",
-  repo_path : string = path.join(process.cwd(), ".git")
+  repo_path : string = path.join(CWD, ".git")
 ) : Bluebird<string[]> =>
   new Bluebird((
     resolve : (files : string[]) => void,

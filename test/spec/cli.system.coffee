@@ -45,7 +45,7 @@ press =
   UP: '\x1B\x5B\x41'
   DOWN: '\x1B\x5B\x42'
 
-describe "cli blackbox testing", ->
+describe "system :: cli blackbox testing", ->
   afterEach -> process.chdir CWD
 
   it "can list help", (done) ->
@@ -53,7 +53,6 @@ describe "cli blackbox testing", ->
 
     cli.exec "-h", (stdout) ->
       expect(stdout).to.match /Usage\: vile \[options\] \[command\]/i
-      process.chdir CWD
       done()
 
   describe "auth", ->
@@ -64,7 +63,6 @@ describe "cli blackbox testing", ->
         expect(stdout).to.match /To authenticate, first go to/i
         expect(stdout).to.match /then:/i
         expect(stdout).to.match /vile p \-u/i
-        process.chdir CWD
         done()
 
   describe "init", ->
@@ -83,7 +81,6 @@ describe "cli blackbox testing", ->
                 path.join(CLI_INIT_EMPTY_DIR, ".keep"), '', "utf-8")
               expect(fs.existsSync("package.json")).to.eql false
               expect(fs.existsSync(".vile.yml")).to.eql false
-              process.chdir CWD
               process.nextTick -> done()
 
       it "can go through a default sequence", (done) ->
@@ -151,7 +148,6 @@ describe "cli blackbox testing", ->
               throw err if err
               expect(fs.existsSync("package.json")).to.eql false
               expect(fs.existsSync(".vile.yml")).to.eql false
-              process.chdir CWD
               process.nextTick -> done()
 
       it "has the expected directories ignore in .vile.yml", (done) ->
@@ -222,7 +218,6 @@ describe "cli blackbox testing", ->
               expect(fs.existsSync(".vile.yml")).to.eql false
               fs.writeFileSync(
                 path.join(CLI_INIT_IGNORES_DIR, ".vile.yml"), '', "utf-8")
-              process.chdir CWD
               process.nextTick -> done()
 
       it "has the expected directories ignore in .vile.yml", (done) ->

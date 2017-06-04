@@ -50,5 +50,4 @@ install:
 
 test_script:
   - npm run -s compile
-  - npm run -s compile-dev
   - npm run -s test

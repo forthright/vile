@@ -4,11 +4,16 @@ git = mimus.require "./../../lib/git", __dirname, []
 chai = require "./../helpers/sinon_chai"
 sinon = require "sinon"
 git_log = mimus.get git, "log"
-git_repo_path = path.join(process.cwd(), ".git")
 expect = chai.expect
 git_diff_tree = undefined
+git_repo_path = undefined
+
+GIT_CWD = process.cwd()
 
 describe "git", ->
+  beforeEach ->
+    git_repo_path = path.join GIT_CWD, ".git"
+
   afterEach mimus.reset
 
   describe ".changed_files", ->
@@ -81,7 +86,7 @@ describe "git", ->
           git.changed_files().should.be.fulfilled.notify ->
             process.nextTick ->
               git_diff_tree.should.have.been
-                .calledWith path.join(process.cwd(), ".git")
+                .calledWith path.join(GIT_CWD, ".git")
               done()
           return
 
