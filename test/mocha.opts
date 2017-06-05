@@ -1,4 +1,4 @@
 --compilers coffee:coffee-script/register
 -R dot
--t 3000
+-t 5000
 -s 2000
