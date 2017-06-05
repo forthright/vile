@@ -94,7 +94,7 @@
     "typescript-eslint-parser": "^3.0.0",
     "vile": "^0.16.0",
     "vile-coffeelint": "^0.1.14",
-    "vile-comment": "^0.1.17",
+    "vile-comment": "^0.1.19",
     "vile-coverage": "^0.2.14",
     "vile-depcheck": "^0.1.12",
     "vile-eclint": "^0.1.13",

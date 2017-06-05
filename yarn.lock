@@ -3630,7 +3630,15 @@ npmi@^2.0.1:
     npm "^3"
     semver "^4.1.0"
 
-"npmlog@0 || 1 || 2 || 3", "npmlog@~2.0.0 || ~3.1.0":
+"npmlog@0 || 1 || 2 || 3", npmlog@^1.2.0:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-1.2.1.tgz#28e7be619609b53f7ad1dd300a10d64d716268b6"
+  dependencies:
+    ansi "~0.3.0"
+    are-we-there-yet "~1.0.0"
+    gauge "~1.2.0"
+
+"npmlog@~2.0.0 || ~3.1.0":
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-3.1.2.tgz#2d46fa874337af9498a2f12bb43d8d0be4a36873"
   dependencies:
@@ -3638,14 +3646,6 @@ npmi@^2.0.1:
     console-control-strings "~1.1.0"
     gauge "~2.6.0"
     set-blocking "~2.0.0"
-
-npmlog@^1.2.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-1.2.1.tgz#28e7be619609b53f7ad1dd300a10d64d716268b6"
-  dependencies:
-    ansi "~0.3.0"
-    are-we-there-yet "~1.0.0"
-    gauge "~1.2.0"
 
 npmlog@~4.0.0:
   version "4.0.2"
@@ -5498,12 +5498,12 @@ vile-coffeelint@^0.1.14:
     coffeelint "^1.16.0"
     lodash "^4.17.4"
 
-vile-comment@^0.1.17:
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/vile-comment/-/vile-comment-0.1.18.tgz#a0e82a7461e1340f6ab11bdfcb0e944b25d7ce9e"
+vile-comment@^0.1.19:
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/vile-comment/-/vile-comment-0.1.19.tgz#1a389dc731e05dadb48eb75012e0d800ed3a45c0"
   dependencies:
+    linez "^4.1.4"
     lodash "^4.17.4"
-    wrench "~1.5.9"
 
 vile-coverage@^0.2.14:
   version "0.2.15"
@@ -5775,13 +5775,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-wordwrap@0.0.2:
+wordwrap@0.0.2, wordwrap@~0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-0.0.2.tgz#b79669bb42ecb409f83d583cad52ca17eaa1643f"
-
-wordwrap@~0.0.2:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-0.0.3.tgz#a3d5da6cd5c0bc0008d37234bbaf1bed63059107"
 
 wordwrap@~1.0.0:
   version "1.0.0"
@@ -5804,10 +5800,6 @@ wreck@^6.3.0:
   dependencies:
     boom "2.x.x"
     hoek "2.x.x"
-
-wrench@~1.5.9:
-  version "1.5.9"
-  resolved "https://registry.yarnpkg.com/wrench/-/wrench-1.5.9.tgz#411691c63a9b2531b1700267279bdeca23b2142a"
 
 write-file-atomic@^1.1.2, write-file-atomic@^1.1.4, write-file-atomic@~1.2.0:
   version "1.2.0"
