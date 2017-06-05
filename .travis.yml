@@ -28,7 +28,7 @@ matrix:
             - g++-4.9
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; eval "CC=gcc-4.9 && CXX=g++-4.9"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then eval "CC=gcc-4.9 && CXX=g++-4.9"; fi
   - gcc --version
   - g++ --version
   - uname -a
