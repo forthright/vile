@@ -2847,9 +2847,9 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-license-checker@^9.0.3:
-  version "9.0.3"
-  resolved "https://registry.yarnpkg.com/license-checker/-/license-checker-9.0.3.tgz#bc9136911fef129d255a2255583765ff569fa316"
+license-checker@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/license-checker/-/license-checker-11.0.0.tgz#546e58a9bbb9e31ce7d89d9450fc884f8fa0d39b"
   dependencies:
     chalk "~0.5.1"
     debug "^2.2.0"
@@ -2857,6 +2857,7 @@ license-checker@^9.0.3:
     nopt "^2.2.0"
     read-installed "~4.0.3"
     semver "^5.3.0"
+    spdx "^0.5.1"
     treeify "^1.0.1"
 
 liftoff@^2.1.0:
@@ -3262,7 +3263,7 @@ minilog@^3.1.0:
   dependencies:
     microee "0.0.6"
 
-"minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2:
+"minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
   dependencies:
@@ -4880,13 +4881,24 @@ spdx-correct@~1.0.0:
   dependencies:
     spdx-license-ids "^1.0.2"
 
+spdx-exceptions@^1.0.0:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/spdx-exceptions/-/spdx-exceptions-1.0.5.tgz#9d21ac4da4bdb71d060fb74e5a67531d032cbba6"
+
 spdx-expression-parse@~1.0.0:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/spdx-expression-parse/-/spdx-expression-parse-1.0.4.tgz#9bdf2f20e1f40ed447fbe273266191fced51626c"
 
-spdx-license-ids@^1.0.2:
+spdx-license-ids@^1.0.0, spdx-license-ids@^1.0.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-1.2.2.tgz#c9df7a3424594ade6bd11900d596696dc06bac57"
+
+spdx@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/spdx/-/spdx-0.5.1.tgz#d36c275088b48d75a9046cd44a838ce4b5339998"
+  dependencies:
+    spdx-exceptions "^1.0.0"
+    spdx-license-ids "^1.0.0"
 
 split-transform-stream@~0.1.1:
   version "0.1.1"
@@ -5202,15 +5214,16 @@ tslib@^1.7.1:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.7.1.tgz#bc8004164691923a79fe8378bbeb3da2017538ec"
 
-tslint@^5.2.0, tslint@^5.3.2:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.4.0.tgz#e5e26524ca39fe950a51416456c2f296ccb69348"
+tslint@^5.4.2:
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.4.2.tgz#609b6640cc0424f4a395a9adf68c375563c549c7"
   dependencies:
     babel-code-frame "^6.22.0"
     colors "^1.1.2"
     commander "^2.9.0"
     diff "^3.2.0"
     glob "^7.1.1"
+    minimatch "^3.0.4"
     resolve "^1.3.2"
     semver "^5.3.0"
     tslib "^1.7.1"
@@ -5563,13 +5576,13 @@ vile-language@^0.1.12:
     language-detect "^1.1.0"
     lodash "^4.17.4"
 
-vile-license@^0.4.0:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/vile-license/-/vile-license-0.4.1.tgz#82c553d412888a5266e1321c8556a16d002e608c"
+vile-license@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/vile-license/-/vile-license-0.4.2.tgz#423fc98185181d03c3d5a563cf71c8dd7146cdcd"
   dependencies:
     bluebird "^3.5.0"
     bower-license "^0.4.4"
-    license-checker "^9.0.3"
+    license-checker "^11.0.0"
     lodash "^4.17.4"
 
 vile-ncu@^0.2.1:
@@ -5604,13 +5617,13 @@ vile-stat@^0.0.15:
     lodash "^4.17.4"
     sloc "^0.2.0"
 
-vile-tslint@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/vile-tslint/-/vile-tslint-0.3.2.tgz#f67ebb25e1fc22d57f3659d6c65b1a82c2e8f4ae"
+vile-tslint@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/vile-tslint/-/vile-tslint-0.3.3.tgz#de443959d962cb6adcb4d47d4e290945314a1275"
   dependencies:
     bluebird "^3.5.0"
     lodash "^4.17.4"
-    tslint "^5.3.2"
+    tslint "^5.4.2"
 
 vile@^0.16.0:
   version "0.16.0"
