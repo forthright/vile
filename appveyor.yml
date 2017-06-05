@@ -3,29 +3,19 @@ version: "#{build}"
 os: Visual Studio 2015
 
 cache:
-  - node_modules -> yarn.lock
-  - ~/.cache/yarn
+  - node_modules -> package.json
 
 environment:
   matrix:
     - nodejs_version: 4
-      npm_version: 2.x.x
-    - nodejs_version: 4
-      npm_version: 3.x.x
-    - nodejs_version: 4
-      npm_version: 4.x.x
     - nodejs_version: 6
-      npm_version: 2.x.x
-    - nodejs_version: 6
-      npm_version: 3.x.x
-    - nodejs_version: 6
-      npm_version: 4.x.x
+    - nodejs_version: 7
+    - nodejs_version: 8
 
 matrix:
   fast_finish: true
 
 platform:
-  - x86
   - x64
 
 init:
@@ -45,8 +35,7 @@ install:
   - ps: Install-Product node $env:nodejs_version
   - ps: npm install -g npm@$env:npm_version
   - ver && node --version && npm --version
-  - npm i -g yarn
-  - yarn
+  - npm i
 
 test_script:
   - npm run -s compile

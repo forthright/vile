@@ -7,18 +7,14 @@ language: node_js
 node_js:
   - "4"
   - "6"
+  - "7"
+  - "8"
 
 sudo: false
 
 cache:
-  yarn: true
   directories:
     - node_modules
-
-env:
-  - NPM_VER=2.x.x
-  - NPM_VER=3.x.x
-  - NPM_VER=4.x.x
 
 matrix:
   fast_finish: true
@@ -26,7 +22,6 @@ matrix:
 before_install:
   - uname -a
   - nvm --version
-  - npm install -g npm@$NPM_VER
   - node --version
   - npm --version
 
@@ -36,6 +31,9 @@ git:
 branches:
   only:
     - master
+
+install:
+  - npm i
 
 before_script:
   - echo "no-op"
