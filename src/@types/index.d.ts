@@ -374,7 +374,7 @@ declare namespace vile {
       default : () => void;
     }
 
-    export interface CLIApp extends commander.ICommand {
+    export interface CLIApp extends commander.CommanderStatic {
       quiet?  : boolean;
       format? : string;
       log?    : string;
@@ -383,7 +383,7 @@ declare namespace vile {
     }
 
     export interface CLIModule {
-      create : (commander : commander.ICommand) => void
+      create : (commander : commander.CommanderStatic) => void
     }
 
     // TODO: flush any any here

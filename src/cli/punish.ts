@@ -175,7 +175,7 @@ const load_config = (app : any) => {
   }
 }
 
-const create = (cli : commander.ICommand) =>
+const create = (cli : commander.CommanderStatic) =>
   cli
     .command("punish [paths...]")
     .alias("p")

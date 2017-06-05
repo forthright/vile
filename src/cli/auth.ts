@@ -3,7 +3,7 @@ import logger = require("./../logger")
 
 const log = logger.create("cli")
 
-const create = (cli : commander.ICommand) =>
+const create = (cli : commander.CommanderStatic) =>
   cli
     .command("auth")
       .alias("a")

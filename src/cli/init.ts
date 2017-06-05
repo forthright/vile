@@ -20,7 +20,7 @@ const vile_config_base = () : vile.YMLConfig => {
 }
 
 const initialize_vile_project = (
-  cli : commander.IExportedCommand
+  cli : commander.CommanderStatic
 ) : Bluebird<vile.YMLConfig> =>
   pre.init(vile_config_base())
     .then(ignore.init)
@@ -29,7 +29,7 @@ const initialize_vile_project = (
     .then(coverage.init)
     .then(post.init)
 
-const create = (cli : commander.ICommand) =>
+const create = (cli : commander.CommanderStatic) =>
   cli
     .command("init")
     .alias("i")
