@@ -15,8 +15,9 @@ sudo: false
 cache:
   directories:
     - node_modules
+
 env:
-  - CXX=g++-7
+  - CXX=g++-4.9
 
 # https://docs.travis-ci.com/user/languages/javascript-with-nodejs#Node.js-v4-(or-io.js-v3)-compiler-requirements
 addons:
@@ -24,7 +25,7 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - g++-7
+      - g++-4.9
 
 matrix:
   fast_finish: true
