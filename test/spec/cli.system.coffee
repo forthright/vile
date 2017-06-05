@@ -11,7 +11,7 @@ issues_snippets = require "./../fixtures/issues-snippets"
 issues_combined = require "./../fixtures/issues-combined"
 issues_not_combined = require "./../fixtures/issues-not-combined"
 expect = chai.expect
-on_win = !!os.platform().match(/win/i)
+on_win = os.platform() == "win32"
 nix_only_describe = if on_win then xit else it
 
 CWD = process.cwd()
