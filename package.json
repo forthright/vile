@@ -118,7 +118,7 @@
     "ncu": "ncu -u",
     "release-it": "release-it",
     "stats": "sloc -d -f cli-table -k total,source,comment -e 'fixtures|@types' src test",
-    "test": "globstar -- _mocha --compilers coffee:coffee-script/register -R dot -t 3000 -s 2000 \"test/spec/**/*.coffee\"",
+    "test": "globstar -- _mocha \"test/spec/**/*.coffee\"",
     "test-fast": "npm run -s test -- -i --grep 'system ::'",
     "test-sys": "npm run -s test -- -R spec --grep 'system ::'",
     "test-cov": "nyc -r json -r lcov -r text -x test -x **/node_modules/** npm run -s test",
