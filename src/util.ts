@@ -24,9 +24,9 @@ const matches = (
 
 const is_ignored = (
   filepath : string,
-  ignore_list : vile.IgnoreList = []
+  ignore_list : vile.IgnoreList
 ) : boolean =>
-  matches(unixify(filepath), "vile.ignore", ignore_list)
+  matches(unixify(filepath), ignore_list)
 
 const is_allowed = (
   filepath : string,
@@ -36,9 +36,12 @@ const is_allowed = (
 
   if (_.isEmpty(allow_list)) return true
 
+  // HACK: not ideal way of doing this (need to do better matching)
   return _
     .some(_.concat([], allow_list), (pattern : string) =>
-      matches(unixpath, "vile.allow", allow_list))
+      pattern.indexOf(unixpath) == 0 ||
+        unixpath.indexOf(pattern) == 0) ||
+          matches(unixpath, allow_list)
 }
 
 // TODO: what to do about dirs (expecting called to know that)

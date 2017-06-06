@@ -27,6 +27,7 @@ PLUGIN_CHECK_DIR = path.join SYSTEM_TESTS, "plugin_check"
 SNIPPET_DIR = path.join SYSTEM_TESTS, "snippet"
 FILTER_IGNORE_DIR = path.join SYSTEM_TESTS, "filtering_ignore"
 FILTER_ALLOW_DIR = path.join SYSTEM_TESTS, "filtering_allow"
+FILTER_ALLOW_DIR_SINGLE_FILE = path.join SYSTEM_TESTS, "filtering_allow_single_file"
 FILTER_ALLOW_DIR_VIA_CLI_ARGS = path
   .join SYSTEM_TESTS, "filtering_allow_via_cli_args"
 LOGGING_DIR = path.join SYSTEM_TESTS, "logging"
@@ -521,6 +522,20 @@ describe "system :: cli blackbox testing", ->
                 type: "error",
                 path: "src/sub/bar.js",
                 plugin: "test-filtering-allow-plugin"
+              }
+            ])
+            done()
+
+      describe "when a list item is within a directory", ->
+        beforeEach -> process.chdir FILTER_ALLOW_DIR_SINGLE_FILE
+
+        it "returns a list of filtered issues", (done) ->
+          cli.exec "p -n -d -f json src/sub/bar.js", (stdout) ->
+            expect(stdout).to.eql JSON.stringify([
+              {
+                type: "error",
+                path: "src/sub/bar.js",
+                plugin: "test-filtering-allow-single-file-plugin"
               }
             ])
             done()
