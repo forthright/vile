@@ -9,8 +9,6 @@ fi
 
 npm run -s compile
 
-npm run -s compile-dev
-
 npm t
 
 git add -f lib
