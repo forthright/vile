@@ -361,8 +361,8 @@ declare namespace vile {
 
       issue        : (d : RawIssueData) => Issue;
 
-      ignored      : (f : string, i? : IgnoreList) => boolean;
-      allowed      : (f : string, a? : AllowList) => boolean;
+      ignored      : (f : string, i : IgnoreList) => boolean;
+      allowed      : (f : string, a : AllowList) => boolean;
 
       spawn        : (b : string, o? : SpawnOptions) => Bluebird<SpawnData>;
     }

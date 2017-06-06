@@ -7,28 +7,15 @@ import extend = require("extend")
 import _ = require("lodash")
 import Bluebird = require("bluebird")
 import ignore = require("ignore")
-import config = require("./config")
-
-const DEFAULT_VILE_YML = ".vile.yml"
 
 Bluebird.promisifyAll(fs)
 
-const get_or_load_config = () : vile.YMLConfig => {
-  let conf : vile.YMLConfig = config.get()
-  if (_.isEmpty(conf)) conf = config.load(DEFAULT_VILE_YML)
-  return conf
-}
-
+// TODO: get ride of the config key part, move outside
 const matches = (
   filepath : string,
-  config_key : string,
   to_match : string[] | string
 ) : boolean => {
   const matcher = ignore()
-
-  if (!to_match) {
-    to_match = _.get(get_or_load_config(), config_key, [])
-  }
 
   return matcher
     .add(_.concat([], to_match))
@@ -43,7 +30,7 @@ const is_ignored = (
 
 const is_allowed = (
   filepath : string,
-  allow_list : vile.AllowList = []
+  allow_list : vile.AllowList
 ) : boolean => {
   const unixpath : string = unixify(filepath)
 
