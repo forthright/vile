@@ -12,7 +12,7 @@
     ],
     "class-name": true,
     "comment-format": [true],
-    "cyclomatic-complexity": [true, 6],
+    "cyclomatic-complexity": [true, 4],
     "curly": false,
     "eofline": true,
     "forin": true,
