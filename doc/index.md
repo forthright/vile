@@ -366,10 +366,12 @@ passive mode enabled:
 
 ## Creating A Plugin
 
-A plugin should be prefixed with `vile-`, and
-have a `commonjs` module that exports a `punish` method,
-which should return an array of issues,
-or a promise that resolves into one.
+A plugin itself should be an [npm package](https://docs.npmjs.com/getting-started/creating-node-modules) prefixed
+with `vile-`, and have a [main module](https://docs.npmjs.com/files/package.json#main) that
+exports a `punish` method.
+
+The `punish` method should return an array of issues,
+or a promise that resolves into one:
 
 ```javascript
 module.exports = {

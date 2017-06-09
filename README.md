@@ -6,9 +6,9 @@ A punishing yet easy to use tool for writing insightful code.
 
 ## Overview
 
-This is the official [library](src/) for [vile.io](https://vile.io).
+This is the official library for [vile.io](https://vile.io) which is currently in beta.
 
-[Standalone](HACKING.md#architecture) it is a multi language/OS static analyzer with a unifying data spec.
+Standalone it is a multi language/OS static analyzer with a unifying data spec.
 
 ## Installation & Usage
 
@@ -30,10 +30,11 @@ Current list of [Contributors](https://github.com/forthright/vile/graphs/contrib
 
 Any contributions are welcome and appreciated!
 
-All you need to do is submit a [Pull Request](https://github.com/forthright/vile/pulls).
+### Code Of Conduct
 
-1. Please consider tests and code quality before submitting.
-2. Please try to keep commits clean, atomic and well explained (for others).
+This project ascribes to [contributor-covenant.org](http://contributor-covenant.org).
+
+By participating in this project you agree to our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ### Issues
 
@@ -41,16 +42,15 @@ Current issue tracker is on [GitHub](https://github.com/forthright/vile/issues).
 
 Even if you are uncomfortable with code, an issue or question is welcome.
 
-### Code Of Conduct
+### Patches
 
-This project ascribes to [contributor-covenant.org](http://contributor-covenant.org).
+All you need to do is submit a [Pull Request](https://github.com/forthright/vile/pulls).
 
-By participating in this project you agree to our [Code of Conduct](CODE_OF_CONDUCT.md).
+1. Please consider tests and code quality before submitting.
+2. Please try to keep commits clean, atomic and well explained (for others).
+
+For more info see [doc/developing.md](doc/developing.md).
 
 ### Maintainers
 
 - Brent Lintner - [@brentlintner](http://github.com/brentlintner)
-
-### Hacking
-
-See [HACKING.md](HACKING.md).

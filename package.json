@@ -9,6 +9,7 @@
     "lib",
     "src/@types",
     "LICENSE",
+    "CHANGELOG.md",
     "README.md"
   ],
   "bin": {
