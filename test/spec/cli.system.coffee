@@ -83,7 +83,7 @@ describe "system :: cli blackbox testing", ->
                 path.join(CLI_INIT_EMPTY_DIR, ".keep"), '', "utf-8")
               expect(fs.existsSync("package.json")).to.eql false
               expect(fs.existsSync(".vile.yml")).to.eql false
-              process.nextTick -> done()
+              done()
 
       it "can go through a default sequence", (done) ->
         answers = [
@@ -133,7 +133,7 @@ describe "system :: cli blackbox testing", ->
             expect(stdout).to.match /vile\.io/i
             expect(stdout).to
               .match /be sure to read up on your installed plugins/i
-            process.nextTick -> done()
+            done()
 
         return
 
@@ -150,7 +150,7 @@ describe "system :: cli blackbox testing", ->
               throw err if err
               expect(fs.existsSync("package.json")).to.eql false
               expect(fs.existsSync(".vile.yml")).to.eql false
-              process.nextTick -> done()
+              done()
 
       it "has the expected directories ignore in .vile.yml", (done) ->
         answers = [
@@ -201,7 +201,7 @@ describe "system :: cli blackbox testing", ->
             expect(stdout).to
               .match /skipping: npm install \-\-save\-dev vile/i
             expect(stdout).to.match /looks like we are good to go/i
-            process.nextTick -> done()
+            done()
 
         return
 
@@ -220,7 +220,7 @@ describe "system :: cli blackbox testing", ->
               expect(fs.existsSync(".vile.yml")).to.eql false
               fs.writeFileSync(
                 path.join(CLI_INIT_IGNORES_DIR, ".vile.yml"), '', "utf-8")
-              process.nextTick -> done()
+              done()
 
       it "has the expected directories ignore in .vile.yml", (done) ->
         answers = [
@@ -288,7 +288,7 @@ describe "system :: cli blackbox testing", ->
               expect(stdout).to.match /vile\.io/i
               expect(stdout).to
                 .match /be sure to read up on your installed plugins/i
-              process.nextTick -> done()
+              done()
             , 200
 
         return
