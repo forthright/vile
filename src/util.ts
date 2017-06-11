@@ -1,7 +1,7 @@
 import unixify = require("unixify")
 import fs = require("fs")
 import path = require("path")
-import child_process = require("child_process")
+import cross_spawn = require("cross-spawn")
 import npm_run_path = require("npm-run-path")
 import extend = require("extend")
 import _ = require("lodash")
@@ -72,6 +72,18 @@ const collect_files = (
   } else { return [ rel_path ] }
 }
 
+const move_node_bin_to_end = (env_path : string) : string => {
+  const node_bin_dir : string = path.dirname(process.execPath)
+
+  const filtered_paths : string[] = _.filter(
+    env_path.split(path.delimiter),
+    (p : string) => p != node_bin_dir)
+
+  filtered_paths.push(node_bin_dir)
+
+  return _.uniq(filtered_paths).join(path.delimiter)
+}
+
 // TODO: add mem limit to child process
 const spawn = (
   bin : string,
@@ -83,14 +95,16 @@ const spawn = (
   ) => {
     const chunks : Buffer[] = []
     const errors : string[] = []
-    const env = extend({}, process.env)
 
-    // Be sure to *append* the npm run path (ex: don't clobber rbenv ruby)
-    env.PATH = env.PATH + ":" +
-      npm_run_path({ cwd: process.cwd(), path: "" })
+    // HACK: Move node bin path added by npm-run-path to end
+    //       (ex: so we don't clobber ruby rbenv/n shims etc)
+    const new_path : string = move_node_bin_to_end(npm_run_path({
+      cwd: process.cwd(),
+      path: process.env.PATH
+    }))
 
-    const proc = child_process.spawn(bin, opts.args, {
-      env,
+    const proc = cross_spawn(bin, opts.args, {
+      env: { PATH: new_path },
       stdio: opts.stdio || [process.stdin, "pipe", "pipe"]
     })
 
