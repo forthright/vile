@@ -139,6 +139,7 @@ declare namespace vile {
   //
   // Anything related to duplicate/similar code
   //
+  // TODO: don't pluralize
   export interface Duplicate {
     locations: DuplicateLocations[]
   }
