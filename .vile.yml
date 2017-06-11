@@ -43,6 +43,9 @@ depcheck:
 
 retire:
   config:
+    node: true
+    package: true
+    js: false
     ignore:
       - .docs
 
