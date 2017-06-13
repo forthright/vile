@@ -10,7 +10,6 @@ import ignore = require("ignore")
 
 Bluebird.promisifyAll(fs)
 
-// TODO: get ride of the config key part, move outside
 const matches = (
   filepath : string,
   to_match : string[] | string
@@ -103,9 +102,15 @@ const spawn = (
       path: process.env.PATH
     }))
 
+    const new_env = extend({}, process.env)
+
+    // HACK: If we don't do this, npm run scripts fail,
+    // but not gems based ones? Force this for now.
+    new_env.Path = new_env.PATH = new_path
+
     const proc = cross_spawn(bin, opts.args, {
-      env: { PATH: new_path },
-      stdio: opts.stdio || [process.stdin, "pipe", "pipe"]
+      env: new_env,
+      stdio: opts.stdio || [ process.stdin, "pipe", "pipe" ]
     })
 
     proc.stdout.on("data", (chunk : Buffer) => {
