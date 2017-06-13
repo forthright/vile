@@ -106,7 +106,8 @@ const spawn = (
 
     // HACK: If we don't do this, npm run scripts fail,
     // but not gems based ones? Force this for now.
-    new_env.Path = new_env.PATH = new_path
+    new_env.Path = new_path
+    new_env.PATH = new_path
 
     const proc = cross_spawn(bin, opts.args, {
       env: new_env,
