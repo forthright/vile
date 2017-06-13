@@ -42,7 +42,7 @@ describe "util", ->
         spawned_env = cross_spawn_stub.args[0][2].env
         expect(cross_spawn_stub).to.have.been.calledWith bin
         expect(spawned_env)
-          .to.eql extend({ Path: new_env.PATH }, new_env)
+          .to.eql extend({}, new_env, { Path: new_env.PATH })
 
       describe "because of a weird failing behavious seen on windows", ->
         it "sets both Path and PATH to", ->
