@@ -2,8 +2,6 @@
 
 Current list of [Contributors](https://github.com/forthright/vile/graphs/contributors).
 
-Any contributions are welcome and appreciated!
-
 ## Code Of Conduct
 
 This project ascribes to [contributor-covenant.org](http://contributor-covenant.org).
@@ -22,8 +20,6 @@ All you need to do is submit a [Pull Request](https://github.com/forthright/vile
 
 1. Please consider tests and code quality before submitting.
 2. Please try to keep commits clean, atomic and well explained (for others).
-
-For more info see [doc/developing.md](doc/developing.md).
 
 ## Developing
 
