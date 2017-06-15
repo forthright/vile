@@ -49,6 +49,10 @@ retire:
     ignore:
       - .docs
 
+synt:
+  ignore:
+    - lib
+
 comment:
   ignore:
     - lib
