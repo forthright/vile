@@ -14,10 +14,6 @@ Standalone it is a multi language/OS static analyzer with a unifying data spec.
 
 Please see the [docs](https://docs.vile.io) site.
 
-## Versioning
-
-This project ascribes to [semantic versioning](http://semver.org).
-
 ## Licensing
 
 This project is licensed under the [MPL-2.0](LICENSE) license.
@@ -26,31 +22,14 @@ Any contributions made to this project are made under the current license.
 
 ## Contributing
 
-Current list of [Contributors](https://github.com/forthright/vile/graphs/contributors).
-
 Any contributions are welcome and appreciated!
 
-### Code Of Conduct
+Please see [CONTRIBUTING](CONTRIBUTING.md) for more info.
 
-This project ascribes to [contributor-covenant.org](http://contributor-covenant.org).
+## Versioning
 
-By participating in this project you agree to our [Code of Conduct](CODE_OF_CONDUCT.md).
+This project ascribes to [semantic versioning](http://semver.org).
 
-### Issues
-
-Current issue tracker is on [GitHub](https://github.com/forthright/vile/issues).
-
-Even if you are uncomfortable with code, an issue or question is welcome.
-
-### Patches
-
-All you need to do is submit a [Pull Request](https://github.com/forthright/vile/pulls).
-
-1. Please consider tests and code quality before submitting.
-2. Please try to keep commits clean, atomic and well explained (for others).
-
-For more info see [doc/developing.md](doc/developing.md).
-
-### Maintainers
+## Maintainers
 
 - Brent Lintner - [@brentlintner](http://github.com/brentlintner)

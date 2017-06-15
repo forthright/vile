@@ -1,4 +1,31 @@
-# Overview
+# Contributing
+
+Current list of [Contributors](https://github.com/forthright/vile/graphs/contributors).
+
+Any contributions are welcome and appreciated!
+
+## Code Of Conduct
+
+This project ascribes to [contributor-covenant.org](http://contributor-covenant.org).
+
+By participating in this project you agree to our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Issues
+
+Current issue tracker is on [GitHub](https://github.com/forthright/vile/issues).
+
+Even if you are uncomfortable with code, an issue or question is welcome.
+
+## Patches
+
+All you need to do is submit a [Pull Request](https://github.com/forthright/vile/pulls).
+
+1. Please consider tests and code quality before submitting.
+2. Please try to keep commits clean, atomic and well explained (for others).
+
+For more info see [doc/developing.md](doc/developing.md).
+
+## Developing
 
 Vile is centered around the use of [plugins](https://docs.vile.io/#creating-a-plugin) that generate [issues](https://docs.vile.io/interfaces/_src__types_index_d_.vile.issue.html).
 
@@ -8,7 +35,7 @@ The core library and cli is written in [TypeScript](http://www.typescriptlang.or
 
 Test code is written in [CoffeeScript](http://coffeescript.org).
 
-## Getting Started
+### Getting Started
 
 Clone the repos:
 
