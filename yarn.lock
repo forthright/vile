@@ -5807,9 +5807,9 @@ vile-stat@^0.0.15:
     lodash "^4.17.4"
     sloc "^0.2.0"
 
-vile-synt@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/vile-synt/-/vile-synt-0.1.0.tgz#8f3e2193572238dcaade2cefada697fffe073388"
+vile-synt@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/vile-synt/-/vile-synt-0.1.1.tgz#fe89adf0c167197afa74db794ecf2988a578aa53"
   dependencies:
     "@types/lodash" "^4.14.66"
     lodash "^4.17.4"
