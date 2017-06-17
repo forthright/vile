@@ -19,7 +19,7 @@ var generate = "npm run -s -- typedoc " +
   "--includeDeclarations " +
   "--externalPattern '**/@types/*/*.d.ts'"
 
-var copy_over = "cp -rf " + build_dir + "/* " + deploy_dir + "/."
+var copy_over = "cp -r " + build_dir + "/* " + deploy_dir + "/."
 
 exec(
   generate,
@@ -30,7 +30,5 @@ exec(
       copy_over,
       function(code, stdout, stderr) {
         if (code !== 0) exit(code)
-        console.log("Copied to: " + deploy_dir)
-        console.log("Please manually commit a release on that branch.")
       })
   })

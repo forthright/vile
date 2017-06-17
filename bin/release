@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 level=$1
+home_dir=`pwd`
+docs_dir="../vile-docs"
 
 set -e
 
@@ -7,10 +9,38 @@ if [ -z "${level}" ]; then
   level=patch
 fi
 
+# -------------------
+#  Compile
+# -------------------
+
+npm run -s clean
+
 npm run -s compile
+
+# -------------------
+#  Release
+# -------------------
 
 git add -f lib
 
 npm run -s -- release-it -n -p -m 'v%s' -i $level
 
+# -------------------
+#  Docs
+# -------------------
+
 npm run -s gen-docs
+
+app_version=$(`dirname $0`/npm-pkg-version)
+
+tag_version="v$app_version"
+
+cd $docs_dir
+
+git commit public -m $tag_version
+
+git push origin master
+
+git push production master
+
+cd $home_dir
