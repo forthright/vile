@@ -6,14 +6,13 @@ const log = logger.create("cli")
 const create = (cli : commander.CommanderStatic) =>
   cli
     .command("auth")
-      .alias("a")
-      .action(() => {
-        log.info("To authenticate, first go to " +
-            "https://vile.io and get a user token.")
-        log.info()
-        log.info("Then:")
-        log.info()
-        log.info("  ~$ VILE_TOKEN=token VILE_PROJECT=my-project vile p -u")
-      })
+    .action(() => {
+      log.info("To authenticate, first go to " +
+          "https://vile.io and get a user token.")
+      log.info()
+      log.info("Then:")
+      log.info()
+      log.info("  ~$ VILE_TOKEN=token VILE_PROJECT=my-project vile a -u")
+    })
 
 export = { create }

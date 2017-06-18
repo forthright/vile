@@ -14,7 +14,7 @@ const into_file_paths = (gtd_raw : any[]) : string[] =>
     (raw : any) => _.get(raw, "toFile", ""))
 
 // TODO: clean up strings in this method
-// TODO: upp the threshold for streams and diff size
+// TODO: up the threshold for streams and diff size
 const changed_files = (
   original_rev : string = "--root",
   repo_path : string = path.join(CWD, ".git")

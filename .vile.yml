@@ -19,6 +19,7 @@ vile:
     - npm-debug.log
     - src/@types
     - tags
+    - test/mocha.opts
     - tmp
     - tsconfig.json
     - retire-report.json

@@ -4,15 +4,15 @@ expect = chai.expect
 git = require "./../../../lib/git"
 config = require "./../../../lib/config"
 service = require "./../../../lib/service"
-lib = require "./../../../lib"
-cli_punish = mimus.require(
-  "./../../../lib/cli/punish", __dirname, [])
-service_log = mimus.get cli_punish, "service_log"
-original_wait_for = mimus.get cli_punish, "wait_for"
+plugin = require "./../../../lib/plugin"
+cli_analyze = mimus.require(
+  "./../../../lib/cli/analyze", __dirname, [])
+service_log = mimus.get cli_analyze, "service_log"
+original_wait_for = mimus.get cli_analyze, "wait_for"
 fake_timer = {}
 wait_for_stub = mimus.stub()
-mimus.set cli_punish, "wait_for", wait_for_stub
-cli_log = mimus.get cli_punish, "log"
+mimus.set cli_analyze, "wait_for", wait_for_stub
+cli_log = mimus.get cli_analyze, "log"
 
 git_changed_promise = undefined
 service_commit_promise = undefined
@@ -33,6 +33,7 @@ exec_issues = []
 
 stub_log_and_exit = ->
   mimus.stub process, "exit"
+  mimus.stub cli_log, "error"
   mimus.stub console, "error"
   mimus.stub console, "log"
 
@@ -41,24 +42,24 @@ restore_log_and_exit = ->
   console.error.restore()
   console.log.restore()
 
-describe "cli/punish", ->
+describe "cli/analyze", ->
   beforeEach ->
     cli_cmd_args = []
     commander = {}
     auth_example = token: "abc", project: "foo"
     mimus.stub git, "changed_files"
-    mimus.stub lib, "exec"
-    lib_exec_promise = mimus.stub()
+    mimus.stub plugin, "exec"
+    plugin_exec_promise = mimus.stub()
     catch_promise = mimus.stub()
     catch_promise.returns {
-      then: lib_exec_promise,
+      then: plugin_exec_promise,
       catch: catch_promise }
-    lib_exec_promise.returns {
-      then: lib_exec_promise,
+    plugin_exec_promise.returns {
+      then: plugin_exec_promise,
       catch: catch_promise }
-    lib_exec_promise.callsArgWith 0, exec_issues
-    lib.exec.returns {
-      then: lib_exec_promise,
+    plugin_exec_promise.callsArgWith 0, exec_issues
+    plugin.exec.returns {
+      then: plugin_exec_promise,
       catch: catch_promise }
     commander.command = mimus.stub()
     commander.command.returns commander
@@ -97,7 +98,7 @@ describe "cli/punish", ->
       mimus.stub service_log, "error"
 
       clear_interval = mimus.stub()
-      mimus.set cli_punish, "clearInterval", clear_interval
+      mimus.set cli_analyze, "clearInterval", clear_interval
       wait_for_stub.callsArgWith 1, fake_timer
       config.get_auth.returns auth_example
 
@@ -138,7 +139,7 @@ describe "cli/punish", ->
         describe "in general", ->
           beforeEach ->
             service_commit_promise.callsArgWith 0, commit_success_data
-            cli_punish.create commander
+            cli_analyze.create commander
 
           it "polls for done status", ->
             expect(wait_for_stub).to.have.been.calledWith 2000
@@ -171,10 +172,10 @@ describe "cli/punish", ->
             mimus.stub process, "exit"
             mimus.stub console, "error"
             mimus.stub console, "log"
-            cli_punish.create commander
-            expect(console.error).to.have.been
+            cli_analyze.create commander
+            expect(cli_log.error).to.have.been
               .calledWith "http status:", 404
-            expect(console.error).to.have.been
+            expect(cli_log.error).to.have.been
               .calledWith commit_status_failure_body
             process.exit.restore()
             console.error.restore()
@@ -182,7 +183,7 @@ describe "cli/punish", ->
 
           it "clears the interval", ->
             stub_log_and_exit()
-            cli_punish.create commander
+            cli_analyze.create commander
             expect(clear_interval).to.have.been
               .calledWith fake_timer
             restore_log_and_exit()
@@ -202,7 +203,7 @@ describe "cli/punish", ->
                 body: commit_status_success_body }
               service_commit_status_promise
                 .callsArgWith 0, commit_status_success_data
-              cli_punish.create commander
+              cli_analyze.create commander
 
             it "logs the commit id and message", ->
               expect(service_log.info).to.have.been
@@ -221,7 +222,7 @@ describe "cli/punish", ->
                 .callsArgWith 0, commit_status_success_data
 
             beforeEach ->
-              cli_punish.create commander
+              cli_analyze.create commander
 
             it "logs detailed stats by default", ->
               expect(service.log).to.have.been
@@ -241,21 +242,21 @@ describe "cli/punish", ->
 
             it "mentions the commit has failed", ->
               stub_log_and_exit()
-              cli_punish.create commander
+              cli_analyze.create commander
               expect(service_log.info).to.have.been
                 .calledWith "Commit 2 failed"
               restore_log_and_exit()
 
             it "clears the interval", ->
               stub_log_and_exit()
-              cli_punish.create commander
+              cli_analyze.create commander
               expect(clear_interval).to.have.been.calledWith fake_timer
               restore_log_and_exit()
 
             it "logs packet and exits process", ->
               stub_log_and_exit()
-              cli_punish.create commander
-              expect(console.error).to.have.been
+              cli_analyze.create commander
+              expect(cli_log.error).to.have.been
                 .calledWith JSON.parse(commit_status_success_body).data
               expect(process.exit).to.have.been.calledWith 1
               restore_log_and_exit()
@@ -275,9 +276,9 @@ describe "cli/punish", ->
         it "logs an error and exits process", ->
           stub_log_and_exit()
 
-          cli_punish.create commander
+          cli_analyze.create commander
 
-          expect(console.error).to.have.been
+          expect(cli_log.error).to.have.been
             .calledWith(
               "No commit uid was provided on commit. " +
               "Can't check status.")
@@ -299,12 +300,12 @@ describe "cli/punish", ->
         it "logs an error and exits process", ->
           stub_log_and_exit()
 
-          cli_punish.create commander
+          cli_analyze.create commander
 
           err = "No commit state was provided upon creation. " +
             "Can't check status."
           expect(process.exit).to.have.been.calledWith 1
-          expect(console.error).to.have.been.calledWith err
+          expect(cli_log.error).to.have.been.calledWith err
 
           restore_log_and_exit()
 
@@ -323,10 +324,10 @@ describe "cli/punish", ->
         it "logs an error and exits process", ->
           stub_log_and_exit()
 
-          cli_punish.create commander
+          cli_analyze.create commander
 
           err = "Creating commit state is failed."
-          expect(console.error).to.have.been.calledWith err
+          expect(cli_log.error).to.have.been.calledWith err
           expect(process.exit).to.have.been.calledWith 1
 
           restore_log_and_exit()
@@ -346,9 +347,9 @@ describe "cli/punish", ->
         it "logs an error and nothing else", ->
           stub_log_and_exit()
 
-          cli_punish.create commander
+          cli_analyze.create commander
 
-          expect(console.error).to.have.been
+          expect(cli_log.error).to.have.been
             .calledWith commit_failure_body
           expect(process.exit).to.have.been.calledWith 1
           expect(service.commit_status).to.not.have.been.called
@@ -357,6 +358,7 @@ describe "cli/punish", ->
 
   describe "when gitdiff is set", ->
     beforeEach ->
+      mimus.stub cli_log, "info"
       cli_cmd_args.push "foo"
       git_changed_promise = { then: mimus.stub() }
       git_changed_promise.then.returns git_changed_promise
@@ -366,17 +368,19 @@ describe "cli/punish", ->
     describe "with no rev", ->
       beforeEach ->
         commander.gitdiff = true
-        cli_punish.create commander
+        cli_analyze.create commander
 
       it "sets allow list to all files in latest commit", ->
         git.changed_files.should.have.been.calledWith()
         expect(commander.config.vile.allow).to.eql [ "foo" ]
+        expect(cli_log.info).to.have.been.calledWith "", "foo"
 
     describe "with a custom rev", ->
       beforeEach ->
         commander.gitdiff = "master"
-        cli_punish.create commander
+        cli_analyze.create commander
 
       it "sets allow list to all files in rev", ->
         git.changed_files.should.have.been.calledWith("master")
         expect(commander.config.vile.allow).to.eql [ "foo" ]
+        expect(cli_log.info).to.have.been.calledWith "", "foo"

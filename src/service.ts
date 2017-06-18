@@ -18,16 +18,18 @@ const api_path = (endpoint : string) : string =>
   `${VILE_APP}/${API_TARGET}/${endpoint}`
 
 const handle_response = (
-  resolve : (r : vile.API.HTTPResponse) => void,
+  resolve : (r : vile.Service.HTTPResponse) => void,
   reject : (e : { error: NodeJS.ErrnoException }) => void
 ) : request.RequestCallback => (
   err : NodeJS.ErrnoException,
   response : http.IncomingMessage,
-  body : vile.API.JSONResponse
+  body : vile.Service.JSONResponse
 ) =>
   err ?
     reject({ error: err }) :
     resolve({ body, response })
+
+// TODO: Flush out use of Bluebird<any>
 
 const commit = (
   issues : vile.IssueList,
@@ -36,7 +38,6 @@ const commit = (
 ) : Bluebird<any> =>
   new Bluebird((resolve, reject) => {
     const url = api_path(`projects/${auth.project}/commits`)
-    log.debug(`POST ${url}`)
     request.post({
       form: {
         cli_time,
@@ -51,11 +52,10 @@ const commit = (
 const commit_status = (
   commit_id : number,
   auth : vile.Auth
-) =>
+) : Bluebird<any> =>
   new Bluebird((resolve, reject) => {
     const url = api_path(
       `projects/${auth.project}/commits/${commit_id}/status`)
-    log.debug(`GET ${url}`)
     request.get({
       headers: http_authentication(auth.token),
       url
@@ -67,10 +67,10 @@ const padded_file_score = (score : number) =>
   (score < 100 ? " " : "") + String(score) + "%"
 
 const log_summary = (
-  post_json : vile.API.CommitStatus
+  post_json : vile.Service.CommitStatus
 ) => {
   const score : number = _.get(post_json, "score", 100)
-  const files : vile.API.CommitStatusFile[][] = _.get(
+  const files : vile.Service.CommitStatusFile[][] = _.get(
     post_json, "files", [])
   const time : number = _.get(post_json, "time", 0)
   const url : string = _.get(post_json, "url", "")
@@ -79,7 +79,7 @@ const log_summary = (
     .toString()
     .replace(/\.0*$/, "")
 
-  _.each(files, (file : vile.API.CommitStatusFile) => {
+  _.each(files, (file : vile.Service.CommitStatusFile) => {
     log.info(
       `${padded_file_score(_.get(file, "score", 0))} => ` +
       `${_.get(file, "path")}`)
@@ -91,8 +91,17 @@ const log_summary = (
   log.info(url)
 }
 
+const API = {
+  COMMIT: {
+    FAILED: "failed",
+    FINISHED: "finished",
+    PROCESSING: "processing"
+  }
+}
+
 export = {
+  API,
   commit,
   commit_status,
   log: log_summary
-} as vile.Lib.Service
+}

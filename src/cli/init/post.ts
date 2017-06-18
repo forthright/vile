@@ -162,24 +162,27 @@ const ready_to_punish = (config : vile.YMLConfig) => {
   log.info()
   log.info("Tips:")
   log.info("  1. Run all plugins:")
-  log.info("    ~$ vile p")
+  log.info("    ~$ vile analyze")
   log.info()
   log.info("  2. Authenticate with vile.io:")
   log.info("    ~$ vile auth")
   log.info()
   log.info("  3. Upload your first commit:")
   log.info(
-    "    ~$ VILE_TOKEN=XXXXXXX vile p " +
+    "    ~$ VILE_TOKEN=XXXXXXX vile analyze " +
     "-u project_name")
   log.info()
   log.info(
-    "  4. Routinely punish your code by " +
+    "  4. Routinely analyze your code by " +
     "integrating vile into your CI/CD build process.")
   log.info()
   log.info(
     "Also, be sure to read up on your installed " +
     "plugins, and any extra requirements they might have:")
   log.info("  https://vile.io/plugins")
+  log.info()
+  log.info("For more information checkout the project docs site:")
+  log.info("  https://docs.vile.io")
   log.info()
   log.info("Happy punishing!")
 }

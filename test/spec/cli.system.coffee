@@ -1,5 +1,4 @@
 path = require "path"
-os = require "os"
 _ = require "lodash"
 yml = require "js-yaml"
 fs = require "fs"
@@ -11,8 +10,6 @@ issues_snippets = require "./../fixtures/issues-snippets"
 issues_combined = require "./../fixtures/issues-combined"
 issues_not_combined = require "./../fixtures/issues-not-combined"
 expect = chai.expect
-on_win = os.platform() == "win32"
-nix_only_describe = if on_win then xit else it
 
 CWD = process.cwd()
 SYSTEM_TESTS = path.join(
@@ -64,7 +61,7 @@ describe "system :: cli blackbox testing", ->
       cli.exec "auth", (stdout) ->
         expect(stdout).to.match /To authenticate, first go to/i
         expect(stdout).to.match /then:/i
-        expect(stdout).to.match /vile p \-u/i
+        expect(stdout).to.match /vile a \-u/i
         done()
 
   describe "init", ->
@@ -107,7 +104,8 @@ describe "system :: cli blackbox testing", ->
             #console.log "A:", responses.join(""), "ENTER"
             proc.stdin.write responses.join("") + press.ENTER
           ,
-          (stdout) ->
+          (stdout, stderr, code) ->
+            expect(code).to.eql 0
             expect(fs.existsSync("package.json")).to.eql true
             expect(fs.existsSync(".vile.yml")).to.eql true
             expect(yml.safeLoad(fs.readFileSync(".vile.yml")))
@@ -118,18 +116,18 @@ describe "system :: cli blackbox testing", ->
                 }
               }
             expect(stdout).to.match /created: .vile.yml/i
-            expect(stdout).to
+            expect(stderr).to
               .match /skipping: npm install \-\-save\-dev npm\-check\-updates/i
-            expect(stdout).to
+            expect(stderr).to
               .match /skipping: npm install \-\-save\-dev vile/i
-            expect(stdout).to.match /vile-language/i
-            expect(stdout).to.match /vile-stat/i
-            expect(stdout).to.match /vile-ncu/i
+            expect(stdout).to.match /\'language\'/i
+            expect(stdout).to.match /\'stat\'/i
+            expect(stdout).to.match /\'ncu\'/i
             expect(stdout).to.match /looks like we are good to go/i
             expect(stdout).to.match /tips:/i
             expect(stdout).to.match /authenticate/i
             expect(stdout).to.match /upload/i
-            expect(stdout).to.match /vile p/i
+            expect(stdout).to.match /vile a/i
             expect(stdout).to.match /vile\.io/i
             expect(stdout).to
               .match /be sure to read up on your installed plugins/i
@@ -184,21 +182,22 @@ describe "system :: cli blackbox testing", ->
             #console.log "A:", responses.join(""), "ENTER"
             cli_proc.stdin.write responses.join("") + press.ENTER
           ,
-          (stdout) ->
+          (stdout, stderr, code) ->
+            expect(code).to.eql 0
             expect(fs.existsSync("package.json")).to.eql true
             expect(fs.existsSync(".vile.yml")).to.eql true
             expect(stdout).to.match /created: .vile.yml/i
-            expect(stdout).to.match /vile-language/i
-            expect(stdout).to.match /vile-stat/i
-            expect(stdout).to.match /vile-escomplex/i
-            expect(stdout).to.match /vile-rubocop/i
-            expect(stdout).to.match /vile-rubycritic/i
-            expect(stdout).to.match /vile-tslint/i
-            expect(stdout).to.match /vile-retire/i
-            expect(stdout).to.match /vile-ncu/i
-            expect(stdout).to
+            expect(stdout).to.match /\'language\'/i
+            expect(stdout).to.match /\'stat\'/i
+            expect(stdout).to.match /\'escomplex\'/i
+            expect(stdout).to.match /\'rubocop\'/i
+            expect(stdout).to.match /\'rubycritic\'/i
+            expect(stdout).to.match /\'tslint\'/i
+            expect(stdout).to.match /\'retire\'/i
+            expect(stdout).to.match /\'ncu\'/i
+            expect(stderr).to
               .match /skipping: npm install \-\-save\-dev npm\-check\-updates/i
-            expect(stdout).to
+            expect(stderr).to
               .match /skipping: npm install \-\-save\-dev vile/i
             expect(stdout).to.match /looks like we are good to go/i
             done()
@@ -259,8 +258,9 @@ describe "system :: cli blackbox testing", ->
             #console.log "A:", responses.join(""), "ENTER"
             cli_proc.stdin.write responses.join("") + press.ENTER
           ,
-          (stdout) ->
+          (stdout, stderr, code) ->
             setTimeout ->
+              expect(code).to.eql 0
               expect(fs.existsSync("package.json")).to.eql true
               expect(fs.existsSync(".vile.yml")).to.eql true
               expect(yml.safeLoad(fs.readFileSync(".vile.yml")))
@@ -276,15 +276,15 @@ describe "system :: cli blackbox testing", ->
                   }
                 }
               expect(stdout).to.match /created: .vile.yml/i
-              expect(stdout).to.match(
+              expect(stderr).to.match(
                 /skipping: npm install \-\-save\-dev npm\-check\-updates/i)
-              expect(stdout).to
+              expect(stderr).to
                 .match /skipping: npm install \-\-save\-dev vile/i
               expect(stdout).to.match /looks like we are good to go/i
               expect(stdout).to.match /tips:/i
               expect(stdout).to.match /authenticate/i
               expect(stdout).to.match /upload/i
-              expect(stdout).to.match /vile p/i
+              expect(stdout).to.match /vile a/i
               expect(stdout).to.match /vile\.io/i
               expect(stdout).to
                 .match /be sure to read up on your installed plugins/i
@@ -300,13 +300,13 @@ describe "system :: cli blackbox testing", ->
       MAP = "-x src.ts:lib.js,diff_folder:diff_folder_rename"
 
       it "combines files", (done) ->
-        cli.exec "p -n -d -f json #{MAP}", (stdout) ->
+        cli.exec "a -n -d -f json #{MAP}", (stdout) ->
           expect(JSON.parse(stdout)).to
             .eql issues_combined
           done()
 
       it "does not combine files when not set", (done) ->
-        cli.exec "p -n -d -f json", (stdout) ->
+        cli.exec "a -n -d -f json", (stdout) ->
           expect(JSON.parse(stdout)).to
             .eql issues_not_combined
           done()
@@ -315,19 +315,19 @@ describe "system :: cli blackbox testing", ->
       beforeEach -> process.chdir SYNC_DIR
 
       it "can set the log level to error", (done) ->
-        cli.exec "p -n -l error", (stdout) ->
+        cli.exec "a -n -l error", (stdout) ->
           expect(stdout).not.to.match /test\-sync\-plugin\:start/i
           expect(stdout).not.to.match /test\-sync\-plugin\:finish/i
           done()
 
       it "can set the log level to warn", (done) ->
-        cli.exec "p -n -l warn", (stdout) ->
+        cli.exec "a -n -l warn", (stdout) ->
           expect(stdout).not.to.match /test\-sync\-plugin\:start/i
           expect(stdout).not.to.match /test\-sync\-plugin\:finish/i
           done()
 
       it "can set the log level to info", (done) ->
-        cli.exec "p -n -l info", (stdout) ->
+        cli.exec "a -n -l info", (stdout) ->
           expect(stdout).to.match /test\-sync\-plugin\:start/i
           expect(stdout).to.match /test\-sync\-plugin\:finish/i
           done()
@@ -336,14 +336,14 @@ describe "system :: cli blackbox testing", ->
       beforeEach -> process.chdir SYNC_DIR
 
       it "seems to run the plugin successfully", (done) ->
-        cli.exec "p", (stdout) ->
+        cli.exec "analyze", (stdout) ->
           expect(stdout).to.match /test\-sync\-plugin\:start/i
           expect(stdout).to.match /test\-sync\-plugin\:finish/i
           done()
 
       describe "with post processing", ->
         it "returns a list of issues", (done) ->
-          cli.exec "p -n -f json", (stdout) ->
+          cli.exec "a -n -f json", (stdout) ->
             issues = JSON.parse(stdout)
             expect(issues.length).to.eql 2
             expect(issues[0]).to.eql {
@@ -358,7 +358,7 @@ describe "system :: cli blackbox testing", ->
 
       describe "without post processing", ->
         it "does not include any ok issues", (done) ->
-          cli.exec "p -d -f json", (stdout) ->
+          cli.exec "a -d -f json", (stdout) ->
             expect(stdout).to.eql JSON.stringify([
               {
                 type: "warning",
@@ -372,14 +372,14 @@ describe "system :: cli blackbox testing", ->
       beforeEach -> process.chdir ASYNC_DIR
 
       it "seems to run the plugin successfully", (done) ->
-        cli.exec "p", (stdout) ->
+        cli.exec "analyze", (stdout) ->
           expect(stdout).to.match /test\-async\-plugin\:start/i
           expect(stdout).to.match /test\-async\-plugin\:finish/i
           done()
 
       describe "with post processing", ->
         it "returns a list of issues", (done) ->
-          cli.exec "p -n -f json", (stdout) ->
+          cli.exec "a -n -f json", (stdout) ->
             issues = JSON.parse(stdout)
             expect(issues.length).to.eql 3
             expect(issues[0]).to.eql {
@@ -399,7 +399,7 @@ describe "system :: cli blackbox testing", ->
 
       describe "without post processing", ->
         it "does not include any ok issues", (done) ->
-          cli.exec "p -n -d -f json", (stdout) ->
+          cli.exec "a -n -d -f json", (stdout) ->
             expect(stdout).to.eql JSON.stringify([
               {
                 type: "warning",
@@ -418,7 +418,7 @@ describe "system :: cli blackbox testing", ->
       beforeEach -> process.chdir PLUGIN_CHECK_DIR
 
       it "can run only one plugin", (done) ->
-        cli.exec "p -p test-plugin-check-plugin-two -n -d -f json", (stdout) ->
+        cli.exec "a -p test-plugin-check-plugin-two -n -d -f json", (stdout) ->
           expect(stdout).to.eql JSON.stringify([
             {
               type: "warning",
@@ -428,9 +428,10 @@ describe "system :: cli blackbox testing", ->
           ])
           done()
 
-      it "will mention if a plugin is not installed", (done) ->
-        cli.exec "p -p three", (stdout) ->
-          expect(stdout).to.match /three is not installed/
+      it "will exit and mention if a plugin is not installed", (done) ->
+        cli.exec_err "a -p three", (stdout, stderr, code) ->
+          expect(stderr).to.match /three is not installed/
+          expect(code).to.eql 1
           done()
 
     describe "code snippets", ->
@@ -438,19 +439,19 @@ describe "system :: cli blackbox testing", ->
 
       describe "without any extra options", ->
         it "appends code snippets to code", (done) ->
-          cli.exec "p -n -f json", (stdout) ->
+          cli.exec "a -n -f json", (stdout) ->
             expect(JSON.parse(stdout)).to.eql issues_snippets
             done()
 
       describe "when --skipsnippets", ->
         it "does not include snippets", (done) ->
-          cli.exec "p -n -s -f json", (stdout) ->
+          cli.exec "a -n -s -f json", (stdout) ->
             expect(JSON.parse(stdout)).to.not.match /snippet/
             done()
 
       describe "when --dontpostprocess", ->
         it "does not include snippets", (done) ->
-          cli.exec "p -n -d -f json", (stdout) ->
+          cli.exec "a -n -d -f json", (stdout) ->
             expect(JSON.parse(stdout)).to.not.match /snippet/
             done()
 
@@ -458,7 +459,7 @@ describe "system :: cli blackbox testing", ->
       beforeEach -> process.chdir FILTER_IGNORE_DIR
 
       it "returns a list of filtered issues", (done) ->
-        cli.exec "p -n -d -f json", (stdout) ->
+        cli.exec "a -n -d -f json", (stdout) ->
           expect(stdout).to.eql JSON.stringify([
             {
               type: "warning",
@@ -483,7 +484,7 @@ describe "system :: cli blackbox testing", ->
         beforeEach -> process.chdir FILTER_ALLOW_DIR_VIA_CLI_ARGS
 
         it "returns a list of filtered issues", (done) ->
-          cli.exec "p -n -d -f json src", (stdout) ->
+          cli.exec "a -n -d -f json src", (stdout) ->
             expect(stdout).to.eql JSON.stringify([
               {
                 type: "error",
@@ -507,7 +508,7 @@ describe "system :: cli blackbox testing", ->
         beforeEach -> process.chdir FILTER_ALLOW_DIR
 
         it "returns a list of filtered issues", (done) ->
-          cli.exec "p -n -d -f json", (stdout) ->
+          cli.exec "a -n -d -f json", (stdout) ->
             expect(stdout).to.eql JSON.stringify([
               {
                 type: "error",
@@ -531,7 +532,7 @@ describe "system :: cli blackbox testing", ->
         beforeEach -> process.chdir FILTER_ALLOW_DIR_SINGLE_FILE
 
         it "returns a list of filtered issues", (done) ->
-          cli.exec "p -n -d -f json src/sub/bar.js", (stdout) ->
+          cli.exec "a -n -d -f json src/sub/bar.js", (stdout) ->
             expect(stdout).to.eql JSON.stringify([
               {
                 type: "error",
@@ -544,8 +545,8 @@ describe "system :: cli blackbox testing", ->
     describe "spawning a file that returns data", ->
       beforeEach -> process.chdir SPAWN_DIR
 
-      it "returns a list of filtered issues", (done) ->
-        cli.exec "p -n -d -f json", (stdout) ->
+      it "returns a list of issues", (done) ->
+        cli.exec "analyze -n -d -f json", (stdout) ->
           expect(stdout).to.eql JSON.stringify([
             {
               type: "error",
@@ -560,7 +561,8 @@ describe "system :: cli blackbox testing", ->
       beforeEach -> process.chdir SPAWN_NON_ZERO_DIR
 
       it "finishes gracefully", (done) ->
-        cli.exec_err "p -n -d", (stdout, stderr, code) ->
+        cli.exec_err "a -n -d", (stdout, stderr, code) ->
+          expect(stderr).to.eql ""
           expect(code).to.eql 0
           expect(stdout).to.match /code is: 10/
           expect(stdout)
@@ -570,19 +572,16 @@ describe "system :: cli blackbox testing", ->
           done()
         return
 
-    # TODO: For some reason, failing (but not always), on Windows
-    # ...only while running the whole suite (works when say, 2-3 are run)
-    nix_only_describe "spawning a file that logs to stderr", ->
+    describe "spawning a file that logs to stderr", ->
       beforeEach -> process.chdir SPAWN_STDERR_DIR
 
-      it "logs, and finishes gracefully", (done) ->
-        cli.exec_err "p -n -d", (stdout, stderr, code) ->
+      it "must manually log any stderr", (done) ->
+        cli.exec_err "a -n -d", (stdout, stderr, code) ->
           expect(code).to.eql 0
           expect(stderr).to.match new RegExp("OH NO!")
           expect(stdout).to.match new RegExp("test-spawn-stderr-plugin:start")
           expect(stdout).to.match new RegExp("test-spawn-stderr-plugin:finish")
           done()
-        , [ process.stdin, "pipe", "ignore" ]
 
         return
 
@@ -590,13 +589,12 @@ describe "system :: cli blackbox testing", ->
       beforeEach -> process.chdir PLUGIN_REJECT_DIR
 
       it "logs to stderr and exits (1) process", (done) ->
-        cli.exec_err "p -n", (stdout, stderr, code) ->
-          expect(stderr).to.match /unhandled rejection/ig
+        cli.exec_err "a -n", (stdout, stderr, code) ->
+          expect(stderr).to.match /unhandled Promise\.reject/ig
           expect(stderr).to.match /Error: huzzah!/ig
           expect(stderr).to
             .match new RegExp("vile-test-err-plugin-reject-plugin " +
             "worker exited", "ig")
-          expect(stdout).to.match /error executing plugins/ig
           expect(code).to.eql 1
           done()
 
@@ -604,13 +602,12 @@ describe "system :: cli blackbox testing", ->
       beforeEach -> process.chdir PLUGIN_EXCEPTION_DIR
 
       it "logs to stderr and exits (1) process", (done) ->
-        cli.exec_err "p -n", (stdout, stderr, code) ->
+        cli.exec_err "a -n", (stdout, stderr, code) ->
           expect(stderr).to.match /Error: huzzah!/ig
           expect(stderr).to.match /at Object\.punish/ig
           expect(stderr).to
             .match new RegExp("vile-test-err-plugin-exception-plugin " +
             "worker exited", "ig")
-          expect(stdout).to.match /error executing plugins/ig
           expect(code).to.eql 1
           done()
 
@@ -618,12 +615,11 @@ describe "system :: cli blackbox testing", ->
       beforeEach -> process.chdir PLUGIN_BAD_API_DIR
 
       it "logs to stderr and exits (1) process", (done) ->
-        cli.exec_err "p -n", (stdout, stderr, code) ->
+        cli.exec_err "a -n", (stdout, stderr, code) ->
           expect(stderr).to.match /invalid plugin API/ig
           expect(stderr).to
             .match new RegExp("vile-test-err-plugin-bad-api-plugin " +
             "worker exited", "ig")
-          expect(stdout).to.match /error executing plugins/ig
           expect(code).to.eql 1
           done()
 
@@ -631,14 +627,15 @@ describe "system :: cli blackbox testing", ->
       beforeEach -> process.chdir PLUGIN_INVALID_DATA_DIR
 
       it "logs an empty array of issues", (done) ->
-        cli.exec_err "p -n -d -f json", (stdout, stderr, code) ->
+        cli.exec_err "a -n -d -f json", (stdout, stderr, code) ->
           expect(stdout).to.eql "[]"
           done()
 
       it "logs to stderr and exits (0) process", (done) ->
-        cli.exec_err "p -n", (stdout, stderr, code) ->
-          expect(_.trim(stderr)).to.eql "test-err-plugin-invalid-data-" +
-            "plugin plugin did not return [] or Promise<[]>"
+        cli.exec_err "a -n", (stdout, stderr, code) ->
+          expect(_.trim(stderr))
+            .to.eql "plugin warn test-err-plugin-invalid-data-" +
+                    "plugin plugin did not return [] or Promise<[]>"
           expect(stdout).to
             .match new RegExp("test-err-plugin-invalid-data-plugin:start")
           expect(stdout).to
@@ -650,7 +647,7 @@ describe "system :: cli blackbox testing", ->
       beforeEach -> process.chdir LOGGING_DIR
 
       it "logs the output to console as syntastic output", (done) ->
-        cli.exec "p -n -d -f syntastic", (stdout) ->
+        cli.exec "a -n -d -f syntastic", (stdout) ->
           expect(stdout).to.match(
             new RegExp("a.ext:1:1: W: a title header => warning msg", "gi"))
           expect(stdout).to.match(
@@ -667,7 +664,7 @@ describe "system :: cli blackbox testing", ->
         return
 
       it "logs the output to console", (done) ->
-        cli.exec "p -n -d", (stdout) ->
+        cli.exec "analyze -n -d", (stdout) ->
           expect(stdout).to.match(
             new RegExp("plugin info test-logging-plugin:start", "gi"))
           expect(stdout).to.match(

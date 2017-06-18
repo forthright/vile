@@ -1,4 +1,4 @@
-/// <reference types="bluebird" />
+/// <reference types="node" />
 
 declare module "git-diff-tree" {
   interface Config {

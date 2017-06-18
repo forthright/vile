@@ -5,6 +5,7 @@ coverage
 npm-debug.log
 .nyc_output
 .test
+.ackrc
 web/report/*.js
 web/report/*.css
 tags

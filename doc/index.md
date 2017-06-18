@@ -28,7 +28,7 @@ vile -h
 vile auth
 ```
 
-*setup*
+*configure*
 
 ```sh
 vile init
@@ -37,7 +37,7 @@ vile init
 *analyze*
 
 ```sh
-vile p -u
+vile analyze -u
 ```
 
 See [analyzing your project](#analyzing-your-project) for more details.
@@ -48,21 +48,25 @@ See [analyzing your project](#analyzing-your-project) for more details.
 
     npm i vile
 
-*use*
+*example*
 
 ```javascript
 const vile = require("vile")
 
+vile.logger.disable()
+
 vile
-  .exec()
-  .then((issues) => { })
+  .exec(vile.config.load())
+  .then((issues : vile.IssueList) => {
+    // ...
+  })
 ```
 
 See [src/index](modules/_src_index_.html) for the full API.
 
 ## Plugins
 
-To actually punish your code, you need to install plugins first.
+To actually analyze your code, you need to install plugins first.
 
 For a complete list of plugins, see [here](https://vile.io/plugins).
 
@@ -78,20 +82,20 @@ npm install -D vile vile-tslint
 *then run*
 
 ```sh
-vile punish
+vile analyze
 ```
 
 *or, more tersely*
 
 ```sh
-vile p
+vile a
 ```
 
 Note: If you don't also have `vile` installed globally, you can access
 the locally installed CLI via:
 
 ```sh
-node node_modules/.bin/vile p
+node node_modules/.bin/vile a
 ```
 
 Or, if you add `"vile": "vile"` to your `package.json` scripts section, you can
@@ -101,13 +105,13 @@ run:
 npm run -s vile -- p
 ```
 
-After calling `vile p`, the CLI will look up any installed plugins and automatically
+After calling `vile a`, the CLI will look up any installed plugins and automatically
 pull them in and run their checks.
 
 You can also specify a white-list of installed plugins to only run:
 
 ```sh
-vile p -p tslint,coffeelint
+vile a -p tslint,coffeelint
 ```
 
 ## Config File
@@ -163,12 +167,12 @@ Note: Unlike ignore, certain levels will **overwrite** others, when set.
 
 From highest to lowest precedence, they are:
 
-1. Specified via `vile p --gitdiff`
-2. Specified via `vile p file dir ...`
+1. Specified via `vile a --gitdiff`
+2. Specified via `vile a file dir ...`
 3. Specified via `vile.allow`
 4. Specified via `my_plugin.allow`
 
-So, say you call `vile p -g` it will ignore plugin/top
+So, say you call `vile a -g` it will ignore plugin/top
 level allow lists, and any path arguments provided.
 
 ### Combining File Data
@@ -176,13 +180,13 @@ level allow lists, and any path arguments provided.
 If you want to map a `src` build directory to a `lib` output directory:
 
 ```sh
-vile p -x src:lib
+vile a -x src:lib
 ```
 
 Or, in the case of this project's code:
 
 ```sh
-vile p -x src.ts:lib.js
+vile a -x src.ts:lib.js
 ```
 
 ## Analyzing Your Project
@@ -199,13 +203,13 @@ vile p -x src.ts:lib.js
 export VILE_TOKEN=my-all-token
 export VILE_PROJECT=my-project-name
 
-vile p -u
+vile a -u
 ```
 
 To disable code snippet generation:
 
 ```sh
-vile p -us
+vile a -us
 ```
 
 ### CI/CD Examples
@@ -232,7 +236,7 @@ checkout:
 
 test:
   post:
-    - vile p -u -n
+    - vile a -u -n
 ```
 
 ### AppVeyor
@@ -268,7 +272,7 @@ install:
 
 test_script:
   - # run tests here
-  - vile p -u -n
+  - vile a -u -n
 ```
 
 ### TravisCI
@@ -299,7 +303,7 @@ git:
 
 script:
   - # run tests here
-  - vile p -u -n
+  - vile a -u -n
 ```
 
 ### Codeship
@@ -311,7 +315,7 @@ prior to analyzing:
 
 ## Editor Integration
 
-You *should* be able to integrate vile into any text editor (ex: via the `-f synastic` flag).
+You *should* be able to integrate vile into any text editor (ex: via the `-f syntastic` flag).
 
 ### Vim
 

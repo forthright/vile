@@ -1,27 +1,21 @@
 import _ = require("lodash")
-import fs = require("fs")
 import commander = require("commander")
 import Bluebird = require("bluebird")
 import http = require("http")
 import service = require("./../service")
-import path = require("path")
 import config = require("./../config")
 import git = require("./../git")
-import util = require("./../util")
 import logger = require("./../logger")
-import lib = require("./../index")
+import plugin = require("./../plugin")
 
 const log = logger.create("cli")
 
 const service_log = logger.create("vile.io")
 
 const COMMIT_STATUS_INTERVAL_TIME = 2000 // 2s
-const DEFAULT_VILE_YML            = ".vile.yml"
 
 const log_and_exit = (error : any) : void => {
-  console.log() // next line if spinner
-  log.error("executing plugins")
-  console.error(_.get(error, "stack", error))
+  log.error(_.get(error, "stack", error))
   process.exit(1)
 }
 
@@ -39,8 +33,8 @@ const wait_for_done_status_and_log = (
     service
       .commit_status(commit_id, auth)
       .then((http : http.IncomingMessage) => {
-        const api_body : vile.API.HTTPResponse = _.get(http, "body")
-        const response : vile.API.JSONResponse = _.get(
+        const api_body : vile.Service.HTTPResponse = _.get(http, "body")
+        const response : vile.Service.JSONResponse = _.get(
           http, "response", { message: null })
 
         const status_code = _.get(response, "statusCode")
@@ -51,16 +45,16 @@ const wait_for_done_status_and_log = (
 
         if (status_code != 200) {
           clearInterval(timer)
-          console.error("http status:", status_code)
+          log.error("http status:", status_code)
           log_and_exit(api_body)
         } else {
           service_log.info(`Commit ${commit_id} ${message}`)
 
           // TODO: handle when message is garbage (don't assume processing)
-          if (message == util.API.COMMIT.FINISHED) {
+          if (message == service.API.COMMIT.FINISHED) {
             clearInterval(timer)
             service.log(data)
-          } else if (message == util.API.COMMIT.FAILED) {
+          } else if (message == service.API.COMMIT.FAILED) {
             clearInterval(timer)
             log_and_exit(data)
           }
@@ -72,7 +66,7 @@ const wait_for_done_status_and_log = (
 const publish = (
   issues : vile.IssueList,
   cli_time : number,
-  opts : vile.Lib.CLIApp
+  opts : vile.CLIApp
 ) => {
   const auth = config.get_auth()
 
@@ -100,7 +94,7 @@ const publish = (
       } else if (!commit_state) {
         log_and_exit("No commit state was provided upon creation. " +
                         "Can't check status.")
-      } else if (commit_state == util.API.COMMIT.FAILED) {
+      } else if (commit_state == service.API.COMMIT.FAILED) {
         log_and_exit("Creating commit state is failed.")
       } else {
         wait_for_done_status_and_log(commit_id, auth)
@@ -108,22 +102,15 @@ const publish = (
     })
 }
 
-// TODO: plugin interface
-const parse_plugins = (plugins : string) : vile.PluginList =>
-  plugins && plugins.split ? plugins.split(",") : undefined
-
-const set_log_levels = (logs? : string) => {
-  logger.quiet()
-  if (logs.split) logs.split(",").forEach(logger.level)
-}
-
 // HACK: This method and above uses promises haphazardly- needs rewrite
-const punish = (app : any, paths : string[]) : void => {
-  const plugins : string = app.plugins
+const analyze = (app : any, paths : string[]) : void => {
+  const custom_plugins = typeof app.plugins == "string" ?
+    _.compact(_.split(app.plugins, ",")) : []
 
   // TODO: not ideal to mutate the app
   _.merge(app, {
     config: config.get(),
+    plugins: custom_plugins,
     spinner: !(app.quiet || app.nodecorations)
   })
 
@@ -133,8 +120,9 @@ const punish = (app : any, paths : string[]) : void => {
 
   const cli_start_time = new Date().getTime()
 
-  const exec = () => lib
-    .exec(parse_plugins(plugins), app.config, app)
+  // TODO: don't pass in app, instead hardcode new opts (when using CC)
+  const exec = () => plugin
+    .exec(app.config, app)
     .then((issues : vile.IssueList) => {
       const cli_end_time = new Date().getTime()
       const cli_time = cli_end_time - cli_start_time
@@ -144,12 +132,14 @@ const punish = (app : any, paths : string[]) : void => {
       }
       return Bluebird.resolve()
     })
-    .catch(log_and_exit) // since we are running as a cli
+    .catch(log_and_exit)
 
   if (app.gitdiff) {
     const rev = typeof app.gitdiff == "string" ?
       app.gitdiff : undefined
+    log.info("git diff:")
     git.changed_files(rev).then((changed_paths : string[]) => {
+      _.each(changed_paths, (p : string) => { log.info("", p) })
       _.set(app, "config.vile.allow", changed_paths)
       exec()
     })
@@ -158,34 +148,17 @@ const punish = (app : any, paths : string[]) : void => {
   }
 }
 
-// TODO: move into config.ts
-const load_config = (app : any) => {
-  let app_config : string
-
-  if (typeof app.config == "string") {
-    app_config = app.config
-  // TODO: make into const/config
-  } else {
-    app_config = DEFAULT_VILE_YML
-  }
-
-  // HACK: weird check because should be silent if checking for default
-  if (fs.existsSync(app_config) || app_config != DEFAULT_VILE_YML) {
-    config.load(path.join(process.cwd(), app_config))
-  }
-}
-
 const create = (cli : commander.CommanderStatic) =>
   cli
-    .command("punish [paths...]")
-    .alias("p")
+    .command("analyze [paths...]")
+    .alias("a")
     .option("-p, --plugins [plugin_list]",
             `unless specified in config, this can be a comma delimited ` +
             `string, else run all installed plugins`)
     .option("-c, --config [path]",
             "specify a custom config file")
     .option("-f, --format [type]",
-            "specify output format (console,json,syntastic)")
+            "specify output format (console=default,json,syntastic)")
     .option("-u, --upload [project_name]",
             "publish to vile.io (disables --gitdiff)- " +
               "alternatively, you can set a VILE_PROJECT env var")
@@ -200,16 +173,20 @@ const create = (cli : commander.CommanderStatic) =>
     .option("-g, --gitdiff [rev]",
             "only check files patched in latest HEAD commit, or rev")
     .option("-l, --log [level]",
-            "specify the log level (info|warn|error|debug)")
-    .option("-q, --quiet",
-            "log nothing")
+            "specify the log level (info=default|warn|error)")
+    .option("-q, --quiet", "log nothing")
     .option("-n, --nodecorations", "disable color and progress bar")
-    .action((paths : string[], app : vile.Lib.CLIApp) => {
-      load_config(app)
-      if (app.quiet || app.format == "json" ||
-          app.format == "syntastic") logger.quiet()
-      if (app.log) set_log_levels(app.log)
-      punish(app, paths)
+    .action((paths : string[], opts : vile.CLIApp) => {
+      logger.enable(!opts.nodecorations)
+
+      config.load(opts.config)
+
+      if (opts.quiet || opts.format == "json" ||
+          opts.format == "syntastic") logger.disable()
+
+      if (opts.log) logger.level(opts.log)
+
+      analyze(opts, paths)
     })
 
 export = { create }

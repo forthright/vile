@@ -28,6 +28,13 @@ describe "service", ->
     mimus.stub request, "post"
     mimus.stub request, "get"
 
+  describe "constants", ->
+    expect(service.API).to.eql
+      COMMIT:
+        FINISHED: "finished"
+        PROCESSING: "processing"
+        FAILED: "failed"
+
   describe ".commit", ->
     describe "on ok response", ->
       beforeEach ->

@@ -18,7 +18,7 @@ describe "util", ->
     beforeEach ->
       new_env = extend({}, process.env)
       cross_spawn_stub = mimus.stub()
-      on_stub = mimus.stub().callsArg(1, 0)
+      on_stub = mimus.stub().callsArgWith(1, 0)
       cross_spawn_stub.returns(
         stdout: { on: mimus.stub() }
         stderr: { on: mimus.stub() }
@@ -37,6 +37,7 @@ describe "util", ->
         a.push(node_bin_dir)
         new_env.PATH = _.uniq(a).join(path.delimiter)
         util.spawn bin
+        return
 
       it "includes entire env with npm run paths", ->
         spawned_env = cross_spawn_stub.args[0][2].env
@@ -61,12 +62,6 @@ describe "util", ->
 
   describe "constants", ->
     it "are defined", ->
-      expect(util.API).to.eql
-        COMMIT:
-          FINISHED: "finished"
-          PROCESSING: "processing"
-          FAILED: "failed"
-
       expect(util.OK).to.eql "ok"
 
       expect(util.displayable_issues).to.eql [

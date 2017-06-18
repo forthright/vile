@@ -2,17 +2,34 @@
 import Bluebird = require("bluebird")
 import _ = require("lodash")
 import plugin = require("./../plugin")
+import logger = require("./../logger")
+
+const log = logger.create("worker")
 
 // Note: This only registers for worker forked processes
 process.on("unhandledRejection", (
   error : NodeJS.ErrnoException | string,
   promise : Bluebird<any>
 ) => {
-  console.error("[Unhandled rejection]")
-  log_and_exit(error)
+  log_and_exit(error, true)
 })
 
 const ping_parent = (process : any) : void => process.send("")
+
+const log_and_exit = (
+  error : any,
+  was_promise? : boolean
+) : void => {
+  const msg : string = _.get(error, "stack", error)
+
+  if (was_promise) {
+    log.error("Unhandled Promise.reject:", msg)
+  } else {
+    log.error(msg)
+  }
+
+  process.exit(1)
+}
 
 const set_ignore_list = (
   plugin_config : vile.PluginConfig,
@@ -34,7 +51,10 @@ const set_allow_list = (
   }
 }
 
-const get_plugin_config = (name : string, config : vile.YMLConfig) : void => {
+const get_plugin_config = (
+  name : string,
+  config : vile.YMLConfig
+) : vile.PluginConfig => {
   const plugin_config : any = _.get(config, name, {})
   const vile_ignore : string[] = _.get(config, "vile.ignore", [])
   const vile_allow : string[] = _.get(config, "vile.allow", [])
@@ -45,13 +65,7 @@ const get_plugin_config = (name : string, config : vile.YMLConfig) : void => {
   return plugin_config
 }
 
-const log_and_exit = (error : any) : void => {
-  console.log() // next line if spinner
-  console.error(_.get(error, "stack", error))
-  process.exit(1)
-}
-
-const handle_worker_request = (data : vile.Lib.PluginWorkerData) : void => {
+const handle_worker_request = (data : vile.PluginWorkerData) : void => {
   const plugins : string[] = data.plugins
   const config : vile.YMLConfig = data.config
 

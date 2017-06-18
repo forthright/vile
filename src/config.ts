@@ -1,16 +1,24 @@
 import yaml = require("js-yaml")
 import fs = require("fs")
+import ConfigParseError = require("./config/config_parse_error")
+
+const DEFAULT_VILE_YML = ".vile.yml"
 
 let conf : vile.YMLConfig = {}
 
-const load_config_from_file = (
-  filepath : string
+const load_config = (
+  filepath = DEFAULT_VILE_YML
 ) : vile.YMLConfig => {
+  if (filepath == DEFAULT_VILE_YML && !fs.existsSync(filepath)) {
+    conf = {}
+    return conf
+  }
+
   try {
-    return conf = yaml.safeLoad(fs.readFileSync(filepath, "utf-8"))
-  } catch(e) {
-    console.error(e)
-    process.exit(1)
+    conf = yaml.safeLoad(fs.readFileSync(filepath, "utf-8"))
+    return conf
+  } catch (e) {
+    throw new ConfigParseError(`${filepath}\n\n${e}`)
   }
 }
 
@@ -27,5 +35,5 @@ const get_conf : vile.YMLConfig = () => conf
 export = {
   get: get_conf,
   get_auth: load_auth_config_from_env,
-  load: load_config_from_file
-} as vile.Lib.Config
+  load: load_config
+}

@@ -6,9 +6,8 @@ const VILE_DOCS_URL = "https://docs.vile.io"
 const create = (cli : commander.CommanderStatic) =>
   cli
     .command("docs")
-      .alias("d")
-      .action(() => {
-        opn(VILE_DOCS_URL)
-      })
+    .action(() => {
+      opn(VILE_DOCS_URL)
+    })
 
 export = { create }

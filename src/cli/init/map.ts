@@ -45,7 +45,7 @@ const peer = {
   "slim-lint": { gem: "slim_lint" }
 }
 
-const PLUGIN_MAP : vile.Lib.PluginMap = {
+const PLUGIN_MAP : vile.PluginMap = {
   frameworks,
   langs,
   peer

@@ -3,24 +3,19 @@
 
 /// <reference types="node" />
 /// <reference types="bluebird" />
-/// <reference types="minilog" />
 
-// Unlike Minilog, these need to be explicitly pulled in?
 import * as Bluebird from "bluebird";
 import * as commander from "commander";
 import * as http from "http";
 
-// So can freely reference vile.Issue, etc (type shows as 'Vile')
-declare var vile : vile.Vile
-
-// So main module import will have a typed function/property signature
+// Enable things like this:
+// > const vile = require("vile")
+// > let i : vile.Issue = vile.issue({ path: "foo", type: vile.ERR })
+declare var vile : vile.Module.Index
 export = vile;
 export as namespace vile;
 
 declare namespace vile {
-  // Alias index.ts exports signature for compiler readability
-  interface Vile extends Lib.Index {}
-
   // -------------------------------------------------
   // Issue
   //
@@ -195,6 +190,7 @@ declare namespace vile {
     combine? : string;
     dontpostprocess? : boolean;
     skipsnippets? : boolean;
+    plugins? : PluginList;
   }
 
   interface VileConfig {
@@ -216,23 +212,76 @@ declare namespace vile {
 
   export type AllowList = string[] | string
 
+  // TODO: try to flush out while supporting any key values?
   export type YMLConfig = any
 
   // -------------------------------------------------
-  // Library API
+  // Anything library/module related
   //
-  // # in src/module_name.ts
-  // module.exports = <Vile.Lib.ModuleName>{...}
+  // const vile : vile.Lib = require("vile")
   //
 
-  export module API {
+  export type PluginMap = {
+    frameworks? : {
+      [k : string] : string[] | string;
+    }
+    peer? : {
+      [k : string] : {
+        [pkg_manager : string] : string[] | string;
+      }
+    }
+    langs? : {
+      [k : string] : string[] | string;
+    }
+  }
+
+  export interface PromiseEachFileOptions {
+    read_data? : boolean;
+  }
+
+  export interface SpawnOptions {
+    args? : string[];
+    stdio? : string[];
+  }
+
+  export interface SpawnData {
+    code   : number;
+    stdout : string;
+    stderr : string;
+  }
+
+  export interface PluginWorkerData {
+    plugins : PluginList;
+    config : YMLConfig;
+  }
+
+  export interface LoggerInstance {
+    error : (...l : any[]) => void;
+    error_stdout : (...l : any[]) => void;
+    info : (...l : any[]) => void;
+    warn : (...l : any[]) => void;
+    warn_stdout :  (...l : any[]) => void;
+  }
+
+  export interface CLIApp extends commander.CommanderStatic {
+    quiet?  : boolean;
+    format? : string;
+    log?    : string;
+    upload? : string;
+    skipsnippets? : boolean;
+  }
+
+  export interface CLIModule {
+    create : (commander : commander.CommanderStatic) => void
+  }
+
+  export module Service {
     export interface HTTPResponse {
       error?     : NodeJS.ErrnoException
       body?      : JSONResponse
       response?  : http.IncomingMessage
     }
 
-    // TODO: mape to API spec in Util interface
     export interface JSONResponse {
       message : string;
       data?   : CommitStatus | any;
@@ -251,49 +300,16 @@ declare namespace vile {
     }
   }
 
-  export module Lib {
-    export type PluginMap = {
-      frameworks? : {
-        [k : string] : string[] | string;
-      }
-      peer? : {
-        [k : string] : {
-          [pkg_manager : string] : string[] | string;
-        }
-      }
-      langs? : {
-        [k : string] : string[] | string;
-      }
-    }
-
-    export interface PromiseEachFileOptions {
-      read_data? : boolean;
-    }
-
-    export interface SpawnOptions {
-      args? : string[];
-      stdio? : string[];
-    }
-
-    export interface SpawnData {
-      code   : number;
-      stdout : string;
-      stderr : string;
-    }
-
-    export interface PluginWorkerData {
-      plugins : PluginList;
-      config : YMLConfig;
+  export module Module {
+    export interface Index extends Module.Plugin, Module.UtilMethods, Module.UtilKeyTypes {
+      logger : Module.Logger;
+      config : Module.Config;
     }
 
     export interface Config {
       load      : (f : string) => YMLConfig;
       get       : () => YMLConfig;
       get_auth  : () => Auth;
-    }
-
-    export interface Package {
-      version : string;
     }
 
     export interface Plugin {
@@ -309,11 +325,11 @@ declare namespace vile {
       ) => Bluebird<IssueList>;
     }
 
-    export interface Index extends Util, Plugin {
-      logger : Logger;
-    }
+    type PromiseEachParsedData = any;
 
-    export interface UtilKeyTypes {
+    type RawIssueData = { [k : string]: any; }
+
+    interface UtilKeyTypes {
       OK    :  IssueType.Ok;
 
       WARN  :  IssueType.Warn;
@@ -333,24 +349,14 @@ declare namespace vile {
       COV   :  IssueType.Cov;
     }
 
-    export interface UtilObjects {
-      API: {
-        [api_context : string] : {
-          [status_name : string] : string;
-        }
-      }
-
+    interface UtilObjects {
       displayable_issues: IssueType.All[];
-
       warnings: IssueType.Warnings[];
       errors:   IssueType.Errors[];
       infos:    IssueType.Infos[];
     }
 
-    type PromiseEachParsedData = any;
-    type RawIssueData = { [k : string]: any; }
-
-    export interface Util extends UtilObjects, UtilKeyTypes {
+    interface UtilMethods {
       promise_each : (
         d : string,
         a : (f_or_d : string, i_d: boolean) => boolean,
@@ -368,39 +374,13 @@ declare namespace vile {
       spawn        : (b : string, o? : SpawnOptions) => Bluebird<SpawnData>;
     }
 
+    export interface Util extends UtilMethods, UtilObjects, UtilKeyTypes {}
+
     export interface Logger {
-      quiet   : () => void;
+      create  : (p : string) => LoggerInstance;
+      enable  : (c : boolean) => void;
+      disable : () => void;
       level   : (l : string) => void;
-      create  : (l : string) => Minilog;
-      default : () => void;
-    }
-
-    export interface CLIApp extends commander.CommanderStatic {
-      quiet?  : boolean;
-      format? : string;
-      log?    : string;
-      upload? : string;
-      skipsnippets? : boolean;
-    }
-
-    export interface CLIModule {
-      create : (commander : commander.CommanderStatic) => void
-    }
-
-    // TODO: flush any any here
-    export interface Service {
-      commit : (
-        issues : IssueList,
-        cli_time : number,
-        auth : Auth
-      ) => Bluebird<any>;
-
-      commit_status : (
-        commit_id : number,
-        auth : Auth
-      ) => Bluebird<any>;
-
-      log : (post_json : API.CommitStatus) => void;
     }
   }
 }

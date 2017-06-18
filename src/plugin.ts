@@ -10,6 +10,7 @@ import spinner = require("cli-spinner")
 import logger = require("./logger")
 import util = require("./util")
 import log_helper = require("./plugin/log_helper")
+import PluginNotFoundError = require("./plugin/plugin_not_found_error")
 
 Bluebird.promisifyAll(fs)
 
@@ -29,23 +30,16 @@ const is_array = (list : any[]) : boolean =>
 const is_promise = (list : Bluebird<any>) : boolean =>
   !!(list && typeof list.then == "function")
 
-const require_plugin = (name : string) : vile.Plugin | null => {
+const require_plugin = (name : string) : vile.Plugin => {
   const cwd_node_modules = path.join(process.cwd(), "node_modules")
-
-  let plugin : vile.Plugin
-
-  try {
-    plugin = require(`${cwd_node_modules}/vile-${name}`)
-  } catch (error) {
-    log.error(_.get(error, "stack", error))
-  }
-
-  return plugin
+  return require(`${cwd_node_modules}/vile-${name}`)
 }
 
 const map_plugin_name_to_issues = (name : string) => (issues : vile.Issue[]) =>
-  _.map(issues, (issue : vile.Issue) =>
-    (issue.plugin = name, issue))
+  _.map(issues, (issue : vile.Issue) => {
+    issue.plugin = name
+    return issue
+  })
 
 const exec_plugin = (
   name : string,
@@ -72,7 +66,7 @@ const exec_plugin = (
     } else if (is_array(issues)) {
       resolve(map_plugin_name_to_issues(name)(issues))
     } else {
-      console.warn(`${name} plugin did not return [] or Promise<[]>`)
+      log.warn(`${name} plugin did not return [] or Promise<[]>`)
       resolve([])
     }
   })
@@ -97,7 +91,7 @@ const exec_in_fork = (
         worker.disconnect()
         resolve(issues)
       } else {
-        const data : vile.Lib.PluginWorkerData = { config, plugins }
+        const data : vile.PluginWorkerData = { config, plugins }
         worker.send(data)
       }
     })
@@ -135,19 +129,14 @@ const check_for_uninstalled_plugins = (
   allowed : string[],
   plugins : vile.PluginList
 ) => {
-  let errors = false
-
   _.each(allowed, (name : string) => {
     if (!_.some(plugins, (plugin : string) =>
       plugin.replace("vile-", "") == name
     )) {
-      errors = true
-      log.error(`${name} is not installed`)
+      throw new PluginNotFoundError(
+        `${name} is not installed`)
     }
   })
-
-  // Hack: should be doing this in cli modules
-  if (errors) process.exit(1)
 }
 
 const combine_paths = (
@@ -382,20 +371,20 @@ const log_post_process = (state : string) =>
   }
 
 const exec = (
-  custom_plugins : vile.PluginList = [],
   config : vile.YMLConfig = {},
   opts : vile.PluginExecOptions = {}
 ) : Bluebird<vile.IssueList> => {
-  const app_config = _.get(config, "vile", { plugins: [] })
+  const app_config = _.get(config, "vile", {})
   const ignore = _.get(app_config, "ignore", null)
   const allow = _.get(app_config, "allow", null)
-  let plugins : vile.PluginList = custom_plugins
+  const config_specified_plugins : vile.PluginList = _.get(
+    app_config, "plugins", [])
   const post_process = !opts.dontpostprocess
   const allow_snippets = !opts.skipsnippets
 
-  if (app_config.plugins) {
-    plugins = _.uniq(plugins.concat(app_config.plugins))
-  }
+  const plugins = _.isEmpty(opts.plugins) ?
+    config_specified_plugins :
+    _.compact(_.concat([], opts.plugins))
 
   return (fs as any).readdirAsync(cwd_plugins_path())
     .filter(is_plugin)
@@ -410,4 +399,4 @@ const exec = (
 export = {
   exec,
   exec_plugin
-} as vile.Lib.Plugin
+}

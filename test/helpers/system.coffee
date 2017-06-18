@@ -49,11 +49,9 @@ exec = (args, cb, stdio, pass_err) ->
 exec_interactive = (args, cb, done) ->
   stdout = []
 
-  proc = exec(
+  proc = exec_err(
     args,
-    (stdout) ->
-      done(stdout)
-    ,
+    done,
     [ "pipe", "pipe", "pipe" ])
 
   proc.stdin.setEncoding "utf-8"

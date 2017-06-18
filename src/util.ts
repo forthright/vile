@@ -43,7 +43,6 @@ const is_allowed = (
           matches(unixpath, allow_list)
 }
 
-// TODO: what to do about dirs (expecting called to know that)
 const filter_promise_each = (
   ignore_list : vile.IgnoreList,
   allow_list : vile.AllowList
@@ -53,7 +52,7 @@ const filter_promise_each = (
   is_allowed(file_or_dir, allow_list) &&
     !is_ignored(file_or_dir, ignore_list)
 
-// TODO: make io async
+// TODO: make io async?
 const collect_files = (
   target : string,
   allowed : (p : string, i : boolean) => boolean
@@ -86,14 +85,14 @@ const move_node_bin_to_end = (env_path : string) : string => {
 // TODO: add mem limit to child process
 const spawn = (
   bin : string,
-  opts : vile.Lib.SpawnOptions = {}
-) : Bluebird<vile.Lib.SpawnData> =>
+  opts : vile.SpawnOptions = {}
+) : Bluebird<vile.SpawnData> =>
   new Bluebird((
-    resolve : (r : vile.Lib.SpawnData) => void,
-    reject : (e : string) => void
+    resolve : (r : vile.SpawnData) => void,
+    reject : (e : Error) => void
   ) => {
-    const chunks : Buffer[] = []
-    const errors : string[] = []
+    const stdout : Buffer[] = []
+    const stderr : Buffer[] = []
 
     // HACK: Move node bin path added by npm-run-path to end
     //       (ex: so we don't clobber ruby rbenv/n shims etc)
@@ -114,31 +113,36 @@ const spawn = (
       stdio: opts.stdio || [ process.stdin, "pipe", "pipe" ]
     })
 
-    proc.stdout.on("data", (chunk : Buffer) => {
-      chunks.push(chunk)
+    proc.stdout.on("data", (data : Buffer) => {
+      stdout.push(data)
     })
 
     proc.stderr.on("data", (data : Buffer) => {
-      const error = data.toString("utf-8")
-      errors.push(error)
-      console.warn(error)
+      stderr.push(data)
     })
 
     proc.on("close", (code : number) => {
-      const stdout : string = chunks
-        .map((chunk) => chunk.toString("utf-8")).join("")
-      const stderr : string = errors.join("")
-      const http : vile.Lib.SpawnData = { code, stderr, stdout }
-      resolve(http)
+      const stdout_str : string = stdout
+        .map((out) => out.toString("utf-8")).join("")
+      const stderr_str : string = stderr
+        .map((err) => err.toString("utf-8")).join("")
+
+      const data : vile.SpawnData = {
+        code,
+        stderr: stderr_str,
+        stdout: stdout_str
+      }
+
+      resolve(data)
     })
   })
 
 const promise_each_file = (
   dirpath : string,
   allow : (file_or_dir_path : string, is_dir : boolean) => boolean,
-  parse_file : (file : string, data? : string) => string,
-  opts : vile.Lib.PromiseEachFileOptions = {}
-) : Bluebird<string[]> => {
+  parse_file : (file : string, data? : string) => Bluebird<any> | any,
+  opts : vile.PromiseEachFileOptions = {}
+) : Bluebird<any> => {
   if (!opts.hasOwnProperty("read_data")) opts.read_data = true
 
   const readdir = new Bluebird((resolve, reject) => {
@@ -172,24 +176,6 @@ const promise_each_file = (
 // TODO: validate issue objects as it comes in
 const into_issue = (data : vile.Issue) : vile.Issue => data
 
-// TODO: can we just assign with types at compile time?
-const types : vile.Lib.UtilKeyTypes = {
-  CHURN :  "churn",
-  COMP  :  "complexity",
-  COV   :  "cov",
-  DEP   :  "dependency",
-  DUPE  :  "duplicate",
-  ERR   :  "error",
-  LANG  :  "lang",
-  MAIN  :  "maintainability",
-  OK    :  "ok",
-  SCM   :  "scm",
-  SEC   :  "security",
-  STAT  :  "stat",
-  STYL  :  "style",
-  WARN  :  "warning"
-}
-
 const displayable_issues : vile.IssueType.All[] = [
   "warning",
   "style",
@@ -222,16 +208,22 @@ const infos : vile.IssueType.Infos[] = [
   "cov"
 ]
 
-const API = {
-  COMMIT: {
-    FAILED: "failed",
-    FINISHED: "finished",
-    PROCESSING: "processing"
-  }
-}
+export = {
+  CHURN :  ("churn" as vile.IssueType.Churn),
+  COMP  :  ("complexity" as vile.IssueType.Comp),
+  COV   :  ("cov" as vile.IssueType.Cov),
+  DEP   :  ("dependency" as vile.IssueType.Dep),
+  DUPE  :  ("duplicate" as vile.IssueType.Dupe),
+  ERR   :  ("error" as vile.IssueType.Err),
+  LANG  :  ("lang" as vile.IssueType.Lang),
+  MAIN  :  ("maintainability" as vile.IssueType.Main),
+  OK    :  ("ok" as vile.IssueType.Ok),
+  SCM   :  ("scm" as vile.IssueType.Scm),
+  SEC   :  ("security" as vile.IssueType.Sec),
+  STAT  :  ("stat" as vile.IssueType.Stat),
+  STYL  :  ("style" as vile.IssueType.Styl),
+  WARN  :  ("warning" as vile.IssueType.Warn),
 
-export = extend({}, types, {
-  API,
   allowed: is_allowed,
   displayable_issues,
   errors,
@@ -242,4 +234,4 @@ export = extend({}, types, {
   promise_each: promise_each_file,
   spawn,
   warnings
-}) as vile.Lib.Util
+}

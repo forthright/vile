@@ -16,4 +16,9 @@ describe "index", ->
       expect(index.logger).to.eql logger
 
     it "has the util module methods", ->
-      expect(index).to.contain.all.keys util
+      keys = _.filter(
+        _.keys(util),
+        (key) -> typeof util[key] == "string" ||
+          typeof util[key] == "function")
+      _.each keys, (key) ->
+        expect(index[key]).to.eql util[key]

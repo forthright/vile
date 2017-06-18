@@ -5,9 +5,10 @@ expect = chai.expect
 cli = mimus.require "./../../lib/cli", __dirname, []
 cli_pkg = mimus.get cli, "pkg"
 commander = mimus.get cli, "cli"
+cli_log = mimus.get cli, "log"
 argv = undefined
 sub_modules = [
-  "cli_punish",
+  "cli_analyze",
   "cli_auth",
   "cli_init"
 ]
@@ -38,15 +39,14 @@ describe "cli", ->
     describe "when an event is emitted", ->
       it "logs and exits the process", ->
         mimus.stub process, "exit"
-        mimus.stub console, "error"
         mimus.stub console, "log"
+        mimus.stub cli_log, "error"
         process.emit("unhandledRejection", "some reason")
-        expect(console.error).to.have.been
+        console.log.restore()
+        expect(cli_log.error).to.have.been
           .calledWith "some reason"
         expect(process.exit).to.have.been.calledWith 1
         process.exit.restore()
-        console.error.restore()
-        console.log.restore()
 
   describe ".interpret", ->
     describe "setting the version", ->

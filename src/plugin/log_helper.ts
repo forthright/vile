@@ -152,7 +152,9 @@ const log_syntastic_applicable_messages = (
 const log_issue_messages = (
   issues : vile.Issue[] = []
 ) => {
-  const nlogs : { [issue_type : string] : Minilog } = {}
+  const nlogs : {
+    [issue_type : string] : vile.LoggerInstance
+  } = {}
 
   issues.forEach((issue : vile.Issue, index : number) => {
     const logger_type : string = issue.type
@@ -166,18 +168,18 @@ const log_issue_messages = (
     const msg_postfix = plugin_name ? ` (vile-${ plugin_name })` : ""
 
     if (_.some(util.errors, (i_type) => issue.type == i_type)) {
-      log.error(to_console(issue) + msg_postfix)
+      log.error_stdout(to_console(issue) + msg_postfix)
     } else if (_.some(util.warnings, (i_type) => issue.type == i_type)) {
       if (issue.type == util.COMP) {
         log.info(to_console_comp(issue) + msg_postfix)
       } else if (issue.type == util.CHURN) {
         log.info(to_console_churn(issue) + msg_postfix)
       } else if (issue.type == util.DEP) {
-        log.warn(to_console_dep(issue) + msg_postfix)
+        log.warn_stdout(to_console_dep(issue) + msg_postfix)
       } else if (issue.type == util.DUPE) {
-        log.warn(to_console_duplicate(issue) + msg_postfix)
+        log.warn_stdout(to_console_duplicate(issue) + msg_postfix)
       } else {
-        log.warn(to_console(issue) + msg_postfix)
+        log.warn_stdout(to_console(issue) + msg_postfix)
       }
     } else {
       if (issue.type == util.LANG) {

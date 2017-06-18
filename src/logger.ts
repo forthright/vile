@@ -1,44 +1,92 @@
 import _ = require("lodash")
-import minilog = require("minilog")
+import chalk = require("chalk")
+import log = require("loglevel")
 
-const filter = new minilog.Filter()
+let enable_colors : boolean = false
 
-const default_filter = () => {
-  filter.allow(/.*/, "error")
-  filter.allow(/.*/, "info")
-  filter.defaultResult = false
+const level = (name : string) : void => {
+  log.setLevel(name)
 }
 
-const quiet = () => filter.clear()
+const enable = (colors = true) : void => {
+  enable_colors = colors
+  // HACK: supports auto setting color in worker procs via the CLI
+  if (process.env.VILE_NO_COLOR == "1") enable_colors = false
+  if (!enable_colors) process.env.VILE_NO_COLOR = "1"
+  log.setLevel("info")
+}
 
-const log_level = (level : string) =>
-  filter.allow(/.*/, level)
+const disable = () : void => {
+  log.setLevel("silent")
+}
 
-const init = () => {
-  // HACK!
-  const nocolor = _.includes(process.argv, "--nodecorations") ||
-    _.includes(process.argv, "-n")
+const colorize = (
+  name : string,
+  prefix : string,
+  logs : string[]
+) : string[] => {
+  if (enable_colors) {
+    prefix = chalk.gray(prefix)
 
-  if (nocolor) {
-    minilog
-      .pipe(filter)
-      .pipe(minilog.backends.console.formatClean)
-      .pipe(minilog.backends.console)
-  } else {
-    minilog
-      .pipe(filter)
-      .pipe(minilog.backends.console.formatMinilog)
-      .pipe(minilog.backends.console)
+    switch (name) {
+      case "error":
+        name = chalk.red(name)
+        break
+      case "warn":
+        name = chalk.yellow(name)
+        break
+      default:
+        name = chalk.cyan(name)
+        break
+    }
   }
 
-  default_filter()
+  return _.concat([], prefix, name, logs)
 }
 
-export = {
-  create: minilog,
-  default: default_filter,
-  level: log_level,
-  quiet
-} as vile.Lib.Logger
+const apply = (
+  name : string,
+  prefix : string
+) => (...logs : any[]) : void => {
+  switch (name) {
+    case "warn":
+      log.warn.apply(log, colorize(name, prefix, logs))
+      break
+    case "error":
+      log.error.apply(log, colorize(name, prefix, logs))
+      break
+    default:
+      log.info.apply(log, colorize(name, prefix, logs))
+      break
+  }
+}
 
-init()
+const apply_issue = (
+  name : string,
+  prefix : string
+) => (...logs : any[]) : void => {
+  if (log.getLevel() == LogLevel.INFO) {
+    log.info.apply(log, colorize(name, prefix, logs))
+  }
+}
+
+const create = (
+  prefix : string
+) : vile.LoggerInstance => {
+  return {
+    error: apply("error", prefix),
+    error_stdout: apply_issue("error", prefix),
+    info:  apply("info", prefix),
+    warn:  apply("warn", prefix),
+    warn_stdout: apply_issue("warn", prefix),
+  }
+}
+
+enable()
+
+export = {
+  create,
+  disable,
+  enable,
+  level
+}
