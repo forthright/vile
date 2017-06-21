@@ -1,0 +1,2 @@
+var s = "possibly a text file"
+console.log(s)

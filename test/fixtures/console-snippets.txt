@@ -1,0 +1,34 @@
+plugin info test-snippet-plugin:start(1/1)
+plugin info test-snippet-plugin:finish
+plugin info plugins:finish
+plugin info postprocess:start
+plugin info postprocess:finish
+ok info .vile.yml
+ok info lib/foo.js
+warning warn lib/index.js: non-snippet issue (vile-test-snippet-plugin)
+warning warn lib/bar: line 1-2, col 0, bar (vile-test-snippet-plugin)
+1:  var s = "possibly a text file"
+2:  console.log(s)
+
+duplicate warn lib/index.js: Similar code in lib/foo.js, lib/index.js (vile-test-snippet-plugin)
+
+ 8:        where: {
+ 9:          start: {
+10:            line: 1,
+11:            character: 0
+12:          },
+13:          end: {
+14:            line: 2,
+
+
+18:      },
+19:      {
+20:        type: "duplicate",
+21:        path: "lib/index.js",
+22:        signature: "snippet-2",
+23:        where: {
+24:          start: { line: 4 },
+25:          end: { line: 6 }
+26:        },
+27:        duplicate: {
+

@@ -12,8 +12,9 @@ issues_not_combined = require "./../fixtures/issues-not-combined"
 expect = chai.expect
 
 CWD = process.cwd()
-SYSTEM_TESTS = path.join(
-  __dirname, "..", "..", "test", "fixtures", "system")
+FIXTURES = path.join(
+  __dirname, "..", "..", "test", "fixtures")
+SYSTEM_TESTS = path.join(FIXTURES, "system")
 SYNC_DIR  = path.resolve(path.join(SYSTEM_TESTS, "sync"))
 ASYNC_DIR = path.resolve(path.join(SYSTEM_TESTS, "async"))
 CMB_FILES_DIR = path.resolve(path.join(SYSTEM_TESTS, "combine_files"))
@@ -37,6 +38,9 @@ PLUGIN_EXCEPTION_DIR = path.join SYSTEM_TESTS, "err_plugin_exception"
 PLUGIN_REJECT_DIR = path.join SYSTEM_TESTS, "err_plugin_reject"
 PLUGIN_BAD_API_DIR = path.join SYSTEM_TESTS, "err_plugin_bad_api"
 PLUGIN_INVALID_DATA_DIR = path.join SYSTEM_TESTS, "err_plugin_invalid_data"
+
+SNIPPET_OUTPUT = fs.readFileSync(
+  path.join(FIXTURES, "console-snippets.txt")).toString()
 
 press =
   ENTER: '\x0D'
@@ -454,6 +458,25 @@ describe "system :: cli blackbox testing", ->
           cli.exec "a -n -d -f json", (stdout) ->
             expect(JSON.parse(stdout)).to.not.match /snippet/
             done()
+
+      describe "logging to the terminal", ->
+        describe "with color", ->
+          # TODO: look into why this color output is lost?
+          it "logs as expected", (done) ->
+            cli.exec_err "a -t", (stdout, stderr, code) ->
+              expect(code).to.eql 0
+              expect(stderr)
+                .to.eql "cli warn highlighting failed for lib/bar:\n"
+              expect(stdout).to.match /24\:         start\: \{ line\: 4 \}\,/
+              done()
+
+        describe "without color", ->
+          it "logs as expected", (done) ->
+            cli.exec_err "a -t -n", (stdout, stderr, code) ->
+              expect(code).to.eql 0
+              expect(stderr).to.eql ""
+              expect(stdout).to.eql SNIPPET_OUTPUT
+              done()
 
     describe "filtering via ignore", ->
       beforeEach -> process.chdir FILTER_IGNORE_DIR

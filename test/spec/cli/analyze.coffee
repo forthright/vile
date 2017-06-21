@@ -5,14 +5,19 @@ git = require "./../../../lib/git"
 config = require "./../../../lib/config"
 service = require "./../../../lib/service"
 plugin = require "./../../../lib/plugin"
+CommitUploadError = require "./../../../lib/cli/analyze/commit_upload_error"
 cli_analyze = mimus.require(
   "./../../../lib/cli/analyze", __dirname, [])
-service_log = mimus.get cli_analyze, "service_log"
-original_wait_for = mimus.get cli_analyze, "wait_for"
+cli_analyze_upload = mimus.require(
+  "./../../../lib/cli/analyze/upload", __dirname, [])
+original_wait_for = mimus.get cli_analyze_upload, "wait_for"
 fake_timer = {}
 wait_for_stub = mimus.stub()
-mimus.set cli_analyze, "wait_for", wait_for_stub
-cli_log = mimus.get cli_analyze, "log"
+# HACK: mock this properly, not lazily
+mimus.set cli_analyze, "upload", cli_analyze_upload
+mimus.set cli_analyze_upload, "wait_for", wait_for_stub
+upload_log = mimus.get cli_analyze_upload, "log"
+log = mimus.get cli_analyze, "log"
 
 git_changed_promise = undefined
 service_commit_promise = undefined
@@ -30,17 +35,6 @@ commander = undefined
 cli_cmd_args = undefined
 auth_example = undefined
 exec_issues = []
-
-stub_log_and_exit = ->
-  mimus.stub process, "exit"
-  mimus.stub cli_log, "error"
-  mimus.stub console, "error"
-  mimus.stub console, "log"
-
-restore_log_and_exit = ->
-  process.exit.restore()
-  console.error.restore()
-  console.log.restore()
 
 describe "cli/analyze", ->
   beforeEach ->
@@ -70,6 +64,10 @@ describe "cli/analyze", ->
     commander.action = mimus.stub()
     commander.action.returns commander
     commander.action.callsArgWith(0, cli_cmd_args, commander)
+    mimus.stub log, "info"
+    mimus.stub log, "error"
+    mimus.stub upload_log, "info"
+    mimus.stub upload_log, "error"
 
   afterEach -> mimus.reset()
   after -> mimus.restore()
@@ -93,12 +91,9 @@ describe "cli/analyze", ->
       mimus.stub service, "commit"
       mimus.stub service, "commit_status"
       mimus.stub service, "log"
-      mimus.stub cli_log, "error"
-      mimus.stub service_log, "info"
-      mimus.stub service_log, "error"
 
       clear_interval = mimus.stub()
-      mimus.set cli_analyze, "clearInterval", clear_interval
+      mimus.set cli_analyze_upload, "clearInterval", clear_interval
       wait_for_stub.callsArgWith 1, fake_timer
       config.get_auth.returns auth_example
 
@@ -149,7 +144,7 @@ describe "cli/analyze", ->
           it "logs the commit state as processing and continues to wait", ->
             expect(clear_interval).not.to.have.been.calledWith fake_timer
             expect(service.log).not.to.have.been.called
-            expect(service_log.info).to.have.been
+            expect(upload_log.info).to.have.been
               .calledWith "Commit 2 processing"
 
         # commit_status start
@@ -168,25 +163,12 @@ describe "cli/analyze", ->
             service_commit_status_promise
               .callsArgWith 0, commit_status_failure_data
 
-          it "logs body info and exits process", ->
-            mimus.stub process, "exit"
-            mimus.stub console, "error"
-            mimus.stub console, "log"
-            cli_analyze.create commander
-            expect(cli_log.error).to.have.been
-              .calledWith "http status:", 404
-            expect(cli_log.error).to.have.been
-              .calledWith commit_status_failure_body
-            process.exit.restore()
-            console.error.restore()
-            console.log.restore()
-
-          it "clears the interval", ->
-            stub_log_and_exit()
-            cli_analyze.create commander
+          it "throws an exception with body info and clears interval", ->
+            expect(-> cli_analyze.create commander).to.throw(
+              CommitUploadError,
+              "status: 404: #{JSON.stringify(commit_status_failure_body)}")
             expect(clear_interval).to.have.been
               .calledWith fake_timer
-            restore_log_and_exit()
 
         describe "if status is 200", ->
           beforeEach ->
@@ -206,7 +188,7 @@ describe "cli/analyze", ->
               cli_analyze.create commander
 
             it "logs the commit id and message", ->
-              expect(service_log.info).to.have.been
+              expect(upload_log.info).to.have.been
                 .calledWith "Commit 2 processing"
 
           describe "if commit is finished", ->
@@ -240,26 +222,12 @@ describe "cli/analyze", ->
               service_commit_status_promise
                 .callsArgWith 0, commit_status_success_data
 
-            it "mentions the commit has failed", ->
-              stub_log_and_exit()
-              cli_analyze.create commander
-              expect(service_log.info).to.have.been
+            it "throws exception, clears interval and mentions commit", ->
+              expect(-> cli_analyze.create commander)
+                .to.throw CommitUploadError, "{}"
+              expect(upload_log.info).to.have.been
                 .calledWith "Commit 2 failed"
-              restore_log_and_exit()
-
-            it "clears the interval", ->
-              stub_log_and_exit()
-              cli_analyze.create commander
               expect(clear_interval).to.have.been.calledWith fake_timer
-              restore_log_and_exit()
-
-            it "logs packet and exits process", ->
-              stub_log_and_exit()
-              cli_analyze.create commander
-              expect(cli_log.error).to.have.been
-                .calledWith JSON.parse(commit_status_success_body).data
-              expect(process.exit).to.have.been.calledWith 1
-              restore_log_and_exit()
 
       describe "when there is no commit id", ->
         beforeEach ->
@@ -273,18 +241,11 @@ describe "cli/analyze", ->
 
           service_commit_promise.callsArgWith 0, commit_success_data
 
-        it "logs an error and exits process", ->
-          stub_log_and_exit()
-
-          cli_analyze.create commander
-
-          expect(cli_log.error).to.have.been
-            .calledWith(
-              "No commit uid was provided on commit. " +
-              "Can't check status.")
-          expect(process.exit).to.have.been.calledWith 1
-
-          restore_log_and_exit()
+        it "throws an exception", ->
+          err = "No commit uid was provided on commit. " +
+            "Can't check status."
+          expect(-> cli_analyze.create commander)
+            .to.throw CommitUploadError, err
 
       describe "when there is no commit state", ->
         beforeEach ->
@@ -297,17 +258,12 @@ describe "cli/analyze", ->
 
           service_commit_promise.callsArgWith 0, commit_success_data
 
-        it "logs an error and exits process", ->
-          stub_log_and_exit()
-
-          cli_analyze.create commander
-
+        it "throws an exception", ->
           err = "No commit state was provided upon creation. " +
             "Can't check status."
-          expect(process.exit).to.have.been.calledWith 1
-          expect(cli_log.error).to.have.been.calledWith err
 
-          restore_log_and_exit()
+          expect(-> cli_analyze.create commander)
+            .to.throw CommitUploadError, err
 
       describe "when commit state is failed", ->
         beforeEach ->
@@ -321,16 +277,10 @@ describe "cli/analyze", ->
 
           service_commit_promise.callsArgWith 0, commit_success_data
 
-        it "logs an error and exits process", ->
-          stub_log_and_exit()
-
-          cli_analyze.create commander
-
+        it "throws an exception", ->
           err = "Creating commit state is failed."
-          expect(cli_log.error).to.have.been.calledWith err
-          expect(process.exit).to.have.been.calledWith 1
-
-          restore_log_and_exit()
+          expect(-> cli_analyze.create commander)
+            .to.throw CommitUploadError, err
 
       describe "when status code is non 200", ->
         beforeEach ->
@@ -344,21 +294,14 @@ describe "cli/analyze", ->
 
           service_commit_promise.callsArgWith 0, commit_failure_data
 
-        it "logs an error and nothing else", ->
-          stub_log_and_exit()
-
-          cli_analyze.create commander
-
-          expect(cli_log.error).to.have.been
-            .calledWith commit_failure_body
-          expect(process.exit).to.have.been.calledWith 1
+        it "throws an exception", ->
+          expect(-> cli_analyze.create commander).to.throw(
+            CommitUploadError,
+            "{\"message\":\"processing\",\"data\":{}}")
           expect(service.commit_status).to.not.have.been.called
-
-          restore_log_and_exit()
 
   describe "when gitdiff is set", ->
     beforeEach ->
-      mimus.stub cli_log, "info"
       cli_cmd_args.push "foo"
       git_changed_promise = { then: mimus.stub() }
       git_changed_promise.then.returns git_changed_promise
@@ -373,7 +316,7 @@ describe "cli/analyze", ->
       it "sets allow list to all files in latest commit", ->
         git.changed_files.should.have.been.calledWith()
         expect(commander.config.vile.allow).to.eql [ "foo" ]
-        expect(cli_log.info).to.have.been.calledWith "", "foo"
+        expect(log.info).to.have.been.calledWith "", "foo"
 
     describe "with a custom rev", ->
       beforeEach ->
@@ -383,4 +326,4 @@ describe "cli/analyze", ->
       it "sets allow list to all files in rev", ->
         git.changed_files.should.have.been.calledWith("master")
         expect(commander.config.vile.allow).to.eql [ "foo" ]
-        expect(cli_log.info).to.have.been.calledWith "", "foo"
+        expect(log.info).to.have.been.calledWith "", "foo"

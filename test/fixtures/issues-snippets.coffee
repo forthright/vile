@@ -10,9 +10,16 @@ issues_snippets = [
     "path": "lib/foo.js"
   },
   {
+    "message": "non-snippet issue"
+    "path": "lib/index.js"
+    "plugin": "test-snippet-plugin"
+    "signature": "non-snippet-1"
+    "type": "warning"
+  },
+  {
     "type": "warning",
-    "path": "lib/index.js",
-    "message": "foo",
+    "path": "lib/bar",
+    "message": "bar",
     "signature": "snippet-1",
     "where": {
       "start": {
@@ -21,29 +28,19 @@ issues_snippets = [
       },
       "end": {
         "line": 2,
-        "character": 4
+        "character": 0
       }
     },
     "plugin": "test-snippet-plugin",
     "snippet": [
       {
         "line": 1,
-        "text": "function punish(config) {",
+        "text": "var s = \"possibly a text file\"",
         "ending": "\n"
       },
       {
         "line": 2,
-        "text": "  return [",
-        "ending": "\n"
-      },
-      {
-        "line": 3,
-        "text": "    {",
-        "ending": "\n"
-      },
-      {
-        "line": 4,
-        "text": "      type: \"warning\",",
+        "text": "console.log(s)",
         "ending": "\n"
       }
     ]

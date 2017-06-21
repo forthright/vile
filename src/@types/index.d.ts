@@ -264,11 +264,14 @@ declare namespace vile {
   }
 
   export interface CLIApp extends commander.CommanderStatic {
-    quiet?  : boolean;
+    config? : YMLConfig;
+    quiet? : boolean;
     format? : string;
-    log?    : string;
+    log? : string;
     upload? : string;
     skipsnippets? : boolean;
+    spinner? : boolean;
+    plugins : PluginList;
   }
 
   export interface CLIModule {

@@ -9,7 +9,6 @@ import linez = require("linez")
 import spinner = require("cli-spinner")
 import logger = require("./logger")
 import util = require("./util")
-import log_helper = require("./plugin/log_helper")
 import PluginNotFoundError = require("./plugin/plugin_not_found_error")
 
 Bluebird.promisifyAll(fs)
@@ -257,12 +256,6 @@ const execute_plugins = (
         issues = combine_paths(opts.combine, issues)
       }
 
-      if (opts.format == "syntastic") {
-        log_helper.syntastic_issues(issues)
-      } else if (opts.format != "json") {
-        log_helper.issues(issues)
-      }
-
       resolve(issues)
     })
     .catch(reject)
@@ -336,8 +329,7 @@ const cwd_plugins_path = () =>
 
 const add_ok_issues = (
   vile_allow : vile.AllowList = [],
-  vile_ignore : vile.IgnoreList = [],
-  log_distinct_ok_issues = false
+  vile_ignore : vile.IgnoreList = []
 ) =>
   (issues : vile.IssueList) =>
     util.promise_each(
@@ -356,11 +348,6 @@ const add_ok_issues = (
     .then((ok_issues : vile.IssueList) => {
       const distinct_ok_issues = _.reject(ok_issues, (issue : vile.Issue) =>
         _.some(issues, (i) => i.path == issue.path))
-
-      if (log_distinct_ok_issues) {
-        log_helper.issues(distinct_ok_issues)
-      }
-
       return distinct_ok_issues.concat(issues)
     })
 

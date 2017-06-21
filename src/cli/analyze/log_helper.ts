@@ -1,9 +1,12 @@
 import _ = require("lodash")
-import logger = require("./../logger")
-import util = require("./../util")
+import chalk = require("chalk")
+import logger = require("./../../logger")
+import util = require("./../../util")
 
-// TODO: DRY both methods
-// TODO: move logging out of plugins?
+const log = logger.create("cli")
+
+// HACK: weird TS bug when using custom types?
+const emphasize : any = require("emphasize")
 
 const humanize_line_char = (issue : vile.Issue) : string => {
   const start : vile.IssueLine = _.get(issue, "where.start", {})
@@ -149,8 +152,80 @@ const log_syntastic_applicable_messages = (
   })
 }
 
+const lines_for = (snippets : vile.Snippet[]) : string[] => {
+  const line_pad = _.toString(
+    _.get(_.last(snippets), "line", "3")).length
+
+  return _.map(snippets, (snippet : vile.Snippet) =>
+    `${_.padStart(snippet.line.toString(), line_pad)}: `
+  )
+}
+
+const code_for = (snippets : vile.Snippet[]) : string =>
+  _.map(
+    snippets,
+    (snippet : vile.Snippet) => snippet.text
+  ).join("\n")
+
+const log_snippet = (
+  lines : any[],
+  code : string,
+  filepath : string,
+  file_ext : string,
+  nocolors : boolean
+) : void => {
+  if (nocolors) {
+    console.log(_.zip(lines, code.split("\n"))
+      .map((s : any[]) => s.join(" ")).join("\n"))
+  } else {
+    let colored : string
+
+    try {
+      colored = _.get(emphasize
+        .highlight(file_ext, code), "value", "")
+    } catch (e) {
+      log.warn(`highlighting failed for ${filepath}:`)
+      colored = code
+    }
+
+    const colored_lines = lines.map((l) => chalk.gray(l))
+    console.log(_.zip(colored_lines, colored.split("\n"))
+      .map((s : any[]) => s.join("")).join("\n"))
+  }
+  console.log()
+}
+
+const to_console_snippet = (
+  issue : vile.Issue,
+  nocolors : boolean
+) : void => {
+  if (_.isEmpty(issue.snippet) && _.isEmpty(issue.duplicate)) return
+
+  const filepath : string = _.get(issue, "path", "")
+  const file_ext = _.first(filepath.match(/[^\.]*$/))
+
+  if (issue.type == util.DUPE) {
+    _.each(
+      _.get(issue, "duplicate.locations", []),
+      (loc : vile.DuplicateLocations) => {
+        const code = code_for(loc.snippet)
+        const lines = lines_for(loc.snippet)
+        const loc_filepath : string = _.get(loc, "path", "")
+        const loc_file_ext = _.first(loc_filepath.match(/[^\.]*$/))
+        console.log()
+        log_snippet(lines, code, loc_filepath, loc_file_ext, nocolors)
+      })
+  } else {
+    const code = code_for(issue.snippet)
+    const lines = lines_for(issue.snippet)
+    log_snippet(lines, code, filepath, file_ext, nocolors)
+  }
+}
+
 const log_issue_messages = (
-  issues : vile.Issue[] = []
+  issues : vile.Issue[] = [],
+  showsnippets = false,
+  nocolors = false
 ) => {
   const nlogs : {
     [issue_type : string] : vile.LoggerInstance
@@ -163,38 +238,42 @@ const log_issue_messages = (
       nlogs[logger_type] = logger.create(logger_type)
     }
 
-    const log = nlogs[logger_type]
+    const nlog = nlogs[logger_type]
     const plugin_name : string = _.get(issue, "plugin", "")
     const msg_postfix = plugin_name ? ` (vile-${ plugin_name })` : ""
 
     if (_.some(util.errors, (i_type) => issue.type == i_type)) {
-      log.error_stdout(to_console(issue) + msg_postfix)
+      nlog.error_stdout(to_console(issue) + msg_postfix)
     } else if (_.some(util.warnings, (i_type) => issue.type == i_type)) {
       if (issue.type == util.COMP) {
-        log.info(to_console_comp(issue) + msg_postfix)
+        nlog.info(to_console_comp(issue) + msg_postfix)
       } else if (issue.type == util.CHURN) {
-        log.info(to_console_churn(issue) + msg_postfix)
+        nlog.info(to_console_churn(issue) + msg_postfix)
       } else if (issue.type == util.DEP) {
-        log.warn_stdout(to_console_dep(issue) + msg_postfix)
+        nlog.warn_stdout(to_console_dep(issue) + msg_postfix)
       } else if (issue.type == util.DUPE) {
-        log.warn_stdout(to_console_duplicate(issue) + msg_postfix)
+        nlog.warn_stdout(to_console_duplicate(issue) + msg_postfix)
       } else {
-        log.warn_stdout(to_console(issue) + msg_postfix)
+        nlog.warn_stdout(to_console(issue) + msg_postfix)
       }
     } else {
       if (issue.type == util.LANG) {
-        log.info(to_console_lang(issue) + msg_postfix)
+        nlog.info(to_console_lang(issue) + msg_postfix)
       } else if (issue.type == util.SCM) {
-        log.info(to_console_scm(issue) + msg_postfix)
+        nlog.info(to_console_scm(issue) + msg_postfix)
       } else if (issue.type == util.STAT) {
-        log.info(to_console_stat(issue) + msg_postfix)
+        nlog.info(to_console_stat(issue) + msg_postfix)
       } else if (issue.type == util.COV) {
-        log.info(to_console_cov(issue) + msg_postfix)
+        nlog.info(to_console_cov(issue) + msg_postfix)
       } else if (issue.type == util.OK) {
-        log.info(issue.path + msg_postfix)
+        nlog.info(issue.path + msg_postfix)
       } else {
-        log.info(to_console(issue) + msg_postfix)
+        nlog.info(to_console(issue) + msg_postfix)
       }
+    }
+
+    if (showsnippets) {
+      to_console_snippet(issue, nocolors)
     }
   })
 }

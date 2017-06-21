@@ -6,7 +6,7 @@ chai = require "./../helpers/sinon_chai"
 expect = chai.expect
 log = mimus.get service, "log"
 
-commit_status = require "./../fixtures/commit_status"
+commit_status = require "./../fixtures/commit-status"
 commit_status_id = 20
 commit_status_api_url = "https://" +
   "vile.io/api/v0/projects/foo/commits/#{commit_status_id}/status"

@@ -40,8 +40,7 @@ exec = (args, cb, stdio, pass_err) ->
         new Buffer(err).toString("utf-8"),
         code)
     else
-      expect(err).to.be.falsy
-      console.log(err) if err
+      throw new Error(err) if err
       cb new Buffer(out).toString("utf-8")
 
   proc
