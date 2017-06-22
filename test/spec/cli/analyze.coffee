@@ -300,7 +300,7 @@ describe "cli/analyze", ->
             "{\"message\":\"processing\",\"data\":{}}")
           expect(service.commit_status).to.not.have.been.called
 
-  describe "when gitdiff is set", ->
+  describe "when gitDiff is set", ->
     beforeEach ->
       cli_cmd_args.push "foo"
       git_changed_promise = { then: mimus.stub() }
@@ -310,20 +310,20 @@ describe "cli/analyze", ->
 
     describe "with no rev", ->
       beforeEach ->
-        commander.gitdiff = true
+        commander.gitDiff = true
         cli_analyze.create commander
 
       it "sets allow list to all files in latest commit", ->
         git.changed_files.should.have.been.calledWith()
-        expect(commander.config.vile.allow).to.eql [ "foo" ]
+        expect(config.get().vile.allow).to.eql [ "foo" ]
         expect(log.info).to.have.been.calledWith "", "foo"
 
     describe "with a custom rev", ->
       beforeEach ->
-        commander.gitdiff = "master"
+        commander.gitDiff = "master"
         cli_analyze.create commander
 
       it "sets allow list to all files in rev", ->
         git.changed_files.should.have.been.calledWith("master")
-        expect(commander.config.vile.allow).to.eql [ "foo" ]
+        expect(config.get().vile.allow).to.eql [ "foo" ]
         expect(log.info).to.have.been.calledWith "", "foo"

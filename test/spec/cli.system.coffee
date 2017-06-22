@@ -447,13 +447,13 @@ describe "system :: cli blackbox testing", ->
             expect(JSON.parse(stdout)).to.eql issues_snippets
             done()
 
-      describe "when --skipsnippets", ->
+      describe "when skipSnippets", ->
         it "does not include snippets", (done) ->
           cli.exec "a -n -s -f json", (stdout) ->
             expect(JSON.parse(stdout)).to.not.match /snippet/
             done()
 
-      describe "when --dontpostprocess", ->
+      describe "when dontPostProcess", ->
         it "does not include snippets", (done) ->
           cli.exec "a -n -d -f json", (stdout) ->
             expect(JSON.parse(stdout)).to.not.match /snippet/

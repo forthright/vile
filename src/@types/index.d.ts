@@ -188,8 +188,8 @@ declare namespace vile {
     spinner? : boolean;
     format?  : string;
     combine? : string;
-    dontpostprocess? : boolean;
-    skipsnippets? : boolean;
+    dont_post_process? : boolean;
+    skip_snippets? : boolean;
     plugins? : PluginList;
   }
 

@@ -366,8 +366,8 @@ const exec = (
   const allow = _.get(app_config, "allow", null)
   const config_specified_plugins : vile.PluginList = _.get(
     app_config, "plugins", [])
-  const post_process = !opts.dontpostprocess
-  const allow_snippets = !opts.skipsnippets
+  const post_process = !opts.dont_post_process
+  const allow_snippets = !opts.skip_snippets
 
   const plugins = _.isEmpty(opts.plugins) ?
     config_specified_plugins :

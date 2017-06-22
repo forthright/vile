@@ -22,22 +22,25 @@ const analyze = (
   const custom_plugins = typeof opts.plugins == "string" ?
     _.compact(_.split(opts.plugins, ",")) : []
 
-  // TODO: not ideal to mutate the app
-  _.merge(opts, {
-    config: config.get(),
+  const vile_yml = config.get()
+
+  const exec_opts : vile.PluginExecOptions = {
+    combine: opts.combine,
+    dont_post_process: opts.dontPostProcess,
+    format: opts.format,
     plugins: custom_plugins,
-    spinner: !(opts.quiet || opts.nodecorations)
-  })
+    skip_snippets: opts.skipSnippets,
+    spinner: !(opts.quiet || !opts.decorations)
+  }
 
   if (!_.isEmpty(paths)) {
-    _.set(opts, "config.vile.allow", paths)
+    _.set(vile_yml, "vile.allow", paths)
   }
 
   const cli_start_time = new Date().getTime()
 
-  // TODO: don't pass in app, instead hardcode new opts (when using CC)
   const exec = () => plugin
-    .exec(opts.config, opts)
+    .exec(vile_yml, exec_opts)
     .then((issues : vile.IssueList) => {
       const cli_end_time = new Date().getTime()
       const cli_time = cli_end_time - cli_start_time
@@ -49,8 +52,8 @@ const analyze = (
       } else {
         log_helper.issues(
           issues,
-          opts.terminalsnippets,
-          opts.nodecorations)
+          opts.terminalSnippets,
+          !opts.decorations)
       }
 
       return opts.upload ?
@@ -59,13 +62,13 @@ const analyze = (
     })
     .catch(log_and_exit)
 
-  if (opts.gitdiff) {
-    const rev = typeof opts.gitdiff == "string" ?
-      opts.gitdiff : undefined
+  if (opts.gitDiff) {
+    const rev = typeof opts.gitDiff == "string" ?
+      opts.gitDiff : undefined
     log.info("git diff:")
     git.changed_files(rev).then((changed_paths : string[]) => {
       _.each(changed_paths, (p : string) => { log.info("", p) })
-      _.set(opts, "config.vile.allow", changed_paths)
+      _.set(vile_yml, "vile.allow", changed_paths)
       exec()
     })
   } else {
@@ -90,21 +93,21 @@ const create = (cli : commander.CommanderStatic) =>
     .option("-x, --combine [combine_def]",
             "combine file data from two directories into one path- " +
               "example: [src:lib,...] or [src.ts:lib.js,...]")
-    .option("-t, --terminalsnippets [path]",
+    .option("-t, --terminal-snippets [path]",
             "show generated code snippets in the terminal")
-    .option("-s, --skipsnippets",
+    .option("-s, --skip-snippets",
             "don't generate code snippets")
-    .option("-d, --dontpostprocess",
+    .option("-d, --dont-post-process",
             "don't post process data in any way (ex: adding ok issues)- " +
             "useful for per file checking- don't use with --upload")
-    .option("-g, --gitdiff [rev]",
+    .option("-g, --git-diff [rev]",
             "only check files patched in latest HEAD commit, or rev")
     .option("-l, --log [level]",
             "specify the log level (info=default|warn|error)")
     .option("-q, --quiet", "log nothing")
-    .option("-n, --nodecorations", "disable color and progress bar")
+    .option("-n, --no-decorations", "disable color and progress bar")
     .action((paths : string[], opts : vile.CLIApp) => {
-      logger.enable(!opts.nodecorations)
+      logger.enable(opts.decorations)
 
       config.load(opts.config)
 
