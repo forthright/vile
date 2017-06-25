@@ -184,15 +184,6 @@ declare namespace vile {
     allow?   : AllowList;
   }
 
-  export interface PluginExecOptions {
-    spinner? : boolean;
-    format?  : string;
-    combine? : string;
-    dont_post_process? : boolean;
-    skip_snippets? : boolean;
-    plugins? : PluginList;
-  }
-
   interface VileConfig {
     plugins? : PluginList;
     ignore?  : IgnoreList;
@@ -250,28 +241,44 @@ declare namespace vile {
     stderr : string;
   }
 
+  export interface LoggerInstance {
+    error : (...l : any[]) => void;
+    error_issue : (...l : any[]) => void;
+    info : (...l : any[]) => void;
+    info_issue : (...l : any[]) => void;
+    warn : (...l : any[]) => void;
+    warn_issue :  (...l : any[]) => void;
+  }
+
   export interface PluginWorkerData {
     plugins : PluginList;
     config : YMLConfig;
   }
 
-  export interface LoggerInstance {
-    error : (...l : any[]) => void;
-    error_stdout : (...l : any[]) => void;
-    info : (...l : any[]) => void;
-    warn : (...l : any[]) => void;
-    warn_stdout :  (...l : any[]) => void;
+  export interface PluginExecOptions {
+    spinner?           : boolean;
+    format?            : string;
+    combine?           : string;
+    dont_post_process? : boolean;
+    skip_snippets?     : boolean;
+    plugins?           : PluginList;
   }
 
-  export interface CLIApp extends commander.CommanderStatic {
-    config? : YMLConfig;
-    quiet? : boolean;
-    format? : string;
-    log? : string;
-    upload? : string;
-    skipsnippets? : boolean;
-    spinner? : boolean;
-    plugins : PluginList;
+  export interface CLIApp {
+    combine?          : string;
+    config?           : string;
+    decorations       : boolean;
+    dontPostProcess?  : boolean
+    format?           : string;
+    gitDiff           : string;
+    issueLog          : string;
+    log?              : string;
+    plugins           : PluginList;
+    quiet?            : boolean;
+    skipSnippets?     : boolean;
+    spinner?          : boolean;
+    terminalSnippets? : boolean;
+    upload?           : string;
   }
 
   export interface CLIModule {

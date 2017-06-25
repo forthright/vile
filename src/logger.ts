@@ -3,30 +3,40 @@ import chalk = require("chalk")
 import log = require("loglevel")
 
 let enable_colors : boolean = false
+let allow_issue_types : vile.IssueType.All[] = []
+let current_level : string = "info"
 
 const level = (name : string) : void => {
+  process.env.VILE_LOG_LEVEL = name
+  current_level = name
   log.setLevel(name)
 }
 
-const enable = (colors = true) : void => {
+const enable = (
+  colors = true,
+  issue_types : vile.IssueType.All[] = []
+) : void => {
+  allow_issue_types = issue_types
   enable_colors = colors
-  // HACK: supports auto setting color in worker procs via the CLI
+
+  // HACK: supports auto setting color/log in worker procs for CLI
   if (process.env.VILE_NO_COLOR == "1") enable_colors = false
   if (!enable_colors) process.env.VILE_NO_COLOR = "1"
-  log.setLevel("info")
+
+  level(process.env.VILE_LOG_LEVEL || "info")
 }
 
 const disable = () : void => {
-  log.setLevel("silent")
+  level("silent")
 }
 
 const colorize = (
   name : string,
-  prefix : string,
+  source : string,
   logs : string[]
 ) : string[] => {
   if (enable_colors) {
-    prefix = chalk.gray(prefix)
+    source = chalk.gray(source)
 
     switch (name) {
       case "error":
@@ -41,44 +51,46 @@ const colorize = (
     }
   }
 
-  return _.concat([], prefix, name, logs)
+  return _.concat([], name, source, logs)
 }
 
 const apply = (
   name : string,
-  prefix : string
+  source : string
 ) => (...logs : any[]) : void => {
   switch (name) {
     case "warn":
-      log.warn.apply(log, colorize(name, prefix, logs))
+      log.warn.apply(log, colorize(name, source, logs))
       break
     case "error":
-      log.error.apply(log, colorize(name, prefix, logs))
+      log.error.apply(log, colorize(name, source, logs))
       break
     default:
-      log.info.apply(log, colorize(name, prefix, logs))
+      log.info.apply(log, colorize(name, source, logs))
       break
   }
 }
 
 const apply_issue = (
   name : string,
-  prefix : string
+  source : string
 ) => (...logs : any[]) : void => {
-  if (log.getLevel() == LogLevel.INFO) {
-    log.info.apply(log, colorize(name, prefix, logs))
+  if ((_.isEmpty(allow_issue_types) ||
+      _.some(allow_issue_types, (t) => t == source))) {
+    log.info.apply(log, colorize(name, source, logs))
   }
 }
 
 const create = (
-  prefix : string
+  source : string
 ) : vile.LoggerInstance => {
   return {
-    error: apply("error", prefix),
-    error_stdout: apply_issue("error", prefix),
-    info:  apply("info", prefix),
-    warn:  apply("warn", prefix),
-    warn_stdout: apply_issue("warn", prefix),
+    error:       apply("error", source),
+    error_issue: apply_issue("error", source),
+    info:        apply("info", source),
+    info_issue:  apply_issue("info", source),
+    warn:        apply("warn", source),
+    warn_issue:  apply_issue("warn", source)
   }
 }
 

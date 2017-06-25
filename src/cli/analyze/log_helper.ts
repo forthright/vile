@@ -192,7 +192,6 @@ const log_snippet = (
     console.log(_.zip(colored_lines, colored.split("\n"))
       .map((s : any[]) => s.join("")).join("\n"))
   }
-  console.log()
 }
 
 const to_console_snippet = (
@@ -215,10 +214,13 @@ const to_console_snippet = (
         console.log()
         log_snippet(lines, code, loc_filepath, loc_file_ext, nocolors)
       })
+    console.log()
   } else {
     const code = code_for(issue.snippet)
     const lines = lines_for(issue.snippet)
+    console.log()
     log_snippet(lines, code, filepath, file_ext, nocolors)
+    console.log()
   }
 }
 
@@ -243,32 +245,32 @@ const log_issue_messages = (
     const msg_postfix = plugin_name ? ` (vile-${ plugin_name })` : ""
 
     if (_.some(util.errors, (i_type) => issue.type == i_type)) {
-      nlog.error_stdout(to_console(issue) + msg_postfix)
+      nlog.error_issue(to_console(issue) + msg_postfix)
     } else if (_.some(util.warnings, (i_type) => issue.type == i_type)) {
       if (issue.type == util.COMP) {
-        nlog.info(to_console_comp(issue) + msg_postfix)
+        nlog.info_issue(to_console_comp(issue) + msg_postfix)
       } else if (issue.type == util.CHURN) {
-        nlog.info(to_console_churn(issue) + msg_postfix)
+        nlog.info_issue(to_console_churn(issue) + msg_postfix)
       } else if (issue.type == util.DEP) {
-        nlog.warn_stdout(to_console_dep(issue) + msg_postfix)
+        nlog.warn_issue(to_console_dep(issue) + msg_postfix)
       } else if (issue.type == util.DUPE) {
-        nlog.warn_stdout(to_console_duplicate(issue) + msg_postfix)
+        nlog.warn_issue(to_console_duplicate(issue) + msg_postfix)
       } else {
-        nlog.warn_stdout(to_console(issue) + msg_postfix)
+        nlog.warn_issue(to_console(issue) + msg_postfix)
       }
     } else {
       if (issue.type == util.LANG) {
-        nlog.info(to_console_lang(issue) + msg_postfix)
+        nlog.info_issue(to_console_lang(issue) + msg_postfix)
       } else if (issue.type == util.SCM) {
-        nlog.info(to_console_scm(issue) + msg_postfix)
+        nlog.info_issue(to_console_scm(issue) + msg_postfix)
       } else if (issue.type == util.STAT) {
-        nlog.info(to_console_stat(issue) + msg_postfix)
+        nlog.info_issue(to_console_stat(issue) + msg_postfix)
       } else if (issue.type == util.COV) {
-        nlog.info(to_console_cov(issue) + msg_postfix)
+        nlog.info_issue(to_console_cov(issue) + msg_postfix)
       } else if (issue.type == util.OK) {
-        nlog.info(issue.path + msg_postfix)
+        nlog.info_issue(issue.path + msg_postfix)
       } else {
-        nlog.info(to_console(issue) + msg_postfix)
+        nlog.info_issue(to_console(issue) + msg_postfix)
       }
     }
 

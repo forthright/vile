@@ -310,39 +310,20 @@ describe "system :: cli blackbox testing", ->
           done()
 
       it "does not combine files when not set", (done) ->
-        cli.exec "a -n -d -f json", (stdout) ->
+        cli.exec_err "a -n -d -f json", (stdout) ->
           expect(JSON.parse(stdout)).to
             .eql issues_not_combined
-          done()
-
-    describe "log level", ->
-      beforeEach -> process.chdir SYNC_DIR
-
-      it "can set the log level to error", (done) ->
-        cli.exec "a -n -l error", (stdout) ->
-          expect(stdout).not.to.match /test\-sync\-plugin\:start/i
-          expect(stdout).not.to.match /test\-sync\-plugin\:finish/i
-          done()
-
-      it "can set the log level to warn", (done) ->
-        cli.exec "a -n -l warn", (stdout) ->
-          expect(stdout).not.to.match /test\-sync\-plugin\:start/i
-          expect(stdout).not.to.match /test\-sync\-plugin\:finish/i
-          done()
-
-      it "can set the log level to info", (done) ->
-        cli.exec "a -n -l info", (stdout) ->
-          expect(stdout).to.match /test\-sync\-plugin\:start/i
-          expect(stdout).to.match /test\-sync\-plugin\:finish/i
           done()
 
     describe "sync plugins", ->
       beforeEach -> process.chdir SYNC_DIR
 
       it "seems to run the plugin successfully", (done) ->
-        cli.exec "analyze", (stdout) ->
-          expect(stdout).to.match /test\-sync\-plugin\:start/i
-          expect(stdout).to.match /test\-sync\-plugin\:finish/i
+        cli.exec_err "analyze", (stdout, stderr, code) ->
+          expect(code).to.eql 0
+          expect(stderr).to.eql ""
+          expect(stdout).to.match(
+            /warn warning undefined: undefined \(vile-test-sync-plugin\)/)
           done()
 
       describe "with post processing", ->
@@ -376,9 +357,11 @@ describe "system :: cli blackbox testing", ->
       beforeEach -> process.chdir ASYNC_DIR
 
       it "seems to run the plugin successfully", (done) ->
-        cli.exec "analyze", (stdout) ->
-          expect(stdout).to.match /test\-async\-plugin\:start/i
-          expect(stdout).to.match /test\-async\-plugin\:finish/i
+        cli.exec_err "analyze", (stdout, stderr, code) ->
+          expect(code).to.eql 0
+          expect(stderr).to.eql ""
+          expect(stdout).to.match(
+            /info test undefined: undefined \(vile-test-async-plugin\)/)
           done()
 
       describe "with post processing", ->
@@ -466,7 +449,7 @@ describe "system :: cli blackbox testing", ->
             cli.exec_err "a -t", (stdout, stderr, code) ->
               expect(code).to.eql 0
               expect(stderr)
-                .to.eql "cli warn highlighting failed for lib/bar:\n"
+                .to.eql "warn cli highlighting failed for lib/bar:\n"
               expect(stdout).to.match /24\:         start\: \{ line\: 4 \}\,/
               done()
 
@@ -588,10 +571,6 @@ describe "system :: cli blackbox testing", ->
           expect(stderr).to.eql ""
           expect(code).to.eql 0
           expect(stdout).to.match /code is: 10/
-          expect(stdout)
-            .to.match new RegExp("test-spawn-non-zero-plugin:start")
-          expect(stdout)
-            .to.match new RegExp("test-spawn-non-zero-plugin:finish")
           done()
         return
 
@@ -602,8 +581,6 @@ describe "system :: cli blackbox testing", ->
         cli.exec_err "a -n -d", (stdout, stderr, code) ->
           expect(code).to.eql 0
           expect(stderr).to.match new RegExp("OH NO!")
-          expect(stdout).to.match new RegExp("test-spawn-stderr-plugin:start")
-          expect(stdout).to.match new RegExp("test-spawn-stderr-plugin:finish")
           done()
 
         return
@@ -657,71 +634,122 @@ describe "system :: cli blackbox testing", ->
       it "logs to stderr and exits (0) process", (done) ->
         cli.exec_err "a -n", (stdout, stderr, code) ->
           expect(_.trim(stderr))
-            .to.eql "plugin warn test-err-plugin-invalid-data-" +
+            .to.eql "warn plugin test-err-plugin-invalid-data-" +
                     "plugin plugin did not return [] or Promise<[]>"
-          expect(stdout).to
-            .match new RegExp("test-err-plugin-invalid-data-plugin:start")
-          expect(stdout).to
-            .match new RegExp("test-err-plugin-invalid-data-plugin:finish")
           expect(code).to.eql 0
           done()
 
-    describe "logging real issues", ->
+    describe "log level", ->
       beforeEach -> process.chdir LOGGING_DIR
 
-      it "logs the output to console as syntastic output", (done) ->
-        cli.exec "a -n -d -f syntastic", (stdout) ->
-          expect(stdout).to.match(
-            new RegExp("a.ext:1:1: W: a title header => warning msg", "gi"))
-          expect(stdout).to.match(
-            new RegExp("a.ext:1:1: W: maintainability msg", "gi"))
-          expect(stdout).to.match(
-            new RegExp("a.ext:1:1: W: undefined", "gi"))
-          expect(stdout).to.match(
-            new RegExp("a.ext:1:1: W: undefined", "gi"))
-          expect(stdout).to.match(
-            new RegExp("a.ext:1:1: E: error msg", "gi"))
-          expect(stdout).to.match(
-            new RegExp("a.ext:1:1: E: sec msg => undefined", "gi"))
-          done()
-        return
+      describe "in general", ->
+        it "can set the log level to error", (done) ->
+          cli.exec_err "a -n -l error", (stdout, stderr, code) ->
+            expect(code).to.eql 0
+            expect(stderr).to.match /error on stderr/
+            expect(stderr).not.to.match /warn on stderr/
+            expect(stdout).not.to.match /info on stdout/i
+            done()
 
-      it "logs the output to console", (done) ->
-        cli.exec "analyze -n -d", (stdout) ->
-          expect(stdout).to.match(
-            new RegExp("plugin info test-logging-plugin:start", "gi"))
-          expect(stdout).to.match(
-            new RegExp("warning warn a.ext: line 1-2, a " +
-              "title header => warning msg", "gi"))
-          expect(stdout).to.match(new RegExp(
-            "maintainability warn a.ext: line 1-2, col 1, maintainability msg",
-            "gi"
-          ))
-          expect(stdout).to.match(
-            new RegExp("complexity info a.ext: 100", "gi"))
-          expect(stdout).to.match new RegExp("churn info a.ext: 50", "gi")
-          expect(stdout).to.match(
-            new RegExp("duplicate warn a.ext: Similar code in a.ext", "gi"))
-          expect(stdout).to.match(
-            new RegExp(
-              "dependency warn New release for dep: 0.0.1 < 0.1.0",
+        it "can set the log level to warn", (done) ->
+          cli.exec_err "a -n -l warn", (stdout, stderr, code) ->
+            expect(code).to.eql 0
+            expect(stderr).to.match /error on stderr/
+            expect(stderr).to.match /warn on stderr/
+            expect(stdout).not.to.match /info on stdout/i
+            done()
+
+        it "can set the log level to info", (done) ->
+          cli.exec_err "a -n -l info", (stdout, stderr, code) ->
+            expect(code).to.eql 0
+            expect(stderr).to.match /error on stderr/
+            expect(stderr).to.match /warn on stderr/
+            expect(stdout).to.match /info on stdout/i
+            done()
+
+        it "sets info by default", (done) ->
+          cli.exec_err "a -n", (stdout, stderr, code) ->
+            expect(code).to.eql 0
+            expect(stderr).to.match /error on stderr/
+            expect(stderr).to.match /warn on stderr/
+            expect(stdout).to.match /info on stdout/i
+            done()
+
+      describe "logging real issues", ->
+        it "logs the output to console as syntastic output", (done) ->
+          cli.exec_err "a -n -d -f syntastic", (stdout, stderr, code) ->
+            expect(stdout).to.match(
+              new RegExp("a.ext:1:1: W: a title header => warning msg", "gi"))
+            expect(stdout).to.match(
+              new RegExp("a.ext:1:1: W: maintainability msg", "gi"))
+            expect(stdout).to.match(
+              new RegExp("a.ext:1:1: W: undefined", "gi"))
+            expect(stdout).to.match(
+              new RegExp("a.ext:1:1: W: undefined", "gi"))
+            expect(stdout).to.match(
+              new RegExp("a.ext:1:1: E: error msg", "gi"))
+            expect(stdout).to.match(
+              new RegExp("a.ext:1:1: E: sec msg => undefined", "gi"))
+            done()
+          return
+
+        it "logs the output to console", (done) ->
+          cli.exec_err "analyze -n -d", (stdout, stderr, code) ->
+            expect(stdout).to.match(
+              new RegExp("warn warning a.ext: line 1-2, a " +
+                "title header => warning msg", "gi"))
+            expect(stdout).to.match(new RegExp(
+              "warn maintainability a.ext:" +
+              " line 1-2, col 1, maintainability msg",
               "gi"
             ))
-          expect(stdout).to.match(
-            new RegExp("error error a.ext: error msg", "gi"))
-          expect(stdout).to.match(
-            new RegExp("security error a.ext: sec msg => undefined", "gi"))
-          expect(stdout).to.match(
-            new RegExp(
-              "0\.097KB.*100 lines\, 80 loc\, 3 comments",
-              "gi"
-            ))
-          expect(stdout).to.match new RegExp("lang info a.ext: ruby", "gi")
-          expect(stdout).to.match new RegExp("scm info sha: commit_date", "gi")
-          expect(stdout).to.match(
-            new RegExp("cov info a.ext: 90% lines covered", "gi"))
-          expect(stdout).to.match new RegExp("ok info b.ext", "gi")
-          expect(stdout).to.match(
-            new RegExp("plugin info test-logging-plugin:finish", "gi"))
-          done()
-        return
+            expect(stdout).to.match(
+              new RegExp("info complexity a.ext: 100", "gi"))
+            expect(stdout).to.match new RegExp("info churn a.ext: 50", "gi")
+            expect(stdout).to.match(
+              new RegExp("warn duplicate a.ext: Similar code in a.ext", "gi"))
+            expect(stdout).to.match(
+              new RegExp(
+                "warn dependency New release for dep: 0.0.1 < 0.1.0",
+                "gi"
+              ))
+            expect(stdout).to.match(
+              new RegExp("error error a.ext: error msg", "gi"))
+            expect(stdout).to.match(
+              new RegExp("error security a.ext: sec msg => undefined", "gi"))
+            expect(stdout).to.match(
+              new RegExp(
+                "0\.097KB.*100 lines\, 80 loc\, 3 comments",
+                "gi"
+              ))
+            expect(stdout)
+              .to.match new RegExp("info lang a.ext: ruby", "gi")
+            expect(stdout)
+              .to.match new RegExp("info scm sha: commit_date", "gi")
+            expect(stdout).to.match(
+              new RegExp("info cov a.ext: 90% lines covered", "gi"))
+            expect(stdout).to.match new RegExp("info ok b.ext", "gi")
+            done()
+          return
+
+        describe "issue log level", ->
+          it "can log all issues by default", (done) ->
+            cli.exec_err "a -n", (stdout, stderr, code) ->
+              expect(stdout).to.match /error security/i
+              expect(stdout).to.match /info complexity/i
+              expect(stdout).to.match /warn dependency/i
+              done()
+
+          it "can log one issue type", (done) ->
+            cli.exec_err "a -i dependency", (stdout, stderr, code) ->
+              expect(stdout).not.to.match /error security/i
+              expect(stdout).not.to.match /info complexity/i
+              expect(stdout).to.match /warn dependency/i
+              done()
+
+          it "can log multiple issue types", (done) ->
+            cli.exec_err "a -i security,dependency", (stdout, stderr, code) ->
+              expect(stdout).to.match /error security/i
+              expect(stdout).not.to.match /info complexity/i
+              expect(stdout).to.match /warn dependency/i
+              done()

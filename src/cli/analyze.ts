@@ -104,10 +104,15 @@ const create = (cli : commander.CommanderStatic) =>
             "only check files patched in latest HEAD commit, or rev")
     .option("-l, --log [level]",
             "specify the log level (info=default|warn|error)")
+    .option("-i, --issue-log [level]",
+            "specify issue types to log (ex: '-i security,dependency')")
     .option("-q, --quiet", "log nothing")
     .option("-n, --no-decorations", "disable color and progress bar")
     .action((paths : string[], opts : vile.CLIApp) => {
-      logger.enable(opts.decorations)
+      const issue_levels = (_.compact(
+        _.split(opts.issueLog, ",")) as vile.IssueType.All[])
+
+      logger.enable(opts.decorations, issue_levels)
 
       config.load(opts.config)
 
