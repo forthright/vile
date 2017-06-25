@@ -37,7 +37,11 @@ tag_version="v$app_version"
 
 cd $docs_dir
 
-git commit public -m $tag_version
+git add -f public
+
+git commit -m $tag_version
+
+git gc
 
 git push origin master
 
