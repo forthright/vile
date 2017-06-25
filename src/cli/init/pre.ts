@@ -61,7 +61,7 @@ const check_for_existing_package_json = (
     name: "vile-project-dependency-config",
     private: true,
     scripts: {
-      "vile-publish": "vile a -u project_name -si --nodecorations"
+      "vile-publish": "vile a -n -u project_name"
     }
   }
 
