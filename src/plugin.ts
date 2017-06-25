@@ -211,11 +211,16 @@ const execute_plugins = (
 
   const plugin_count : number = plugins.length
   const concurrency : number = os.cpus().length || 1
-  const spin = ora({ color: "green" })
 
-  if (opts.spinner && opts.format != "json") spin.start()
+  // HACK: need to get exported ora types
+  let spin : any
+
+  if (opts.spinner && opts.format != "json") {
+    spin = ora({ color: "green" }).start()
+  }
 
   const update_spinner = () : void => {
+    if (!spin) return
     const percent = _.toNumber(
       plugins_finished / plugin_count * 100).toFixed(0)
     let names : string = _.map(_.keys(
