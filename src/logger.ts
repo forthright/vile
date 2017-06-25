@@ -4,11 +4,9 @@ import log = require("loglevel")
 
 let enable_colors : boolean = false
 let allow_issue_types : vile.IssueType.All[] = []
-let current_level : string = "info"
 
 const level = (name : string) : void => {
   process.env.VILE_LOG_LEVEL = name
-  current_level = name
   log.setLevel(name)
 }
 
