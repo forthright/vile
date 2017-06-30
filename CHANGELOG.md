@@ -1,3 +1,3 @@
 # Vile Changelog
 
-Please see our GithHub [releases](https://github.com/forthright/vile/releases).
+Please see our GitHub [releases](https://github.com/forthright/vile/releases).
