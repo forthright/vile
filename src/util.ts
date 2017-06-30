@@ -215,7 +215,6 @@ export = {
   DEP   :  ("dependency" as vile.IssueType.Dep),
   DUPE  :  ("duplicate" as vile.IssueType.Dupe),
   ERR   :  ("error" as vile.IssueType.Err),
-  LANG  :  ("lang" as vile.IssueType.Lang),
   MAIN  :  ("maintainability" as vile.IssueType.Main),
   OK    :  ("ok" as vile.IssueType.Ok),
   SCM   :  ("scm" as vile.IssueType.Scm),

@@ -10,7 +10,6 @@ const library : vile.Module.Index = {
   DEP:   util.DEP,
   DUPE:  util.DUPE,
   ERR:   util.ERR,
-  LANG:  util.LANG,
   MAIN:  util.MAIN,
   OK:    util.OK,
   SCM:   util.SCM,

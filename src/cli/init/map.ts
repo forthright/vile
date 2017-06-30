@@ -5,7 +5,7 @@ const frameworks = {
   brakeman: [ "brakeman" ],
   bundler: [ "bundler-outdated", "bundler-audit" ],
   coffeelint: [ "coffeelint" ],
-  core: [ "language", "stat" ],
+  core: [ "stat" ],
   coverage: [ "coverage" ],
   editorconfig: [ "eclint" ],
   eslint: [ "eslint" ],

@@ -36,7 +36,6 @@ declare namespace vile {
     coverage?   : Coverage;
     plugin?     : string;
     snippet?    : Snippet[];
-    language?   : string;
     complexity? : Complexity;
     churn?      : Churn;
     where?      : IssueLocation;
@@ -152,6 +151,7 @@ declare namespace vile {
   //
   export interface Stat {
     size?     : number;
+    language? : string;
     loc?      : number;
     lines?    : number;
     comments? : number;
@@ -355,7 +355,6 @@ declare namespace vile {
 
       STAT  :  IssueType.Stat;
       SCM   :  IssueType.Scm;
-      LANG  :  IssueType.Lang;
       COV   :  IssueType.Cov;
     }
 

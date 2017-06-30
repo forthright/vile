@@ -100,10 +100,6 @@ const to_console_comp = (
   issue : vile.Issue
 ) => `${ issue.path }: ${ issue.complexity }`
 
-const to_console_lang = (
-  issue : vile.Issue
-) => `${ issue.path }: ${ issue.language }`
-
 const to_console_scm = (
   issue : vile.Issue
 ) => {
@@ -120,9 +116,11 @@ const to_console_stat = (
   const loc = _.get(issue, "stat.loc", "?")
   const lines = _.get(issue, "stat.lines", "?")
   const comments = _.get(issue, "stat.comments", "?")
+  const lang = _.get(issue, "stat.language", "?")
   return `${ issue.path } ` +
     `(${ size ? (Number(size) / 1024).toFixed(3) + "KB" : "" })` +
-    `: ${ lines } lines, ${ loc } loc, ${ comments } comments`
+    `: ${ lines } lines, ${ loc } loc, ${ comments }` +
+    ` comments (language: ${lang})`
 }
 
 const to_console_dep = (
@@ -259,9 +257,7 @@ const log_issue_messages = (
         nlog.warn_issue(to_console(issue) + msg_postfix)
       }
     } else {
-      if (issue.type == util.LANG) {
-        nlog.info_issue(to_console_lang(issue) + msg_postfix)
-      } else if (issue.type == util.SCM) {
+      if (issue.type == util.SCM) {
         nlog.info_issue(to_console_scm(issue) + msg_postfix)
       } else if (issue.type == util.STAT) {
         nlog.info_issue(to_console_stat(issue) + msg_postfix)

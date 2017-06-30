@@ -124,7 +124,6 @@ describe "system :: cli blackbox testing", ->
               .match /skipping: npm install \-\-save\-dev npm\-check\-updates/i
             expect(stderr).to
               .match /skipping: npm install \-\-save\-dev vile/i
-            expect(stdout).to.match /\'language\'/i
             expect(stdout).to.match /\'stat\'/i
             expect(stdout).to.match /\'ncu\'/i
             expect(stdout).to.match /looks like we are good to go/i
@@ -191,7 +190,6 @@ describe "system :: cli blackbox testing", ->
             expect(fs.existsSync("package.json")).to.eql true
             expect(fs.existsSync(".vile.yml")).to.eql true
             expect(stdout).to.match /created: .vile.yml/i
-            expect(stdout).to.match /\'language\'/i
             expect(stdout).to.match /\'stat\'/i
             expect(stdout).to.match /\'escomplex\'/i
             expect(stdout).to.match /\'rubocop\'/i
@@ -723,7 +721,8 @@ describe "system :: cli blackbox testing", ->
                 "gi"
               ))
             expect(stdout)
-              .to.match new RegExp("info lang a.ext: ruby", "gi")
+              .to.match new RegExp("info stat a.ext \\(0.097KB\\): 100 lines" +
+                ", 80 loc, 3 comments \\(language: Ext\\)", "gi")
             expect(stdout)
               .to.match new RegExp("info scm sha: commit_date", "gi")
             expect(stdout).to.match(
