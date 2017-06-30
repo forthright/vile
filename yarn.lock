@@ -5936,14 +5936,6 @@ vile-git@^0.5.3:
     gift "github:brentlintner/gift"
     lodash "^4.17.4"
 
-vile-language@^0.1.13:
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/vile-language/-/vile-language-0.1.13.tgz#2265c75c37c275bd82168188b78a5818deede390"
-  dependencies:
-    bluebird "^3.5.0"
-    language-detect "^1.1.0"
-    lodash "^4.17.4"
-
 vile-license@^0.4.2:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/vile-license/-/vile-license-0.4.2.tgz#423fc98185181d03c3d5a563cf71c8dd7146cdcd"
