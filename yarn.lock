@@ -5967,15 +5967,15 @@ vile-retire@^0.1.3:
     bluebird "^3.5.0"
     lodash "^4.17.4"
 
-vile-stat@^0.0.15:
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/vile-stat/-/vile-stat-0.0.15.tgz#572a25ed0dc76d0eded7f12b95d769e864794b41"
+vile-stat@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/vile-stat/-/vile-stat-0.1.0.tgz#a1eee546eb9734f645945b19e67ad4a29dc5322c"
   dependencies:
-    bluebird "~3.5.0"
     language-detect "^1.1.0"
     language-map "^1.2.0"
     lodash "^4.17.4"
     sloc "^0.2.0"
+    unixify "^1.0.0"
 
 vile-synt@^0.1.2:
   version "0.1.2"
