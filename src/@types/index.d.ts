@@ -324,9 +324,8 @@ declare namespace vile {
 
     export interface Plugin {
       exec : (
-        p?      : PluginList,
-        config? : YMLConfig,
-        opts?   : PluginExecOptions
+        config : YMLConfig,
+        opts?  : PluginExecOptions
       ) => Bluebird<IssueList>;
 
       exec_plugin : (
