@@ -102,7 +102,7 @@ Or, if you add `"vile": "vile"` to your `package.json` scripts section, you can
 run:
 
 ```sh
-npm run -s vile -- p
+npm run -s vile -- analyze
 ```
 
 After calling `vile a`, the CLI will look up any installed plugins and automatically
