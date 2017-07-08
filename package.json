@@ -120,7 +120,7 @@
     "clean": "rm -rf {.nyc_output,coverage,lib} && git checkout -- lib",
     "dev": "tsc -w",
     "gen-docs": "node bin/gen-docs",
-    "lint-cov": "node bin/lint-cov",
+    "lint-cov": "nyc check-coverage --lines 97 --branches 88",
     "ncu": "ncu -u",
     "release-it": "release-it",
     "stats": "sloc -d -f cli-table -k total,source,comment -e 'fixtures|@types' src test",

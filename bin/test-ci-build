@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 require("shelljs/global")
 
-// TODO use lint-cov once proper tests are written
-// TODO: create util methods for async chaining
 exec(
   "npm run -s compile",
   function(code) {
@@ -12,5 +10,11 @@ exec(
         "npm run -s test-cov",
         function(code) {
           if (code !== 0) exit(code)
+
+          exec(
+            "npm run -s lint-cov",
+            function(code) {
+              if (code !== 0) exit(code)
+            })
         })
   })
