@@ -1,33 +1,20 @@
 vile:
   ignore:
-    - appveyor.yml
+    - ".*"
     - coverage
-    - LICENSE
-    - coffeelint.json
-    - .travis.yml
     - doc
-    - .docs
+    - "*.json"
+    - LICENSE
+    - "*.lock"
+    - "*.log"
+    - "*.md"
     - node_modules
-    - .nyc_output
-    - tags
-    - test/fixtures/**
-    - .git
-    - circle.yml
-    - .editorconfig
-    - .eslint.yml
-    - .gitignore
-    - npm-debug.log
     - src/@types
     - tags
+    - test/fixtures
     - test/mocha.opts
     - tmp
-    - tsconfig.json
-    - retire-report.json
-    - tslint.json
-    - tsd.json
-    - README.md
-    - .vile.yml
-    - yarn.lock
+    - "*.yml"
 
 depcheck:
   config:
@@ -51,24 +38,20 @@ retire:
       - .docs
 
 synt:
-  ignore:
-    - lib
+  ignore: lib
 
 comment:
-  ignore:
-    - lib
+  ignore: lib
 
 eclint:
-  ignore:
-    - lib
+  ignore: lib
 
 escomplex:
   config:
     use_maintainability_index: false
 
 language:
-  ignore:
-    - lib
+  ignore: lib
 
 stat:
   allow:
