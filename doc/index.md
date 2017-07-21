@@ -4,7 +4,7 @@ A punishing yet easy to use tool for writing insightful code.
 
 ## Requirements
 
-- [NodeJS](http://nodejs.org)
+- [Node.js](http://nodejs.org)
 
 ## Installation & Usage
 
@@ -66,53 +66,27 @@ See [src/index](modules/_src_index_.html) for the full API.
 
 ## Plugins
 
-To actually analyze your code, you need to install plugins first.
+To analyze your code, you need to install plugins first.
 
 For a complete list of plugins, see [here](https://vile.io/plugins).
 
-To get started, install a plugin package in your project root:
-
-*for example, install the `tslint` plugin*
+For example, for your everyday Node.js project:
 
 ```sh
-cd into_my_project
-npm install -D vile vile-tslint
+npm i -D vile vile-ncu vile-synt vile-coverage vile-stat vile-git vile-escomplex vile-eslint
 ```
 
-*then run*
+*then run:*
 
 ```sh
 vile analyze
 ```
 
-*or, more tersely*
-
-```sh
-vile a
-```
-
-Note: If you don't also have `vile` installed globally, you can access
-the locally installed CLI via:
-
-```sh
-node node_modules/.bin/vile a
-```
-
-Or, if you add `"vile": "vile"` to your `package.json` scripts section, you can
-run:
-
-```sh
-npm run -s vile -- analyze
-```
-
-After calling `vile a`, the CLI will look up any installed plugins and automatically
+The CLI will look up any installed plugins and automatically
 pull them in and run their checks.
 
-You can also specify a white-list of installed plugins to only run:
-
-```sh
-vile a -p tslint,coffeelint
-```
+Note: If you don't also have `vile` installed globally, you can easily
+access the locally installed CLI using something like [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b).
 
 ## Config File
 
@@ -123,9 +97,9 @@ A config file is named `.vile.yml` and should reside in your project root.
 ```yaml
 vile:
   ignore:
-    - "custom ignore list"
+    - foo/bar
   allow:
-    - "or a custom allow list"
+    - baz
 
 some_plugin:
   config: plugin_config
@@ -384,7 +358,7 @@ module.exports = {
 }
 ```
 
-You can also [require("vile")](interfaces/_src__types_index_d_.vile.vile.html) in your plugin and use its
+You can also [require("vile")](https://docs.vile.io/interfaces/_src__types_index_d_.vile.module.index.html) in your plugin and use its
 API, which provides some helpers.
 
 See [vile.Issue](https://docs.vile.io/interfaces/_src__types_index_d_.vile.issue.html) for how Issues are structured.
@@ -433,5 +407,4 @@ windows style paths, but not necessarily from things like config lists.
 Any files that are not ignored globally via `vile.ignore` and have no
 issues are sent along with any reported issues.
 
-You can disable this with the `--dontpostprocess` option. Currently,
-this does not post process anything, including code snippets.
+Currently, you can disable this with the `--dont-post-process` option.

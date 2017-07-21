@@ -4,8 +4,6 @@ Current list of [Contributors](https://github.com/forthright/vile/graphs/contrib
 
 ## Code Of Conduct
 
-This project ascribes to [contributor-covenant.org](http://contributor-covenant.org).
-
 By participating in this project you agree to our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Issues
@@ -13,6 +11,9 @@ By participating in this project you agree to our [Code of Conduct](CODE_OF_COND
 Current issue tracker is on [GitHub](https://github.com/forthright/vile/issues).
 
 Even if you are uncomfortable with code, an issue or question is welcome.
+
+Note: If you are reporting a bug or feature request
+for [vile.io](https://vile.io) itself, please see [forthright/vile.io](https://github.com/forthright/vile.io) instead.
 
 ## Patches
 

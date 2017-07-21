@@ -6,9 +6,10 @@ A punishing yet easy to use tool for writing insightful code.
 
 ## Overview
 
-This is the official library for [vile.io](https://vile.io) which is currently in beta.
+This is the official library for [vile.io](https://vile.io), which is currently in beta.
 
-Standalone it is a multi language/OS static analyzer with a unifying data spec.
+Standalone it is a plugin based code quality tool for any language or framework,
+with a focus on having a robust CLI and easy editor integration.
 
 ## Installation & Usage
 
@@ -28,7 +29,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for more info.
 
 ## Versioning
 
-This project ascribes to [semantic versioning](http://semver.org).
+This project uses [Semver](http://semver.org).
 
 ## Maintainers
 
