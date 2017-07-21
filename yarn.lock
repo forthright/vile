@@ -2352,9 +2352,9 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-"gift@github:brentlintner/gift":
+"gift@github:forthright/gift":
   version "0.8.0"
-  resolved "https://codeload.github.com/brentlintner/gift/tar.gz/4e4db741d7212931a9f7e797d25cba7e25133bd6"
+  resolved "https://codeload.github.com/forthright/gift/tar.gz/4e4db741d7212931a9f7e797d25cba7e25133bd6"
   dependencies:
     underscore "1.x.x"
 
@@ -6356,12 +6356,12 @@ vile-eslint@^0.1.15:
     eslint "^4.1.0"
     lodash "^4.17.4"
 
-vile-git@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/vile-git/-/vile-git-0.5.3.tgz#b292be553b5254bf8ff833726c3978b9ade827ec"
+vile-git@^0.5.6:
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/vile-git/-/vile-git-0.5.6.tgz#980e5db615f21774185c964faadfb5d8b5a92b55"
   dependencies:
     bluebird "^3.5.0"
-    gift "github:brentlintner/gift"
+    gift "github:forthright/gift"
     lodash "^4.17.4"
 
 vile-license@^0.4.2:
