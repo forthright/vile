@@ -29,6 +29,9 @@ npm run -s -- release-it -n -p -m 'v%s' -i $level
 #  Docs
 # -------------------
 
+rm -r $docs_dir/public
+mkdir $docs_dir/public
+
 npm run -s gen-docs
 
 app_version=$(`dirname $0`/npm-pkg-version)
