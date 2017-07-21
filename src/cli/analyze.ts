@@ -8,11 +8,26 @@ import plugin = require("./../plugin")
 import upload = require("./analyze/upload")
 import log_helper = require("./analyze/log_helper")
 
+const DEFAULT_IGNORE_DIRS : string[] = [
+  ".git",
+  "node_modules"
+]
+
 const log = logger.create("cli")
 
 const log_and_exit = (error : any) : void => {
   log.error(_.get(error, "stack", error))
   process.exit(1)
+}
+
+const add_default_ignores = (
+  vile_yml : vile.YMLConfig
+) : void => {
+  const base_ignore : vile.IgnoreList = _.get(
+    vile_yml, "vile.ignore", [])
+  const new_ignore : vile.IgnoreList = _.uniq(
+    _.concat(base_ignore, DEFAULT_IGNORE_DIRS))
+  _.set(vile_yml, "vile.ignore", new_ignore)
 }
 
 const analyze = (
@@ -23,6 +38,9 @@ const analyze = (
     _.compact(_.split(opts.plugins, ",")) : []
 
   const vile_yml = config.get()
+
+  // HACK: always auto ignore node_modules/.git for now
+  add_default_ignores(vile_yml)
 
   const exec_opts : vile.PluginExecOptions = {
     combine: opts.combine,
