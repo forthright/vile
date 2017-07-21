@@ -6422,9 +6422,9 @@ vile-tslint@^0.3.3:
     lodash "^4.17.4"
     tslint "^5.4.2"
 
-vile@^0.18.1:
-  version "0.18.1"
-  resolved "https://registry.yarnpkg.com/vile/-/vile-0.18.1.tgz#8c439cb656adcd91684fa15170b6726f3bc62acc"
+vile@^0.18.3:
+  version "0.18.3"
+  resolved "https://registry.yarnpkg.com/vile/-/vile-0.18.3.tgz#fd361e82c10051bcc7726b5a1a9f230b98514ffc"
   dependencies:
     "@types/bluebird" "^3.5.5"
     "@types/chalk" "^0.4.31"
