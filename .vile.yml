@@ -60,12 +60,6 @@ stat:
   ignore:
     - src/@types/**
 
-eslint:
-  allow:
-    - src/*
-  ignore:
-    - lib
-
 coverage:
   config:
     path: coverage/lcov.info
