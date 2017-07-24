@@ -26,10 +26,10 @@ const wait_for_done_status_and_log = (
   wait_for(COMMIT_STATUS_INTERVAL_TIME, (timer) => {
     service
       .commit_status(commit_id, auth)
-      .then((http : http.IncomingMessage) => {
-        const api_body : vile.Service.HTTPResponse = _.get(http, "body")
+      .then((msg : http.IncomingMessage) => {
+        const api_body : vile.Service.HTTPResponse = _.get(msg, "body")
         const response : vile.Service.JSONResponse = _.get(
-          http, "response", { message: null })
+          msg, "response", { message: null })
 
         const status_code = _.get(response, "statusCode")
         const body_json = _.attempt(
@@ -70,13 +70,13 @@ const commit = (
 
   return service
     .commit(issues, cli_time, auth)
-    .then((http : http.IncomingMessage) => {
-      if (_.get(http, "response.statusCode") != 200) {
-        upload_error(_.get(http, "body", "[no body]"))
+    .then((msg : http.IncomingMessage) => {
+      if (_.get(msg, "response.statusCode") != 200) {
+        upload_error(_.get(msg, "body", "[no body]"))
       }
 
       const body_json = _.attempt(
-        JSON.parse.bind(null, _.get(http, "body", "{}")))
+        JSON.parse.bind(null, _.get(msg, "body", "{}")))
       const commit_state = _.get(body_json, "message")
       const commit_id = _.get(body_json, "data.commit_id", null)
 
