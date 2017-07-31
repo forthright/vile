@@ -46,10 +46,6 @@ comment:
 eclint:
   ignore: lib
 
-escomplex:
-  config:
-    use_maintainability_index: false
-
 language:
   ignore: lib
 
