@@ -1,6 +1,7 @@
 vile:
   ignore:
     - ".*"
+    - bin
     - coverage
     - doc
     - "*.json"
@@ -50,9 +51,6 @@ language:
   ignore: lib
 
 stat:
-  allow:
-    - src
-    - test
   ignore:
     - src/@types/**
 
