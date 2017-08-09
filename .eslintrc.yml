@@ -2,15 +2,12 @@ env:
   node: true
   es6: true
 
-parser: typescript-eslint-parser
-
 rules:
   curly: [0, "all"]
   dot-notation: [2, {}]
   eqeqeq: [0, "smart"]
   camelcase: [0]
-  semi: [2, "never"]
-  strict: [2, "never"]
+  strict: [2, "global"]
   max-nested-callbacks: [2, 4]
   no-mixed-requires: [1, false]
   no-return-assign: [2, "always"]

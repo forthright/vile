@@ -103,6 +103,7 @@
     "vile-depcheck": "^0.1.13",
     "vile-eclint": "^0.1.14",
     "vile-escomplex": "^0.1.5",
+    "vile-eslint": "^0.1.16",
     "vile-git": "^0.5.6",
     "vile-license": "^0.4.2",
     "vile-ncu": "^0.2.4",
