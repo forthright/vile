@@ -74,6 +74,7 @@ license:
       - WTFPL
       - Public Domain
       - CC-BY-3.0
+      - CC0-1.0
     ignored:
       - classifier   # MIT https://github.com/harthur/classifier/blob/master/LICENSE
       - event-stream # MIT https://github.com/dominictarr/event-stream/blob/master/LICENCE
