@@ -198,19 +198,21 @@ escomplex:
 A basic Ruby project example (using [Bundler](http://bundler.io)):
 
 ```sh
-    npm i -D vile vile-git vile-sass-lint vile-bundler-audit vile-bundler-outdated
+npm i -D vile vile-git vile-rubycritic vile-rubocop vile-sass-lint vile-bundler-audit vile-bundler-outdated
 
-    # you can also add these to your Gemfile
-    gem install rubocop rubycritic bundler bundler-audit
+# you can also add these to your Gemfile
+gem install rubocop rubycritic bundler bundler-audit
 
-    # depending on your setup, you may need to use `bundle exec`
-    bundle exec vile analyze
+# depending on your setup, you may need to use `bundle exec`
+bundle exec vile analyze
 ```
 
 Note: Some plugins don't support Vile's allow/ignore out of the box.
 
 For example, [vile-rubycritic](https://github.com/forthright/vile-rubycritic) requires
 you set specific `allow` paths to avoid traversing `node_modules`.
+
+The same goes for [vile-rubocop](https://github.com/forthright/vile-rubocop#ignoring-files).
 
 ### Rails
 
@@ -220,7 +222,9 @@ For an in depth article about using Rails + Vile checkout [Continuous Analysis F
 
 Depending on your setup and if you are using sandboxes, you may need to use `cabal exec`:
 
-    cabal exec -- vile analyze
+```sh
+cabal exec -- vile analyze
+```
 
 ## Config
 
@@ -279,15 +283,19 @@ level allow lists, and any path arguments provided.
 
 ## Getting New Releases
 
-    cd my_project_src/
-    npx npm-check-updates -u
-    npm install
-    git commit package.json -m "Updated some vile packages."
+```sh
+cd my_project_src/
+npx npm-check-updates -u
+npm install
+git commit package.json -m "Updated some vile packages."
+```
 
 For a global install:
 
-    npx npm-check-updates -g -f vile
-    npm install -g vile
+```sh
+npx npm-check-updates -g -f vile
+npm install -g vile
+```
 
 ## Editor Integration
 
