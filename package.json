@@ -1,6 +1,6 @@
 {
   "name": "vile",
-  "version": "0.18.3",
+  "version": "0.19.0",
   "description": "A punishing yet easy to use tool for writing insightful code.",
   "main": "lib/index.js",
   "types": "src/@types/index.d.ts",
