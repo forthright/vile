@@ -8,7 +8,6 @@ pre = mimus.get cli_init, "pre"
 language = mimus.get cli_init, "language"
 framework = mimus.get cli_init, "framework"
 ignore = mimus.get cli_init, "ignore"
-coverage = mimus.get cli_init, "coverage"
 post = mimus.get cli_init, "post"
 
 promise_stub = undefined
@@ -55,7 +54,7 @@ describe "cli/init", ->
           vile: {
             ignore: [],
             allow: [],
-            plugins: map.frameworks.core
+            plugins: []
           }
         }
 
@@ -71,10 +70,6 @@ describe "cli/init", ->
       it "initializes framework", ->
         expect(promise_stub.then).to.have.been
           .calledWith framework.init
-
-      it "initializes coverage", ->
-        expect(promise_stub.then).to.have.been
-          .calledWith coverage.init
 
       it "initializes post", ->
         expect(promise_stub.then).to.have.been

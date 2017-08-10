@@ -1,15 +1,54 @@
-![vile_full](https://cloud.githubusercontent.com/assets/93340/23980691/aba34a1a-09d7-11e7-85b2-12d1403b5686.png)
+<p align="center">
+<img style="background: none" src="https://user-images.githubusercontent.com/93340/29194760-20c18b1e-7df9-11e7-94aa-47c0302b1b6b.png" alt="Vile Logo">
+</p>
 
-[![Circle CI](https://circleci.com/gh/forthright/vile.svg?style=shield&circle-token=76807e9cc864afc2d2af7db4c744a0eae8b9fc00)](https://circleci.com/gh/forthright/vile) [![Windows Build](https://ci.appveyor.com/api/projects/status/3qu5ih8n3iufpait/branch/master?svg=true)](https://ci.appveyor.com/project/brentlintner/vile/branch/master) [![MacOS/Linux Builds](https://travis-ci.org/forthright/vile.svg?branch=master)](https://travis-ci.org/forthright/vile) [![score-badge](https://vile.io/api/v0/projects/vile/badges/score?token=USryyHar5xQs7cBjNUdZ)](https://vile.io/~brentlintner/vile) [![security-badge](https://vile.io/api/v0/projects/vile/badges/security?token=USryyHar5xQs7cBjNUdZ)](https://vile.io/~brentlintner/vile) [![coverage-badge](https://vile.io/api/v0/projects/vile/badges/coverage?token=USryyHar5xQs7cBjNUdZ)](https://vile.io/~brentlintner/vile) [![dependency-badge](https://vile.io/api/v0/projects/vile/badges/dependency?token=USryyHar5xQs7cBjNUdZ)](https://vile.io/~brentlintner/vile) [![npm version](https://badge.fury.io/js/vile.svg)](https://badge.fury.io/js/vile)
+<p align="center">A punishing yet easy to use tool for writing insightful code. </p>
 
-A punishing yet easy to use tool for writing insightful code.
+<p align="center">
+  <a href="https://circleci.com/gh/forthright/vile">
+    <img src="https://circleci.com/gh/forthright/vile.svg?style=shield&circle-token=76807e9cc864afc2d2af7db4c744a0eae8b9fc00" alt="Main Linux Builds">
+  </a>
+  <a href="https://ci.appveyor.com/project/brentlintner/vile/branch/master">
+    <img src="https://ci.appveyor.com/api/projects/status/3qu5ih8n3iufpait/branch/master?svg=true" alt="Windows Builds">
+  </a>
+  <a href="https://travis-ci.org/forthright/vile">
+    <img src="https://travis-ci.org/forthright/vile.svg?branch=master" alt="Linux/OSX Builds">
+  </a>
+  <a href="https://vile.io/~brentlintner/vile">
+    <img src="https://vile.io/api/v0/projects/vile/badges/score?token=USryyHar5xQs7cBjNUdZ" alt="code quality score">
+  </a>
+  <a href="https://vile.io/~brentlintner/vile">
+    <img src="https://vile.io/api/v0/projects/vile/badges/coverage?token=USryyHar5xQs7cBjNUdZ" alt="coverage status">
+  </a>
+  <a href="https://vile.io/~brentlintner/vile">
+    <img src="https://vile.io/api/v0/projects/vile/badges/dependency?token=USryyHar5xQs7cBjNUdZ" alt="dependencies status">
+  </a>
+  <a href="https://www.npmjs.com/package/vile">
+    <img src="https://badge.fury.io/js/vile.svg" alt="npm package">
+  </a>
+</p>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/93340/29182233-2204e6f6-7dcc-11e7-93a4-f58b16c706f6.png" alt="Quick Demo Video">
+</p>
 
 ## Overview
 
-This is the official library for [vile.io](https://vile.io), which is currently in beta.
+Vile is a general purpose code quality tool that you can
+run in your terminal, use with your code editor, and bake into your CI process (via [vile.io](https://vile.io)).
 
-Standalone it is a plugin based code quality tool for any language or framework,
-with a focus on having a robust CLI and easy editor integration.
+It was created as a passion project to help foster an
+open and flexible cross-OS platform and inclusive community for any type of code analysis.
+
+Whether you are just getting started or have been building products and software for decades,
+Vile can help you gain insights, be more productive, and build better software.
+
+## Features
+
+* Robust CLI
+* Powerful plugin system
+* Easy editor integration
+* Support for multiple languages
 
 ## Installation & Usage
 

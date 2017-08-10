@@ -54,6 +54,9 @@ const check_for_project_languages = (
   .then(() => {
     const uniq_langs : string[] = _.chain(_.filter(_.uniq(langs)))
       .map((lang : string) => lang.toLowerCase())
+      .filter((lang : string) =>
+        _.some(_.keys(plugin_map.langs),
+          (l : string) => l == lang))
       .value()
 
     if (_.isEmpty(uniq_langs)) return Bluebird.resolve(config)
@@ -62,7 +65,7 @@ const check_for_project_languages = (
       choices: _.map(uniq_langs, (lang : string) => {
         return { name: lang }
       }),
-      message: "It appears you speak our language. Select any that apply!",
+      message: "Found some available plugins. Select any languages that apply!",
       name: "langs",
       type: "checkbox",
       validate: (answer : string[]) => true

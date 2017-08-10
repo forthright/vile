@@ -1,7 +1,7 @@
 _ = require "lodash"
 mimus = require "mimus"
 path = require "path"
-extend = require "extend"
+_ = require "lodash"
 npm_run_path = require "npm-run-path"
 util = mimus.require "./../../lib/util", __dirname, []
 chai = require "./../helpers/sinon_chai"
@@ -16,7 +16,7 @@ describe "util", ->
     afterEach -> mimus.restore()
 
     beforeEach ->
-      new_env = extend({}, process.env)
+      new_env = _.assign({}, process.env)
       cross_spawn_stub = mimus.stub()
       on_stub = mimus.stub().callsArgWith(1, 0)
       cross_spawn_stub.returns(
@@ -43,7 +43,7 @@ describe "util", ->
         spawned_env = cross_spawn_stub.args[0][2].env
         expect(cross_spawn_stub).to.have.been.calledWith bin
         expect(spawned_env)
-          .to.eql extend({}, new_env, { Path: new_env.PATH })
+          .to.eql _.assign({}, new_env, { Path: new_env.PATH })
 
       describe "because of a weird failing behavious seen on windows", ->
         it "sets both Path and PATH to", ->

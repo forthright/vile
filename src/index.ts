@@ -1,9 +1,10 @@
-import util   = require("./util")
+import _ = require("lodash")
+import util = require("./util")
 import config = require("./config")
 import plugin = require("./plugin")
 import logger = require("./logger")
 
-const library : vile.Module.Index = {
+const types : vile.Module.UtilKeyTypes = {
   CHURN: util.CHURN,
   COMP:  util.COMP,
   COV:   util.COV,
@@ -16,8 +17,10 @@ const library : vile.Module.Index = {
   SEC:   util.SEC,
   STAT:  util.STAT,
   STYL:  util.STYL,
-  WARN:  util.WARN,
+  WARN:  util.WARN
+}
 
+const library : vile.Module.Index = _.assign(types, {
   allowed:      util.allowed,
   config,
   exec:         plugin.exec,
@@ -28,6 +31,6 @@ const library : vile.Module.Index = {
   logger,
   promise_each: util.promise_each,
   spawn:        util.spawn
-}
+})
 
 export = library

@@ -3,6 +3,9 @@ import path = require("path")
 import inquirer = require("inquirer")
 import Bluebird = require("bluebird")
 
+// HACK: type defs not right?
+const fs_writeFile : any = Bluebird.promisify(fs.writeFile)
+
 const welcome_confirm = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> =>
@@ -55,24 +58,18 @@ const check_for_existing_package_json = (
   if (fs.existsSync(pkg_json_path)) return Bluebird.resolve(config)
 
   const pkg_json_shell = {
-    description: "Run `npm install` in a freshly cloned " +
-      "project to install vile. This does not include non-npm " +
-      "based peer dependency requirements. See plugin readme(s) for details.",
+    description: "Tracks any Node.js based dependencies for Vile.",
     name: "vile-project-dependency-config",
-    private: true,
-    scripts: {
-      "vile-publish": "vile a -n -u project_name"
-    }
+    private: true
   }
 
   const file_data = new Buffer(JSON.stringify(pkg_json_shell, null, "  "))
 
-  return (fs as any).writeFileAsync(pkg_json_path, file_data)
-    .then((err : NodeJS.ErrnoException) => {
-      return err ?
+  return fs_writeFile(pkg_json_path, file_data)
+    .then((err : NodeJS.ErrnoException) =>
+      err ?
         Bluebird.reject(err) :
-        Bluebird.resolve(config)
-    })
+        Bluebird.resolve(config))
 }
 
 export = {

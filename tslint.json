@@ -16,6 +16,7 @@
     "curly": false,
     "eofline": true,
     "forin": true,
+    "ordered-imports": false,
     "indent": [true, 4],
     "jsdoc-format": true,
     "label-position": true,

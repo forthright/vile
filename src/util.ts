@@ -3,12 +3,13 @@ import fs = require("fs")
 import path = require("path")
 import cross_spawn = require("cross-spawn")
 import npm_run_path = require("npm-run-path")
-import extend = require("extend")
 import _ = require("lodash")
 import Bluebird = require("bluebird")
 import ignore = require("ignore")
+import logger = require("./logger")
 
-Bluebird.promisifyAll(fs)
+// HACK: no options in type defs?
+const fs_readFile : any = Bluebird.promisify(fs.readFile)
 
 const matches = (
   filepath : string,
@@ -101,7 +102,7 @@ const spawn = (
       path: process.env.PATH
     }))
 
-    const new_env = extend({}, process.env)
+    const new_env = _.assign({}, process.env)
 
     // HACK: If we don't do this, npm run scripts fail,
     // but not gems based ones? Force this for now.
@@ -126,6 +127,12 @@ const spawn = (
         .map((out) => out.toString("utf-8")).join("")
       const stderr_str : string = stderr
         .map((err) => err.toString("utf-8")).join("")
+
+      // TODO: should be lib opt to disable auto logging stderr
+      if (stderr_str) {
+        const log = logger.create(bin)
+        log.warn("\n", stderr_str)
+      }
 
       const data : vile.SpawnData = {
         code,
@@ -159,7 +166,7 @@ const promise_each_file = (
     return Bluebird.all(files.map((target) => {
       if (fs.lstatSync(target).isFile()) {
         if (opts.read_data) {
-          return (fs as any).readFileAsync(target, { encoding: "utf-8" })
+          return fs_readFile(target, { encoding: "utf-8" })
             .then((data : string) => parse_file(target, data))
         } else {
           return parse_file(target)
@@ -167,7 +174,6 @@ const promise_each_file = (
       } else {
         return Bluebird.resolve([])
       }
-
     }))
     .then((targets) => _.flatten(targets))
   })
@@ -208,7 +214,7 @@ const infos : vile.IssueType.Infos[] = [
   "cov"
 ]
 
-export = {
+const api : vile.Module.Util = {
   CHURN :  ("churn" as vile.IssueType.Churn),
   COMP  :  ("complexity" as vile.IssueType.Comp),
   COV   :  ("cov" as vile.IssueType.Cov),
@@ -234,3 +240,5 @@ export = {
   spawn,
   warnings
 }
+
+export = api

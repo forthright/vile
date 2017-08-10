@@ -45,6 +45,8 @@ const check_for_project_frameworks = (
 
   if (exists("coffeelint.json")) frameworks.push("coffeelint")
 
+  if (exists("tslint.json")) frameworks.push("tslint")
+
   if (exists(".sass-lint.yml")) frameworks.push("sass-lint")
 
   if (exists(".rubocop.yml")) frameworks.push("rubocop")

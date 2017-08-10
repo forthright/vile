@@ -15,7 +15,7 @@ a:hover, a:focus, a:active { text-decoration: none; }
 .tsd-page-title,
 body {
   box-shadow: none;
-  background-color: #fcfcfc;
+  background-color: #ffffff;
 }
 
 .tsd-page-title {
@@ -25,6 +25,7 @@ body {
 
 .tsd-panel {
   box-shadow: none;
+  background: none;
 }
 
 .container {

@@ -7,16 +7,23 @@ import fs = require("fs")
 import unixify = require("unixify")
 import _ = require("lodash")
 import linez = require("linez")
-import ora = require("ora")
 import logger = require("./logger")
 import util = require("./util")
 import PluginNotFoundError = require("./plugin/plugin_not_found_error")
 
-Bluebird.promisifyAll(fs)
+const fs_readdir = Bluebird.promisify(fs.readdir)
 
 const log = logger.create("plugin")
 
 const FILE_EXT = /\.[^\.]*$/
+
+// NOTE: defined in package.json dependencies section
+const BUNDLED_PLUGINS = [
+  "vile-comment",
+  "vile-coverage",
+  "vile-ncu",
+  "vile-stat"
+]
 
 const is_plugin = (name : string) : boolean =>
   !!/^vile-/.test(name)
@@ -29,11 +36,6 @@ const is_array = (list : any[]) : boolean =>
 
 const is_promise = (list : Bluebird<any>) : boolean =>
   !!(list && typeof list.then == "function")
-
-const require_plugin = (name : string) : vile.Plugin => {
-  const cwd_node_modules = path.join(process.cwd(), "node_modules")
-  return require(`${cwd_node_modules}/vile-${name}`)
-}
 
 const map_plugin_name_to_issues = (name : string) => (issues : vile.Issue[]) =>
   _.map(issues, (issue : vile.Issue) => {
@@ -159,6 +161,37 @@ const combine_paths = (
   return _.filter(issues)
 }
 
+const cannot_find_module = (
+  err : NodeJS.ErrnoException | string
+) : boolean =>
+  /cannot find module/i.test(
+    _.get(err, "stack", (err as string)))
+
+const require_plugin = (name : string) : vile.Plugin => {
+  const cwd_node_modules = path.join(process.cwd(), "node_modules")
+  const module_name = `vile-${name}`
+  const module_name_cwd_node_modules = `${cwd_node_modules}/${module_name}`
+
+  let plugin : vile.Plugin
+
+  try {
+    // CWD first (in case a bundled plugin is also user installed)
+    plugin = require(module_name_cwd_node_modules)
+  } catch (e) {
+    if (cannot_find_module(e)) {
+      try {
+        plugin = require(module_name)
+      } catch (e2) {
+        if (cannot_find_module(e2)) {
+          throw new PluginNotFoundError(e2)
+        } else { throw e2 }
+      }
+    } else { throw e }
+  }
+
+  return plugin
+}
+
 const exec_plugin = (
   name : string,
   config : vile.PluginConfig = {
@@ -190,21 +223,13 @@ const exec_plugin = (
   })
 
 const execute_plugins = (
-  allowed : vile.PluginList = [],
+  plugins : vile.PluginList = [],
   config : vile.YMLConfig = null,
   opts : vile.PluginExecOptions = {}
-) => (plugins : string[]) : Bluebird<vile.IssueList> => {
-  check_for_uninstalled_plugins(allowed, plugins)
-
+) : Bluebird<vile.IssueList> => {
   cluster.setupMaster({
     exec: path.join(__dirname, "plugin", "worker.js")
   })
-
-  // TODO: own method
-  if (allowed.length > 0) {
-    plugins = _.filter(plugins, (p) =>
-      _.some(allowed, (a) => p.replace("vile-", "") == a))
-  }
 
   let plugins_finished = 0
   const plugins_running : { [ name : string ] : boolean } = {}
@@ -212,15 +237,7 @@ const execute_plugins = (
   const plugin_count : number = plugins.length
   const concurrency : number = os.cpus().length || 1
 
-  // HACK: need to get exported ora types
-  let spin : any
-
-  if (opts.spinner && opts.format != "json") {
-    spin = ora({ color: "green" }).start()
-  }
-
   const update_spinner = () : void => {
-    if (!spin) return
     const percent = _.toNumber(
       plugins_finished / plugin_count * 100).toFixed(0)
     let names : string = _.map(_.keys(
@@ -228,8 +245,10 @@ const execute_plugins = (
       (p) => p.replace(/^vile-/, "")
     ).join(" + ")
     if (names) names = ` [${names}]`
-    spin.text = chalk.gray(`${percent}%${names}`)
+    logger.update_spinner(chalk.gray(`${percent}%${names}`))
   }
+
+  update_spinner()
 
   return Bluebird.map(plugins, (plugin : string) => {
     const worker = cluster.fork()
@@ -238,43 +257,40 @@ const execute_plugins = (
     update_spinner()
     return exec_in_fork(plugins_to_run, config, worker)
       .then((issues : vile.Issue[]) => {
-        if (spin) spin.stop()
         plugins_finished += plugins_to_run.length
         _.each(plugins_to_run, (p) => { delete plugins_running[p] })
         update_spinner()
-        if (spin) spin.start()
         normalize_paths(issues)
         return issues
       })
   }, { concurrency })
   .then(_.flatten)
   .then((issues : vile.IssueList) => {
+    update_spinner()
+
     if (!_.isEmpty(opts.combine)) {
       issues = combine_paths(opts.combine, issues)
     }
 
-    const stop_spinner = () => spin && spin.stop()
-
     // HACK: this should be better, but belongs inside here
     if (opts.dont_post_process) {
-      stop_spinner()
+      logger.stop_spinner()
       return issues
     } else {
-      const app_ignore = _.get(config, "vile.ignore", null)
-      const app_allow = _.get(config, "vile.allow", null)
+      const app_ignore = _.get(config, "vile.ignore", [])
+      const app_allow = _.get(config, "vile.allow", [])
+      const stop_spinner = (list : vile.IssueList) : vile.IssueList => {
+        logger.stop_spinner()
+        return list
+      }
+
       if (opts.skip_snippets) {
         return add_ok_issues(app_allow, app_ignore, issues)
-          .then((i) => {
-            stop_spinner()
-            return i
-          })
+          .then(stop_spinner)
       } else {
         return add_code_snippets(issues)
           .then((i) => add_ok_issues(app_allow, app_ignore, i))
-          .then((i) => {
-            stop_spinner()
-            return i
-          })
+          .then(stop_spinner)
       }
     }
   })
@@ -346,8 +362,8 @@ const cwd_plugins_path = () =>
   path.resolve(path.join(process.cwd(), "node_modules"))
 
 const add_ok_issues = (
-  vile_allow : vile.AllowList = [],
-  vile_ignore : vile.IgnoreList = [],
+  vile_allow : vile.AllowList,
+  vile_ignore : vile.IgnoreList,
   issues : vile.IssueList = []
 ) : Bluebird<vile.IssueList> =>
   util.promise_each(
@@ -369,24 +385,62 @@ const add_ok_issues = (
     return distinct_ok_issues.concat(issues)
   })
 
+const filter_plugins_to_run = (
+  peer_installed : vile.PluginList,
+  via_config : vile.PluginList,
+  via_opts : vile.PluginList,
+  skip_core_plugins : boolean
+) : vile.PluginList => {
+  const allowed_plugins : vile.PluginList = _
+    .isEmpty(via_opts) ? via_config : _.concat([], via_opts)
+
+  const available_plugins : vile.PluginList = skip_core_plugins ?
+    peer_installed :
+    _.uniq(_.concat(peer_installed, BUNDLED_PLUGINS))
+
+  check_for_uninstalled_plugins(allowed_plugins, available_plugins)
+
+  // TODO: have opt to disable auto adding bundled plugins
+  return _.isEmpty(allowed_plugins) ?
+    available_plugins :
+    _.filter(available_plugins, (p) =>
+      _.some(allowed_plugins, (a) => p.replace("vile-", "") == a))
+}
+
 const exec = (
   config : vile.YMLConfig = {},
   opts : vile.PluginExecOptions = {}
 ) : Bluebird<vile.IssueList> => {
   const app_config = _.get(config, "vile", {})
-  const config_specified_plugins : vile.PluginList = _.get(
+  const allowed_plugins_via_config : vile.PluginList = _.get(
     app_config, "plugins", [])
-  const plugins = _.isEmpty(opts.plugins) ?
-    config_specified_plugins :
-    _.compact(_.concat([], opts.plugins))
+  const allowed_plugins_via_opts : vile.PluginList = _.get(
+    opts, "plugins", [])
 
-  // TODO: any given bluebird promisifyAll call
-  return (fs as any).readdirAsync(cwd_plugins_path())
-    .filter(is_plugin)
-    .then(execute_plugins(plugins, config, opts))
+  const plugins_path = cwd_plugins_path()
+
+  const run = (peer_installed_plugins : vile.PluginList) =>
+    execute_plugins(
+      filter_plugins_to_run(
+        peer_installed_plugins,
+        allowed_plugins_via_config,
+        allowed_plugins_via_opts,
+        opts.skip_core_plugins),
+      config,
+      opts)
+
+  if (fs.existsSync(plugins_path)) {
+    return fs_readdir(plugins_path)
+      .filter(is_plugin)
+      .then(run)
+  } else {
+    return run([])
+  }
 }
 
-export = {
+const module_exports : vile.Module.Plugin = {
   exec,
   exec_plugin
 }
+
+export = module_exports

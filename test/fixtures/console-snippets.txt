@@ -1,5 +1,3 @@
-info ok .vile.yml
-info ok lib/foo.js
 warn warning lib/index.js: non-snippet issue (vile-test-snippet-plugin)
 warn warning lib/bar: line 1-2, col 0, bar (vile-test-snippet-plugin)
 

@@ -25,7 +25,7 @@ const log_and_exit = (
   if (was_promise) {
     log.error("Unhandled Promise.reject:", msg)
   } else {
-    log.error(msg)
+    log.error("\n", msg)
   }
 
   process.exit(1)

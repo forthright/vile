@@ -216,6 +216,7 @@ declare namespace vile {
     frameworks? : {
       [k : string] : string[] | string;
     }
+    ignore? : IgnoreList;
     peer? : {
       [k : string] : {
         [pkg_manager : string] : string[] | string;
@@ -260,25 +261,27 @@ declare namespace vile {
     format?            : string;
     combine?           : string;
     dont_post_process? : boolean;
+    skip_core_plugins? : boolean
     skip_snippets?     : boolean;
     plugins?           : PluginList;
   }
 
   export interface CLIApp {
-    combine?          : string;
-    config?           : string;
-    decorations       : boolean;
-    dontPostProcess?  : boolean
-    format?           : string;
-    gitDiff           : string;
-    issueLog          : string;
-    log?              : string;
-    plugins           : PluginList;
-    quiet?            : boolean;
-    skipSnippets?     : boolean;
-    spinner?          : boolean;
-    terminalSnippets? : boolean;
-    upload?           : string;
+    combine?            : string;
+    config?             : string;
+    decorations         : boolean;
+    dontPostProcess?    : boolean
+    format?             : string;
+    gitDiff             : string;
+    issueLog            : string;
+    log?                : string;
+    plugins             : PluginList;
+    quiet?              : boolean;
+    skipSnippets?       : boolean;
+    spinner?            : boolean;
+    terminalSnippets?   : boolean;
+    upload?             : string;
+    withoutCorePlugins? : boolean
   }
 
   export interface CLIModule {
@@ -386,9 +389,12 @@ declare namespace vile {
 
     export interface Logger {
       create  : (p : string) => LoggerInstance;
-      enable  : (c : boolean) => void;
+      enable  : (c? : boolean, l? : string[]) => void;
       disable : () => void;
       level   : (l : string) => void;
+      start_spinner  : () => void;
+      stop_spinner   : () => void;
+      update_spinner : (t : string) => void;
     }
   }
 }

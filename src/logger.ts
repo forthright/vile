@@ -1,9 +1,26 @@
 import _ = require("lodash")
 import chalk = require("chalk")
 import log = require("loglevel")
+import ora = require("ora")
 
 let enable_colors : boolean = false
 let allow_issue_types : vile.IssueType.All[] = []
+
+// HACK: need to get exported ora types
+const spin : any = ora({ color: "green" })
+
+const stop_spinner = () : void => {
+  spin.stop()
+}
+
+const start_spinner = () : void => {
+  spin.start()
+}
+
+const update_spinner = (text : string) : void => {
+  spin.text = text
+  start_spinner()
+}
 
 const level = (name : string) : void => {
   process.env.VILE_LOG_LEVEL = name
@@ -56,6 +73,8 @@ const apply = (
   name : string,
   source : string
 ) => (...logs : any[]) : void => {
+  stop_spinner()
+
   switch (name) {
     case "warn":
       log.warn.apply(log, colorize(name, source, logs))
@@ -92,11 +111,16 @@ const create = (
   }
 }
 
-enable()
-
-export = {
+const api : vile.Module.Logger = {
   create,
   disable,
   enable,
-  level
+  level,
+  start_spinner,
+  stop_spinner,
+  update_spinner
 }
+
+enable()
+
+export = api

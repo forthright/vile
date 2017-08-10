@@ -1,51 +1,29 @@
 import fs = require("fs")
-import child_process = require("child_process")
+import chalk = require("chalk")
 import yaml = require("js-yaml")
-import inquirer = require("inquirer")
 import _ = require("lodash")
 import Bluebird = require("bluebird")
-import logger = require("./../../logger")
+
+// HACK: type defs not right?
+const fs_writeFile : any = Bluebird.promisify(fs.writeFile)
 
 const plugin_map = require("./map")
-
-const log = logger.create("cli")
-
-const confirm_vile_config_is_ok = (
-  config : vile.YMLConfig
-) : Bluebird<vile.YMLConfig> => {
-  console.log()
-  console.log(config)
-  console.log()
-  return (inquirer as any).prompt([
-    {
-      default: true,
-      message: "Look good?",
-      name: "ok_to_continue",
-      type: "confirm"
-    }
-  ]).then((answers : any) => {
-    if (answers.ok_to_continue) {
-      return Bluebird.resolve(config)
-    } else {
-      return Bluebird.resolve(process.exit(0))
-    }
-  })
-}
 
 const create_config = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> => {
   const config_without_plugins = _.cloneDeep(config)
   delete config_without_plugins.vile.plugins
+  config_without_plugins.vile.ignore = _.sortBy(
+    config_without_plugins.vile.ignore)
 
-  return (fs as any).writeFileAsync(
+  return fs_writeFile(
     ".vile.yml",
     new Buffer(yaml.safeDump(config_without_plugins))
   ).then((err : NodeJS.ErrnoException) => {
     if (err) {
       return Bluebird.reject(err)
     } else {
-      log.info("Created: .vile.yml")
       return Bluebird.resolve(config)
     }
   })
@@ -61,136 +39,85 @@ const install_plugin_args = (plugins : string[]) =>
       return cmd
     }, []))
 
-const install_plugins = (
+const install_plugins_instructions = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> => {
   // TODO: move to method
   const by_bin = _.reduce(
     plugin_map.peer,
-    (bins : any, deps_def : any, plugin : string) => {
-      _.each(deps_def, (deps : any, bin : string) => {
+    (bins : any, peer_deps : any, plugin : string) => {
+      _.each(peer_deps, (peer_dep : any, bin : string) => {
         if (!_.some(config.vile.plugins, (p : string) => p == plugin)) {
           return bins
         }
-        if (typeof deps == "string") deps = [ deps ]
+        peer_dep = _.concat([], peer_dep)
         if (!bins[bin]) bins[bin] = []
-        bins[bin] = _.uniq(_.concat(bins[bin], deps))
+        bins[bin] = _.uniq(_.concat(bins[bin], peer_dep))
       })
       return bins
     },
     {})
 
-  if (_.isEmpty(by_bin)) return Bluebird.resolve(config)
+  const args = install_plugin_args(config.vile.plugins)
 
-  return (inquirer as any).prompt([
-    {
-      default: false,
-      message: "Install required plugins and their peer dependencies? " +
-        `(requires ${Object.keys(by_bin).join(",")})`,
-      name: "ok_to_continue",
-      type: "confirm"
-    }
-  ]).then((answers : any) => {
-    const install = answers.ok_to_continue
+  console.log()
+  console.log(
+    chalk.green("created:"),
+    chalk.gray("package.json"))
+  console.log(
+    chalk.green("created:"),
+    chalk.gray(".vile.yml"))
+  console.log()
+  console.log(chalk.bold("Final Steps:"))
+  console.log()
+  console.log(
+    chalk.green("#1"),
+    chalk.gray("Install required packages:"))
+  console.log()
 
-    const deps = _.map(
-      by_bin,
-      (dep_list : string[], bin : string) => [ bin, dep_list ])
+  console.log("  ", "npm", args.join(" "))
 
-    if (install) {
-      log.info("Installing peer dependencies... this could take a while.")
-    }
+  const deps = _.map(
+    by_bin,
+    (dep_list : string[], bin : string) => [ bin, dep_list ])
 
-    return Bluebird.each(deps, (info : any[]) => {
-      const [ bin, dep_list] = info
-      const args = bin == "npm" ?
-        _.concat("install", "--save-dev", dep_list) :
-        _.concat("install", dep_list)
+  return Bluebird.each(deps, (info : any[]) => {
+    const [ bin, dep_list] = info
+    const install_args = bin == "npm" ?
+      _.concat("install", "--save-dev", dep_list) :
+      _.concat("install", dep_list)
 
-      if (!install) {
-        log.warn("skipping:", bin, args.join(" "))
-        return Bluebird.resolve(config)
-      } else {
-        log.info(bin, args.join(" "))
-
-        return new Bluebird((
-          resolve : () => void,
-          reject : (err : string) => void
-        ) => {
-          child_process
-            .spawn(bin, args, { stdio: [0, 1, 2] })
-            .on("close", (code : number) => {
-              if (code != 0) {
-                const msg = `${bin} died with code: ${code}`
-                reject(msg)
-              } else {
-                log.info(bin, "finished installing dependencies")
-                resolve()
-              }
-            })
-        })
-      }
-    })
-    .then(() =>
-      new Bluebird((resolve, reject) => {
-        const args = install_plugin_args(config.vile.plugins)
-
-        if (install) {
-          log.info("Installing plugins... this could take a while.")
-          log.info("npm", args.join(" "))
-          child_process
-            .spawn("npm", args, { stdio: [0, 1, 2] })
-            .on("close", (code : number) => {
-              if (code != 0) {
-                reject("Exit code was " + code)
-              } else {
-                log.info("Updated: package.json")
-                resolve(config)
-              }
-            })
-        } else {
-          log.warn("skipping:", "npm", args.join(" "))
-          resolve(config)
-        }
-      }))
+    console.log("  ", bin, install_args.join(" "))
   })
+  .then(() => config)
 }
 
-const ready_to_punish = (config : vile.YMLConfig) => {
-  log.info()
-  log.info("Looks like we are good to go!")
-  log.info()
-  log.info("Tips:")
-  log.info("  1. Run all plugins:")
-  log.info("    ~$ vile analyze")
-  log.info()
-  log.info("  2. Authenticate with vile.io:")
-  log.info("    ~$ vile auth")
-  log.info()
-  log.info("  3. Upload your first commit:")
-  log.info(
-    "    ~$ VILE_TOKEN=XXXXXXX vile analyze " +
-    "-u project_name")
-  log.info()
-  log.info(
-    "  4. Routinely analyze your code by " +
-    "integrating vile into your CI/CD build process.")
-  log.info()
-  log.info(
-    "Also, be sure to read up on your installed " +
-    "plugins, and any extra requirements they might have:")
-  log.info("  https://vile.io/plugins")
-  log.info()
-  log.info("For more information checkout the project docs site:")
-  log.info("  https://docs.vile.io")
-  log.info()
-  log.info("Happy punishing!")
+const ready_to_analyze = (config : vile.YMLConfig) => {
+  console.log()
+  console.log(
+    chalk.green("#2"),
+    chalk.gray("Commit vile's config and package defs to source:"))
+  console.log()
+  console.log("  ~$ git add .vile.yml package.json")
+  console.log("  ~$ git commit -m 'Added Vile to my project.'")
+  console.log()
+  console.log(chalk.green("#3"), chalk.gray("Analyze some code:"))
+  console.log()
+  console.log("  * Run vile locally:")
+  console.log("    ~$ vile analyze")
+  console.log()
+  console.log("  * Learn how to upload data to vile.io:")
+  console.log("    https://docs.vile.io/#analyzing-your-project")
+  console.log()
+  console.log("  * Choose and configure more advanced plugins:")
+  console.log("    https://vile.io/plugins")
+  console.log()
+  console.log(chalk.green("Happy Punishing!"))
 }
 
 export = {
   init: (config : vile.YMLConfig) =>
-    confirm_vile_config_is_ok(config)
-      .then(create_config)
-      .then(install_plugins)
-      .then(ready_to_punish)
+    create_config(config)
+      .then(install_plugins_instructions)
+      .then(ready_to_analyze)
 }

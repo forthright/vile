@@ -8,7 +8,7 @@ const create = (cli : commander.CommanderStatic) =>
     .command("auth")
     .action(() => {
       log.info("To authenticate, first go to " +
-          "https://vile.io and get a user token.")
+          "https://vile.io/auth_tokens and get an All token.")
       log.info()
       log.info("Then:")
       log.info()

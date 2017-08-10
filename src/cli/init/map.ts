@@ -5,30 +5,28 @@ const frameworks = {
   brakeman: [ "brakeman" ],
   bundler: [ "bundler-outdated", "bundler-audit" ],
   coffeelint: [ "coffeelint" ],
-  core: [ "stat" ],
-  coverage: [ "coverage" ],
   editorconfig: [ "eclint" ],
   eslint: [ "eslint" ],
   git: [ "git" ],
   jshint: [ "jshint" ],
-  nodejs: [ "retire", "ncu" ],
+  nodejs: [ "nsp" ],
   rails: [ "brakeman", "rails-best-practices" ],
   retirejs: [ "retire" ],
   rubocop: [ "rubocop" ],
   sass_lint: ["sass-lint" ],
-  slim_lint: [ "slim-lint" ]
+  slim_lint: [ "slim-lint" ],
+  tslint: [ "tslint" ]
 }
 
 const langs = {
-  coffeescript: [ "coffeelint" ],
+  // coffeescript: [ "coffeelint" ], TODO: requires config file present
   haskell: [ "hlint" ],
-  javascript: [ "escomplex" ],
-  php: [ "phpmd" ],
-  ruby: [ "rubocop", "rubycritic" ],
+  // php: [ "phpmd" ], TODO: has a complex peer install
+  ruby: [ "rubocop" ],
   sass: [ "sass-lint" ],
-  scss: [ "scss-lint" ],
-  slim: [ "slim-lint" ],
-  typescript: [ "tslint" ]
+  scss: [ "sass-lint" ],
+  slim: [ "slim-lint" ]
+  // typescript: [ "tslint" ] TODO: tslint requires config file present
 }
 
 const peer = {
@@ -36,17 +34,38 @@ const peer = {
   "bundler-audit": { gem: [ "bundler", "bundler-audit" ] },
   "bundler-outdated": { gem: "bundler" },
   "hlint": { cabal: "hlint" },
-  "ncu": { npm: "npm-check-updates" },
   "rails-best-practices": { gem: "rails_best_practices" },
   "retire": { npm: "retire" },
   "rubocop": { gem: "rubocop" },
-  "sass-lint": { npm: "sass-lint" },
-  "scss-lint": { gem: "scss_lint" },
   "slim-lint": { gem: "slim_lint" }
 }
 
+const DEFAULT_IGNORE_DIRS : string[] = [
+  "app/assets/images",
+  "app/assets/videos",
+  "bin",
+  "bower_components",
+  ".bundle",
+  "cabal.sandbox.config",
+  ".cabal-sandbox",
+  "coverage",
+  "db",
+  "doc",
+  "dist",
+  ".git",
+  ".gitmodules",
+  ".gitattributes",
+  "log",
+  "node_modules",
+  ".nyc_output",
+  "tmp",
+  "tags",
+  "vendor"
+]
+
 const PLUGIN_MAP : vile.PluginMap = {
   frameworks,
+  ignore: DEFAULT_IGNORE_DIRS,
   langs,
   peer
 }

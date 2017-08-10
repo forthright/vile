@@ -77,9 +77,9 @@ const to_console = (
       `${ h_line ? "line " + h_line + ", " : "" }` +
       `${ h_char ? "col " + h_char + ", " : "" }` : ""
 
-    const msg : string = `${ issue.path }: ${ loc }${ details }`
+    const issue_path = _.isEmpty(issue.path) ? "" : `${ issue.path }: `
 
-    return msg
+    return `${issue_path}${ loc }${ details }`
   }
 }
 
@@ -264,7 +264,7 @@ const log_issue_messages = (
       } else if (issue.type == util.COV) {
         nlog.info_issue(to_console_cov(issue) + msg_postfix)
       } else if (issue.type == util.OK) {
-        nlog.info_issue(issue.path + msg_postfix)
+        // TODO: don't log for now (too annoying for certain user experiences)
       } else {
         nlog.info_issue(to_console(issue) + msg_postfix)
       }

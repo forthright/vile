@@ -32,8 +32,10 @@ const load_auth_config_from_env = () : vile.Auth => {
 
 const get_conf : vile.YMLConfig = () => conf
 
-export = {
+const api : vile.Module.Config = {
   get: get_conf,
   get_auth: load_auth_config_from_env,
   load: load_config
 }
+
+export = api

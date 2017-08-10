@@ -26,9 +26,6 @@ depcheck:
     ignore_dirs:
       - src
       - .docs
-      - node_modules
-      - coverage
-      - tmp
 
 retire:
   config:
@@ -53,10 +50,6 @@ language:
 stat:
   ignore:
     - src/@types/**
-
-coverage:
-  config:
-    path: coverage/lcov.info
 
 license:
   config:

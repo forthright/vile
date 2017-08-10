@@ -7,16 +7,14 @@ import logger = require("./../logger")
 import plugin = require("./../plugin")
 import upload = require("./analyze/upload")
 import log_helper = require("./analyze/log_helper")
+import plugin_map = require("./init/map")
 
-const DEFAULT_IGNORE_DIRS : string[] = [
-  ".git",
-  "node_modules"
-]
+const DEFAULT_IGNORE_DIRS = plugin_map.ignore
 
 const log = logger.create("cli")
 
 const log_and_exit = (error : any) : void => {
-  log.error(_.get(error, "stack", error))
+  log.error("\n", _.get(error, "stack", error))
   process.exit(1)
 }
 
@@ -39,7 +37,6 @@ const analyze = (
 
   const vile_yml = config.get()
 
-  // HACK: always auto ignore node_modules/.git for now
   add_default_ignores(vile_yml)
 
   const exec_opts : vile.PluginExecOptions = {
@@ -47,6 +44,7 @@ const analyze = (
     dont_post_process: opts.dontPostProcess,
     format: opts.format,
     plugins: custom_plugins,
+    skip_core_plugins: opts.withoutCorePlugins,
     skip_snippets: opts.skipSnippets,
     spinner: !(opts.quiet || !opts.decorations)
   }
@@ -94,6 +92,34 @@ const analyze = (
   }
 }
 
+const configure = (
+  opts : vile.CLIApp
+) : void => {
+  const issue_levels = (_.compact(
+    _.split(opts.issueLog, ",")) as vile.IssueType.All[])
+
+  logger.enable(opts.decorations, issue_levels)
+
+  config.load(opts.config)
+
+  if (opts.log) logger.level(opts.log)
+
+  const disable_logger = opts.quiet ||
+    opts.format == "json" ||
+    opts.format == "syntastic"
+
+  if (disable_logger) logger.disable()
+
+  if (!disable_logger && opts.decorations) {
+    logger.start_spinner()
+  }
+}
+
+const action = (paths : string[], opts : vile.CLIApp) => {
+  configure(opts)
+  analyze(opts, paths)
+}
+
 const create = (cli : commander.CommanderStatic) =>
   cli
     .command("analyze [paths...]")
@@ -115,31 +141,19 @@ const create = (cli : commander.CommanderStatic) =>
             "show generated code snippets in the terminal")
     .option("-s, --skip-snippets",
             "don't generate code snippets")
-    .option("-d, --dont-post-process",
-            "don't post process data in any way (ex: adding ok issues)- " +
-            "useful for per file checking- don't use with --upload")
     .option("-g, --git-diff [rev]",
             "only check files patched in latest HEAD commit, or rev")
+    .option("-d, --dont-post-process",
+            "don't post process data in any way (ex: adding ok issues)- " +
+            "useful for per file checking")
+    .option("-w, --without-core-plugins",
+            "don't use plugins bundled with core lib")
     .option("-l, --log [level]",
             "specify the log level (info=default|warn|error)")
     .option("-i, --issue-log [level]",
             "specify issue types to log (ex: '-i security,dependency')")
     .option("-q, --quiet", "log nothing")
     .option("-n, --no-decorations", "disable color and progress bar")
-    .action((paths : string[], opts : vile.CLIApp) => {
-      const issue_levels = (_.compact(
-        _.split(opts.issueLog, ",")) as vile.IssueType.All[])
-
-      logger.enable(opts.decorations, issue_levels)
-
-      config.load(opts.config)
-
-      if (opts.log) logger.level(opts.log)
-
-      if (opts.quiet || opts.format == "json" ||
-          opts.format == "syntastic") logger.disable()
-
-      analyze(opts, paths)
-    })
+    .action(action)
 
 export = { create }

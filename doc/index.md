@@ -6,190 +6,41 @@ A punishing yet easy to use tool for writing insightful code.
 
 - [Node.js](http://nodejs.org)
 
-## Installation & Usage
+## Installation
 
-**CLI**
+    npm i -g vile
 
-*install*
+## Configuration
 
-```sh
-npm i -g vile
-```
+    cd my_project_src/
+    vile init
 
-*help*
-
-```sh
-vile -h
-```
-
-*authenticate*
-
-```sh
-vile auth
-```
-
-*configure*
-
-```sh
-vile init
-```
-
-*analyze*
-
-```sh
-vile analyze -u
-```
-
-See [analyzing your project](#analyzing-your-project) for more details.
-
-**API**
-
-*install*
-
-    npm i vile
-
-*example*
-
-```javascript
-const vile = require("vile")
-
-vile.logger.disable()
-
-vile
-  .exec(vile.config.load())
-  .then((issues : vile.IssueList) => {
-    // ...
-  })
-```
-
-See [src/index](modules/_src_index_.html) for the full API.
-
-## Plugins
-
-To analyze your code, you need to install plugins first.
-
-For a complete list of plugins, see [here](https://vile.io/plugins).
-
-For example, for your everyday Node.js project:
-
-```sh
-npm i -D vile vile-ncu vile-synt vile-coverage vile-stat vile-git vile-escomplex vile-eslint
-```
-
-*then run:*
-
-```sh
-vile analyze
-```
-
-The CLI will look up any installed plugins and automatically
-pull them in and run their checks.
-
-Note: If you don't also have `vile` installed globally, you can easily
+Note: If you don't like installing vile's CLI globally, you can easily
 access the locally installed CLI using something like [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b).
-
-## Config File
-
-A config file is named `.vile.yml` and should reside in your project root.
-
-*looks something like this*
-
-```yaml
-vile:
-  ignore:
-    - foo/bar
-  allow:
-    - baz
-
-some_plugin:
-  config: plugin_config
-  ignore: plugin_ignore
-  allow: plugin_allow
-```
-
-You can also specify a custom plugin list in your config:
-
-```yaml
-vile:
-  plugins:
-    - "tslint"
-```
-
-### Ignore Lists
-
-The `vile.ignore` (and plugin specific) setting is a list of items to ignore.
-
-If a plugin specifies its own `ignore` list, then it will be merged into
-`vile.ignore` and passed to the respective plugin when it is run.
-
-At the moment, each plugin is responsible for matching against
-the provided ignore list.
-
-However, you can use the `vile.ignored("path", ignore_list)` library
-method to do the matching for you.
-
-For reference, [node-ignore](https://www.npmjs.com/package/ignore) is currently used for matching.
-
-### Allow Lists
-
-The `vile.allow` (and plugin specific) setting specifies paths to
-*only* include.
-
-It's util method is `vile.allowed("path", allow_list)`.
-
-Note: Unlike ignore, certain levels will **overwrite** others, when set.
-
-From highest to lowest precedence, they are:
-
-1. Specified via `vile a --gitdiff`
-2. Specified via `vile a file dir ...`
-3. Specified via `vile.allow`
-4. Specified via `my_plugin.allow`
-
-So, say you call `vile a -g` it will ignore plugin/top
-level allow lists, and any path arguments provided.
-
-### Combining File Data
-
-If you want to map a `src` build directory to a `lib` output directory:
-
-```sh
-vile a -x src:lib
-```
-
-Or, in the case of this project's code:
-
-```sh
-vile a -x src.ts:lib.js
-```
 
 ## Analyzing Your Project
 
 1. Make an account on [vile.io](https://vile.io).
 
-2. Create a [new project](https://vile.io/new_project).
+2. Create a [New Project](https://vile.io/new_project).
 
-2. Grab an [API token](https://vile.io/auth_tokens).
+3. Grab an [API Token](https://vile.io/auth_tokens).
 
-3. Upload your first commit:
+4. Upload your first commit:
 
 ```sh
 export VILE_TOKEN=my-all-token
 export VILE_PROJECT=my-project-name
 
-vile a -u
+vile analyze -u
 ```
 
-To disable code snippet generation:
+## Setting Up Continuous Analysis
 
-```sh
-vile a -us
-```
+Vile is most helpful when you integrate it into your CI/CD process
+and run it right after your build and test steps.
 
-### CI/CD Examples
-
-While you should be able to integrate vile into any
-CI/CD process, here are some mainstream config examples.
+See below for some popular examples.
 
 *Note: don't forget to set `VILE_TOKEN` and `VILE_PROJECT` on your build server!*
 
@@ -287,6 +138,157 @@ prior to analyzing:
 
     git checkout -f $CI_BRANCH
 
+## Language Support
+
+Vile itself comes with a general set of plugins that support basic multi language analysis.
+
+To analyze your code further, such as tracking outdated RubyGems, plugging in
+your favourite linter, tracking code complexity, or checking for vulnerabilities,
+you need to install extra plugins first.
+
+While there is a full list of plugins available [here](https://vile.io/plugins), please
+see below for tips and known caveats for various languages and frameworks.
+
+### JavaScript
+
+For an everyday JavaScript (or Node.js) project:
+
+    npm i -D vile vile-synt vile-git vile-escomplex vile-nsp
+
+### Flow
+
+There is currently limited support for Flow using non-core plugins.
+Some plugins may work, and others (that specifically parse JS) may fail.
+
+For example [vile-synt](https://github.com/forthright/vile-synt) currently does not work ([yet](https://github.com/brentlintner/synt/issues/99)).
+
+### JSX
+
+Just like Flow there is limited support.
+
+A good workaround is to ignore all `.jsx` files
+and also any `.js` files with JSX code in them.
+
+For example, with a plugin like [vile-escomplex](https://github.com/forthright/vile-escomplex):
+
+```yaml
+escomplex:
+  ignore:
+    - "*.jsx"
+    - path/to/jsx
+```
+
+### Non-Standard JS
+
+If you are using EMCAScript Stage-3 and below proposals,
+some plugins might not work out of the box or just yet.
+
+A good workaround is to map `lib` data to `src` using the CLI's
+`-x src:lib` option, while also ignoring `src` for the specific plugins:
+
+```yaml
+synt:
+  ignore: src
+escomplex:
+  ignore: src
+```
+
+### Ruby
+
+A basic Ruby project example (using [Bundler](http://bundler.io)):
+
+```sh
+    npm i -D vile vile-git vile-sass-lint vile-bundler-audit vile-bundler-outdated
+
+    # you can also add these to your Gemfile
+    gem install rubocop rubycritic bundler bundler-audit
+
+    # depending on your setup, you may need to use `bundle exec`
+    bundle exec vile analyze
+```
+
+Note: Some plugins don't support Vile's allow/ignore out of the box.
+
+For example, [vile-rubycritic](https://github.com/forthright/vile-rubycritic) requires
+you set specific `allow` paths to avoid traversing `node_modules`.
+
+### Rails
+
+For an in depth article about using Rails + Vile checkout [Continuous Analysis For Your Rails Project Using Vile and CircleCI](https://medium.com/forthright/continuous-analysis-for-your-rails-project-using-vile-and-circleci-4fb077378ab6).
+
+### Haskell
+
+Depending on your setup and if you are using sandboxes, you may need to use `cabal exec`:
+
+    cabal exec -- vile analyze
+
+## Config
+
+You can easily configure Vile and it's plugins via a `.vile.yml` file.
+
+The file should reside in your project root and look something like this:
+
+```yaml
+vile:
+  ignore:
+    - foo/bar
+  allow:
+    - baz
+
+some_plugin:
+  config:
+    some_opt: "some val"
+  ignore: plugin_specific_ignore
+  allow: plugin_specific_allow
+```
+
+You can also specify a custom plugin list in your config:
+
+```yaml
+vile:
+  plugins:
+    - "tslint"
+```
+
+### Ignore Lists
+
+Vile already ignores known directories and paths
+for you, such as `node_modules`, `coverage`, etc.
+
+Setting `vile.ignore` in your config will ignore paths/files globally.
+
+If `plugin_name.ignore` is set, then it will be merged into
+`vile.ignore` and passed to the respective plugin when it is run.
+
+### Allow Lists
+
+The `vile.allow` (and plugin specific) setting specifies paths to
+*only* include.
+
+Note: Unlike ignore, certain levels will **overwrite** others, when set.
+
+From highest to lowest precedence, they are:
+
+1. Specified via `vile a --gitdiff`
+2. Specified via `vile a file dir ...`
+3. Specified via `vile.allow`
+4. Specified via `my_plugin.allow`
+
+So, say you call `vile a -g` it will ignore plugin/top
+level allow lists, and any path arguments provided.
+
+## Getting New Releases
+
+    cd my_project_src/
+    npx npm-check-updates -u
+    npm install
+    git commit package.json -m "Updated some vile packages."
+
+For a global install:
+
+    npx npm-check-updates -g -f vile
+    npm install -g vile
+
 ## Editor Integration
 
 You *should* be able to integrate vile into any text editor (ex: via the `-f syntastic` flag).
@@ -342,6 +344,28 @@ passive mode enabled:
   let g:syntastic_sass_checkers=["vile_sass_lint"]
 ```
 
+## Library Integration
+
+*install:*
+
+    npm i vile
+
+*analyze:*
+
+```javascript
+const vile = require("vile")
+
+vile.logger.disable()
+
+vile
+  .exec(vile.config.load())
+  .then((issues : vile.IssueList) => {
+    // ...
+  })
+```
+
+See [src/index](modules/_src_index_.html) for the full API.
+
 ## Creating A Plugin
 
 A plugin itself should be an [npm package](https://docs.npmjs.com/getting-started/creating-node-modules) prefixed
@@ -378,8 +402,23 @@ Checkout [vile-rubycritic](https://github.com/forthright/vile-rubycritic) for an
 
 ### Filtering
 
-Plugins are expected to support both the `ignore` and `allow` lists.
-There are some helper methods to abstract away the onerous work.
+At the moment, each plugin is expected to support
+both the `ignore` and `allow` lists (if applicable).
+
+#### Ignore Lists
+
+You can use the `vile.ignored("path", ignore_list)` library
+method help with matching.
+
+For reference, [node-ignore](https://www.npmjs.com/package/ignore) is currently used for matching.
+
+#### Allow Lists
+
+Similarily, you can use `vile.allowed("path", allow_list)`.
+
+#### Helpers
+
+There are also some helper methods to abstract away some onerous work.
 
 For example: `vile.filter` is great for using with `vile.promise_each`, or in general.
 
@@ -396,6 +435,7 @@ module.exports = {
   }
 }
 ```
+
 ### Windows/Unix Paths
 
 Plugins should stick to using unix style paths in issues and where

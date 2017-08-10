@@ -1,0 +1,6 @@
+warn warning test (vile-test-with-bundled-plugins-plugin)
+info cov process/cwd/one.rb: 91.67% lines covered (vile-coverage)
+info cov two.rb: 100% lines covered (vile-coverage)
+warn dependency New release for vile: 0.17.1 < 0.18.3 (vile-ncu)
+info stat lib/test.js (0.334KB): 19 lines, 19 loc, ? comments (language: JavaScript) (vile-stat)
+info stat package.json (0.048KB): ? lines, ? loc, ? comments (language: JSON) (vile-stat)
