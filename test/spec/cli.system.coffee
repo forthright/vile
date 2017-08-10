@@ -302,7 +302,7 @@ describe "system :: cli blackbox testing", ->
           expect(stdout).to.eql "" +
             "info stat lib/test.js (0.334KB): 19 " +
             "lines, 19 loc, ? comments (language: JavaScript) (vile-stat)\n" +
-            "info stat package.json (0.048KB): ? lines, ? " +
+            "info stat package.json (0.024KB): ? lines, ? " +
             "loc, ? comments (language: JSON) (vile-stat)\n"
           expect(code).to.eql 0
           done()
