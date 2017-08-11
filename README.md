@@ -37,11 +37,11 @@
 Vile is a general purpose code quality tool that you can
 run in your terminal, use with your code editor, and bake into your CI process (via [vile.io](https://vile.io)).
 
-It was created as a passion project to help foster an
-open and flexible cross-OS platform and inclusive community for any type of code analysis.
+It started out as a passion project to provide an
+open, extensible and inclusive platform for any type of software analysis.
 
 Whether you are just getting started or have been building products and software for decades,
-Vile can help you gain insights, be more productive, and build better software.
+Vile can help you gain insights, increase productivity, and build better software.
 
 ## Features
 
