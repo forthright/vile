@@ -34,25 +34,43 @@
 
 ## Overview
 
-Vile is a general purpose code quality tool that you can
-run in your terminal, use with your code editor, and bake into your CI process (via [vile.io](https://vile.io)).
-
-It started out as a passion project to provide an
-open, extensible and inclusive platform for any type of software analysis.
-
-Whether you are just getting started or have been building products and software for decades,
-Vile can help you gain insights, increase productivity, and build better software.
+Vile is a general purpose, multi-language code quality tool that you can
+run in your terminal, integrate with your code editor, and pair with [vile.io](https://vile.io).
 
 ## Features
 
-* Robust CLI
-* Powerful plugin system
-* Easy editor integration
-* Support for multiple languages
+While [vile.io](https://vile.io) helps you continuously
+analyze your software, using this standalone can help you:
+
+* Analyze code complexity
+* Check for outdated software packages
+* Collect test coverage data
+* Identify similar and duplicate code
+* Analyze and track vulnerabilities in code and libraries
+* Generate file statistics
+* Track technical debt
+* Enforce style guides
+* Calculate churn
+* Capture commit data
+* Report general warnings and program errors (ex: via existing linters)
+
+## Goals
+
+* Provide an open and extensible platform for any type of software analysis
+* Help maintain and foster an open and inclusive community around code quality
+* Distill various types of software analysis into a language independent
+data format
+* Support and complement existing tooling (linters, complexity tools, etc.)
+* Create new libraries and plugins that backfill language support (ex: [vile-synt](https://github.com/forthright/vile-synt))
 
 ## Installation & Usage
 
-Please see the [docs](https://docs.vile.io) site.
+    cd my_project/
+    npm i vile
+    npx vile init
+    npx vile analyze
+
+Please see [docs.vile.io](https://docs.vile.io) for more info.
 
 ## Licensing
 
