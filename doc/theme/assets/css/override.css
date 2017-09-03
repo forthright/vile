@@ -143,6 +143,18 @@ img[alt="vile_full"] {
   padding: 0 .5rem;
 }
 
+.tsd-typography ul > li > ul {
+  margin: .25rem 0 !important;
+}
+
+.tsd-typography ol > li > ul {
+  margin: .25rem 0 !important;
+}
+
+.tsd-typography li {
+  margin: .25rem 0 !important;
+}
+
 @media only screen and (max-width: 900px) {
   .container-main {
     padding-left: 0;
