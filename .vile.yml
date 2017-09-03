@@ -1,20 +1,14 @@
 vile:
   ignore:
     - ".*"
-    - bin
-    - coverage
-    - doc
     - "*.json"
     - LICENSE
     - "*.lock"
     - "*.log"
     - "*.md"
-    - node_modules
     - src/@types
-    - tags
     - test/fixtures
     - test/mocha.opts
-    - tmp
     - "*.yml"
 
 depcheck:
