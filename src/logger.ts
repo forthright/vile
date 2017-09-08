@@ -14,7 +14,7 @@ const stop_spinner = () : void => {
 }
 
 const start_spinner = () : void => {
-  spin.start()
+  if (enable_colors) spin.start()
 }
 
 const update_spinner = (text : string) : void => {
