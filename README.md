@@ -28,39 +28,48 @@
 
 ## Overview
 
-`vile` is a general purpose, multi-language code quality tool
-that integrates with your code editor, runs on your build server,
-and bakes into your CI process. :squirrel:
+`vile` is a general purpose code quality tool for any language or
+platform that statically analyzes your software project and its dependencies.
+
+Along with its [hosted service](https://vile.io) it provides a highly
+flexible platform for continuous software analysis
+that integrates directly into your CI process and development workflow.
+
+## Demo
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/93340/30000171-0f440bac-9030-11e7-8544-1469d53479cf.gif" alt="Quick Demo Video">
+  <a href="https://asciinema.org/a/137383" target="_blank">
+    <img src="https://user-images.githubusercontent.com/93340/30343065-0c55ca06-97ca-11e7-95a8-bd4605f8c452.png"/>
+  </a>
 </p>
 
 ## Features
 
-* :zap: Analyze complexity
+* :fire: Analyze complexity & churn
 * :truck: Check for outdated software packages
-* :globe_with_meridians: Calculate code coverage
 * :mag: Identify similar and duplicate code
-* :closed_lock_with_key: Check for vulnerabilities in code and libraries
+* :globe_with_meridians: Calculate test coverage
+* :closed_lock_with_key: Check for vulnerabilities in libraries and code
 * :clipboard: Generate file statistics
-* :fire: Calculate churn
-* :movie_camera: Capture commit data
-* :wrench: Track technical debt
-* :notebook_with_decorative_cover: Enforce style guides
-* :loudspeaker: Report general warnings and errors (ex: via existing linters)
-* :electric_plug: Powerful plugin system
+* :clock2: Capture commit data
+* :wrench: Run traditional linter tools
+* :electric_plug: Flexible and easy to use plugin system
 * :hearts: Supports Windows, Linux, and MacOS
 
-+&nbsp;[vile.io](https://vile.io):
+#### [+ vile.io](https://vile.io)
 
-* :part_alternation_mark: Track code quality over time
-* :muscle: Get automated insights and suggestions based on the curent state of your project
-* :shower: Schedule daily CI builds
+* :part_alternation_mark: Track code quality and issues over time
+* :muscle: Get automated insights and suggestions based on the current state of your project
 * :email: Get notified about new issues and insights
+* :raising_hand: Collaborate with other users
 * :octocat: Set GitHub pull request statuses
+* :shower: Schedule routine CI builds for popular services like CircleCI, AppVeyor, and Codeship
 
 ## Installation & Usage
+
+The main library requires you at least have [Node.js](https://nodejs.org) installed.
+
+A simple install and setup:
 
     cd my_project/
     npm i vile
@@ -79,9 +88,10 @@ you need to install extra [plugins](https://vile.io/plugins) first.
 
 ## Common Use Cases
 
-* Run `vile a` locally to get a snapshot of the state of your project's quality and stats
+* Run `vile a` locally to analyze your code and print any issues or data
 * Run `vile a -u` on every build server commit to continuously analyze your code
 * Run `vile a -d -p lint-plugin my/file.ext` to run a plugin on a specific file
+* Run `vile a -d -e -p lint-plugin,security-plugin` to run certain lint checks during a build
 
 ## Contributing
 
