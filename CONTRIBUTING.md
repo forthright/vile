@@ -40,12 +40,7 @@ Clone the repos:
     git clone git@github.com:forthright/vile-docs.git
     cd vile
 
-We use `yarn` for development (for speed):
-
-    npm i -g yarn
-    yarn
-
-However, `npm` should work just as well:
+Install packages:
 
     npm i
 

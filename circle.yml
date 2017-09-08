@@ -8,13 +8,8 @@ checkout:
     - git checkout -f $CIRCLE_BRANCH
 
 dependencies:
-  cache_directories:
-    - ~/.cache/yarn
   pre:
-    # until we switch to v5 + package-lock
-    - npm i -g npm@4
     - sh bin/list-env-versions
-    - yarn
 
 test:
   override:
