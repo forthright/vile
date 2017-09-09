@@ -42,6 +42,8 @@ PLUGIN_MODULE_DNE = path.join SYSTEM_TESTS, "err_plugin_module_dne"
 PLUGIN_INVALID_DATA_DIR = path.join SYSTEM_TESTS, "err_plugin_invalid_data"
 WITH_BUNDLED_DIR = path.join SYSTEM_TESTS, "with_bundled_plugins"
 NODE_MODULES_DNE_DIR = path.join SYSTEM_TESTS, "node_modules_dne"
+EXIT_ON_ISSUES = path.join SYSTEM_TESTS, "exit_on_issues"
+EXIT_ON_ISSUES_NONE = path.join SYSTEM_TESTS, "exit_on_issues_none"
 
 SNIPPET_OUTPUT = fs.readFileSync(
   path.join(FIXTURES, "console-snippets.txt")).toString()
@@ -395,6 +397,37 @@ describe "system :: cli blackbox testing", ->
               }
             ])
             done()
+
+    describe "exit on issues found", ->
+      describe "when not set", ->
+        beforeEach -> process.chdir EXIT_ON_ISSUES
+
+        it "exits with zero status", (done) ->
+          cli.exec_err "a -w", (stdout, stderr, code) ->
+            expect(stderr).to.eql ""
+            expect(stdout).to.match /bad issue/
+            expect(code).to.eql 0
+            done()
+
+      describe "when set", ->
+        beforeEach -> process.chdir EXIT_ON_ISSUES
+
+        it "exits with non-zero status", (done) ->
+          cli.exec_err "a -w -e", (stdout, stderr, code) ->
+            expect(stderr).to.eql ""
+            expect(stdout).to.match /bad issue/
+            expect(code).to.eql 1
+            done()
+
+        describe "when no issues found", ->
+          beforeEach -> process.chdir EXIT_ON_ISSUES_NONE
+
+          it "exits with zero status", (done) ->
+            cli.exec_err "a -w -e", (stdout, stderr, code) ->
+              expect(stderr).to.eql ""
+              expect(stdout).to.eql ""
+              expect(code).to.eql 0
+              done()
 
     describe "filtering and checking for installed plugins", ->
       beforeEach -> process.chdir PLUGIN_CHECK_DIR

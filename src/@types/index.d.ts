@@ -270,7 +270,8 @@ declare namespace vile {
     combine?            : string;
     config?             : string;
     decorations         : boolean;
-    dontPostProcess?    : boolean
+    dontPostProcess?    : boolean;
+    exitOnIssues        : boolean;
     format?             : string;
     gitDiff             : string;
     issueLog            : string;

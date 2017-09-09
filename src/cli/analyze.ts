@@ -5,6 +5,7 @@ import config = require("./../config")
 import git = require("./../git")
 import logger = require("./../logger")
 import plugin = require("./../plugin")
+import util = require("./../util")
 import upload = require("./analyze/upload")
 import log_helper = require("./analyze/log_helper")
 import plugin_map = require("./init/map")
@@ -27,6 +28,11 @@ const add_default_ignores = (
     _.concat(base_ignore, DEFAULT_IGNORE_DIRS))
   _.set(vile_yml, "vile.ignore", new_ignore)
 }
+
+const has_non_info_issues = (issues : vile.IssueList) : boolean =>
+  _.filter(issues, (issue : vile.Issue) =>
+    _.some(util.displayable_issues, (t) => t == issue.type)
+  ).length > 0
 
 const analyze = (
   opts : vile.CLIApp,
@@ -72,9 +78,14 @@ const analyze = (
           !opts.decorations)
       }
 
-      return opts.upload ?
-        upload.commit(issues, cli_time, opts) :
-        Bluebird.resolve()
+      if (opts.upload) {
+        return upload.commit(issues, cli_time, opts)
+      } else {
+        if (opts.exitOnIssues && has_non_info_issues(issues)) {
+          process.exit(1)
+        }
+        return Bluebird.resolve()
+      }
     })
     .catch(log_and_exit)
 
@@ -152,6 +163,8 @@ const create = (cli : commander.CommanderStatic) =>
             "specify the log level (info=default|warn|error)")
     .option("-i, --issue-log [level]",
             "specify issue types to log (ex: '-i security,dependency')")
+    .option("-e, --exit-on-issues", "exit with bad code " +
+            "if non-info issues exist")
     .option("-q, --quiet", "log nothing")
     .option("-n, --no-decorations", "disable color and progress bar")
     .action(action)
