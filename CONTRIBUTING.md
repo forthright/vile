@@ -22,6 +22,8 @@ All you need to do is submit a [Pull Request](https://github.com/forthright/vile
 1. Please consider tests and code quality before submitting.
 2. Please try to keep commits clean, atomic and well explained (for others).
 
+Note: If you prefer to submit a `patch` then please [open an issue](https://github.com/forthright/vile/issues/new) and link to it.
+
 ## Developing
 
 Vile is centered around the use of [plugins](https://docs.vile.io/#creating-a-plugin) that generate [issues](https://docs.vile.io/interfaces/_src__types_index_d_.vile.issue.html).
