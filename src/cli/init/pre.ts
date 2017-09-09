@@ -6,25 +6,6 @@ import Bluebird = require("bluebird")
 // HACK: type defs not right?
 const fs_writeFile : any = Bluebird.promisify(fs.writeFile)
 
-const welcome_confirm = (
-  config : vile.YMLConfig
-) : Bluebird<vile.YMLConfig> =>
-  (inquirer as any).prompt([
-    {
-      default: true,
-      message: "Hello friend. Please follow the prompts and " +
-        "answer as best you can.",
-      name: "ok_to_proceed",
-      type: "confirm"
-    }
-  ]).then((answers : any) => {
-    if (answers.ok_to_proceed) {
-      return Bluebird.resolve(config)
-    } else {
-      return Bluebird.resolve(process.exit(0))
-    }
-  })
-
 const check_for_existing_config = (
   config : vile.YMLConfig
 ) : Bluebird<vile.YMLConfig> => {
@@ -74,7 +55,6 @@ const check_for_existing_package_json = (
 
 export = {
   init: (config : vile.YMLConfig) =>
-    welcome_confirm(config)
-    .then(check_for_existing_config)
+    check_for_existing_config(config)
     .then(check_for_existing_package_json)
 }

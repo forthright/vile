@@ -95,7 +95,6 @@ describe "system :: cli blackbox testing", ->
 
       it "can go through a default sequence", (done) ->
         answers = [
-          [ /hello friend/i, [] ]
           [ /frameworks and tooling/i, [] ]
           [ /install required plugins/i, [ "n" ] ]
         ]
@@ -145,7 +144,6 @@ describe "system :: cli blackbox testing", ->
 
       it "has the expected directories ignore in .vile.yml", (done) ->
         answers = [
-          [ /hello friend/i, [] ]
           [ /frameworks and tooling/i, [] ]
           [
             /available plugins/,
@@ -206,7 +204,6 @@ describe "system :: cli blackbox testing", ->
 
       it "has the expected directories ignore in .vile.yml", (done) ->
         answers = [
-          [ /hello friend/i, [] ]
           [ /found an existing \.vile\.yml/i, [ "y" ] ]
           [
             /any extra directories/i,
