@@ -55,6 +55,12 @@ ferret:
 
 # -------- Node.js --------
 
+depcheck:
+  config:
+    ignore_deps:
+      - "@types/**"
+      - "ferret-**"
+
 # -------- PHP --------
 
 # -------- Haskell --------

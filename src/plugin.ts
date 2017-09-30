@@ -25,7 +25,6 @@ const WORKER_MODULE = path.join(__dirname, "plugin", "worker.js")
 const BUNDLED_PLUGINS = [
   "ferret-comment",
   "ferret-coverage",
-  "ferret-ncu",
   "ferret-stat"
 ]
 
@@ -33,7 +32,7 @@ const is_plugin = (name : string) : boolean =>
   !!/^ferret-/.test(name)
 
 const valid_plugin = (api : ferret.Plugin) : boolean =>
-  !!(api && typeof api.exec == "function")
+  !!(api && (typeof api.exec == "function" || api.meta == true))
 
 const is_array = (list : any[]) : boolean =>
   !!(list && typeof list.forEach == "function")
@@ -178,7 +177,11 @@ const exec_plugin = (
   ) => {
     const api : ferret.Plugin = plugin_require.locate(name)
 
-    if (!valid_plugin(api)) reject(`invalid plugin API: ${name}`)
+    if (!valid_plugin(api)) {
+      return reject(`invalid plugin API: ${name}`)
+    }
+
+    if (api.meta) return resolve([])
 
     const data : any = api.exec(config)
 

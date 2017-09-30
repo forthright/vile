@@ -201,9 +201,11 @@ declare namespace ferret {
   //
 
   export interface Plugin {
-    context : Context;
+    context? : Context;
 
-    exec : (
+    meta? : true;
+
+    exec? : (
       config : PluginConfig
     ) => DataList | Bluebird<DataList>;
   }

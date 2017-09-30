@@ -111,8 +111,9 @@ const ready_to_analyze = (config : ferret.YMLConfig) => {
   console.log("  * Learn how to upload data to ferret.io:")
   console.log("    https://docs.ferret.io/#analyzing-your-project")
   console.log()
-  console.log("  * Choose and configure more advanced plugins:")
-  console.log("    https://ferret.io/plugins")
+  console.log("  * Choose and configure more advanced plugins" +
+    " and meta-packages:")
+  console.log("    https://docs.ferretci.com/lang")
   console.log()
   console.log(chalk.green("Happy Punishing!"))
 }
