@@ -111,8 +111,9 @@ const ready_to_analyze = (config : vile.YMLConfig) => {
   console.log("  * Learn how to upload data to vile.io:")
   console.log("    https://docs.vile.io/#analyzing-your-project")
   console.log()
-  console.log("  * Choose and configure more advanced plugins:")
-  console.log("    https://vile.io/plugins")
+  console.log("  * Choose and configure more advanced plugins" +
+    " and meta-packages:")
+  console.log("    https://docs.vile.io/#language-support")
   console.log()
   console.log(chalk.green("Happy Punishing!"))
 }

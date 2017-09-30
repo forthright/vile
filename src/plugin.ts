@@ -30,7 +30,7 @@ const is_plugin = (name : string) : boolean =>
   !!/^vile-/.test(name)
 
 const valid_plugin = (api : vile.Plugin) : boolean =>
-  !!(api && typeof api.punish == "function")
+  !!(api && (typeof api.punish == "function" || api.meta == true))
 
 const is_array = (list : any[]) : boolean =>
   !!(list && typeof list.forEach == "function")
@@ -206,7 +206,11 @@ const exec_plugin = (
   ) => {
     const api : vile.Plugin = require_plugin(name)
 
-    if (!valid_plugin(api)) reject(`invalid plugin API: ${name}`)
+    if (!valid_plugin(api)) {
+      return reject(`invalid plugin API: ${name}`)
+    }
+
+    if (api.meta) return resolve([])
 
     const issues : any = api.punish(config)
 
