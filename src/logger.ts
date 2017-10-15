@@ -24,7 +24,8 @@ const update_spinner = (text : string) : void => {
 
 const level = (name : string) : void => {
   process.env.VILE_LOG_LEVEL = name
-  log.setLevel(name)
+  // HACK: weird dual type (num/string) issue with log.LogLevel
+  log.setLevel(<any>name)
 }
 
 const enable = (
