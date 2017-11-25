@@ -173,7 +173,8 @@ declare namespace vile {
   //
 
   export interface Plugin {
-    punish : (
+    meta? : true;
+    punish? : (
       config : PluginConfig
     ) => IssueList | Bluebird<IssueList>;
   }

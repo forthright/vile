@@ -1,5 +1,11 @@
+<h3 align="center">
+  <p align="center">
+    <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/32079868-9ab53e9e-ba7a-11e7-817f-c6a46038db63.png" alt="the Vile logo" />
+  </p>
+  Vile
+</h3>
 <p align="center">
-<img style="background: none" src="https://user-images.githubusercontent.com/93340/29194760-20c18b1e-7df9-11e7-94aa-47c0302b1b6b.png" alt="Vile Logo">
+  A code quality tool for any language or platform.
 </p>
 
 <p align="center">
@@ -28,12 +34,9 @@
 
 ## Overview
 
-`vile` is a general purpose code quality tool for any language or
-platform that statically analyzes your software project and its dependencies.
-
-Along with its [hosted service](https://vile.io) it provides a highly
-flexible platform for continuous software analysis
-that integrates directly into your CI process and development workflow.
+`vile` is a software analysis library and [hosted service](https://vile.io) that
+enables developers and organizations to analyze, maintain, and
+improve their software projects over time.
 
 ## Demo
 
@@ -78,7 +81,7 @@ A simple install and setup:
 
 Please see [docs.vile.io](https://docs.vile.io) for more detailed info.
 
-## Plugins
+## Language Support
 
 The core `vile` package comes with a general set of plugins that support basic multi-language analysis.
 
@@ -86,12 +89,38 @@ To analyze your code further, such as tracking outdated RubyGems, plugging in
 your favourite linter, tracking code complexity, or checking for vulnerabilities,
 you need to install extra [plugins](https://vile.io/plugins) first.
 
-## Common Use Cases
+You can also install language specific [meta-plugins](https://docs.vile.io/#language-support) that
+provide all the plugins you need to fully analyze your code.
+
+## FAQ
+
+**Why Node.js/TypeScript?**
+
+While JavaScript is certainly not the best language, Node+npm+TypeScript provides a reasonable
+and robust (typed) way to write a decently fast, cross-OS analysis library with concurrent plugin execution.
+
+**Can I use Vile without Node.js?**
+
+Not yet. Ideally there will be many language implementations & native plugins that all ascribe to
+the same metadata spec that Vile's [web service](https://vile.io) API accepts.
+
+**What are some common use cases for the CLI?**
 
 * Run `vile a` locally to analyze your code and print any issues or data
 * Run `vile a -u` on every build server commit to continuously analyze your code
 * Run `vile a -d -p lint-plugin my/file.ext` to run a plugin on a specific file
 * Run `vile a -d -e -p lint-plugin,security-plugin` to run certain lint checks during a build
+
+## Project Goals
+
+* :rainbow: Provide an open and extensible platform for any type of software analysis
+* :seedling: Help maintain and foster an open and inclusive community around code quality
+* :vhs: Distill various types of software analysis into a language independent
+data format
+* :tada: Support and complement existing tooling (linters, complexity tools, etc.)
+* :nut_and_bolt: Create new libraries and plugins that backfill language support (ex: [synt](https://github.com/brentlintner/synt))
+
+For more info on why `vile` was created checkout our post on [Medium](https://medium.com/forthright/building-better-habits-for-the-greater-good-6a10de5c679a).
 
 ## Contributing
 
@@ -112,14 +141,3 @@ This project uses [Semver](http://semver.org).
 ## Maintainers
 
 - Brent Lintner - [@brentlintner](http://github.com/brentlintner)
-
-## Project Goals
-
-* :rainbow: Provide an open and extensible platform for any type of software analysis
-* :seedling: Help maintain and foster an open and inclusive community around code quality
-* :vhs: Distill various types of software analysis into a language independent
-data format
-* :tada: Support and complement existing tooling (linters, complexity tools, etc.)
-* :nut_and_bolt: Create new libraries and plugins that backfill language support (ex: [synt](https://github.com/brentlintner/synt))
-
-For more info on why `vile` was created checkout our post on [Medium](https://medium.com/forthright/building-better-habits-for-the-greater-good-6a10de5c679a).

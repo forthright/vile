@@ -6,29 +6,45 @@
 2. [Installation](#installation)
 3. [Setup](#setup)
 4. [Analyzing Your Project](#analyzing-your-project)
-5. [Language Support](#language-support)
-  * [JavaScript](#javascript)
-  * [Flow](#flow)
-  * [JSX](#jsx)
-  * [Non-Standard JS](#non-standard-js)
-  * [Ruby](#ruby)
-  * [Rails](#rails)
-  * [Haskell](#haskell)
-6. [Setting Up Continuous Analysis](#setting-up-continuous-analysis)
-  * [CircleCI](#circleci)
-  * [AppVeyor](#appveyor)
-  * [TravisCI](#travisci)
-  * [Codeship](#codeship)
-7. [Configuration](#configuration)
-8. [Getting New Releases](#getting-new-releases)
-9. [Editor Integration](#editor-integration)
-  * [Vim](#vim)
-10. [Library Integration](#library-integration)
-10. [Creating a Plugin](#creating-a-plugin)
+5. [Setting Up Continuous Analysis](#setting-up-continuous-analysis)
+    * [CircleCI](#circleci)
+    * [AppVeyor](#appveyor)
+    * [TravisCI](#travisci)
+    * [Codeship](#codeship)
+6. [Language Support](#language-support)
+    * [Ruby](#ruby)
+    * [JavaScript](#javascript)
+    * [TypeScript](#typescript)
+    * [CoffeeScript](#coffeescript)
+    * [Haskell](#haskell)
+    * [Swift](#swift)
+    * [PHP](#php)
+    * [Python](#python)
+    * [Rust](#rust)
+    * [Go](#go)
+    * [Java](#java)
+    * [Scala](#scala)
+    * [Kotlin](#kotlin)
+    * [Clojure](#clojure)
+    * [C](#c)
+    * [C++](#c-)
+    * [C#](#c-sharp)
+    * [Objective-C](#objective-c)
+    * [Crystal](#crystal)
+    * [Elixir](#elixir)
+7. [Source Control Support](#source-control-support)
+    * [Git](#git)
+    * [Other SCMs](#other-scms)
+8. [Configuration](#configuration)
+9. [Getting New Releases](#getting-new-releases)
+10. [Editor Integration](#editor-integration)
+    * [Vim](#vim)
+11. [Library Integration](#library-integration)
+12. [Creating a Plugin](#creating-a-plugin)
 
 ## Requirements
 
-- [Node.js](http://nodejs.org)
+- [Node.js](https://nodejs.org)
 
 ## Installation
 
@@ -57,93 +73,6 @@ export VILE_TOKEN=my-all-token
 export VILE_PROJECT=my-project-name
 
 vile analyze -u
-```
-
-## Language Support
-
-The core `vile` package comes with a general set of plugins that support basic multi language analysis.
-
-To analyze your code further, such as tracking outdated RubyGems, plugging in
-your favourite linter, tracking code complexity, or checking for vulnerabilities,
-you need to install extra [plugins](https://vile.io/plugins) first.
-
-See also below for tips and known caveats for various languages and frameworks.
-
-### JavaScript
-
-For an everyday JavaScript (or Node.js) project:
-
-    npm i -D vile vile-synt vile-git vile-escomplex vile-nsp
-
-### Flow
-
-There is currently limited support for Flow using non-core plugins.
-Some plugins may work, and others (that specifically parse JS) may fail.
-
-For example [vile-synt](https://github.com/forthright/vile-synt) currently does not work ([yet](https://github.com/brentlintner/synt/issues/99)).
-
-### JSX
-
-Just like Flow there is limited support.
-
-A good workaround is to ignore all `.jsx` files
-and also any `.js` files with JSX code in them.
-
-For example, with a plugin like [vile-escomplex](https://github.com/forthright/vile-escomplex):
-
-```yaml
-escomplex:
-  ignore:
-    - "*.jsx"
-    - path/to/jsx
-```
-
-### Non-Standard JS
-
-If you are using EMCAScript Stage-3 and below proposals,
-some plugins might not work out of the box or just yet.
-
-A good workaround is to map `lib` data to `src` using the CLI's
-`-x src:lib` option, while also ignoring `src` for the specific plugins:
-
-```yaml
-synt:
-  ignore: src
-escomplex:
-  ignore: src
-```
-
-### Ruby
-
-A basic Ruby project example (using [Bundler](http://bundler.io)):
-
-```sh
-npm i -D vile vile-git vile-rubycritic vile-rubocop vile-sass-lint vile-bundler-audit vile-bundler-outdated
-
-# you can also add these to your Gemfile
-gem install rubocop rubycritic bundler bundler-audit
-
-# depending on your setup, you may need to use `bundle exec`
-bundle exec vile analyze
-```
-
-Note: Some plugins don't support Vile's allow/ignore out of the box.
-
-For example, [vile-rubycritic](https://github.com/forthright/vile-rubycritic) requires
-you set specific `allow` paths to avoid traversing `node_modules`.
-
-The same goes for [vile-rubocop](https://github.com/forthright/vile-rubocop#ignoring-files).
-
-### Rails
-
-For an in depth article about using Rails + Vile checkout [Continuous Analysis For Your Rails Project Using Vile and CircleCI](https://medium.com/forthright/continuous-analysis-for-your-rails-project-using-vile-and-circleci-4fb077378ab6).
-
-### Haskell
-
-Depending on your setup and if you are using sandboxes, you may need to use `cabal exec`:
-
-```sh
-cabal exec -- vile analyze
 ```
 
 ## Setting Up Continuous Analysis
@@ -248,6 +177,82 @@ If you run into issues reporting `churn` or generating `git` data, you may need 
 prior to analyzing:
 
     git checkout -f $CI_BRANCH
+
+## Language Support
+
+The core `vile` package comes with a general set of plugins that support basic multi language analysis.
+
+To analyze your code further, such as tracking outdated RubyGems, plugging in
+your favourite linter, tracking code complexity, or checking for vulnerabilities,
+you need to first install extra [plugins](https://vile.io/plugins), or install
+your language's repsective meta plugin:
+
+<table>
+  <tr>
+    <th width="300">Language</th>
+    <th width="600">Repository</th>
+  </tr>
+  <tr>
+    <td>ID</td>
+    <td><a id="ID" href="https://github.com/forthright/vile-ID">https://github.com/forthright/vile-ID</a></td>
+  </tr>
+  <tr>
+    <td>ID</td>
+    <td><a id="ID" href="https://github.com/forthright/vile-ID">https://github.com/forthright/vile-ID</a></td>
+  </tr>
+  <tr>
+    <td>ID</td>
+    <td><a id="ID" href="https://github.com/forthright/vile-ID">https://github.com/forthright/vile-ID</a></td>
+  </tr>
+  <tr>
+    <td>ID</td>
+    <td><a id="ID" href="https://github.com/forthright/vile-ID">https://github.com/forthright/vile-ID</a></td>
+  </tr>
+  <tr>
+    <td>ID</td>
+    <td><a id="ID" href="https://github.com/forthright/vile-ID">https://github.com/forthright/vile-ID</a></td>
+  </tr>
+  <tr>
+    <td>ID</td>
+    <td><a id="ID" href="https://github.com/forthright/vile-ID">https://github.com/forthright/vile-ID</a></td>
+  </tr>
+  <tr>
+    <td>ID</td>
+    <td><a id="ID" href="https://github.com/forthright/vile-ID">https://github.com/forthright/vile-ID</a></td>
+  </tr>
+  <tr>
+    <td>ID</td>
+    <td><a id="ID" href="https://github.com/forthright/vile-ID">https://github.com/forthright/vile-ID</a></td>
+  </tr>
+  <tr>
+    <td>ID</td>
+    <td><a id="ID" href="https://github.com/forthright/vile-ID">https://github.com/forthright/vile-ID</a></td>
+  </tr>
+</table>
+
+### Haskell
+
+See the [vile-haskell](https://github.com/forthright/vile-haskell) package.
+
+Depending on your setup and if you are using sandboxes, you may need to use `cabal exec`:
+
+```sh
+cabal exec -- vile analyze
+```
+
+## Source Control Support
+
+As long as you have a plugin that generates `vile.SCM` data then you are set.
+
+### Git
+
+Use [vile-git](https://github.com/forthright/vile-git).
+
+### Other SCMs
+
+Currently `git` is the only type of source control a plugin has been written for.
+
+Plugins that support mercurial, svn and others are a TODO!
 
 ## Configuration
 
