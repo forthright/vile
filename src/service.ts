@@ -70,7 +70,7 @@ const log_summary = (
   post_json : vile.Service.CommitStatus
 ) => {
   const score : number = _.get(post_json, "score", 100)
-  const files : vile.Service.CommitStatusFile[][] = _.get(
+  const files : vile.Service.CommitStatusFile[] = _.get(
     post_json, "files", [])
   const time : number = _.get(post_json, "time", 0)
   const url : string = _.get(post_json, "url", "")

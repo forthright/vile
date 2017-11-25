@@ -1,7 +1,9 @@
 import _ = require("lodash")
-import chalk = require("chalk")
 import log = require("loglevel")
 import ora = require("ora")
+
+// HACK: types fail lookup when using import
+const chalk = require("chalk")
 
 let enable_colors : boolean = false
 let allow_issue_types : vile.IssueType.All[] = []

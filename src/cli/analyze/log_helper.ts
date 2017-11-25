@@ -1,7 +1,9 @@
 import _ = require("lodash")
-import chalk = require("chalk")
 import logger = require("./../../logger")
 import util = require("./../../util")
+
+// HACK: types fail lookup when using import
+const chalk = require("chalk")
 
 const log = logger.create("cli")
 

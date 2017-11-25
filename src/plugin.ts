@@ -1,6 +1,5 @@
 import path = require("path")
 import os = require("os")
-import chalk = require("chalk")
 import cluster = require("cluster")
 import Bluebird = require("bluebird")
 import fs = require("fs")
@@ -10,6 +9,8 @@ import linez = require("linez")
 import logger = require("./logger")
 import util = require("./util")
 import PluginNotFoundError = require("./plugin/plugin_not_found_error")
+
+const chalk = require("chalk")
 
 const fs_readdir = Bluebird.promisify(fs.readdir)
 
@@ -299,7 +300,8 @@ const execute_plugins = (
 // TODO: use Linez typings
 const into_snippet = (lines : any, start : number, end : number) =>
   _.reduce(lines, (snippets, line, num) => {
-    if ((num > (start - 4) && num < (end + 2))) {
+    const num_as_num = _.toNumber(num)
+    if (num_as_num > (start - 4) && num_as_num < (end + 2)) {
       snippets.push({
         ending: "\n", // normalize for web
         line: _.get(line, "number"),

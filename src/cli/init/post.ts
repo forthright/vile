@@ -1,8 +1,10 @@
 import fs = require("fs")
-import chalk = require("chalk")
 import yaml = require("js-yaml")
 import _ = require("lodash")
 import Bluebird = require("bluebird")
+
+// HACK: types fail lookup when using import
+const chalk = require("chalk")
 
 // HACK: type defs not right?
 const fs_writeFile : any = Bluebird.promisify(fs.writeFile)
