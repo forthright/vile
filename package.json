@@ -84,7 +84,7 @@
     "chai-as-promised": "^7.0.0",
     "coffee-script": "^1.12.6",
     "globstar": "^1.0.0",
-    "mimus": "^0.2.7",
+    "mimus": "^0.2.8",
     "mocha": "^4.0.1",
     "nyc": "^11.3.0",
     "release-it": "^5.0.0",

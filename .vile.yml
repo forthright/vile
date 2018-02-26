@@ -69,3 +69,4 @@ license:
       - map-stream   # MIT https://github.com/dominictarr/map-stream/blob/master/LICENCE
       - retire       # Apache-2.0 https://github.com/RetireJS/retire.js/blob/master/LICENSE.md
       - semver-utils # Apache-2.0 https://git.daplie.com/coolaj86/semver-utils/blob/master/package.json#L20
+      - base64-js    # MIT https://github.com/beatgammit/base64-js/blob/master/LICENSE
