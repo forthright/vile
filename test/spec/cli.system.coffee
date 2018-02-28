@@ -64,7 +64,7 @@ describe "system :: cli blackbox testing", ->
     process.chdir SYNC_DIR
 
     cli.exec "-h", (stdout) ->
-      expect(stdout).to.match /Usage\: vile \[options\] \[command\]/i
+      expect(stdout).to.match /Usage\: ferret \[options\] \[command\]/i
       done()
 
   describe "auth", ->
@@ -74,7 +74,7 @@ describe "system :: cli blackbox testing", ->
       cli.exec "auth", (stdout) ->
         expect(stdout).to.match /To authenticate, first go to/i
         expect(stdout).to.match /then:/i
-        expect(stdout).to.match /vile a \-u/i
+        expect(stdout).to.match /ferret a \-u/i
         done()
 
   describe "init", ->
@@ -83,7 +83,7 @@ describe "system :: cli blackbox testing", ->
         process.chdir CLI_INIT_EMPTY_DIR
 
       afterEach (done) ->
-        rimraf path.join(CLI_INIT_EMPTY_DIR, ".vile.yml"), (err) ->
+        rimraf path.join(CLI_INIT_EMPTY_DIR, ".ferret.yml"), (err) ->
           throw err if err
           rimraf path.join(CLI_INIT_EMPTY_DIR, "package.json"), (err) ->
             throw err if err
@@ -92,7 +92,7 @@ describe "system :: cli blackbox testing", ->
               fs.writeFileSync(
                 path.join(CLI_INIT_EMPTY_DIR, ".keep"), '', "utf-8")
               expect(fs.existsSync("package.json")).to.eql false
-              expect(fs.existsSync(".vile.yml")).to.eql false
+              expect(fs.existsSync(".ferret.yml")).to.eql false
               done()
 
       it "can go through a default sequence", (done) ->
@@ -116,15 +116,15 @@ describe "system :: cli blackbox testing", ->
           (stdout, stderr, code) ->
             expect(code).to.eql 0
             expect(fs.existsSync("package.json")).to.eql true
-            expect(fs.existsSync(".vile.yml")).to.eql true
-            expect(yml.safeLoad(fs.readFileSync(".vile.yml")))
-              .to.eql { vile: { allow: [], ignore: [] } }
-            expect(stdout).to.match /created: .vile.yml/i
+            expect(fs.existsSync(".ferret.yml")).to.eql true
+            expect(yml.safeLoad(fs.readFileSync(".ferret.yml")))
+              .to.eql { ferret: { allow: [], ignore: [] } }
+            expect(stdout).to.match /created: .ferret.yml/i
             expect(stdout).to
-              .match /npm install \-\-save\-dev vile/i
-            expect(stdout).to.match /vile\.io\/plugins/i
-            expect(stdout).to.match /docs\.vile\.io/i
-            expect(stdout).to.match /vile analyze/i
+              .match /npm install \-\-save\-dev ferret/i
+            expect(stdout).to.match /ferret\.io\/plugins/i
+            expect(stdout).to.match /docs\.ferret\.io/i
+            expect(stdout).to.match /ferret analyze/i
             done()
 
         return
@@ -134,17 +134,17 @@ describe "system :: cli blackbox testing", ->
         process.chdir CLI_INIT_LANGS_DIR
 
       afterEach (done) ->
-        rimraf path.join(CLI_INIT_LANGS_DIR, ".vile.yml"), (err) ->
+        rimraf path.join(CLI_INIT_LANGS_DIR, ".ferret.yml"), (err) ->
           throw err if err
           rimraf path.join(CLI_INIT_LANGS_DIR, "package.json"), (err) ->
             throw err if err
             rimraf path.join(CLI_INIT_LANGS_DIR, "node_modules"), (err) ->
               throw err if err
               expect(fs.existsSync("package.json")).to.eql false
-              expect(fs.existsSync(".vile.yml")).to.eql false
+              expect(fs.existsSync(".ferret.yml")).to.eql false
               done()
 
-      it "has the expected directories ignore in .vile.yml", (done) ->
+      it "has the expected directories ignore in .ferret.yml", (done) ->
         answers = [
           [ /frameworks and tooling/i, [] ]
           [
@@ -174,12 +174,12 @@ describe "system :: cli blackbox testing", ->
           (stdout, stderr, code) ->
             expect(code).to.eql 0
             expect(fs.existsSync("package.json")).to.eql true
-            expect(fs.existsSync(".vile.yml")).to.eql true
-            expect(stdout).to.match /created: .vile.yml/i
-            expect(stdout).to.match /vile-nsp/i
-            expect(stdout).to.match /vile-rubocop/i
+            expect(fs.existsSync(".ferret.yml")).to.eql true
+            expect(stdout).to.match /created: .ferret.yml/i
+            expect(stdout).to.match /ferret-nsp/i
+            expect(stdout).to.match /ferret-rubocop/i
             expect(stdout).to
-              .match /npm install \-\-save\-dev vile/i
+              .match /npm install \-\-save\-dev ferret/i
             expect(stdout).to
               .match /gem install rubocop/i
             expect(stdout).to.match /happy punishing/i
@@ -187,26 +187,26 @@ describe "system :: cli blackbox testing", ->
 
         return
 
-    describe "with pre-existing ignorables and a .vile.yml", ->
+    describe "with pre-existing ignorables and a .ferret.yml", ->
       beforeEach ->
         process.chdir CLI_INIT_IGNORES_DIR
 
       afterEach (done) ->
-        rimraf path.join(CLI_INIT_IGNORES_DIR, ".vile.yml"), (err) ->
+        rimraf path.join(CLI_INIT_IGNORES_DIR, ".ferret.yml"), (err) ->
           throw err if err
           rimraf path.join(CLI_INIT_IGNORES_DIR, "package.json"), (err) ->
             throw err if err
             rimraf path.join(CLI_INIT_IGNORES_DIR, "node_modules"), (err) ->
               throw err if err
               expect(fs.existsSync("package.json")).to.eql false
-              expect(fs.existsSync(".vile.yml")).to.eql false
+              expect(fs.existsSync(".ferret.yml")).to.eql false
               fs.writeFileSync(
-                path.join(CLI_INIT_IGNORES_DIR, ".vile.yml"), '', "utf-8")
+                path.join(CLI_INIT_IGNORES_DIR, ".ferret.yml"), '', "utf-8")
               done()
 
-      it "has the expected directories ignore in .vile.yml", (done) ->
+      it "has the expected directories ignore in .ferret.yml", (done) ->
         answers = [
-          [ /found an existing \.vile\.yml/i, [ "y" ] ]
+          [ /found an existing \.ferret\.yml/i, [ "y" ] ]
           [
             /any extra directories/i,
             [
@@ -240,15 +240,14 @@ describe "system :: cli blackbox testing", ->
             setTimeout ->
               expect(code).to.eql 0
               expect(fs.existsSync("package.json")).to.eql true
-              expect(fs.existsSync(".vile.yml")).to.eql true
-              expect(yml.safeLoad(fs.readFileSync(".vile.yml")))
-                .to.eql { vile: { allow: [], ignore: [ ".build" ] } }
-              expect(stdout).to.match /created: .vile.yml/i
+              expect(fs.existsSync(".ferret.yml")).to.eql true
+              expect(yml.safeLoad(fs.readFileSync(".ferret.yml")))
+                .to.eql { ferret: { allow: [], ignore: [ ".build" ] } }
+              expect(stdout).to.match /created: .ferret.yml/i
               expect(stdout).to
-                .match /npm install \-\-save\-dev vile/i
-              expect(stdout).to.match /vile analyze/i
-              expect(stdout).to.match /docs\.vile\.io/i
-              expect(stdout).to.match /vile\.io\/plugins/i
+                .match /npm install \-\-save\-dev ferreferret              expect(stdout).to.match /ferret analyze/i
+              expect(stdout).to.match /docs\.ferretci\.com/i
+              expect(stdout).to.match /ferretci\.com\/plugins/i
               expect(stdout).to.match /happy punishing/i
               done()
             , 200
@@ -300,9 +299,9 @@ describe "system :: cli blackbox testing", ->
             .match /warn stat File extension \'json\' is not supported/
           expect(stdout).to.eql "" +
             "info stat lib/test.js (0.334KB): 19 " +
-            "lines, 19 loc, ? comments (language: JavaScript) (vile-stat)\n" +
+            "lines, 19 loc, ? comments (language: JavaScript) (ferret-stat)\n" +
             "info stat package.json (0.024KB): ? lines, ? " +
-            "loc, ? comments (language: JSON) (vile-stat)\n"
+            "loc, ? comments (language: JSON) (ferret-stat)\n"
           expect(code).to.eql 0
           done()
 
@@ -313,7 +312,7 @@ describe "system :: cli blackbox testing", ->
         cli.exec_err "analyze -w", (stdout, stderr, code) ->
           expect(stderr).to.eql ""
           expect(stdout).to.match(
-            /warn warning test \(vile-test-sync-plugin\)/)
+            /warn warning test \(ferret-test-sync-plugin\)/)
           expect(code).to.eql 0
           done()
 
@@ -323,7 +322,7 @@ describe "system :: cli blackbox testing", ->
             issues = JSON.parse(stdout)
             expect(issues.length).to.eql 2
             expect(issues[0]).to.eql {
-              type: "ok", path: ".vile.yml"
+              type: "ok", path: ".ferret.yml"
             }
             expect(issues[1]).to.eql {
               message: "test",
@@ -353,7 +352,7 @@ describe "system :: cli blackbox testing", ->
         cli.exec_err "analyze -w", (stdout, stderr, code) ->
           expect(stderr).to.eql ""
           expect(stdout).to.match(
-            /info test test \(vile-test-async-plugin\)/)
+            /info test test \(ferret-test-async-plugin\)/)
           expect(code).to.eql 0
           done()
 
@@ -363,7 +362,7 @@ describe "system :: cli blackbox testing", ->
             issues = JSON.parse(stdout)
             expect(issues.length).to.eql 3
             expect(issues[0]).to.eql {
-              type: "ok", path: ".vile.yml"
+              type: "ok", path: ".ferret.yml"
             }
             expect(issues[1]).to.eql {
               message: "test",
@@ -539,7 +538,7 @@ describe "system :: cli blackbox testing", ->
             ])
             done()
 
-      describe "via .vile.yml", ->
+      describe "via .ferret.yml", ->
         beforeEach -> process.chdir FILTER_ALLOW_DIR
 
         it "returns a list of filtered issues", (done) ->
@@ -622,7 +621,7 @@ describe "system :: cli blackbox testing", ->
           expect(stderr).to.match /unhandled Promise\.reject/ig
           expect(stderr).to.match /Error: huzzah!/ig
           expect(stderr).to
-            .match new RegExp("vile-test-err-plugin-reject-plugin " +
+            .match new RegExp("ferret-test-err-plugin-reject-plugin " +
             "worker exited", "ig")
           expect(code).to.eql 1
           done()
@@ -635,7 +634,7 @@ describe "system :: cli blackbox testing", ->
           expect(stderr).to.match /Error: huzzah!/ig
           expect(stderr).to.match /at Object\.punish/ig
           expect(stderr).to
-            .match new RegExp("vile-test-err-plugin-exception-plugin " +
+            .match new RegExp("ferret-test-err-plugin-exception-plugin " +
             "worker exited", "ig")
           expect(code).to.eql 1
           done()
@@ -647,7 +646,7 @@ describe "system :: cli blackbox testing", ->
         cli.exec_err "a -w -n", (stdout, stderr, code) ->
           expect(stderr).to.match /invalid plugin API/ig
           expect(stderr).to
-            .match new RegExp("vile-test-err-plugin-bad-api-plugin " +
+            .match new RegExp("ferret-test-err-plugin-bad-api-plugin " +
             "worker exited", "ig")
           expect(code).to.eql 1
           done()
@@ -660,7 +659,7 @@ describe "system :: cli blackbox testing", ->
           expect(stderr).to.match /oh no \(died on require\)/ig
           expect(stderr).to.match /error worker/ig
           expect(stderr).to
-            .match new RegExp("vile-test-err-plugin-bad-require-plugin " +
+            .match new RegExp("ferret-test-err-plugin-bad-require-plugin " +
             "worker exited", "ig")
           expect(code).to.eql 1
           done()
@@ -674,9 +673,9 @@ describe "system :: cli blackbox testing", ->
           expect(stderr).to.match /error worker/ig
           expect(stderr).to
             .match new RegExp("PluginNotFoundError: Cannot find module " +
-            "\'vile-test-err-plugin-module-dne-plugin\'", "ig")
+            "\'ferret-test-err-plugin-module-dne-plugin\'", "ig")
           expect(stderr).to
-            .match new RegExp("vile-test-err-plugin-module-dne-plugin " +
+            .match new RegExp("ferret-test-err-plugin-module-dne-plugin " +
             "worker exited", "ig")
           expect(code).to.eql 1
           done()

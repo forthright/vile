@@ -19,14 +19,14 @@ describe "config", ->
       mimus.set config, "conf", {}
 
     describe "by default", ->
-      filepath = ".vile.yml"
+      filepath = ".ferret.yml"
 
       beforeEach ->
         fs.readFileSync
           .withArgs filepath, "utf-8"
-          .returns "vile:\n  ignore:\n    - foo"
+          .returns "ferret:\n  ignore:\n    - foo"
 
-      describe "when .vile.yml does not exist", ->
+      describe "when .ferret.yml does not exist", ->
         beforeEach ->
           fs.existsSync
             .withArgs filepath
@@ -36,20 +36,20 @@ describe "config", ->
           config.load()
           expect(config.get()).to.eql {}
 
-      describe "when .vile.yml exists", ->
+      describe "when .ferret.yml exists", ->
         beforeEach ->
           fs.existsSync
             .withArgs filepath
             .returns true
 
-        it "can load config from a .vile.yml file", ->
+        it "can load config from a .ferret.yml file", ->
           expect(config.load())
-            .to.eql vile: ignore: [ "foo" ]
+            .to.eql ferret: ignore: [ "foo" ]
 
         it "sets the config internally", ->
           config.load()
           expect(config.get())
-            .to.eql vile: ignore: [ "foo" ]
+            .to.eql ferret: ignore: [ "foo" ]
 
     describe "custom file path", ->
       filepath = "foobar.yml"
@@ -61,16 +61,16 @@ describe "config", ->
             .returns true
           fs.readFileSync
             .withArgs filepath, "utf-8"
-            .returns "vile:\n  ignore:\n    - foo"
+            .returns "ferret:\n  ignore:\n    - foo"
 
         it "can load config from a file", ->
           expect(config.load(filepath))
-            .to.eql vile: ignore: [ "foo" ]
+            .to.eql ferret: ignore: [ "foo" ]
 
         it "sets the config internally", ->
           config.load(filepath)
           expect(config.get())
-            .to.eql vile: ignore: [ "foo" ]
+            .to.eql ferret: ignore: [ "foo" ]
 
       describe "when it does not exist", ->
         beforeEach ->
@@ -86,7 +86,7 @@ describe "config", ->
           ).to.throw()
 
     describe "when an exception is thrown during load", ->
-      filepath = ".vile.yml"
+      filepath = ".ferret.yml"
       err = new Error "foo"
 
       beforeEach ->
@@ -101,15 +101,15 @@ describe "config", ->
           config.load filepath
         catch e
           expect(e).to.be.an.instanceof ConfigParseError
-          expect(e.toString()).to.match /\.vile\.yml/
+          expect(e.toString()).to.match /\.ferret\.yml/
           expect(e.toString()).to.match /Error: foo/
 
         expect(config.get()).to.eql {}
 
   describe ".get_auth", ->
     beforeEach ->
-      process.env.VILE_TOKEN = "test-token"
-      process.env.VILE_PROJECT = "test-project"
+      process.env.FERRET_TOKEN = "test-token"
+      process.env.FERRET_PROJECT = "test-project"
 
     it "sets auth token data based on ENV", ->
       expect(config.get_auth())

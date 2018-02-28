@@ -1,0 +1,86 @@
+ferret:
+  plugins:
+    - brakeman
+    - eclint
+    - nsp
+    - rails-best-practices
+    - sass-lint
+    - slim-lint
+  ignore:
+    - .ackrc
+    - app/assets/images
+    - app/assets/stylesheets/highlight.css
+    - app/assets/videos
+    - appveyor.yml
+    - circle.yml
+    - config.ru
+    - config/initializers/devise.rb
+    - config/rails_best_practises.yml
+    - Gemfile.lock
+    - app/assets/images/**
+    - public
+    - tmp/**
+    - .git
+    - .gitattributes
+    - .keep
+    - tags
+    - .brakeman.yml
+    - .ctags
+    - .editorconfig
+    - .env
+    - .eslintignore
+    - .eslintrc
+    - .fs-lint
+    - .gitignore
+    - .jshintignore
+    - .jshintrc
+    - .npmrc
+    - Rakefile
+    - .rcignore
+    - .reek
+    - .release.json
+    - .rspec
+    - .rubocop.yml
+    - .ruby-version
+    - .sass-lint.yml
+    - .slim-lint.yml
+    - .ferret.yml
+    - LICENSE
+    - Procfile
+    - yarn.lock
+
+depcheck:
+  config:
+    ignore_dirs:
+      - tmp
+      - app
+
+eclint:
+  ignore:
+    - app/assets
+
+bundler-audit:
+  config:
+    update_db: true
+
+stat:
+  ignore:
+    - README.md
+    - package.json
+    - spec
+    - lib/**/*.rake
+    - app/views/**/*.slim
+    - config
+
+rails-best-practices:
+  config:
+    spec: true
+    test: true
+    features: true
+
+rubycritic:
+  allow:
+    - app
+    - lib
+  config:
+    rating: "A"

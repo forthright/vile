@@ -4,7 +4,7 @@ import config = require("./config")
 import plugin = require("./plugin")
 import logger = require("./logger")
 
-const types : vile.Module.UtilKeyTypes = {
+const types : ferret.Module.UtilKeyTypes = {
   CHURN: util.CHURN,
   COMP:  util.COMP,
   COV:   util.COV,
@@ -20,7 +20,7 @@ const types : vile.Module.UtilKeyTypes = {
   WARN:  util.WARN
 }
 
-const library : vile.Module.Index = _.assign(types, {
+const library : ferret.Module.Index = _.assign(types, {
   allowed:      util.allowed,
   config,
   exec:         plugin.exec,

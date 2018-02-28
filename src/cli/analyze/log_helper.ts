@@ -10,9 +10,9 @@ const log = logger.create("cli")
 // HACK: weird TS bug when using custom types?
 const emphasize : any = require("emphasize")
 
-const humanize_line_char = (issue : vile.Issue) : string => {
-  const start : vile.IssueLine = _.get(issue, "where.start", {})
-  const end : vile.IssueLine = _.get(issue, "where.end", {})
+const humanize_line_char = (issue : ferret.Issue) : string => {
+  const start : ferret.IssueLine = _.get(issue, "where.start", {})
+  const end : ferret.IssueLine = _.get(issue, "where.end", {})
 
   const start_character : string = (
       typeof start.character == "number" || typeof start.character == "string"
@@ -26,9 +26,9 @@ const humanize_line_char = (issue : vile.Issue) : string => {
     `${start_character}${end_character}` : start_character
 }
 
-const humanize_line_num = (issue : vile.Issue) : string => {
-  const start : vile.IssueLine = _.get(issue, "where.start", {})
-  const end : vile.IssueLine = _.get(issue, "where.end", {})
+const humanize_line_num = (issue : ferret.Issue) : string => {
+  const start : ferret.IssueLine = _.get(issue, "where.start", {})
+  const end : ferret.IssueLine = _.get(issue, "where.end", {})
 
   const start_line : string = (
       typeof start.line == "number" || typeof start.line == "string"
@@ -43,12 +43,12 @@ const humanize_line_num = (issue : vile.Issue) : string => {
 }
 
 const to_console = (
-  issue : vile.Issue,
+  issue : ferret.Issue,
   format : string = "default"
 ) : string => {
   if (format == "syntastic") {
     const issue_type : string = issue.type
-    let start_info : vile.IssueLine
+    let start_info : ferret.IssueLine
     const synastic_type : string = _
       .some(util.errors, (name) => name == issue_type) ? "E" : "W"
 
@@ -86,7 +86,7 @@ const to_console = (
 }
 
 const to_console_duplicate = (
-  issue : vile.Issue
+  issue : ferret.Issue
 ) => {
   const files = _.chain(
     _.get(issue, "duplicate.locations", [])
@@ -95,15 +95,15 @@ const to_console_duplicate = (
 }
 
 const to_console_churn = (
-  issue : vile.Issue
+  issue : ferret.Issue
 ) => `${ issue.path }: ${ issue.churn }`
 
 const to_console_comp = (
-  issue : vile.Issue
+  issue : ferret.Issue
 ) => `${ issue.path }: ${ issue.complexity }`
 
 const to_console_scm = (
-  issue : vile.Issue
+  issue : ferret.Issue
 ) => {
   const date = _.get(issue, "commit.commit_date") ||
               _.get(issue, "commit.author_date")
@@ -112,7 +112,7 @@ const to_console_scm = (
 }
 
 const to_console_stat = (
-  issue : vile.Issue
+  issue : ferret.Issue
 ) => {
   const size = _.get(issue, "stat.size", "?")
   const loc = _.get(issue, "stat.loc", "?")
@@ -126,7 +126,7 @@ const to_console_stat = (
 }
 
 const to_console_dep = (
-  issue : vile.Issue
+  issue : ferret.Issue
 ) : string => {
   const name = _.get(issue, "dependency.name", "?")
   const current = _.get(issue, "dependency.current", "?")
@@ -135,16 +135,16 @@ const to_console_dep = (
 }
 
 const to_console_cov = (
-  issue : vile.Issue
+  issue : ferret.Issue
 ) : string => {
   const cov = _.get(issue, "coverage.total", "?")
   return `${ issue.path }: ${ cov }% lines covered`
 }
 
 const log_syntastic_applicable_messages = (
-  issues : vile.Issue[] = []
+  issues : ferret.Issue[] = []
 ) => {
-  issues.forEach((issue : vile.Issue, index : number) => {
+  issues.forEach((issue : ferret.Issue, index : number) => {
     const issue_type : string = issue.type
     if (_.some(util.displayable_issues, (t) => issue_type == t)) {
       console.log(to_console(issue, "syntastic"))
@@ -152,19 +152,19 @@ const log_syntastic_applicable_messages = (
   })
 }
 
-const lines_for = (snippets : vile.Snippet[]) : string[] => {
+const lines_for = (snippets : ferret.Snippet[]) : string[] => {
   const line_pad = _.toString(
     _.get(_.last(snippets), "line", "3")).length
 
-  return _.map(snippets, (snippet : vile.Snippet) =>
+  return _.map(snippets, (snippet : ferret.Snippet) =>
     `${_.padStart(snippet.line.toString(), line_pad)}: `
   )
 }
 
-const code_for = (snippets : vile.Snippet[]) : string =>
+const code_for = (snippets : ferret.Snippet[]) : string =>
   _.map(
     snippets,
-    (snippet : vile.Snippet) => snippet.text
+    (snippet : ferret.Snippet) => snippet.text
   ).join("\n")
 
 const log_snippet = (
@@ -195,7 +195,7 @@ const log_snippet = (
 }
 
 const to_console_snippet = (
-  issue : vile.Issue,
+  issue : ferret.Issue,
   nocolors : boolean
 ) : void => {
   if (_.isEmpty(issue.snippet) && _.isEmpty(issue.duplicate)) return
@@ -206,7 +206,7 @@ const to_console_snippet = (
   if (issue.type == util.DUPE) {
     _.each(
       _.get(issue, "duplicate.locations", []),
-      (loc : vile.DuplicateLocations) => {
+      (loc : ferret.DuplicateLocations) => {
         const code = code_for(loc.snippet)
         const lines = lines_for(loc.snippet)
         const loc_filepath : string = _.get(loc, "path", "")
@@ -225,15 +225,15 @@ const to_console_snippet = (
 }
 
 const log_issue_messages = (
-  issues : vile.Issue[] = [],
+  issues : ferret.Issue[] = [],
   showsnippets = false,
   nocolors = false
 ) => {
   const nlogs : {
-    [issue_type : string] : vile.LoggerInstance
+    [issue_type : string] : ferret.LoggerInstance
   } = {}
 
-  issues.forEach((issue : vile.Issue, index : number) => {
+  issues.forEach((issue : ferret.Issue, index : number) => {
     const logger_type : string = issue.type
 
     if (!nlogs[logger_type]) {
@@ -242,7 +242,7 @@ const log_issue_messages = (
 
     const nlog = nlogs[logger_type]
     const plugin_name : string = _.get(issue, "plugin", "")
-    const msg_postfix = plugin_name ? ` (vile-${ plugin_name })` : ""
+    const msg_postfix = plugin_name ? ` (ferret-${ plugin_name })` : ""
 
     if (_.some(util.errors, (i_type) => issue.type == i_type)) {
       nlog.error_issue(to_console(issue) + msg_postfix)

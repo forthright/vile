@@ -1,0 +1,58 @@
+dist: trusty
+
+os:
+  - osx
+  - linux
+
+language: node_js
+
+node_js:
+  - "6"
+  - "7"
+  - "8"
+
+sudo: false
+
+cache:
+  directories:
+    - node_modules
+
+env:
+  global:
+     - LIN_GCC="CC=gcc-4.9 && CXX=g++-4.9"
+
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then eval "${LIN_GCC}"; fi
+  - gcc --version
+  - g++ --version
+  - uname -a
+  - nvm --version
+  - node --version
+  - npm --version
+
+git:
+  depth: 10
+
+branches:
+  only:
+    - master
+
+install:
+  - npm i
+
+before_script:
+  - echo "no-op"
+
+script:
+  - npm run -s compile
+  - npm run -s test

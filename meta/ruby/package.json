@@ -1,0 +1,34 @@
+{
+  "name": "ferret-ruby",
+  "version": "0.1.3",
+  "description": "A Ferret meta plugin for analyzing your Ruby code and ecosystem.",
+  "pkg": {
+    "assets": [
+      "node_modules/opn/xdg-open",
+      "xdg-open",
+      "node_modules/ferret-bundler-audit/lib_ruby/*"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/forthright/ferret-ruby.git"
+  },
+  "keywords": [
+    "ruby",
+    "ferret"
+  ],
+  "author": "Brent Lintner <brent.lintner@gmail.com>",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/forthright/ferret-ruby/issues"
+  },
+  "homepage": "https://github.com/forthright/ferret-ruby#readme",
+  "dependencies": {
+    "ferret": "^0.19.2",
+    "ferret-bundler-audit": "^0.3.6",
+    "ferret-bundler-outdated": "^0.1.3",
+    "ferret-git": "^0.5.6",
+    "ferret-rubocop": "^0.2.4",
+    "ferret-rubycritic": "^0.3.0"
+  }
+}

@@ -6,9 +6,9 @@ import framework = require("./init/framework")
 import ignore = require("./init/ignore")
 import post = require("./init/post")
 
-const vile_config_base = () : vile.YMLConfig => {
+const ferret_config_base = () : ferret.YMLConfig => {
   return {
-    vile: {
+    ferret: {
       allow: [],
       ignore: [],
       plugins: []
@@ -16,10 +16,10 @@ const vile_config_base = () : vile.YMLConfig => {
   }
 }
 
-const initialize_vile_project = (
+const initialize_ferret_project = (
   cli : commander.CommanderStatic
-) : Bluebird<vile.YMLConfig> =>
-  pre.init(vile_config_base())
+) : Bluebird<ferret.YMLConfig> =>
+  pre.init(ferret_config_base())
     .then(ignore.init)
     .then(language.init)
     .then(framework.init)
@@ -29,6 +29,6 @@ const create = (cli : commander.CommanderStatic) =>
   cli
     .command("init")
     .alias("i")
-    .action(initialize_vile_project)
+    .action(initialize_ferret_project)
 
 export = { create }

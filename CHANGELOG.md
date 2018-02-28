@@ -1,3 +1,3 @@
-# Vile Changelog
+# Ferret Changelog
 
-Please see our GitHub [releases](https://github.com/forthright/vile/releases).
+Please see our GitHub [releases](https://github.com/forthright/ferret/releases).

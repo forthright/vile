@@ -24,13 +24,13 @@ const matches = (
 
 const is_ignored = (
   filepath : string,
-  ignore_list : vile.IgnoreList
+  ignore_list : ferret.IgnoreList
 ) : boolean =>
   matches(unixify(filepath), ignore_list)
 
 const is_allowed = (
   filepath : string,
-  allow_list : vile.AllowList
+  allow_list : ferret.AllowList
 ) : boolean => {
   const unixpath : string = unixify(filepath)
 
@@ -45,8 +45,8 @@ const is_allowed = (
 }
 
 const filter_promise_each = (
-  ignore_list : vile.IgnoreList,
-  allow_list : vile.AllowList
+  ignore_list : ferret.IgnoreList,
+  allow_list : ferret.AllowList
 ) => (
   file_or_dir : string
 ) : boolean =>
@@ -86,10 +86,10 @@ const move_node_bin_to_end = (env_path : string) : string => {
 // TODO: add mem limit to child process
 const spawn = (
   bin : string,
-  opts : vile.SpawnOptions = {}
-) : Bluebird<vile.SpawnData> =>
+  opts : ferret.SpawnOptions = {}
+) : Bluebird<ferret.SpawnData> =>
   new Bluebird((
-    resolve : (r : vile.SpawnData) => void,
+    resolve : (r : ferret.SpawnData) => void,
     reject : (e : Error) => void
   ) => {
     const stdout : Buffer[] = []
@@ -134,7 +134,7 @@ const spawn = (
         log.warn("\n", stderr_str)
       }
 
-      const data : vile.SpawnData = {
+      const data : ferret.SpawnData = {
         code,
         stderr: stderr_str,
         stdout: stdout_str
@@ -148,7 +148,7 @@ const promise_each_file = (
   dirpath : string,
   allow : (file_or_dir_path : string, is_dir : boolean) => boolean,
   parse_file : (file : string, data? : string) => Bluebird<any> | any,
-  opts : vile.PromiseEachFileOptions = {}
+  opts : ferret.PromiseEachFileOptions = {}
 ) : Bluebird<any> => {
   if (!opts.hasOwnProperty("read_data")) opts.read_data = true
 
@@ -180,9 +180,9 @@ const promise_each_file = (
 }
 
 // TODO: validate issue objects as it comes in
-const into_issue = (data : vile.Issue) : vile.Issue => data
+const into_issue = (data : ferret.Issue) : ferret.Issue => data
 
-const displayable_issues : vile.IssueType.All[] = [
+const displayable_issues : ferret.IssueType.All[] = [
   "warning",
   "style",
   "maintainability",
@@ -192,7 +192,7 @@ const displayable_issues : vile.IssueType.All[] = [
   "dependency"
 ]
 
-const warnings : vile.IssueType.Warnings[] = [
+const warnings : ferret.IssueType.Warnings[] = [
   "warning",
   "style",
   "maintainability",
@@ -202,32 +202,32 @@ const warnings : vile.IssueType.Warnings[] = [
   "dependency"
 ]
 
-const errors : vile.IssueType.Errors[] = [
+const errors : ferret.IssueType.Errors[] = [
   "error",
   "security"
 ]
 
-const infos : vile.IssueType.Infos[] = [
+const infos : ferret.IssueType.Infos[] = [
   "stat",
   "scm",
   "lang",
   "cov"
 ]
 
-const api : vile.Module.Util = {
-  CHURN :  ("churn" as vile.IssueType.Churn),
-  COMP  :  ("complexity" as vile.IssueType.Comp),
-  COV   :  ("cov" as vile.IssueType.Cov),
-  DEP   :  ("dependency" as vile.IssueType.Dep),
-  DUPE  :  ("duplicate" as vile.IssueType.Dupe),
-  ERR   :  ("error" as vile.IssueType.Err),
-  MAIN  :  ("maintainability" as vile.IssueType.Main),
-  OK    :  ("ok" as vile.IssueType.Ok),
-  SCM   :  ("scm" as vile.IssueType.Scm),
-  SEC   :  ("security" as vile.IssueType.Sec),
-  STAT  :  ("stat" as vile.IssueType.Stat),
-  STYL  :  ("style" as vile.IssueType.Styl),
-  WARN  :  ("warning" as vile.IssueType.Warn),
+const api : ferret.Module.Util = {
+  CHURN :  ("churn" as ferret.IssueType.Churn),
+  COMP  :  ("complexity" as ferret.IssueType.Comp),
+  COV   :  ("cov" as ferret.IssueType.Cov),
+  DEP   :  ("dependency" as ferret.IssueType.Dep),
+  DUPE  :  ("duplicate" as ferret.IssueType.Dupe),
+  ERR   :  ("error" as ferret.IssueType.Err),
+  MAIN  :  ("maintainability" as ferret.IssueType.Main),
+  OK    :  ("ok" as ferret.IssueType.Ok),
+  SCM   :  ("scm" as ferret.IssueType.Scm),
+  SEC   :  ("security" as ferret.IssueType.Sec),
+  STAT  :  ("stat" as ferret.IssueType.Stat),
+  STYL  :  ("style" as ferret.IssueType.Styl),
+  WARN  :  ("warning" as ferret.IssueType.Warn),
 
   allowed: is_allowed,
   displayable_issues,

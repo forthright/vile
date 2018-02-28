@@ -1,5 +1,5 @@
-// vile.d.ts
-// The go to definition for Vile data
+// ferret.d.ts
+// The go to definition for Ferret data
 
 /// <reference types="node" />
 /// <reference types="bluebird" />
@@ -9,20 +9,20 @@ import * as commander from "commander";
 import * as http from "http";
 
 // Enable things like this:
-// > const vile = require("vile")
-// > let i : vile.Issue = vile.issue({ path: "foo", type: vile.ERR })
-declare var vile : vile.Module.Index
-export = vile;
-export as namespace vile;
+// > const ferret = require("ferret")
+// > let i : ferret.Data = ferret.issue({ path: "foo", type: ferret.ERR })
+declare var ferret : ferret.Module.Index
+export = ferret;
+export as namespace ferret;
 
-declare namespace vile {
+declare namespace ferret {
   // -------------------------------------------------
-  // Issue
+  // Data
   //
-  // Type defs for vile issue object creation
+  // Type defs for ferret issue object creation
   //
-  export interface Issue {
-    type        : IssueType.All;
+  export interface Data {
+    type        : DataType.All;
     message?    : string;
     path?       : string;
     title?      : string;
@@ -38,20 +38,20 @@ declare namespace vile {
     snippet?    : Snippet[];
     complexity? : Complexity;
     churn?      : Churn;
-    where?      : IssueLocation;
+    where?      : DataLocation;
   }
 
-  export interface IssueLocation {
-    start? : IssueLine;
-    end?  : IssueLine;
+  export interface DataLocation {
+    start? : DataLine;
+    end?  : DataLine;
   }
 
-  export interface IssueLine {
+  export interface DataLine {
     line?      : number;
     character? : number;
   }
 
-  export type IssueList = Issue[]
+  export type DataList = Data[]
 
   export type Complexity = number
 
@@ -63,7 +63,7 @@ declare namespace vile {
     ending?  : string;
   }
 
-  export module IssueType {
+  export module DataType {
     export type Ok    = "ok";
     export type Warn  = "warning";
     export type Styl  = "style";
@@ -141,7 +141,7 @@ declare namespace vile {
   export interface DuplicateLocations {
     path      : string;
     snippet?  : Snippet[];
-    where?    : IssueLocation;
+    where?    : DataLocation;
   }
 
   // -------------------------------------------------
@@ -169,13 +169,13 @@ declare namespace vile {
   // -------------------------------------------------
   // Config
   //
-  // Anything related to .vile.yml or plugin creation
+  // Anything related to .ferret.yml or plugin creation
   //
 
   export interface Plugin {
     punish : (
       config : PluginConfig
-    ) => IssueList | Bluebird<IssueList>;
+    ) => DataList | Bluebird<DataList>;
   }
 
   export interface PluginConfig {
@@ -184,7 +184,7 @@ declare namespace vile {
     allow?   : AllowList;
   }
 
-  interface VileConfig {
+  interface FerretConfig {
     plugins? : PluginList;
     ignore?  : IgnoreList;
     allow?   : AllowList;
@@ -209,7 +209,7 @@ declare namespace vile {
   // -------------------------------------------------
   // Anything library/module related
   //
-  // const vile : vile.Lib = require("vile")
+  // const ferret : ferret.Module.Index = require("ferret")
   //
 
   export type PluginMap = {
@@ -264,6 +264,7 @@ declare namespace vile {
     skip_core_plugins? : boolean
     skip_snippets?     : boolean;
     plugins?           : PluginList;
+    force_plugins?     : PluginList;
   }
 
   export interface CLIApp {
@@ -276,7 +277,8 @@ declare namespace vile {
     gitDiff             : string;
     issueLog            : string;
     log?                : string;
-    plugins             : PluginList;
+    plugins             : string;
+    forcePlugins?       : string;
     quiet?              : boolean;
     skipSnippets?       : boolean;
     spinner?            : boolean;
@@ -330,42 +332,42 @@ declare namespace vile {
       exec : (
         config : YMLConfig,
         opts?  : PluginExecOptions
-      ) => Bluebird<IssueList>;
+      ) => Bluebird<DataList>;
 
       exec_plugin : (
         name : string,
         config? : YMLConfig
-      ) => Bluebird<IssueList>;
+      ) => Bluebird<DataList>;
     }
 
     type PromiseEachParsedData = any;
 
-    type RawIssueData = { [k : string]: any; }
+    type RawMetaData = { [k : string]: any; }
 
     interface UtilKeyTypes {
-      OK    :  IssueType.Ok;
+      OK    :  DataType.Ok;
 
-      WARN  :  IssueType.Warn;
-      STYL  :  IssueType.Styl;
-      MAIN  :  IssueType.Main;
-      COMP  :  IssueType.Comp;
-      CHURN :  IssueType.Churn;
-      DUPE  :  IssueType.Dupe;
-      DEP   :  IssueType.Dep;
+      WARN  :  DataType.Warn;
+      STYL  :  DataType.Styl;
+      MAIN  :  DataType.Main;
+      COMP  :  DataType.Comp;
+      CHURN :  DataType.Churn;
+      DUPE  :  DataType.Dupe;
+      DEP   :  DataType.Dep;
 
-      ERR   :  IssueType.Err;
-      SEC   :  IssueType.Sec;
+      ERR   :  DataType.Err;
+      SEC   :  DataType.Sec;
 
-      STAT  :  IssueType.Stat;
-      SCM   :  IssueType.Scm;
-      COV   :  IssueType.Cov;
+      STAT  :  DataType.Stat;
+      SCM   :  DataType.Scm;
+      COV   :  DataType.Cov;
     }
 
     interface UtilObjects {
-      displayable_issues: IssueType.All[];
-      warnings: IssueType.Warnings[];
-      errors:   IssueType.Errors[];
-      infos:    IssueType.Infos[];
+      displayable_issues: DataType.All[];
+      warnings: DataType.Warnings[];
+      errors:   DataType.Errors[];
+      infos:    DataType.Infos[];
     }
 
     interface UtilMethods {
@@ -378,7 +380,7 @@ declare namespace vile {
 
       filter : (i : IgnoreList, a : AllowList) => (p : string) => boolean;
 
-      issue        : (d : RawIssueData) => Issue;
+      issue        : (d : RawMetaData) => Data;
 
       ignored      : (f : string, i : IgnoreList) => boolean;
       allowed      : (f : string, a : AllowList) => boolean;

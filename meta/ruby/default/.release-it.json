@@ -1,0 +1,16 @@
+{
+  "non-interactive": true,
+  "src": {
+    "pushRepo": "origin",
+    "commitMessage": "v%s",
+    "tagName": "%s"
+  },
+  "npm": {
+    "publish": false,
+    "private": true,
+    "forcePublishSourceRepo": false
+  },
+  "github": {
+    "release": false
+  }
+}

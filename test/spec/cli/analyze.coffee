@@ -315,7 +315,7 @@ describe "cli/analyze", ->
 
       it "sets allow list to all files in latest commit", ->
         git.changed_files.should.have.been.calledWith()
-        expect(config.get().vile.allow).to.eql [ "foo" ]
+        expect(config.get().ferret.allow).to.eql [ "foo" ]
         expect(log.info).to.have.been.calledWith "", "foo"
 
     describe "with a custom rev", ->
@@ -325,5 +325,5 @@ describe "cli/analyze", ->
 
       it "sets allow list to all files in rev", ->
         git.changed_files.should.have.been.calledWith("master")
-        expect(config.get().vile.allow).to.eql [ "foo" ]
+        expect(config.get().ferret.allow).to.eql [ "foo" ]
         expect(log.info).to.have.been.calledWith "", "foo"

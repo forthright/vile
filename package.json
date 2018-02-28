@@ -1,29 +1,35 @@
 {
-  "name": "vile",
+  "name": "@forthright/ferret",
   "version": "0.19.2",
-  "description": "A code quality tool for any language or platform.",
+  "description": "An open platform for continuous software analysis.",
   "main": "lib/index.js",
   "types": "src/@types/index.d.ts",
+  "pkg": {
+    "scripts": [
+      "lib/plugin/worker.js"
+    ]
+  },
   "files": [
-    "bin/vile",
+    "bin/ferret",
     "lib",
+    "dist",
     "src/@types",
     "LICENSE",
     "CHANGELOG.md",
     "README.md"
   ],
   "bin": {
-    "vile": "bin/vile"
+    "ferret": "bin/ferret"
   },
   "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/forthright/vile/issues"
+    "url": "https://github.com/forthright/ferret/issues"
   },
-  "homepage": "https://github.com/forthright/vile",
+  "homepage": "https://github.com/forthright/ferret",
   "repository": {
     "type": "git",
-    "url": "https://github.com/forthright/vile.git"
+    "url": "https://github.com/forthright/ferret"
   },
   "keywords": [
     "quality",
@@ -45,6 +51,10 @@
     "npm": ">=2.0.0"
   },
   "dependencies": {
+    "@forthright/ferret-comment": "^0.1.20",
+    "@forthright/ferret-coverage": "^0.3.0",
+    "@forthright/ferret-ncu": "^0.3.0",
+    "@forthright/ferret-stat": "^0.1.1",
     "@types/bluebird": "^3.5.17",
     "@types/commander": "^2.11.0",
     "@types/inquirer": "^0.0.35",
@@ -53,7 +63,8 @@
     "@types/loglevel": "^1.5.3",
     "@types/node": "^8.0.47",
     "@types/opn": "^5.1.0",
-    "@types/ora": "^1.3.0",
+    "@types/ora": "^1.3.2",
+    "@types/os-name": "^2.0.0",
     "@types/request": "^2.0.7",
     "bluebird": "^3.5.1",
     "chalk": "^2.3.0",
@@ -72,12 +83,9 @@
     "npm-run-path": "^2.0.2",
     "opn": "^5.0.0",
     "ora": "^1.3.0",
+    "os-name": "^2.0.1",
     "request": "^2.83.0",
-    "unixify": "^1.0.0",
-    "vile-comment": "^0.1.20",
-    "vile-coverage": "^0.3.0",
-    "vile-ncu": "^0.3.0",
-    "vile-stat": "^0.1.1"
+    "unixify": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^4.0.2",
@@ -86,7 +94,8 @@
     "globstar": "^1.0.0",
     "mimus": "^0.2.8",
     "mocha": "^4.0.1",
-    "nyc": "^11.3.0",
+    "nyc": "^11.5.0",
+    "pkg": "^4.3.0",
     "release-it": "^5.0.0",
     "retire": "^1.3.1",
     "rimraf": "^2.6.1",
@@ -94,37 +103,20 @@
     "sinon": "^4.1.2",
     "sinon-chai": "^2.14.0",
     "sloc": "^0.2.0",
-    "typedoc": "^0.9.0",
-    "typescript": "^2.6.1",
-    "vile": "^0.19.2",
-    "vile-coffeelint": "^0.1.16",
-    "vile-depcheck": "^0.1.17",
-    "vile-eclint": "^0.1.14",
-    "vile-escomplex": "^0.1.5",
-    "vile-eslint": "^0.1.16",
-    "vile-git": "^0.5.6",
-    "vile-license": "^0.4.2",
-    "vile-nsp": "^0.2.14",
-    "vile-retire": "^0.1.3",
-    "vile-synt": "^0.1.2",
-    "vile-tslint": "^0.3.3"
+    "typescript": "^2.6.1"
   },
   "scripts": {
     "compile": "tsc",
     "clean": "rm -rf {.nyc_output,coverage,lib} && git checkout -- lib",
     "dev": "tsc -w",
-    "gen-docs": "node bin/gen-docs",
     "lint-cov": "nyc check-coverage --lines 97 --branches 88",
     "ncu": "ncu -u",
-    "release-it": "release-it",
     "stats": "sloc -d -f cli-table -k total,source,comment -e 'fixtures|@types' src test",
     "test": "globstar -- _mocha \"test/spec/**/*.coffee\"",
     "test-fast": "npm run -s test -- -i --grep 'system ::'",
     "test-sys": "npm run -s test -- -R spec --grep 'system ::'",
     "test-cov": "nyc -r json -r lcov -r text -x test -x **/node_modules/** npm run -s test",
     "test-ci-build": "node bin/test-ci-build",
-    "tsc": "tsc",
-    "typedoc": "typedoc",
     "vile": "vile a -u -x src.ts:lib.js -n"
   }
 }

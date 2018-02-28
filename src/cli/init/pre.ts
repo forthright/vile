@@ -7,15 +7,15 @@ import Bluebird = require("bluebird")
 const fs_writeFile : any = Bluebird.promisify(fs.writeFile)
 
 const check_for_existing_config = (
-  config : vile.YMLConfig
-) : Bluebird<vile.YMLConfig> => {
-  const vile_yml_path = path.join(process.cwd(), ".vile.yml")
+  config : ferret.YMLConfig
+) : Bluebird<ferret.YMLConfig> => {
+  const ferret_yml_path = path.join(process.cwd(), ".ferret.yml")
 
-  if (fs.existsSync(vile_yml_path)) {
+  if (fs.existsSync(ferret_yml_path)) {
     return (inquirer as any).prompt([
       {
         default: true,
-        message: "Found an existing .vile.yml. OK to overwrite?",
+        message: "Found an existing .ferret.yml. OK to overwrite?",
         name: "ok_to_overwrite",
         type: "confirm"
       }
@@ -32,15 +32,15 @@ const check_for_existing_config = (
 }
 
 const check_for_existing_package_json = (
-  config : vile.YMLConfig
-) : Bluebird<vile.YMLConfig> => {
+  config : ferret.YMLConfig
+) : Bluebird<ferret.YMLConfig> => {
   const pkg_json_path = path.join(process.cwd(), "package.json")
 
   if (fs.existsSync(pkg_json_path)) return Bluebird.resolve(config)
 
   const pkg_json_shell = {
-    description: "Tracks any Node.js based dependencies for Vile.",
-    name: "vile-project-dependency-config",
+    description: "Tracks any Node.js based dependencies for ferret.",
+    name: "ferret-project-dependency-config",
     private: true
   }
 
@@ -54,7 +54,7 @@ const check_for_existing_package_json = (
 }
 
 export = {
-  init: (config : vile.YMLConfig) =>
+  init: (config : ferret.YMLConfig) =>
     check_for_existing_config(config)
     .then(check_for_existing_package_json)
 }

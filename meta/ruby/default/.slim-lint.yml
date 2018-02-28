@@ -1,0 +1,30 @@
+exclude:
+  - "vendor/**/*.slim"
+  - "node_modules/**/*.slim"
+
+linters:
+  CommentControlStatement:
+    enabled: true
+
+  ConsecutiveControlStatements:
+    enabled: true
+    max_consecutive: 2
+
+  EmptyControlStatement:
+    enabled: true
+
+  RedundantDiv:
+    enabled: true
+
+  LineLength:
+    enabled: true
+    max: 80
+
+  RuboCop:
+    enabled: false
+
+  TagCase:
+    enabled: true
+
+  TrailingWhitespace:
+    enabled: true

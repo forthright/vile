@@ -2,14 +2,14 @@ import yaml = require("js-yaml")
 import fs = require("fs")
 import ConfigParseError = require("./config/config_parse_error")
 
-const DEFAULT_VILE_YML = ".vile.yml"
+const DEFAULT_FERRET_YML = ".ferret.yml"
 
-let conf : vile.YMLConfig = {}
+let conf : ferret.YMLConfig = {}
 
 const load_config = (
-  filepath = DEFAULT_VILE_YML
-) : vile.YMLConfig => {
-  if (filepath == DEFAULT_VILE_YML && !fs.existsSync(filepath)) {
+  filepath = DEFAULT_FERRET_YML
+) : ferret.YMLConfig => {
+  if (filepath == DEFAULT_FERRET_YML && !fs.existsSync(filepath)) {
     conf = {}
     return conf
   }
@@ -22,17 +22,17 @@ const load_config = (
   }
 }
 
-const load_auth_config_from_env = () : vile.Auth => {
+const load_auth_config_from_env = () : ferret.Auth => {
   const env = process.env
   return {
-    project : env.VILE_PROJECT,
-    token : env.VILE_TOKEN
+    project : env.FERRET_PROJECT,
+    token : env.FERRET_TOKEN
   }
 }
 
-const get_conf : vile.YMLConfig = () => conf
+const get_conf : ferret.YMLConfig = () => conf
 
-const api : vile.Module.Config = {
+const api : ferret.Module.Config = {
   get: get_conf,
   get_auth: load_auth_config_from_env,
   load: load_config

@@ -6,7 +6,7 @@ import ora = require("ora")
 const chalk = require("chalk")
 
 let enable_colors : boolean = false
-let allow_issue_types : vile.IssueType.All[] = []
+let allow_issue_types : ferret.IssueType.All[] = []
 
 // HACK: need to get exported ora types
 const spin : any = ora({ color: "green" })
@@ -25,23 +25,23 @@ const update_spinner = (text : string) : void => {
 }
 
 const level = (name : string) : void => {
-  process.env.VILE_LOG_LEVEL = name
+  process.env.FERRET_LOG_LEVEL = name
   // HACK: weird dual type (num/string) issue with log.LogLevel
   log.setLevel(<any>name)
 }
 
 const enable = (
   colors = true,
-  issue_types : vile.IssueType.All[] = []
+  issue_types : ferret.IssueType.All[] = []
 ) : void => {
   allow_issue_types = issue_types
   enable_colors = colors
 
   // HACK: supports auto setting color/log in worker procs for CLI
-  if (process.env.VILE_NO_COLOR == "1") enable_colors = false
-  if (!enable_colors) process.env.VILE_NO_COLOR = "1"
+  if (process.env.FERRET_NO_COLOR == "1") enable_colors = false
+  if (!enable_colors) process.env.FERRET_NO_COLOR = "1"
 
-  level(process.env.VILE_LOG_LEVEL || "info")
+  level(process.env.FERRET_LOG_LEVEL || "info")
 }
 
 const disable = () : void => {
@@ -103,7 +103,7 @@ const apply_issue = (
 
 const create = (
   source : string
-) : vile.LoggerInstance => {
+) : ferret.LoggerInstance => {
   return {
     error:       apply("error", source),
     error_issue: apply_issue("error", source),
@@ -114,7 +114,7 @@ const create = (
   }
 }
 
-const api : vile.Module.Logger = {
+const api : ferret.Module.Logger = {
   create,
   disable,
   enable,

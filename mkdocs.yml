@@ -1,0 +1,43 @@
+site_name: Ferret
+site_author: Brent Lintner
+site_description: Documentation for Ferret and FerretCI.
+copyright: 'Copyright &copy; 2016 Forthright, Inc.'
+site_dir: .docs-site
+repo_url: https://github.com/forthright/ferret
+docs_dir: docs
+
+extra_css:
+  - css/ferret.css
+
+theme:
+  name: 'material'
+  logo: 'img/ferret.svg'
+  language: 'en'
+  palette:
+    primary: 'grey'
+    accent: 'grey'
+  font:
+    text: 'Roboto'
+    code: 'Roboto Mono'
+
+extra:
+  social:
+    - type: 'twitter'
+      link: 'https://twitter.com/ferretci'
+
+pages:
+  - ' ': index.md
+  - Docs:
+    - 'Getting Started': start.md
+    - 'Analyzing Your Code': analyze.md
+    - 'Language Support': lang.md
+    - '.ferret.yml': config.md
+    - 'Library API': library.md
+    - 'Creating a Plugin': plugins.md
+    - 'Editor Integration': editor.md
+    - 'Metadata Spec': metadata.md
+    - 'Web API': web_api.md
+  - About:
+    - 'FAQ': faq.md
+    - 'License': license.md
+    - 'Release Notes': release.md

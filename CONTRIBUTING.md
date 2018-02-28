@@ -1,46 +1,63 @@
 # Contributing
 
-Current list of [Contributors](https://github.com/forthright/vile/graphs/contributors).
+Current list of [Contributors](https://github.com/forthright/ferret/graphs/contributors).
 
 ## Code Of Conduct
 
 By participating in this project you agree to our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## Issues
+## Project Tenets
 
-Current issue tracker is on [GitHub](https://github.com/forthright/vile/issues).
+* :rainbow: Provide an open and extensible platform for any type of software analysis
+* :seedling: Help maintain and foster an open and inclusive community around code quality
+* :vhs: Distill various types of software analysis into a language independent
+data format
+* :tada: Support and complement existing tooling (linters, complexity tools, etc.)
+* :nut_and_bolt: Create new libraries and plugins that backfill language support (ex: [synt](https://github.com/brentlintner/synt))
+
+## Submitting Issues
+
+Current issue tracker is on [GitHub](https://github.com/forthright/ferret/issues).
 
 Even if you are uncomfortable with code, an issue or question is welcome.
 
 Note: If you are reporting a bug or feature request
-for [vile.io](https://vile.io) itself, please see [forthright/vile.io](https://github.com/forthright/vile.io) instead.
+for [ferretci.com](https://ferretci.com) itself, please see [forthright/ferretci.com](https://github.com/forthright/ferretci.com) instead.
 
-## Patches
+## Submitting Patches
 
-All you need to do is submit a [Pull Request](https://github.com/forthright/vile/pulls).
+All you need to do is submit a [Pull Request](https://github.com/forthright/ferret/pulls).
 
 1. Please consider tests and code quality before submitting.
 2. Please try to keep commits clean, atomic and well explained (for others).
 
-Note: If you prefer to submit a `patch` then please [open an issue](https://github.com/forthright/vile/issues/new) and link to it.
+Note: If you prefer to submit a `patch` then please [open an issue](https://github.com/forthright/ferret/issues/new) and link to it.
 
-## Developing
+## Development Setup
 
-Vile is centered around the use of [plugins](https://docs.vile.io/#creating-a-plugin) that generate [issues](https://docs.vile.io/interfaces/_src__types_index_d_.vile.issue.html).
+Ferret is centered around the use of [plugins](https://docs.ferretci.com/#creating-a-plugin) that generate [issues](https://docs.ferretci.com/interfaces/_src__types_index_d_.ferret.issue.html).
 
-A plugin can be written in JavaScript, or easily [shell out](https://docs.vile.io/#writing-non-javascript-plugins) to another language.
+A plugin can be written in JavaScript, or easily [shell out](https://docs.ferretci.com/#writing-non-javascript-plugins) to another language.
 
 The core library and cli is written in [TypeScript](http://www.typescriptlang.org).
 
 Test code is written in [CoffeeScript](http://coffeescript.org).
 
+### Requirements
+
+* [Node.js]()
+* [Python]()
+* [MkDocs]()
+* [Git]()
+* [zsh/bash](http://zsh.sourceforge.net)
+
 ### Getting Started
 
 Clone the repos:
 
-    git clone git@github.com:forthright/vile.git
-    git clone git@github.com:forthright/vile-docs.git
-    cd vile
+    git clone git@github.com:forthright/ferret.git
+    git clone git@github.com:forthright/ferret-docs.git
+    cd ferret
 
 Install packages:
 
@@ -56,7 +73,7 @@ Compile from `src` to `lib`:
 
 To run the CLI locally:
 
-    node bin/vile -h
+    node bin/ferret -h
 
 To run tests:
 
@@ -81,4 +98,4 @@ To run compile task with file watch in the background:
 To generate latest docs:
 
     npm run -s gen-docs
-    [browser] ../vile-docs/public/index.html
+    [browser] ../ferret-docs/public/index.html

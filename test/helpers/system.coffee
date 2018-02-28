@@ -4,7 +4,7 @@ child_process = require "child_process"
 chai = require "chai"
 expect = chai.expect
 
-VILE_BIN = path.join(__dirname, "..", "..", "bin", "vile")
+FERRET_BIN = path.join(__dirname, "..", "..", "bin", "ferret")
 
 sys_test_count = 0
 
@@ -15,7 +15,7 @@ exec = (args, cb, stdio, pass_err) ->
   cmd = undefined
   sys_test_count += 1
 
-  cmd = "#{VILE_BIN} #{args}"
+  cmd = "#{FERRET_BIN} #{args}"
 
   cli_args = cmd.split(" ")
   proc = child_process.spawn(

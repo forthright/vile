@@ -32,16 +32,16 @@ const log_and_exit = (
 }
 
 const set_ignore_list = (
-  plugin_config : vile.PluginConfig,
-  base : vile.IgnoreList
+  plugin_config : ferret.PluginConfig,
+  base : ferret.IgnoreList
 ) : void => {
   const list = _.compact(_.concat([], _.get(plugin_config, "ignore", [])))
   _.set(plugin_config, "ignore", _.uniq(list.concat(base)))
 }
 
 const set_allow_list = (
-  plugin_config : vile.PluginConfig,
-  base : vile.AllowList
+  plugin_config : ferret.PluginConfig,
+  base : ferret.AllowList
 ) : void => {
   if (!_.isEmpty(base)) {
     _.set(plugin_config, "allow", _.compact(_.concat([], base)))
@@ -53,24 +53,24 @@ const set_allow_list = (
 
 const get_plugin_config = (
   name : string,
-  config : vile.YMLConfig
-) : vile.PluginConfig => {
+  config : ferret.YMLConfig
+) : ferret.PluginConfig => {
   const plugin_config : any = _.get(config, name, {})
-  const vile_ignore : string[] = _.get(config, "vile.ignore", [])
-  const vile_allow : string[] = _.get(config, "vile.allow", [])
+  const ferret_ignore : string[] = _.get(config, "ferret.ignore", [])
+  const ferret_allow : string[] = _.get(config, "ferret.allow", [])
 
-  set_ignore_list(plugin_config, vile_ignore)
-  set_allow_list(plugin_config, vile_allow)
+  set_ignore_list(plugin_config, ferret_ignore)
+  set_allow_list(plugin_config, ferret_allow)
 
   return plugin_config
 }
 
-const handle_worker_request = (data : vile.PluginWorkerData) : void => {
+const handle_worker_request = (data : ferret.PluginWorkerData) : void => {
   const plugins : string[] = data.plugins
-  const config : vile.YMLConfig = data.config
+  const config : ferret.YMLConfig = data.config
 
   Bluebird.map(plugins, (plugin_name : string) => {
-    const name : string = plugin_name.replace("vile-", "")
+    const name : string = plugin_name.replace("ferret-", "")
     const plugin_config = get_plugin_config(name, config)
     return plugin.exec_plugin(name, plugin_config)
   })

@@ -1,0 +1,9 @@
+:run_all_checks: true
+:quiet: true
+:skip_files:
+  - vendor/
+  - db/
+  - script/
+  - public/
+  - tmp/
+  - app/assets/images

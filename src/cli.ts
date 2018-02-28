@@ -5,6 +5,7 @@ import cli_analyze = require("./cli/analyze")
 import cli_auth = require("./cli/auth")
 import cli_init = require("./cli/init")
 import cli_docs = require("./cli/docs")
+import cli_version = require("./cli/version")
 import logger = require("./logger")
 
 const log = logger.create("cli")
@@ -26,20 +27,23 @@ const no_args = (argv : string[]) : boolean =>
   !argv.slice(2).length
 
 const log_additional_help = () => {
+  console.log()
+  console.log()
   console.log("  Command specific help:")
   console.log()
   console.log("    {cmd} -h, --help")
   console.log()
 }
 
-const sub_modules = () : vile.CLIModule[] => [
+const sub_modules = () : ferret.CLIModule[] => [
   cli_analyze,
   cli_auth,
   cli_init,
-  cli_docs
+  cli_docs,
+  cli_version
 ]
 
-const bind_sub_module = (cli_sub_mod : vile.CLIModule) => {
+const bind_sub_module = (cli_sub_mod : ferret.CLIModule) => {
   cli_sub_mod.create(cli)
 }
 

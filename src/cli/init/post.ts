@@ -12,15 +12,15 @@ const fs_writeFile : any = Bluebird.promisify(fs.writeFile)
 const plugin_map = require("./map")
 
 const create_config = (
-  config : vile.YMLConfig
-) : Bluebird<vile.YMLConfig> => {
+  config : ferret.YMLConfig
+) : Bluebird<ferret.YMLConfig> => {
   const config_without_plugins = _.cloneDeep(config)
-  delete config_without_plugins.vile.plugins
-  config_without_plugins.vile.ignore = _.sortBy(
-    config_without_plugins.vile.ignore)
+  delete config_without_plugins.ferret.plugins
+  config_without_plugins.ferret.ignore = _.sortBy(
+    config_without_plugins.ferret.ignore)
 
   return fs_writeFile(
-    ".vile.yml",
+    ".ferret.yml",
     new Buffer(yaml.safeDump(config_without_plugins))
   ).then((err : NodeJS.ErrnoException) => {
     if (err) {
@@ -35,21 +35,21 @@ const install_plugin_args = (plugins : string[]) =>
   _.concat(
     "install",
     "--save-dev",
-    "vile",
+    "ferret",
     _.reduce(plugins, (cmd : string[], plugin : string) => {
-      cmd.push(`vile-${plugin}`)
+      cmd.push(`ferret-${plugin}`)
       return cmd
     }, []))
 
 const install_plugins_instructions = (
-  config : vile.YMLConfig
-) : Bluebird<vile.YMLConfig> => {
+  config : ferret.YMLConfig
+) : Bluebird<ferret.YMLConfig> => {
   // TODO: move to method
   const by_bin = _.reduce(
     plugin_map.peer,
     (bins : any, peer_deps : any, plugin : string) => {
       _.each(peer_deps, (peer_dep : any, bin : string) => {
-        if (!_.some(config.vile.plugins, (p : string) => p == plugin)) {
+        if (!_.some(config.ferret.plugins, (p : string) => p == plugin)) {
           return bins
         }
         peer_dep = _.concat([], peer_dep)
@@ -60,7 +60,7 @@ const install_plugins_instructions = (
     },
     {})
 
-  const args = install_plugin_args(config.vile.plugins)
+  const args = install_plugin_args(config.ferret.plugins)
 
   console.log()
   console.log(
@@ -68,7 +68,7 @@ const install_plugins_instructions = (
     chalk.gray("package.json"))
   console.log(
     chalk.green("created:"),
-    chalk.gray(".vile.yml"))
+    chalk.gray(".ferret.yml"))
   console.log()
   console.log(chalk.bold("Final Steps:"))
   console.log()
@@ -94,31 +94,31 @@ const install_plugins_instructions = (
   .then(() => config)
 }
 
-const ready_to_analyze = (config : vile.YMLConfig) => {
+const ready_to_analyze = (config : ferret.YMLConfig) => {
   console.log()
   console.log(
     chalk.green("#2"),
-    chalk.gray("Commit vile's config and package defs to source:"))
+    chalk.gray("Commit ferret's config and package defs to source:"))
   console.log()
-  console.log("  ~$ git add .vile.yml package.json")
-  console.log("  ~$ git commit -m 'Added Vile to my project.'")
+  console.log("  ~$ git add .ferret.yml package.json")
+  console.log("  ~$ git commit -m 'Added ferret to my project.'")
   console.log()
   console.log(chalk.green("#3"), chalk.gray("Analyze some code:"))
   console.log()
-  console.log("  * Run vile locally:")
-  console.log("    ~$ vile analyze")
+  console.log("  * Run ferret locally:")
+  console.log("    ~$ ferret analyze")
   console.log()
-  console.log("  * Learn how to upload data to vile.io:")
-  console.log("    https://docs.vile.io/#analyzing-your-project")
+  console.log("  * Learn how to upload data to ferret.io:")
+  console.log("    https://docs.ferret.io/#analyzing-your-project")
   console.log()
   console.log("  * Choose and configure more advanced plugins:")
-  console.log("    https://vile.io/plugins")
+  console.log("    https://ferret.io/plugins")
   console.log()
   console.log(chalk.green("Happy Punishing!"))
 }
 
 export = {
-  init: (config : vile.YMLConfig) =>
+  init: (config : ferret.YMLConfig) =>
     create_config(config)
       .then(install_plugins_instructions)
       .then(ready_to_analyze)

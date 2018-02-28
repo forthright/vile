@@ -4,10 +4,10 @@ import request = require("request")
 import logger = require("./logger")
 import _ = require("lodash")
 
-const HOST = "vile.io"
+const HOST = "ferretci.com"
 const PROD_URL = `https://${HOST}`
 const API_TARGET = "api/v0"
-const VILE_APP = process.env.VILE_APP || PROD_URL
+const FERRET_APP = process.env.FERRET_APP || PROD_URL
 const log = logger.create(HOST)
 
 const http_authentication = (auth_token : string) : any => {
@@ -15,15 +15,15 @@ const http_authentication = (auth_token : string) : any => {
 }
 
 const api_path = (endpoint : string) : string =>
-  `${VILE_APP}/${API_TARGET}/${endpoint}`
+  `${FERRET_APP}/${API_TARGET}/${endpoint}`
 
 const handle_response = (
-  resolve : (r : vile.Service.HTTPResponse) => void,
+  resolve : (r : ferret.Service.HTTPResponse) => void,
   reject : (e : { error: NodeJS.ErrnoException }) => void
 ) : request.RequestCallback => (
   err : NodeJS.ErrnoException,
   response : http.IncomingMessage,
-  body : vile.Service.JSONResponse
+  body : ferret.Service.JSONResponse
 ) =>
   err ?
     reject({ error: err }) :
@@ -32,9 +32,9 @@ const handle_response = (
 // TODO: Flush out use of Bluebird<any>
 
 const commit = (
-  issues : vile.IssueList,
+  issues : ferret.IssueList,
   cli_time : number,
-  auth : vile.Auth
+  auth : ferret.Auth
 ) : Bluebird<any> =>
   new Bluebird((resolve, reject) => {
     const url = api_path(`projects/${auth.project}/commits`)
@@ -51,7 +51,7 @@ const commit = (
 
 const commit_status = (
   commit_id : number,
-  auth : vile.Auth
+  auth : ferret.Auth
 ) : Bluebird<any> =>
   new Bluebird((resolve, reject) => {
     const url = api_path(
@@ -67,10 +67,10 @@ const padded_file_score = (score : number) =>
   (score < 100 ? " " : "") + String(score) + "%"
 
 const log_summary = (
-  post_json : vile.Service.CommitStatus
+  post_json : ferret.Service.CommitStatus
 ) => {
   const score : number = _.get(post_json, "score", 100)
-  const files : vile.Service.CommitStatusFile[] = _.get(
+  const files : ferret.Service.CommitStatusFile[] = _.get(
     post_json, "files", [])
   const time : number = _.get(post_json, "time", 0)
   const url : string = _.get(post_json, "url", "")
@@ -79,7 +79,7 @@ const log_summary = (
     .toString()
     .replace(/\.0*$/, "")
 
-  _.each(files, (file : vile.Service.CommitStatusFile) => {
+  _.each(files, (file : ferret.Service.CommitStatusFile) => {
     log.info(
       `${padded_file_score(_.get(file, "score", 0))} => ` +
       `${_.get(file, "path")}`)

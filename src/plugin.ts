@@ -8,6 +8,7 @@ import _ = require("lodash")
 import linez = require("linez")
 import logger = require("./logger")
 import util = require("./util")
+import plugin_require = require("./plugin/require")
 import PluginNotFoundError = require("./plugin/plugin_not_found_error")
 
 const chalk = require("chalk")
@@ -18,18 +19,20 @@ const log = logger.create("plugin")
 
 const FILE_EXT = /\.[^\.]*$/
 
+const WORKER_MODULE = path.join(__dirname, "plugin", "worker.js")
+
 // NOTE: defined in package.json dependencies section
 const BUNDLED_PLUGINS = [
-  "vile-comment",
-  "vile-coverage",
-  "vile-ncu",
-  "vile-stat"
+  "ferret-comment",
+  "ferret-coverage",
+  "ferret-ncu",
+  "ferret-stat"
 ]
 
 const is_plugin = (name : string) : boolean =>
-  !!/^vile-/.test(name)
+  !!/^ferret-/.test(name)
 
-const valid_plugin = (api : vile.Plugin) : boolean =>
+const valid_plugin = (api : ferret.Plugin) : boolean =>
   !!(api && typeof api.punish == "function")
 
 const is_array = (list : any[]) : boolean =>
@@ -38,27 +41,27 @@ const is_array = (list : any[]) : boolean =>
 const is_promise = (list : Bluebird<any>) : boolean =>
   !!(list && typeof list.then == "function")
 
-const map_plugin_name_to_issues = (name : string) => (issues : vile.Issue[]) =>
-  _.map(issues, (issue : vile.Issue) => {
+const map_plugin_name_to_issues = (name : string) => (issues : ferret.Issue[]) =>
+  _.map(issues, (issue : ferret.Issue) => {
     issue.plugin = name
     return issue
   })
 
 const exec_in_fork = (
-  plugins : vile.PluginList,
-  config  : vile.YMLConfig,
+  plugins : ferret.PluginList,
+  config  : ferret.YMLConfig,
   worker  : cluster.Worker
-) : Bluebird<vile.IssueList> =>
+) : Bluebird<ferret.IssueList> =>
   new Bluebird((
-    resolve : (issue : vile.IssueList) => void,
+    resolve : (issue : ferret.IssueList) => void,
     reject : (error : string) => void
   ) => {
-    worker.on("message", (issues : vile.IssueList) => {
+    worker.on("message", (issues : ferret.IssueList) => {
       if (issues) {
         worker.disconnect()
         resolve(issues)
       } else {
-        const data : vile.PluginWorkerData = { config, plugins }
+        const data : ferret.PluginWorkerData = { config, plugins }
         worker.send(data)
       }
     })
@@ -74,7 +77,7 @@ const exec_in_fork = (
 
 const on_windows = () : boolean => /windows/i.test(os.type())
 
-const normalize_paths = (issues : vile.IssueList) =>
+const normalize_paths = (issues : ferret.IssueList) =>
   _.each(issues, (issue) => {
     if (_.has(issue, "path")) {
       issue.path = unixify(issue.path)
@@ -94,11 +97,11 @@ const normalize_paths = (issues : vile.IssueList) =>
 
 const check_for_uninstalled_plugins = (
   allowed : string[],
-  plugins : vile.PluginList
+  plugins : ferret.PluginList
 ) => {
   _.each(allowed, (name : string) => {
     if (!_.some(plugins, (plugin : string) =>
-      plugin.replace("vile-", "") == name
+      plugin.replace("ferret-", "") == name
     )) {
       throw new PluginNotFoundError(
         `${name} is not installed`)
@@ -108,8 +111,8 @@ const check_for_uninstalled_plugins = (
 
 const combine_paths = (
   combine_str : string,
-  issues : vile.Issue[]
-) : vile.Issue[] => {
+  issues : ferret.Issue[]
+) : ferret.Issue[] => {
   const sanitized_combine_paths = _.map(combine_str.split(","),
                             (def : string) => def.split(":"))
 
@@ -124,7 +127,7 @@ const combine_paths = (
     const merge_path_regexp = new RegExp(`^${merge_path}/`, "i")
 
     // TODO: Windows support, better matching
-    issues.forEach((issue : vile.Issue, idx : number) =>  {
+    issues.forEach((issue : ferret.Issue, idx : number) =>  {
       const issue_path = unixify(_.get(issue, "path", ""))
       const issue_type = _.get(issue, "type")
 
@@ -146,7 +149,7 @@ const combine_paths = (
         (t : string) => t == issue_type)
       // TODO: test this explicitly, especially unixify with non string
       const same_data_exists = potential_data_dupe &&
-        _.some(issues, (i : vile.Issue) =>
+        _.some(issues, (i : ferret.Issue) =>
           i && _.has(i, "path") && unixify(i.path) == new_path &&
             i.type == issue_type)
 
@@ -162,49 +165,18 @@ const combine_paths = (
   return _.filter(issues)
 }
 
-const cannot_find_module = (
-  err : NodeJS.ErrnoException | string
-) : boolean =>
-  /cannot find module/i.test(
-    _.get(err, "stack", (err as string)))
-
-const require_plugin = (name : string) : vile.Plugin => {
-  const cwd_node_modules = path.join(process.cwd(), "node_modules")
-  const module_name = `vile-${name}`
-  const module_name_cwd_node_modules = `${cwd_node_modules}/${module_name}`
-
-  let plugin : vile.Plugin
-
-  try {
-    // CWD first (in case a bundled plugin is also user installed)
-    plugin = require(module_name_cwd_node_modules)
-  } catch (e) {
-    if (cannot_find_module(e)) {
-      try {
-        plugin = require(module_name)
-      } catch (e2) {
-        if (cannot_find_module(e2)) {
-          throw new PluginNotFoundError(e2)
-        } else { throw e2 }
-      }
-    } else { throw e }
-  }
-
-  return plugin
-}
-
 const exec_plugin = (
   name : string,
-  config : vile.PluginConfig = {
+  config : ferret.PluginConfig = {
     config: {},
     ignore: []
   }
-) : Bluebird<vile.IssueList> =>
+) : Bluebird<ferret.IssueList> =>
   new Bluebird((
-    resolve : (i : vile.IssueList) => void,
+    resolve : (i : ferret.IssueList) => void,
     reject : (e : string) => void
   ) => {
-    const api : vile.Plugin = require_plugin(name)
+    const api : ferret.Plugin = plugin_require.locate(name)
 
     if (!valid_plugin(api)) reject(`invalid plugin API: ${name}`)
 
@@ -224,13 +196,11 @@ const exec_plugin = (
   })
 
 const execute_plugins = (
-  plugins : vile.PluginList = [],
-  config : vile.YMLConfig = null,
-  opts : vile.PluginExecOptions = {}
-) : Bluebird<vile.IssueList> => {
-  cluster.setupMaster({
-    exec: path.join(__dirname, "plugin", "worker.js")
-  })
+  plugins : ferret.PluginList = [],
+  config : ferret.YMLConfig = null,
+  opts : ferret.PluginExecOptions = {}
+) : Bluebird<ferret.IssueList> => {
+  cluster.setupMaster({ exec: WORKER_MODULE })
 
   let plugins_finished = 0
   const plugins_running : { [ name : string ] : boolean } = {}
@@ -243,7 +213,7 @@ const execute_plugins = (
       plugins_finished / plugin_count * 100).toFixed(0)
     let names : string = _.map(_.keys(
       plugins_running),
-      (p) => p.replace(/^vile-/, "")
+      (p) => p.replace(/^ferret-/, "")
     ).join(" + ")
     if (names) names = ` [${names}]`
     logger.update_spinner(chalk.gray(`${percent}%${names}`))
@@ -257,7 +227,7 @@ const execute_plugins = (
     _.each(plugins_to_run, (p) => { plugins_running[p] = true })
     update_spinner()
     return exec_in_fork(plugins_to_run, config, worker)
-      .then((issues : vile.Issue[]) => {
+      .then((issues : ferret.Issue[]) => {
         plugins_finished += plugins_to_run.length
         _.each(plugins_to_run, (p) => { delete plugins_running[p] })
         update_spinner()
@@ -266,7 +236,7 @@ const execute_plugins = (
       })
   }, { concurrency })
   .then(_.flatten)
-  .then((issues : vile.IssueList) => {
+  .then((issues : ferret.IssueList) => {
     update_spinner()
 
     if (!_.isEmpty(opts.combine)) {
@@ -278,9 +248,9 @@ const execute_plugins = (
       logger.stop_spinner()
       return issues
     } else {
-      const app_ignore = _.get(config, "vile.ignore", [])
-      const app_allow = _.get(config, "vile.allow", [])
-      const stop_spinner = (list : vile.IssueList) : vile.IssueList => {
+      const app_ignore = _.get(config, "ferret.ignore", [])
+      const app_allow = _.get(config, "ferret.allow", [])
+      const stop_spinner = (list : ferret.IssueList) : ferret.IssueList => {
         logger.stop_spinner()
         return list
       }
@@ -312,8 +282,8 @@ const into_snippet = (lines : any, start : number, end : number) =>
   }, [])
 
 const add_code_snippets = (
-  issues : vile.IssueList
-) : Bluebird<vile.IssueList> =>
+  issues : ferret.IssueList
+) : Bluebird<ferret.IssueList> =>
   Bluebird.map(_.uniq(_.map(issues, "path")), (filepath : string) => {
     if (!(filepath &&
           fs.existsSync(filepath) &&
@@ -324,16 +294,16 @@ const add_code_snippets = (
       "utf-8"
     )).lines
 
-    _.each(_.filter(issues, (i : vile.Issue) => i.path == filepath),
-      (issue : vile.Issue) => {
+    _.each(_.filter(issues, (i : ferret.Issue) => i.path == filepath),
+      (issue : ferret.Issue) => {
         const start = Number(_.get(issue, "where.start.line", 0))
         const end = Number(_.get(issue, "where.end.line", start))
 
         if (issue.type == util.DUPE) {
-          const locations : vile.DuplicateLocations[] = _.
+          const locations : ferret.DuplicateLocations[] = _.
             get(issue, "duplicate.locations", [])
 
-          _.each(locations, (loc : vile.DuplicateLocations) => {
+          _.each(locations, (loc : ferret.DuplicateLocations) => {
             const sub_start = Number(_.get(loc, "where.start.line", 0))
             const sub_end = Number(_.get(loc, "where.end.line", sub_start))
             if (sub_start === 0 && end === sub_end) return
@@ -364,41 +334,44 @@ const cwd_plugins_path = () =>
   path.resolve(path.join(process.cwd(), "node_modules"))
 
 const add_ok_issues = (
-  vile_allow : vile.AllowList,
-  vile_ignore : vile.IgnoreList,
-  issues : vile.IssueList = []
-) : Bluebird<vile.IssueList> =>
+  ferret_allow : ferret.AllowList,
+  ferret_ignore : ferret.IgnoreList,
+  issues : ferret.IssueList = []
+) : Bluebird<ferret.IssueList> =>
   util.promise_each(
     process.cwd(),
     // TODO: don't compile ignore/allow every time
     // NOTE: need to fallthrough if is_dir, in case --gitdiff is set
     (p : string, is_dir : boolean) =>
-      (util.allowed(p, vile_allow) || is_dir) &&
-        !util.ignored(p, vile_ignore)
+      (util.allowed(p, ferret_allow) || is_dir) &&
+        !util.ignored(p, ferret_ignore)
     ,
     (filepath : string) => util.issue({
       path: unixify(filepath),
       type: util.OK
     }),
     { read_data: false })
-  .then((ok_issues : vile.IssueList) => {
-    const distinct_ok_issues = _.reject(ok_issues, (issue : vile.Issue) =>
+  .then((ok_issues : ferret.IssueList) => {
+    const distinct_ok_issues = _.reject(ok_issues, (issue : ferret.Issue) =>
       _.some(issues, (i) => i.path == issue.path))
     return distinct_ok_issues.concat(issues)
   })
 
 const filter_plugins_to_run = (
-  peer_installed : vile.PluginList,
-  via_config : vile.PluginList,
-  via_opts : vile.PluginList,
+  peer_installed : ferret.PluginList,
+  via_config : ferret.PluginList, // via .ferret.yml
+  via_opts : ferret.PluginList, // via CLI opt
+  via_force_opts : ferret.PluginList, // for bundling meta pkg bins
   skip_core_plugins : boolean
-) : vile.PluginList => {
-  const allowed_plugins : vile.PluginList = _
+) : ferret.PluginList => {
+  const allowed_plugins : ferret.PluginList = _
     .isEmpty(via_opts) ? via_config : _.concat([], via_opts)
 
-  const available_plugins : vile.PluginList = skip_core_plugins ?
+  let available_plugins : ferret.PluginList = skip_core_plugins ?
     peer_installed :
     _.uniq(_.concat(peer_installed, BUNDLED_PLUGINS))
+
+  available_plugins = _.uniq(available_plugins.concat(via_force_opts))
 
   check_for_uninstalled_plugins(allowed_plugins, available_plugins)
 
@@ -406,27 +379,31 @@ const filter_plugins_to_run = (
   return _.isEmpty(allowed_plugins) ?
     available_plugins :
     _.filter(available_plugins, (p) =>
-      _.some(allowed_plugins, (a) => p.replace("vile-", "") == a))
+      _.some(allowed_plugins, (a) => p.replace("ferret-", "") == a))
 }
 
 const exec = (
-  config : vile.YMLConfig = {},
-  opts : vile.PluginExecOptions = {}
-) : Bluebird<vile.IssueList> => {
-  const app_config = _.get(config, "vile", {})
-  const allowed_plugins_via_config : vile.PluginList = _.get(
+  config : ferret.YMLConfig = {},
+  opts : ferret.PluginExecOptions = {}
+) : Bluebird<ferret.IssueList> => {
+  const app_config = _.get(config, "ferret", {})
+  const allowed_plugins_via_config : ferret.PluginList = _.get(
     app_config, "plugins", [])
-  const allowed_plugins_via_opts : vile.PluginList = _.get(
+  const allowed_plugins_via_opts : ferret.PluginList = _.get(
     opts, "plugins", [])
 
   const plugins_path = cwd_plugins_path()
 
-  const run = (peer_installed_plugins : vile.PluginList) =>
+  const allowed_plugins_via_force_opts : ferret.PluginList = _
+    .get(opts, "force_plugins", [])
+
+  const run = (peer_installed_plugins : ferret.PluginList) =>
     execute_plugins(
       filter_plugins_to_run(
         peer_installed_plugins,
         allowed_plugins_via_config,
         allowed_plugins_via_opts,
+        allowed_plugins_via_force_opts,
         opts.skip_core_plugins),
       config,
       opts)
@@ -440,7 +417,7 @@ const exec = (
   }
 }
 
-const module_exports : vile.Module.Plugin = {
+const module_exports : ferret.Module.Plugin = {
   exec,
   exec_plugin
 }

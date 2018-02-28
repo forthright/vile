@@ -48,11 +48,11 @@ const ignored_directories = (directory : string) : Bluebird<string[]> =>
     .then(get_chosen_ignored_directories)
 
 const check_for_ignored_directories = (
-  config : vile.YMLConfig
-) : Bluebird<vile.YMLConfig> =>
+  config : ferret.YMLConfig
+) : Bluebird<ferret.YMLConfig> =>
   ignored_directories(process.cwd())
     .then((ignored_dirs : string[]) => {
-      config.vile.ignore = _.uniq(ignored_dirs)
+      config.ferret.ignore = _.uniq(ignored_dirs)
       return config
     })
 

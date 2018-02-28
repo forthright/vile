@@ -9,8 +9,8 @@ log = mimus.get service, "log"
 commit_status = require "./../fixtures/commit-status"
 commit_status_id = 20
 commit_status_api_url = "https://" +
-  "vile.io/api/v0/projects/foo/commits/#{commit_status_id}/status"
-commit_api_url = "https://vile.io/api/v0/projects/foo/commits"
+  "ferretci.com/api/v0/projects/foo/commits/#{commit_status_id}/status"
+commit_api_url = "https://ferretci.com/api/v0/projects/foo/commits"
 server_response = mimus.stub()
 api_body = mimus.stub()
 server_error = mimus.stub()

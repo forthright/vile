@@ -1,0 +1,23 @@
+# Maintainer: Brent Lintner <brent.lintner@gmail.com>
+
+pkgname=ferret
+pkgver={##PKGVERS##}
+pkgrel=1
+pkgdesc="An open platform for continuous software analysis."
+arch=('x86_64')
+url="https://github.com/forthright/ferret"
+license=('MPL-2.0')
+provides=('ferret')
+optdepends=(ruby bundler nodejs npm php composer phpmd ghc cabal-install scala scalastyle)
+source_x86_64=(ferret-${pkgver}-x86-64-linux--.tar.gz::https://github.com/forthright/ferret/releases)
+sha256sums_x86_64=('3562d23f5a0735bef55baadafc04815404170c24c99dc4254f7a9cb0bbc7a067')
+package() {
+  install -d "${pkgdir}/usr/share/licenses/${_pkgname}"
+  install -d "${pkgdir}/opt/${_pkgname}"
+  install -d "${pkgdir}/usr/bin"
+
+  install -m644 "${srcdir}/${_pkg}/LICENSE" "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
+
+  cp -r "${srcdir}/${_pkg}/"* "${pkgdir}/opt/${_pkgname}" -R
+  ln -s /opt/${_pkgname}/bin/ferret "${pkgdir}"/usr/bin/ferret
+}

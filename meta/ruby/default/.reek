@@ -1,0 +1,32 @@
+IrresponsibleModule:
+  enabled: false
+
+#InstanceVariableAssumption:
+#  enabled: false
+
+UtilityFunction:
+  enabled: false
+
+InstanceVariableAssumption:
+  enabled: false
+
+FeatureEnvy:
+  enabled: false
+
+UncommunicativeVariableName:
+  enabled: false
+
+TooManyStatements:
+  enabled: true
+  exclude:
+    - "AddDeviseToUsers#self.up"
+    - initialize
+  max_statements: 8
+
+exclude_paths:
+  - bin
+  - public
+  - node_modules
+  - db
+  - vendor
+  - spec/

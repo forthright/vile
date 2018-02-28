@@ -9,7 +9,7 @@ framework = mimus.require(
   "./../../../../lib/cli/init/framework", __dirname, [])
 map = require "./../../../../lib/cli/init/map"
 promise_stub = undefined
-config = vile: plugins: []
+config = ferret: plugins: []
 expect = chai.expect
 
 describe "cli/init/framework", ->
@@ -22,7 +22,7 @@ describe "cli/init/framework", ->
 
   beforeEach ->
     promise_stub.then.returns promise_stub
-    config.vile.plugins = []
+    config.ferret.plugins = []
 
   after -> mimus.restore()
 
@@ -38,7 +38,7 @@ describe "cli/init/framework", ->
 
       it "does nothing and passes back the config", ->
         framework.init(config).should.eventually.eql {
-          vile: { plugins: [] }
+          ferret: { plugins: [] }
         }
 
     describe "when config.ru seems to have Rails in it", ->
@@ -54,7 +54,7 @@ describe "cli/init/framework", ->
 
       it "adds rails specific plugins to config", ->
         framework.init(config).should.eventually.eql {
-          vile: {
+          ferret: {
             plugins: map.frameworks.rails
           }
         }
@@ -94,7 +94,7 @@ describe "cli/init/framework", ->
 
         it "adds plugins for #{target}", ->
           framework.init(config).should.eventually.eql {
-            vile: {
+            ferret: {
               plugins: map.frameworks[ctx]
             }
           }

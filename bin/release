@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 level=$1
 home_dir=`pwd`
-docs_dir="../vile-docs"
+docs_dir="../ferret-docs"
 
 set -e
 
@@ -23,16 +23,18 @@ npm run -s compile
 
 git add -f lib
 
-npm run -s -- release-it -n -p -m 'v%s' -i $level
+npx release-it -n -p -m 'v%s' -i $level
 
 # -------------------
 #  Docs
 # -------------------
 
-rm -r $docs_dir/public
+rm -rf $docs_dir/public
 mkdir $docs_dir/public
 
-npm run -s gen-docs
+mkdocs build
+
+cp -r .docs-site/* $docs_dir/public/.
 
 app_version=$(`dirname $0`/npm-pkg-version)
 

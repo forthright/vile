@@ -1,0 +1,16 @@
+a:active,
+a:focus,
+a:hover {
+  color: #B0B0B0 !important;
+}
+
+.md-header,
+.md-footer-nav,
+.md-footer-nav,
+.md-footer-meta {
+  background-color: #5F5F5F !important;
+}
+
+.md-content__inner {
+  margin-bottom: 5rem;
+}

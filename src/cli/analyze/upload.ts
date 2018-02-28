@@ -5,7 +5,7 @@ import service = require("./../../service")
 import logger = require("./../../logger")
 import CommitUploadError = require("./commit_upload_error")
 
-const log = logger.create("vile.io")
+const log = logger.create("ferretci")
 
 const COMMIT_STATUS_INTERVAL_TIME = 2000 // 2s
 
@@ -21,14 +21,14 @@ const wait_for = (ms : number, cb : (t : any) => void) => {
 
 const wait_for_done_status_and_log = (
   commit_id : number | null,
-  auth : vile.Auth
+  auth : ferret.Auth
 ) => {
   wait_for(COMMIT_STATUS_INTERVAL_TIME, (timer) => {
     service
       .commit_status(commit_id, auth)
       .then((msg : http.IncomingMessage) => {
-        const api_body : vile.Service.HTTPResponse = _.get(msg, "body")
-        const response : vile.Service.JSONResponse = _.get(
+        const api_body : ferret.Service.HTTPResponse = _.get(msg, "body")
+        const response : ferret.Service.JSONResponse = _.get(
           msg, "response", { message: null })
 
         const status_code = _.get(response, "statusCode")
@@ -59,9 +59,9 @@ const wait_for_done_status_and_log = (
 }
 
 const commit = (
-  issues : vile.IssueList,
+  issues : ferret.IssueList,
   cli_time : number,
-  opts : vile.CLIApp
+  opts : ferret.CLIApp
 ) => {
   const auth = config.get_auth()
 

@@ -1,0 +1,43 @@
+options:
+  merge-default-rules: true
+rules:
+  indentation: 0
+  extends-before-mixins: 2
+  extends-before-declarations: 2
+  empty-args: 0
+  placeholder-in-extend: 2
+  mixins-before-declarations:
+    - 2
+    -
+      exclude:
+        - breakpoint
+        - mq
+
+  no-warn: 1
+  no-debug: 1
+  no-ids: 0
+  no-important: 2
+  hex-notation:
+    - 2
+    -
+      style: uppercase
+  property-sort-order:
+    - 0
+    -
+      order: alphabetical
+      ignore-custom-properties: true
+  quotes:
+    - 1
+    - style: double
+  shorthand-values:
+    - 1
+    - allowed-shorthands:
+        - 1
+        - 2
+  space-before-colon: 0
+  variable-for-property:
+    - 2
+    -
+      properties:
+        - background-color
+        - color

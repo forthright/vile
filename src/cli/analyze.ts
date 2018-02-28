@@ -20,50 +20,54 @@ const log_and_exit = (error : any) : void => {
 }
 
 const add_default_ignores = (
-  vile_yml : vile.YMLConfig
+  ferret_yml : ferret.YMLConfig
 ) : void => {
-  const base_ignore : vile.IgnoreList = _.get(
-    vile_yml, "vile.ignore", [])
-  const new_ignore : vile.IgnoreList = _.uniq(
+  const base_ignore : ferret.IgnoreList = _.get(
+    ferret_yml, "ferret.ignore", [])
+  const new_ignore : ferret.IgnoreList = _.uniq(
     _.concat(base_ignore, DEFAULT_IGNORE_DIRS))
-  _.set(vile_yml, "vile.ignore", new_ignore)
+  _.set(ferret_yml, "ferret.ignore", new_ignore)
 }
 
-const has_non_info_issues = (issues : vile.IssueList) : boolean =>
-  _.filter(issues, (issue : vile.Issue) =>
+const has_non_info_issues = (issues : ferret.IssueList) : boolean =>
+  _.filter(issues, (issue : ferret.Issue) =>
     _.some(util.displayable_issues, (t) => t == issue.type)
   ).length > 0
 
 const analyze = (
-  opts : vile.CLIApp,
+  opts : ferret.CLIApp,
   paths : string[]
 ) : void => {
   const custom_plugins = typeof opts.plugins == "string" ?
     _.compact(_.split(opts.plugins, ",")) : []
 
-  const vile_yml = config.get()
+  const ferret_yml = config.get()
 
-  add_default_ignores(vile_yml)
+  const force_plugins = typeof process.env.FORCE_PLUGINS == "string" ?
+    _.compact(_.split(process.env.FORCE_PLUGINS, ",")) : []
 
-  const exec_opts : vile.PluginExecOptions = {
+  add_default_ignores(ferret_yml)
+
+  const exec_opts : ferret.PluginExecOptions = {
     combine: opts.combine,
     dont_post_process: opts.dontPostProcess,
     format: opts.format,
     plugins: custom_plugins,
+    force_plugins: force_plugins,
     skip_core_plugins: opts.withoutCorePlugins,
     skip_snippets: opts.skipSnippets,
     spinner: !(opts.quiet || !opts.decorations)
   }
 
   if (!_.isEmpty(paths)) {
-    _.set(vile_yml, "vile.allow", paths)
+    _.set(ferret_yml, "ferret.allow", paths)
   }
 
   const cli_start_time = new Date().getTime()
 
   const exec = () => plugin
-    .exec(vile_yml, exec_opts)
-    .then((issues : vile.IssueList) => {
+    .exec(ferret_yml, exec_opts)
+    .then((issues : ferret.IssueList) => {
       const cli_end_time = new Date().getTime()
       const cli_time = cli_end_time - cli_start_time
 
@@ -95,7 +99,7 @@ const analyze = (
     log.info("git diff:")
     git.changed_files(rev).then((changed_paths : string[]) => {
       _.each(changed_paths, (p : string) => { log.info("", p) })
-      _.set(vile_yml, "vile.allow", changed_paths)
+      _.set(ferret_yml, "ferret.allow", changed_paths)
       exec()
     })
   } else {
@@ -104,10 +108,10 @@ const analyze = (
 }
 
 const configure = (
-  opts : vile.CLIApp
+  opts : ferret.CLIApp
 ) : void => {
   const issue_levels = (_.compact(
-    _.split(opts.issueLog, ",")) as vile.IssueType.All[])
+    _.split(opts.issueLog, ",")) as ferret.IssueType.All[])
 
   logger.enable(opts.decorations, issue_levels)
 
@@ -126,7 +130,7 @@ const configure = (
   }
 }
 
-const action = (paths : string[], opts : vile.CLIApp) => {
+const action = (paths : string[], opts : ferret.CLIApp) => {
   configure(opts)
   analyze(opts, paths)
 }
@@ -143,8 +147,8 @@ const create = (cli : commander.CommanderStatic) =>
     .option("-f, --format [type]",
             "specify output format (console=default,json,syntastic)")
     .option("-u, --upload [project_name]",
-            "publish to vile.io (disables --gitdiff)- " +
-              "alternatively, you can set a VILE_PROJECT env var")
+            "publish to ferret.io (disables --gitdiff)- " +
+              "alternatively, you can set a FERRET_PROJECT env var")
     .option("-x, --combine [combine_def]",
             "combine file data from two directories into one path- " +
               "example: [src:lib,...] or [src.ts:lib.js,...]")

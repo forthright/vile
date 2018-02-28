@@ -8,11 +8,11 @@ const create = (cli : commander.CommanderStatic) =>
     .command("auth")
     .action(() => {
       log.info("To authenticate, first go to " +
-          "https://vile.io/auth_tokens and get an All token.")
+          "https://ferretci.com/auth_tokens and get an All token.")
       log.info()
       log.info("Then:")
       log.info()
-      log.info("  ~$ VILE_TOKEN=token VILE_PROJECT=my-project vile a -u")
+      log.info("  ~$ FERRET_TOKEN=token FERRET_PROJECT=my-project ferret a -u")
     })
 
 export = { create }

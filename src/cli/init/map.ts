@@ -64,7 +64,7 @@ const DEFAULT_IGNORE_DIRS : string[] = [
   "vendor"
 ]
 
-const PLUGIN_MAP : vile.PluginMap = {
+const PLUGIN_MAP : ferret.PluginMap = {
   frameworks,
   ignore: DEFAULT_IGNORE_DIRS,
   langs,

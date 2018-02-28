@@ -48,10 +48,10 @@ describe "cli/init", ->
       expect(commander.alias).to.have.been
         .calledWith "i"
 
-    it "calls pre-init with a vile config base", ->
+    it "calls pre-init with a ferret config base", ->
       expect(pre.init).to.have.been
         .calledWith {
-          vile: {
+          ferret: {
             ignore: [],
             allow: [],
             plugins: []

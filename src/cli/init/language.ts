@@ -33,8 +33,8 @@ const detect_language = (
     ))
 
 const check_for_project_languages = (
-  config : vile.YMLConfig
-) : Bluebird<vile.YMLConfig> => {
+  config : ferret.YMLConfig
+) : Bluebird<ferret.YMLConfig> => {
   const langs : string[] = []
 
   return util.promise_each(
@@ -76,7 +76,7 @@ const check_for_project_languages = (
         (lang : string) => {
           const lcase = lang.toLowerCase()
           const plugins = plugin_map.langs[lcase] || []
-          config.vile.plugins = config.vile.plugins.concat(plugins)
+          config.ferret.plugins = config.ferret.plugins.concat(plugins)
         })
 
       return config

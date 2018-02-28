@@ -11,8 +11,8 @@ const read = (file : string) =>
   fs.readFileSync(file).toString()
 
 const check_for_project_frameworks = (
-  config : vile.YMLConfig
-) : Bluebird<vile.YMLConfig> => {
+  config : ferret.YMLConfig
+) : Bluebird<ferret.YMLConfig> => {
   const frameworks : string[] = []
 
   if (exists("config.ru") && /Rails/g.test(read("config.ru"))) {
@@ -72,14 +72,14 @@ const check_for_project_frameworks = (
       _.get(answers, "frameworks", []),
       (name : string) => {
         _.each(plugin_map.frameworks[name], (plugin : string) => {
-          config.vile.plugins.push(plugin)
+          config.ferret.plugins.push(plugin)
         })
       })
 
     if (_.isEmpty(frameworks)) return Bluebird.resolve(config)
 
     // strain out any dupes
-    config.vile.plugins = _.uniq(config.vile.plugins)
+    config.ferret.plugins = _.uniq(config.ferret.plugins)
 
     return config
   })
