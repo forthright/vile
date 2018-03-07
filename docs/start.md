@@ -4,14 +4,14 @@ You will first need to install its CLI and library on your local machine or CI s
 
 ## Installation
 
-### Windows
-
-    choco install ferret
-
 ### MacOS
 
     brew tap forthright/ferret
     brew install ferret
+
+### Windows
+
+    choco install ferret
 
 ### Ubuntu
 

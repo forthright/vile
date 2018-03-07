@@ -1,13 +1,12 @@
 {
-  "name": "ferret-javascript",
+  "name": "ferret-misc",
   "version": "0.1.3",
-  "description": "A Ferret meta plugin for analyzing your JavaScript code and ecosystem.",
+  "description": "A Ferret meta plugin composing a number of misc plugins shipped with Ferret core.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/forthright/ferret.git"
   },
   "keywords": [
-    "javascript",
     "ferret"
   ],
   "author": "Brent Lintner <brent.lintner@gmail.com>",
@@ -18,6 +17,16 @@
   "homepage": "https://github.com/forthright/ferret#readme",
   "dependencies": {
     "ferret": "^0.19.2",
-    "ferret-scalastyle": ""
+    "constable": "",
+    "depcheck": "",
+    "eclint": "",
+    "jshint": "",
+    "git": "",
+    "license": "",
+    "nsp": "",
+    "retire": "",
+    "sass-lint": "",
+    "slim-lint": "",
+    "license": ""
   }
 }

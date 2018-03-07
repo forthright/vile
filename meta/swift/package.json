@@ -1,13 +1,13 @@
 {
-  "name": "ferret-javascript",
+  "name": "ferret-swift",
   "version": "0.1.3",
-  "description": "A Ferret meta plugin for analyzing your JavaScript code and ecosystem.",
+  "description": "A Ferret meta plugin for analyzing your Swift code and ecosystem.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/forthright/ferret.git"
   },
   "keywords": [
-    "javascript",
+    "swift",
     "ferret"
   ],
   "author": "Brent Lintner <brent.lintner@gmail.com>",
@@ -18,6 +18,6 @@
   "homepage": "https://github.com/forthright/ferret#readme",
   "dependencies": {
     "ferret": "^0.19.2",
-    "ferret-scalastyle": ""
+    "ferret-tailor": ""
   }
 }

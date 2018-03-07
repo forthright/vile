@@ -35,6 +35,14 @@ Ferret is composed of 3 core units:
 2. A language-agnostic [metadata spec](https://docs.ferretci.com/plugins)
 3. A web based [continuous analysis service](https://ferretci.com) and data API
 
+## Demo
+
+<p align="center">
+  <a href="https://asciinema.org/a/137383" target="_blank">
+    <img src="https://user-images.githubusercontent.com/93340/30343065-0c55ca06-97ca-11e7-95a8-bd4605f8c452.png"/>
+  </a>
+</p>
+
 ## Features
 
 * :part_alternation_mark: Track code quality over time
@@ -52,14 +60,6 @@ Ferret is composed of 3 core units:
 * :wrench: Run traditional linter tools
 * :electric_plug: Flexible and easy to use plugin system
 * :hearts: Supports Windows, Linux, and MacOS
-
-## Demo
-
-<p align="center">
-  <a href="https://asciinema.org/a/137383" target="_blank">
-    <img src="https://user-images.githubusercontent.com/93340/30343065-0c55ca06-97ca-11e7-95a8-bd4605f8c452.png"/>
-  </a>
-</p>
 
 ## Installation & Usage
 
