@@ -1,5 +1,5 @@
 <p align="center">
-  <img style="background: none" src="https://github.com/forthright/ferret_temp/raw/master/docs/img/ferret.png" alt="Ferret Logo">
+  <img style="background: none" src="https://github.com/forthright/ferret_temp/raw/master/docs/img/ferret-new.png" alt="Ferret Logo">
   <p>An open platform for continuous software analysis.</p>
 </p>
 
@@ -42,24 +42,6 @@ Ferret is composed of 3 core units:
     <img src="https://user-images.githubusercontent.com/93340/30343065-0c55ca06-97ca-11e7-95a8-bd4605f8c452.png"/>
   </a>
 </p>
-
-## Features
-
-* :part_alternation_mark: Track code quality over time
-* :muscle: Get automated insights and suggestions based on the current state of your project
-* :email: Get notified about new issues and insights
-* :raising_hand: Collaborate with other users
-* :octocat: Set GitHub pull request statuses
-* :shower: Schedule routine CI builds for popular services like CircleCI, AppVeyor, and Codeship
-* :fire: Analyze complexity & churn
-* :truck: Track outdated software packages
-* :mag: Identify similar and duplicate code
-* :globe_with_meridians: Track your test coverage
-* :closed_lock_with_key: Check for vulnerabilities in libraries and code
-* :clock2: Capture commit data
-* :wrench: Run traditional linter tools
-* :electric_plug: Flexible and easy to use plugin system
-* :hearts: Supports Windows, Linux, and MacOS
 
 ## Installation & Usage
 
