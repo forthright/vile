@@ -16,17 +16,19 @@ files to your project's root, and let you know about anything else worth knowing
 
 Authenticating with Ferret is pretty straightforward if a bit manual (at the moment).
 
-First, create an account on [FerretCI](https://ferretci.com) if you havn't,
+First, create an account on [FerretCI](https://ferretci.com) if you haven't,
 and complete the authentication setup with:
 
     ferret auth
+
+*([Don't want to create an account?](faq/#can-i-use-ferret-without-creating-an-account))*
 
 ## Upload Your First Commit
 
 Now we can analyze our project locally and upload our first analysis snapshot
 using Ferret's web service API.
 
-    ferret analyze -u
+    ferret analyze --commit
 
 *Note: If you are using a plugin like `ferret-git`, uploading snapshots
 on both master and non-master branches (force push away!) will reflect in

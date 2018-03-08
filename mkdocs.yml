@@ -32,6 +32,7 @@ pages:
     - 'Analyzing Your Code': analyze.md
     - 'Language Support': lang.md
     - '.ferret.yml': config.md
+    - 'Integrations': integrations.md
     - 'Library API': library.md
     - 'Creating a Plugin': plugins.md
     - 'Editor Integration': editor.md
