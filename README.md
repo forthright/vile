@@ -1,5 +1,5 @@
 <p align="center">
-  <img style="background: none" src="https://github.com/forthright/ferret_temp/raw/master/docs/img/ferret-new.png" alt="Ferret Logo">
+  <img style="background: none" src="https://user-images.githubusercontent.com/93340/37132572-47f33a4a-225c-11e8-910f-443d192f7faf.png" alt="Ferret Logo">
   <p>An open platform for continuous software analysis.</p>
 </p>
 
