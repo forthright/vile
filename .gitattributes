@@ -1,5 +1,8 @@
 bin/* linguist-vendored
+build/* linguist-vendored
 lib/* linguist-vendored
 test/* linguist-vendored
+meta/* linguist-vendored
+docs/* linguist-vendored
 
 * text eol=lf

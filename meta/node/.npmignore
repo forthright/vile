@@ -1,0 +1,3 @@
+dist/*.tgz
+dist/*.zip
+dist/*.tar.gz

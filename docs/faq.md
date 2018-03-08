@@ -1,3 +1,5 @@
+# FAQ
+
 ## Can I use Ferret without installing Node.js?
 
 As long as you use the [pre-compiled binaries](start/#platform-binaries) or

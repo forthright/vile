@@ -1,18 +1,118 @@
-The core `ferret` package comes with a variety of plugins that support various languages and frameworks.
+# Language Support
 
-You can find a full list of official and unofficial plugins [here](https://ferretci.com/plugins).
+If you are installing Ferret [by "source"](start/#install-by-source) then this section
+will be helpful. If you are using the pre-compiled binary which
+comes loaded with all available official plugins, you only need to
+really worry about [configuring your project](/analyze/#configure-your-project).
+
+Below are all the [meta plugins](/plugins/#meta-plugins) that are
+bundled with Ferret's binaries.
 
 ## JavaScript
 
-For an everyday JavaScript (or Node.js) project:
+Provided via [ferret-javascript](https://github.com/forthright/ferret/tree/master/meta/javascript).
 
-    npm i -D ferret ferret-synt ferret-git ferret-escomplex ferret-nsp
+<table>
+  <tr>
+    <th width="300">Metadata Type</th>
+    <th width="600">Provided By</th>
+  </tr>
+  <tr>
+    <td>Coverage</td>
+    <td>
+      <a id="coverage" href="https://github.com/forthright/vile-coverage">vile-coverage</a>
+    </td>
+  </tr>
+  <tr>
+    <td id="complexity">Complexity</td>
+    <td>
+      <a href="https://github.com/forthright/vile-rubycritic">vile-rubycritic</a>
+    </td>
+  </tr>
+  <tr>
+    <td id="churn">Churn</td>
+    <td>
+      <a href="https://github.com/forthright/vile-rubycritic">vile-rubycritic</a>
+    </td>
+  </tr>
+  <tr>
+    <td id="dependencies">Dependencies</td>
+    <td>
+      <a href="https://github.com/forthright/vile-bundler-outdated">vile-bundler-outdated</a>
+    </td>
+  </tr>
+  <tr>
+    <td id="duplicate">Duplicate</td>
+    <td>
+      <a href="https://github.com/forthright/vile-rubycritic">vile-rubycritic</a>
+    </td>
+  </tr>
+  <tr>
+    <td id="security">Security</td>
+    <td>
+      <a href="https://github.com/forthright/vile-bundler-audit">vile-bundler-audit</a>
+    </td>
+  </tr>
+  <tr>
+    <td id="file-statistics">File Statistics</td>
+    <td>
+      <a href="https://github.com/forthright/vile-stat">vile-stat</a>
+    </td>
+  </tr>
+  <tr>
+    <td id="commit-info">Commit Info</td>
+    <td>
+      <a href="https://github.com/forthright/vile-git">vile-git</a>
+    </td>
+  </tr>
+  <tr>
+    <td id="lint-tools">Lint Tools</td>
+    <td>
+      <p>Included:</p>
+      <ul>
+        <li>
+          <a href="https://github.com/forthright/vile-rubocop">vile-rubocop</a>
+        </li>
+        <li>
+          <a href="https://github.com/forthright/vile-rubycritic">vile-rubycritic</a>
+        </li>
+      </ul>
+      <p>User installable:</p>
+      <ul>
+        <li>
+          <a href="https://github.com/forthright/vile-brakeman">vile-brakeman</a>
+        </li>
+        <li>
+          <a href="https://github.com/forthright/vile-rails-best-practices">vile-rails-best-practices</a>
+        </li>
+        <li>
+          <a href="https://github.com/forthright/vile-reek">vile-reek</a>
+        </li>
+        <li>
+          <a href="https://github.com/forthright/vile-sass-lint">vile-sass-lint</a>
+        </li>
+        <li>
+          <a href="https://github.com/forthright/vile-scsslint">vile-scsslint</a>
+        </li>
+        <li>
+          <a href="https://github.com/forthright/vile-slim-lint">vile-slim-lint</a>
+        </li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
 ### Node.js
 
+See [ferret-node](https://github.com/forthright/ferret/tree/master/meta/node).
+
 ### TypeScript
 
+See [ferret-typescript](https://github.com/forthright/ferret/tree/master/meta/node).
+
 ### CoffeeScript
+
+See [ferret-coffeescript](https://github.com/forthright/ferret/tree/master/meta/node).
 
 ### Flow
 

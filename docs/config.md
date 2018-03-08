@@ -1,3 +1,5 @@
+# .ferret.yml
+
 You can easily configure Ferret and it's plugins via a `.ferret.yml` file.
 
 The file should reside in your project root and look something like this:

@@ -1,3 +1,5 @@
+# Library API
+
 ## v0 (beta)
 
 See [src/index](src/index.ts) for the main library exports.

@@ -1,3 +1,5 @@
+# Getting Started
+
 Ferret is different compared to most continuous analysis services.
 
 You will first need to install its CLI and library on your local machine or CI server.
@@ -52,9 +54,9 @@ To install packages manually, or if you are familiar with an npm setup:
 
     cd my_project/
     npm i @forthright/ferret
-    npm i @forthright/ferret-ruby (or whatever lang pack you need)
+    npm i @forthright/ferret-XXXX (whatever plugins and meta packages you want)
 
-For a full list of packages see [our npm package list](https://ferretci.com/plugins).
+For more details on installing via `npm` see [here](/lang/#plugins).
 
 ## Checking The Install
 

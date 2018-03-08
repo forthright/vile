@@ -1,3 +1,5 @@
+# Editor Integrations
+
 You *should* be able to integrate Ferret into any text editor (ex: via the `-f syntastic` flag).
 
 ### Vim

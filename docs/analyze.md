@@ -1,3 +1,5 @@
+# Analyzing Your Code
+
 ## Configure Your Project
 
 By default, Ferret will auto detect your languages and frameworks

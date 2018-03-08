@@ -1,3 +1,5 @@
+# Integrations
+
 You can integrate a number of services using Ferret's web service.
 
 ## CI

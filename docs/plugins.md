@@ -1,3 +1,17 @@
+# Creating a Plugin
+
+Ferret is centred around plugins that generate various types of data for different
+types of languages and frameworks.
+
+You can find a full list of official, binary bundled plugins [here](https://ferretci.com/plugins).
+
+## Meta Plugins
+
+There are also various [meta plugins](meta/) that provide a full set of plugins
+for a specific language or framework.
+
+## Quick Start
+
 A plugin itself should be an [npm package](https://docs.npmjs.com/getting-started/creating-node-modules) prefixed
 with `ferret-` and have a [main module](https://docs.npmjs.com/files/package.json#main).
 

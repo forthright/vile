@@ -13,7 +13,7 @@ By participating in this project you agree to our [Code of Conduct](CODE_OF_COND
 * :vhs: Distill various types of software analysis into a language independent
 data format
 * :tada: Support and complement existing tooling (linters, complexity tools, etc.)
-* :nut_and_bolt: Create new libraries and plugins that backfill language support (ex: [synt](https://github.com/brentlintner/synt))
+* :nut_and_bolt: Create new open source libraries and plugins
 
 ## Submitting Issues
 
