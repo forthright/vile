@@ -1,6 +1,11 @@
+<h3 align="center">
+<img width="128px" style="background: none" src="https://user-images.githubusercontent.com/93340/37132572-47f33a4a-225c-11e8-910f-443d192f7faf.png" alt="Ferret Logo">
+<br/>
+Ferret
+</h3>
+
 <p align="center">
-  <img style="background: none" src="https://user-images.githubusercontent.com/93340/37132572-47f33a4a-225c-11e8-910f-443d192f7faf.png" alt="Ferret Logo">
-  <p>An open platform for continuous software analysis.</p>
+  An open platform for continuous software analysis.
 </p>
 
 <p align="center">
