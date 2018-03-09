@@ -36,15 +36,23 @@ professionals supporting and growing the project.
 
 Given this, the tried and tested way of providing a pay-for-private SaaS model (ex: GitHub)
 seemed like an ideal one at the start. However, Ferret started out as a passion project
-that I would rather have free and open compared to closed and purely for profit.
+that I would rather have free and open compared to closed and ultimately driven for profit.
 
 Other mechanisms of managing a "company" of contributors and maintainers (ideally in a decentralized way
 such as with [Open Collective](https://opencollective.com)) are definitely on the radar as well, and if enough users like the idea then
 I believe it behooves the maintainers/creators to do so.
 
+## How did Ferret start out?
+
+It started out as a project born out of frustration of existing continuous analysis solutions.
+
+The main goal was to create an open, extensible, multi-language platform that could help
+foster and transparently support the existing open source community and tooling surrounding
+static code analysis and project maintenance.
+
 ## Didn't this project used to be called something else?
 
-Yes. It was originally called Vile, and started out a software library, CLI and
+Yes. It was originally called Vile, and initially started out as a software library, CLI and
 local web report for JS/Ruby based projects. From there it just outgrew its name as well as the
 connotations its name conveyed, resulting in some pretty noticeable brand dissonance.
 

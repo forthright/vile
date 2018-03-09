@@ -12,6 +12,7 @@ extra_css:
 theme:
   name: 'material'
   logo: 'img/ferret.svg'
+  favicon: 'img/favicon.ico'
   language: 'en'
   palette:
     primary: 'grey'

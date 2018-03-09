@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+home_dir=`pwd`
+docs_dir="../ferret-docs"
+
+set -xe
+
+rm -rf $docs_dir/public
+mkdir $docs_dir/public
+
+mkdocs build
+
+cp -r .docs-site/* $docs_dir/public/.
+
+app_version=$(`dirname $0`/npm-pkg-version)
+
+tag_version="v$app_version"
+
+cd $docs_dir
+
+git add -f public
+
+git commit -m $tag_version
+
+git gc
+
+git push origin master
+
+git push production master
+
+cd $home_dir

@@ -6,30 +6,66 @@ You will first need to install its CLI and library on your local machine or CI s
 
 ## Installation
 
-### MacOS
+The recommended way to install and update Ferret is through your favourite OS's
+package manager. Many GNU/Linux distros and package formats are supported,
+along with Windows and MacOS.
+
+### Package Manager
+
+#### MacOS
+
+Using [Homebrew](https://brew.sh):
 
     brew tap forthright/ferret
     brew install ferret
 
-### Windows
+#### Windows
 
-    choco install ferret
+Using [Chocolatey](https://chocolatey.org/):
 
-### Ubuntu
+    cinst ferret
+
+#### Ubuntu
+
+(unless we just use build.opensuse.org?)
+
+Using a custom [PPA](https://launchpad.net/~brentlintner/+archive/ubuntu/ferret-code):
 
     add-apt-repository ....
     apt update
     apt install ferret-code
 
-### Arch Linux
+#### Debian
+
+Use [build.opensuse.org](https://build.opensuse.org/).
+
+#### Arch Linux
+
+Using an [AUR](https://aur.archlinux.org/packages/ferret) package:
 
     pacman -S pacaur
     pacaur -S ferret
 
-### Fedora
+#### openSUSE
+
+Using an [build.opensuse.org](https://build.opensuse.org/):
+
+    ....
+    yast install ferret
+
+#### Fedora
+
+Using an [build.opensuse.org](https://build.opensuse.org/):
 
     ....
     dnf install ferret
+
+#### CentOS
+
+Using an [build.opensuse.org](https://build.opensuse.org/):
+
+    yum-....
+    yum install ferret
 
 ### Platform Binaries
 

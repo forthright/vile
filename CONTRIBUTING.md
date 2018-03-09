@@ -97,5 +97,5 @@ To run compile task with file watch in the background:
 
 To generate latest docs:
 
-    npm run -s gen-docs
-    [browser] ../ferret-docs/public/index.html
+    ./bin/gen-docs
+    [server-static] ../ferret-docs/public/index.html
