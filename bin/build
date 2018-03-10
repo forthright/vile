@@ -2,6 +2,8 @@
 
 set -xe
 
+# TODO: script sh/js (look in the forthright/scripts section
+
 build() {
   target="node8.6.0-$target_os"
 
@@ -26,7 +28,7 @@ build() {
   bin_name="$core_dist/ferret"
   zip_name="$full_target.tgz"
 
-  npx pkg -t $target -o $bin_name package.json
+  npx pkg -t $target -o $bin_name $pkg_json
   tar -C $core_dist/.. -czvf $core_dist/../$zip_name $full_target
 }
 
@@ -41,6 +43,7 @@ clean() {
 main() {
   dist=dist
   script_dir=`dirname $0`
+  pkg_json=package-build.json
   target_arch=x86_64
 
   clean()

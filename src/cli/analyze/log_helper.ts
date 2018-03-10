@@ -10,9 +10,9 @@ const log = logger.create("cli")
 // HACK: weird TS bug when using custom types?
 const emphasize : any = require("emphasize")
 
-const humanize_line_char = (issue : ferret.Issue) : string => {
-  const start : ferret.IssueLine = _.get(issue, "where.start", {})
-  const end : ferret.IssueLine = _.get(issue, "where.end", {})
+const humanize_line_char = (data : ferret.Data) : string => {
+  const start : ferret.DataLine = _.get(data, "where.start", {})
+  const end : ferret.DataLine = _.get(data, "where.end", {})
 
   const start_character : string = (
       typeof start.character == "number" || typeof start.character == "string"
@@ -26,9 +26,9 @@ const humanize_line_char = (issue : ferret.Issue) : string => {
     `${start_character}${end_character}` : start_character
 }
 
-const humanize_line_num = (issue : ferret.Issue) : string => {
-  const start : ferret.IssueLine = _.get(issue, "where.start", {})
-  const end : ferret.IssueLine = _.get(issue, "where.end", {})
+const humanize_line_num = (data : ferret.Data) : string => {
+  const start : ferret.DataLine = _.get(data, "where.start", {})
+  const end : ferret.DataLine = _.get(data, "where.end", {})
 
   const start_line : string = (
       typeof start.line == "number" || typeof start.line == "string"
@@ -43,111 +43,111 @@ const humanize_line_num = (issue : ferret.Issue) : string => {
 }
 
 const to_console = (
-  issue : ferret.Issue,
+  data : ferret.Data,
   format : string = "default"
 ) : string => {
   if (format == "syntastic") {
-    const issue_type : string = issue.type
-    let start_info : ferret.IssueLine
+    const data_type : string = data.type
+    let start_info : ferret.DataLine
     const synastic_type : string = _
-      .some(util.errors, (name) => name == issue_type) ? "E" : "W"
+      .some(util.errors, (name) => name == data_type) ? "E" : "W"
 
-    if (issue_type == util.DUPE) {
-      const locs = _.get(issue, "duplicate.locations", [])
+    if (data_type == util.DUPE) {
+      const locs = _.get(data, "duplicate.locations", [])
       start_info = _.get(_.first(locs), "where.start", {})
     } else {
-      start_info = _.get(issue, "where.start", {})
+      start_info = _.get(data, "where.start", {})
     }
 
     const h_line = _.get(start_info, "line", 1)
     const h_char = _.get(start_info, "character", 1)
-    const details = _.has(issue, "title") &&
-                  issue.message != issue.title ?
-                    `${issue.title} => ${issue.message}` :
-                      (issue.message || issue.title)
+    const details = _.has(data, "title") &&
+                  data.message != data.title ?
+                    `${data.title} => ${data.message}` :
+                      (data.message || data.title)
 
-    return `${ issue.path }:${ h_line }:${ h_char }: ` +
+    return `${ data.path }:${ h_line }:${ h_char }: ` +
       `${synastic_type}: ${ details }`
   } else {
-    const h_line : string = humanize_line_num(issue)
-    const h_char : string = humanize_line_char(issue)
-    const details : string = _.has(issue, "title") &&
-                  issue.message != issue.title ?
-                    `${issue.title} => ${issue.message}` :
-                      (issue.message || issue.title)
+    const h_line : string = humanize_line_num(data)
+    const h_char : string = humanize_line_char(data)
+    const details : string = _.has(data, "title") &&
+                  data.message != data.title ?
+                    `${data.title} => ${data.message}` :
+                      (data.message || data.title)
     const loc : string = h_line || h_char ?
       `${ h_line ? "line " + h_line + ", " : "" }` +
       `${ h_char ? "col " + h_char + ", " : "" }` : ""
 
-    const issue_path = _.isEmpty(issue.path) ? "" : `${ issue.path }: `
+    const data_path = _.isEmpty(data.path) ? "" : `${ data.path }: `
 
-    return `${issue_path}${ loc }${ details }`
+    return `${data_path}${ loc }${ details }`
   }
 }
 
 const to_console_duplicate = (
-  issue : ferret.Issue
+  data : ferret.Data
 ) => {
   const files = _.chain(
-    _.get(issue, "duplicate.locations", [])
+    _.get(data, "duplicate.locations", [])
   ).map("path").uniq().join(", ")
-  return `${ issue.path }: Similar code in ${ files }`
+  return `${ data.path }: Similar code in ${ files }`
 }
 
 const to_console_churn = (
-  issue : ferret.Issue
-) => `${ issue.path }: ${ issue.churn }`
+  data : ferret.Data
+) => `${ data.path }: ${ data.churn }`
 
 const to_console_comp = (
-  issue : ferret.Issue
-) => `${ issue.path }: ${ issue.complexity }`
+  data : ferret.Data
+) => `${ data.path }: ${ data.complexity }`
 
 const to_console_scm = (
-  issue : ferret.Issue
+  data : ferret.Data
 ) => {
-  const date = _.get(issue, "commit.commit_date") ||
-              _.get(issue, "commit.author_date")
-  const sha = _.get(issue, "commit.sha")
+  const date = _.get(data, "commit.commit_date") ||
+              _.get(data, "commit.author_date")
+  const sha = _.get(data, "commit.sha")
   return `${ sha }: ${ date }`
 }
 
 const to_console_stat = (
-  issue : ferret.Issue
+  data : ferret.Data
 ) => {
-  const size = _.get(issue, "stat.size", "?")
-  const loc = _.get(issue, "stat.loc", "?")
-  const lines = _.get(issue, "stat.lines", "?")
-  const comments = _.get(issue, "stat.comments", "?")
-  const lang = _.get(issue, "stat.language", "?")
-  return `${ issue.path } ` +
+  const size = _.get(data, "stat.size", "?")
+  const loc = _.get(data, "stat.loc", "?")
+  const lines = _.get(data, "stat.lines", "?")
+  const comments = _.get(data, "stat.comments", "?")
+  const lang = _.get(data, "stat.language", "?")
+  return `${ data.path } ` +
     `(${ size ? (Number(size) / 1024).toFixed(3) + "KB" : "" })` +
     `: ${ lines } lines, ${ loc } loc, ${ comments }` +
     ` comments (language: ${lang})`
 }
 
 const to_console_dep = (
-  issue : ferret.Issue
+  data : ferret.Data
 ) : string => {
-  const name = _.get(issue, "dependency.name", "?")
-  const current = _.get(issue, "dependency.current", "?")
-  const latest = _.get(issue, "dependency.latest", "?")
+  const name = _.get(data, "dependency.name", "?")
+  const current = _.get(data, "dependency.current", "?")
+  const latest = _.get(data, "dependency.latest", "?")
   return `New release for ${name}: ${current} < ${latest}`
 }
 
 const to_console_cov = (
-  issue : ferret.Issue
+  data : ferret.Data
 ) : string => {
-  const cov = _.get(issue, "coverage.total", "?")
-  return `${ issue.path }: ${ cov }% lines covered`
+  const cov = _.get(data, "coverage.total", "?")
+  return `${ data.path }: ${ cov }% lines covered`
 }
 
 const log_syntastic_applicable_messages = (
-  issues : ferret.Issue[] = []
+  data : ferret.Data[] = []
 ) => {
-  issues.forEach((issue : ferret.Issue, index : number) => {
-    const issue_type : string = issue.type
-    if (_.some(util.displayable_issues, (t) => issue_type == t)) {
-      console.log(to_console(issue, "syntastic"))
+  data.forEach((datum : ferret.Data, index : number) => {
+    const data_type : string = datum.type
+    if (_.some(util.displayable_issues, (t) => data_type == t)) {
+      console.log(to_console(datum, "syntastic"))
     }
   })
 }
@@ -195,17 +195,17 @@ const log_snippet = (
 }
 
 const to_console_snippet = (
-  issue : ferret.Issue,
+  data : ferret.Data,
   nocolors : boolean
 ) : void => {
-  if (_.isEmpty(issue.snippet) && _.isEmpty(issue.duplicate)) return
+  if (_.isEmpty(data.snippet) && _.isEmpty(data.duplicate)) return
 
-  const filepath : string = _.get(issue, "path", "")
+  const filepath : string = _.get(data, "path", "")
   const file_ext = _.first(filepath.match(/[^\.]*$/))
 
-  if (issue.type == util.DUPE) {
+  if (data.type == util.DUPE) {
     _.each(
-      _.get(issue, "duplicate.locations", []),
+      _.get(data, "duplicate.locations", []),
       (loc : ferret.DuplicateLocations) => {
         const code = code_for(loc.snippet)
         const lines = lines_for(loc.snippet)
@@ -216,69 +216,69 @@ const to_console_snippet = (
       })
     console.log()
   } else {
-    const code = code_for(issue.snippet)
-    const lines = lines_for(issue.snippet)
+    const code = code_for(data.snippet)
+    const lines = lines_for(data.snippet)
     console.log()
     log_snippet(lines, code, filepath, file_ext, nocolors)
     console.log()
   }
 }
 
-const log_issue_messages = (
-  issues : ferret.Issue[] = [],
+const log_data_messages = (
+  data : ferret.DataList = [],
   showsnippets = false,
   nocolors = false
 ) => {
   const nlogs : {
-    [issue_type : string] : ferret.LoggerInstance
+    [data_type : string] : ferret.LoggerInstance
   } = {}
 
-  issues.forEach((issue : ferret.Issue, index : number) => {
-    const logger_type : string = issue.type
+  data.forEach((datum : ferret.Data, index : number) => {
+    const logger_type : string = datum.type
 
     if (!nlogs[logger_type]) {
       nlogs[logger_type] = logger.create(logger_type)
     }
 
     const nlog = nlogs[logger_type]
-    const plugin_name : string = _.get(issue, "plugin", "")
+    const plugin_name : string = _.get(datum, "plugin", "")
     const msg_postfix = plugin_name ? ` (ferret-${ plugin_name })` : ""
 
-    if (_.some(util.errors, (i_type) => issue.type == i_type)) {
-      nlog.error_issue(to_console(issue) + msg_postfix)
-    } else if (_.some(util.warnings, (i_type) => issue.type == i_type)) {
-      if (issue.type == util.COMP) {
-        nlog.info_issue(to_console_comp(issue) + msg_postfix)
-      } else if (issue.type == util.CHURN) {
-        nlog.info_issue(to_console_churn(issue) + msg_postfix)
-      } else if (issue.type == util.DEP) {
-        nlog.warn_issue(to_console_dep(issue) + msg_postfix)
-      } else if (issue.type == util.DUPE) {
-        nlog.warn_issue(to_console_duplicate(issue) + msg_postfix)
+    if (_.some(util.errors, (i_type) => datum.type == i_type)) {
+      nlog.error_issue(to_console(datum) + msg_postfix)
+    } else if (_.some(util.warnings, (i_type) => datum.type == i_type)) {
+      if (datum.type == util.COMP) {
+        nlog.info_issue(to_console_comp(datum) + msg_postfix)
+      } else if (datum.type == util.CHURN) {
+        nlog.info_issue(to_console_churn(datum) + msg_postfix)
+      } else if (datum.type == util.DEP) {
+        nlog.warn_issue(to_console_dep(datum) + msg_postfix)
+      } else if (datum.type == util.DUPE) {
+        nlog.warn_issue(to_console_duplicate(datum) + msg_postfix)
       } else {
-        nlog.warn_issue(to_console(issue) + msg_postfix)
+        nlog.warn_issue(to_console(datum) + msg_postfix)
       }
     } else {
-      if (issue.type == util.SCM) {
-        nlog.info_issue(to_console_scm(issue) + msg_postfix)
-      } else if (issue.type == util.STAT) {
-        nlog.info_issue(to_console_stat(issue) + msg_postfix)
-      } else if (issue.type == util.COV) {
-        nlog.info_issue(to_console_cov(issue) + msg_postfix)
-      } else if (issue.type == util.OK) {
+      if (datum.type == util.SCM) {
+        nlog.info_issue(to_console_scm(datum) + msg_postfix)
+      } else if (datum.type == util.STAT) {
+        nlog.info_issue(to_console_stat(datum) + msg_postfix)
+      } else if (datum.type == util.COV) {
+        nlog.info_issue(to_console_cov(datum) + msg_postfix)
+      } else if (datum.type == util.OK) {
         // TODO: don't log for now (too annoying for certain user experiences)
       } else {
-        nlog.info_issue(to_console(issue) + msg_postfix)
+        nlog.info_issue(to_console(datum) + msg_postfix)
       }
     }
 
     if (showsnippets) {
-      to_console_snippet(issue, nocolors)
+      to_console_snippet(datum, nocolors)
     }
   })
 }
 
 export = {
-  issues: log_issue_messages,
+  issues: log_data_messages,
   syntastic_issues: log_syntastic_applicable_messages,
 }

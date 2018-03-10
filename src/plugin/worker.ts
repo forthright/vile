@@ -75,7 +75,7 @@ const handle_worker_request = (data : ferret.PluginWorkerData) : void => {
     return plugin.exec_plugin(name, plugin_config)
   })
   .then(_.flatten)
-  .then((issues) => process.send(issues))
+  .then((data) => process.send(data))
   .catch(log_and_exit) // since we could be in a forked proc
 }
 

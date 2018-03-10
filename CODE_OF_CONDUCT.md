@@ -9,6 +9,15 @@ size, disability, ethnicity, gender identity and expression, level of experience
 nationality, personal appearance, race, religion, or sexual identity and
 orientation.
 
+## Our Tenets
+
+* :rainbow: Provide an open and extensible platform for any type of software analysis
+* :seedling: Help maintain and foster an open and inclusive community around code quality
+* :vhs: Distill various types of software analysis into a language independent
+data format
+* :tada: Support and complement existing tooling (linters, complexity tools, etc.)
+* :nut_and_bolt: Create new open source libraries and plugins, notably within the realm of static analysis
+
 ## Our Standards
 
 Examples of behavior that contributes to creating a positive environment

@@ -1,4 +1,5 @@
 import path = require("path")
+import _ = require("lodash")
 import PluginNotFoundError = require("./plugin_not_found_error")
 
 const FORTHRIGHT_NPM : string = "@forthright"
@@ -40,7 +41,7 @@ const locate = (name : string) : ferret.Plugin => {
   try {
     // official plugins
     plugin = _locate(name, FORTHRIGHT_NPM)
-  } catch (e : Error) {
+  } catch (e) {
     if (e.name == "PluginNotFoundError") {
       // unofficial plugins
       plugin = _locate(name)

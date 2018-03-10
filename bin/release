@@ -22,7 +22,7 @@ npm run -s compile
 
 git add -f lib
 
-npx release-it -n -p -m 'v%s' -i $level
+npx release-it -i $level
 
 # -------------------
 #  Release Docs

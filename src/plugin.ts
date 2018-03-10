@@ -41,8 +41,8 @@ const is_array = (list : any[]) : boolean =>
 const is_promise = (list : Bluebird<any>) : boolean =>
   !!(list && typeof list.then == "function")
 
-const map_plugin_name_to_issues = (name : string) => (issues : ferret.Issue[]) =>
-  _.map(issues, (issue : ferret.Issue) => {
+const map_plugin_name_to_data = (name : string) => (data : ferret.Data[]) =>
+  _.map(data, (issue : ferret.Data) => {
     issue.plugin = name
     return issue
   })
@@ -51,15 +51,15 @@ const exec_in_fork = (
   plugins : ferret.PluginList,
   config  : ferret.YMLConfig,
   worker  : cluster.Worker
-) : Bluebird<ferret.IssueList> =>
+) : Bluebird<ferret.DataList> =>
   new Bluebird((
-    resolve : (issue : ferret.IssueList) => void,
+    resolve : (issue : ferret.DataList) => void,
     reject : (error : string) => void
   ) => {
-    worker.on("message", (issues : ferret.IssueList) => {
-      if (issues) {
+    worker.on("message", (data : ferret.DataList) => {
+      if (data) {
         worker.disconnect()
-        resolve(issues)
+        resolve(data)
       } else {
         const data : ferret.PluginWorkerData = { config, plugins }
         worker.send(data)
@@ -77,8 +77,8 @@ const exec_in_fork = (
 
 const on_windows = () : boolean => /windows/i.test(os.type())
 
-const normalize_paths = (issues : ferret.IssueList) =>
-  _.each(issues, (issue) => {
+const normalize_paths = (data : ferret.DataList) =>
+  _.each(data, (issue) => {
     if (_.has(issue, "path")) {
       issue.path = unixify(issue.path)
 
@@ -111,8 +111,8 @@ const check_for_uninstalled_plugins = (
 
 const combine_paths = (
   combine_str : string,
-  issues : ferret.Issue[]
-) : ferret.Issue[] => {
+  data : ferret.Data[]
+) : ferret.Data[] => {
   const sanitized_combine_paths = _.map(combine_str.split(","),
                             (def : string) => def.split(":"))
 
@@ -127,7 +127,7 @@ const combine_paths = (
     const merge_path_regexp = new RegExp(`^${merge_path}/`, "i")
 
     // TODO: Windows support, better matching
-    issues.forEach((issue : ferret.Issue, idx : number) =>  {
+    data.forEach((issue : ferret.Data, idx : number) =>  {
       const issue_path = unixify(_.get(issue, "path", ""))
       const issue_type = _.get(issue, "type")
 
@@ -149,20 +149,20 @@ const combine_paths = (
         (t : string) => t == issue_type)
       // TODO: test this explicitly, especially unixify with non string
       const same_data_exists = potential_data_dupe &&
-        _.some(issues, (i : ferret.Issue) =>
+        _.some(data, (i : ferret.Data) =>
           i && _.has(i, "path") && unixify(i.path) == new_path &&
             i.type == issue_type)
 
       // HACK: If a lang,stat,comp issue and on base already, drop it
       if (same_data_exists) {
-        issues[idx] = undefined
+        data[idx] = undefined
       } else {
         _.set(issue, "path", new_path)
       }
     })
   })
 
-  return _.filter(issues)
+  return _.filter(data)
 }
 
 const exec_plugin = (
@@ -171,24 +171,24 @@ const exec_plugin = (
     config: {},
     ignore: []
   }
-) : Bluebird<ferret.IssueList> =>
+) : Bluebird<ferret.DataList> =>
   new Bluebird((
-    resolve : (i : ferret.IssueList) => void,
+    resolve : (i : ferret.DataList) => void,
     reject : (e : string) => void
   ) => {
     const api : ferret.Plugin = plugin_require.locate(name)
 
     if (!valid_plugin(api)) reject(`invalid plugin API: ${name}`)
 
-    const issues : any = api.punish(config)
+    const data : any = api.punish(config)
 
-    if (is_promise(issues)) {
-      issues
-        .then(map_plugin_name_to_issues(name))
+    if (is_promise(data)) {
+      data
+        .then(map_plugin_name_to_data(name))
         .then(resolve)
         .catch(reject) // TODO: keep running other plugins?
-    } else if (is_array(issues)) {
-      resolve(map_plugin_name_to_issues(name)(issues))
+    } else if (is_array(data)) {
+      resolve(map_plugin_name_to_data(name)(data))
     } else {
       log.warn(`${name} plugin did not return [] or Promise<[]>`)
       resolve([])
@@ -199,7 +199,7 @@ const execute_plugins = (
   plugins : ferret.PluginList = [],
   config : ferret.YMLConfig = null,
   opts : ferret.PluginExecOptions = {}
-) : Bluebird<ferret.IssueList> => {
+) : Bluebird<ferret.DataList> => {
   cluster.setupMaster({ exec: WORKER_MODULE })
 
   let plugins_finished = 0
@@ -227,40 +227,40 @@ const execute_plugins = (
     _.each(plugins_to_run, (p) => { plugins_running[p] = true })
     update_spinner()
     return exec_in_fork(plugins_to_run, config, worker)
-      .then((issues : ferret.Issue[]) => {
+      .then((data : ferret.Data[]) => {
         plugins_finished += plugins_to_run.length
         _.each(plugins_to_run, (p) => { delete plugins_running[p] })
         update_spinner()
-        normalize_paths(issues)
-        return issues
+        normalize_paths(data)
+        return data
       })
   }, { concurrency })
   .then(_.flatten)
-  .then((issues : ferret.IssueList) => {
+  .then((data : ferret.DataList) => {
     update_spinner()
 
     if (!_.isEmpty(opts.combine)) {
-      issues = combine_paths(opts.combine, issues)
+      data = combine_paths(opts.combine, data)
     }
 
     // HACK: this should be better, but belongs inside here
     if (opts.dont_post_process) {
       logger.stop_spinner()
-      return issues
+      return data
     } else {
       const app_ignore = _.get(config, "ferret.ignore", [])
       const app_allow = _.get(config, "ferret.allow", [])
-      const stop_spinner = (list : ferret.IssueList) : ferret.IssueList => {
+      const stop_spinner = (list : ferret.DataList) : ferret.DataList => {
         logger.stop_spinner()
         return list
       }
 
       if (opts.skip_snippets) {
-        return add_ok_issues(app_allow, app_ignore, issues)
+        return add_ok_data(app_allow, app_ignore, data)
           .then(stop_spinner)
       } else {
-        return add_code_snippets(issues)
-          .then((i) => add_ok_issues(app_allow, app_ignore, i))
+        return add_code_snippets(data)
+          .then((i) => add_ok_data(app_allow, app_ignore, i))
           .then(stop_spinner)
       }
     }
@@ -282,9 +282,9 @@ const into_snippet = (lines : any, start : number, end : number) =>
   }, [])
 
 const add_code_snippets = (
-  issues : ferret.IssueList
-) : Bluebird<ferret.IssueList> =>
-  Bluebird.map(_.uniq(_.map(issues, "path")), (filepath : string) => {
+  data : ferret.DataList
+) : Bluebird<ferret.DataList> =>
+  Bluebird.map(_.uniq(_.map(data, "path")), (filepath : string) => {
     if (!(filepath &&
           fs.existsSync(filepath) &&
             fs.lstatSync(filepath).isFile())) return
@@ -294,8 +294,8 @@ const add_code_snippets = (
       "utf-8"
     )).lines
 
-    _.each(_.filter(issues, (i : ferret.Issue) => i.path == filepath),
-      (issue : ferret.Issue) => {
+    _.each(_.filter(data, (i : ferret.Data) => i.path == filepath),
+      (issue : ferret.Data) => {
         const start = Number(_.get(issue, "where.start.line", 0))
         const end = Number(_.get(issue, "where.end.line", start))
 
@@ -328,16 +328,16 @@ const add_code_snippets = (
         }
       })
   })
-  .then(() => issues)
+  .then(() => data)
 
 const cwd_plugins_path = () =>
   path.resolve(path.join(process.cwd(), "node_modules"))
 
-const add_ok_issues = (
+const add_ok_data = (
   ferret_allow : ferret.AllowList,
   ferret_ignore : ferret.IgnoreList,
-  issues : ferret.IssueList = []
-) : Bluebird<ferret.IssueList> =>
+  data : ferret.DataList = []
+) : Bluebird<ferret.DataList> =>
   util.promise_each(
     process.cwd(),
     // TODO: don't compile ignore/allow every time
@@ -351,10 +351,10 @@ const add_ok_issues = (
       type: util.OK
     }),
     { read_data: false })
-  .then((ok_issues : ferret.IssueList) => {
-    const distinct_ok_issues = _.reject(ok_issues, (issue : ferret.Issue) =>
-      _.some(issues, (i) => i.path == issue.path))
-    return distinct_ok_issues.concat(issues)
+  .then((ok_data : ferret.DataList) => {
+    const distinct_ok_data = _.reject(ok_data, (issue : ferret.Data) =>
+      _.some(data, (i) => i.path == issue.path))
+    return distinct_ok_data.concat(data)
   })
 
 const filter_plugins_to_run = (
@@ -385,7 +385,7 @@ const filter_plugins_to_run = (
 const exec = (
   config : ferret.YMLConfig = {},
   opts : ferret.PluginExecOptions = {}
-) : Bluebird<ferret.IssueList> => {
+) : Bluebird<ferret.DataList> => {
   const app_config = _.get(config, "ferret", {})
   const allowed_plugins_via_config : ferret.PluginList = _.get(
     app_config, "plugins", [])
@@ -394,8 +394,8 @@ const exec = (
 
   const plugins_path = cwd_plugins_path()
 
-  const allowed_plugins_via_force_opts : ferret.PluginList = _
-    .get(opts, "force_plugins", [])
+  const allowed_plugins_via_additional_opts : ferret.PluginList = _
+    .get(opts, "additional_plugins", [])
 
   const run = (peer_installed_plugins : ferret.PluginList) =>
     execute_plugins(
@@ -403,7 +403,7 @@ const exec = (
         peer_installed_plugins,
         allowed_plugins_via_config,
         allowed_plugins_via_opts,
-        allowed_plugins_via_force_opts,
+        allowed_plugins_via_additional_opts,
         opts.skip_core_plugins),
       config,
       opts)

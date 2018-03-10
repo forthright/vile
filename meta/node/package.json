@@ -19,11 +19,9 @@
   },
   "homepage": "https://github.com/forthright/ferret#readme",
   "dependencies": {
-    "ferret": "^0.19.2",
     "ferret-escomplex": "^0.1.6",
     "ferret-eslint": "^0.1.16",
-    "ferret-git": "^0.5.6",
-    "ferret-nsp": "^0.2.15",
+    "ferret-retire": "^0.1.6",
     "ferret-synt": "^0.1.3"
   }
 }

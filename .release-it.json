@@ -6,8 +6,7 @@
     "tagName": "%s"
   },
   "npm": {
-    "publish": false,
-    "private": true,
+    "publish": true,
     "forcePublishSourceRepo": false
   },
   "github": {

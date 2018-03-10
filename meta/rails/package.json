@@ -2,13 +2,6 @@
   "name": "ferret-rails",
   "version": "0.1.0",
   "description": "A Ferret meta plugin for analyzing your Rails app and ecosystem.",
-  "pkg": {
-    "assets": [
-      "node_modules/opn/xdg-open",
-      "xdg-open",
-      "node_modules/ferret-bundler-audit/lib_ruby/*"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/forthright/ferret-rails.git"
@@ -24,14 +17,11 @@
   },
   "homepage": "https://github.com/forthright/ferret-ruby#readme",
   "dependencies": {
-    "ferret": "^0.19.2",
-    "ferret-brakeman": "^0.3.4",
-    "ferret-bundler-audit": "^0.3.4",
-    "ferret-bundler-outdated": "^0.1.2",
-    "ferret-eslint": "^0.1.15",
-    "ferret-rails-best-practices": "^0.3.2",
-    "ferret-rubocop": "^0.2.2",
-    "ferret-rubycritic": "^0.3.0",
-    "ferret-sass-lint": "^0.4.0"
+    "@forthright/ferret-ruby": "^0.1.3",
+    "@forthright/ferret-brakeman": "^0.3.4",
+    "@forthright/ferret-eslint": "^0.1.15",
+    "@forthright/ferret-rails-best-practices": "^0.3.2",
+    "@forthright/ferret-sass-lint": "^0.4.0",
+    "@forthright/ferret-slim-lint": "^0.3.3"
   }
 }

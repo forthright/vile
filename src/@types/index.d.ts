@@ -10,7 +10,7 @@ import * as http from "http";
 
 // Enable things like this:
 // > const ferret = require("ferret")
-// > let i : ferret.Data = ferret.issue({ path: "foo", type: ferret.ERR })
+// > let i : ferret.Data = ferret.data({ path: "foo", type: ferret.ERR })
 declare var ferret : ferret.Module.Index
 export = ferret;
 export as namespace ferret;
@@ -19,7 +19,7 @@ declare namespace ferret {
   // -------------------------------------------------
   // Data
   //
-  // Type defs for ferret issue object creation
+  // Type defs for ferret data object creation
   //
   export interface Data {
     type        : DataType.All;
@@ -61,6 +61,19 @@ declare namespace ferret {
     line     : number;
     text     : string;
     ending?  : string;
+  }
+
+  export type Context = ContextType.All[]
+
+  export module ContextType {
+    export type Ruby         = "ruby";
+    export type TypeScript   = "typescript";
+    export type JavaScript   = "javascript";
+    export type CoffeeScript = "coffeescript";
+    export type Haskell      = "haskell";
+    export type Rails        = "rails";
+
+    export type All = Ruby | TypeScript | JavaScript | CoffeeScript | Haskell | Rails
   }
 
   export module DataType {
@@ -264,7 +277,7 @@ declare namespace ferret {
     skip_core_plugins? : boolean
     skip_snippets?     : boolean;
     plugins?           : PluginList;
-    force_plugins?     : PluginList;
+    additional_plugins? : PluginList;
   }
 
   export interface CLIApp {
@@ -278,7 +291,7 @@ declare namespace ferret {
     issueLog            : string;
     log?                : string;
     plugins             : string;
-    forcePlugins?       : string;
+    additionalPlugins?  : string;
     quiet?              : boolean;
     skipSnippets?       : boolean;
     spinner?            : boolean;

@@ -180,9 +180,9 @@ const promise_each_file = (
 }
 
 // TODO: validate issue objects as it comes in
-const into_issue = (data : ferret.Issue) : ferret.Issue => data
+const into_issue = (data : ferret.Data) : ferret.Data => data
 
-const displayable_issues : ferret.IssueType.All[] = [
+const displayable_issues : ferret.DataType.All[] = [
   "warning",
   "style",
   "maintainability",
@@ -192,7 +192,7 @@ const displayable_issues : ferret.IssueType.All[] = [
   "dependency"
 ]
 
-const warnings : ferret.IssueType.Warnings[] = [
+const warnings : ferret.DataType.Warnings[] = [
   "warning",
   "style",
   "maintainability",
@@ -202,12 +202,12 @@ const warnings : ferret.IssueType.Warnings[] = [
   "dependency"
 ]
 
-const errors : ferret.IssueType.Errors[] = [
+const errors : ferret.DataType.Errors[] = [
   "error",
   "security"
 ]
 
-const infos : ferret.IssueType.Infos[] = [
+const infos : ferret.DataType.Infos[] = [
   "stat",
   "scm",
   "lang",
@@ -215,19 +215,19 @@ const infos : ferret.IssueType.Infos[] = [
 ]
 
 const api : ferret.Module.Util = {
-  CHURN :  ("churn" as ferret.IssueType.Churn),
-  COMP  :  ("complexity" as ferret.IssueType.Comp),
-  COV   :  ("cov" as ferret.IssueType.Cov),
-  DEP   :  ("dependency" as ferret.IssueType.Dep),
-  DUPE  :  ("duplicate" as ferret.IssueType.Dupe),
-  ERR   :  ("error" as ferret.IssueType.Err),
-  MAIN  :  ("maintainability" as ferret.IssueType.Main),
-  OK    :  ("ok" as ferret.IssueType.Ok),
-  SCM   :  ("scm" as ferret.IssueType.Scm),
-  SEC   :  ("security" as ferret.IssueType.Sec),
-  STAT  :  ("stat" as ferret.IssueType.Stat),
-  STYL  :  ("style" as ferret.IssueType.Styl),
-  WARN  :  ("warning" as ferret.IssueType.Warn),
+  CHURN :  ("churn" as ferret.DataType.Churn),
+  COMP  :  ("complexity" as ferret.DataType.Comp),
+  COV   :  ("cov" as ferret.DataType.Cov),
+  DEP   :  ("dependency" as ferret.DataType.Dep),
+  DUPE  :  ("duplicate" as ferret.DataType.Dupe),
+  ERR   :  ("error" as ferret.DataType.Err),
+  MAIN  :  ("maintainability" as ferret.DataType.Main),
+  OK    :  ("ok" as ferret.DataType.Ok),
+  SCM   :  ("scm" as ferret.DataType.Scm),
+  SEC   :  ("security" as ferret.DataType.Sec),
+  STAT  :  ("stat" as ferret.DataType.Stat),
+  STYL  :  ("style" as ferret.DataType.Styl),
+  WARN  :  ("warning" as ferret.DataType.Warn),
 
   allowed: is_allowed,
   displayable_issues,

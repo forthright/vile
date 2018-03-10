@@ -59,7 +59,7 @@ const wait_for_done_status_and_log = (
 }
 
 const commit = (
-  issues : ferret.IssueList,
+  data : ferret.DataList,
   cli_time : number,
   opts : ferret.CLIApp
 ) => {
@@ -69,7 +69,7 @@ const commit = (
   if (_.isEmpty(auth.project)) auth.project = opts.upload
 
   return service
-    .commit(issues, cli_time, auth)
+    .commit(data, cli_time, auth)
     .then((msg : http.IncomingMessage) => {
       if (_.get(msg, "response.statusCode") != 200) {
         upload_error(_.get(msg, "body", "[no body]"))

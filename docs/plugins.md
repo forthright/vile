@@ -7,6 +7,9 @@ You can find a full list of official, binary bundled plugins [here](https://ferr
 
 ## Quick Start
 
+**TODO: just make a demo repo and post that, because it's way easier, and
+can have it at @fortright/ferret-plugin-demo**
+
 A plugin itself should be an [npm package](https://docs.npmjs.com/getting-started/creating-node-modules) prefixed
 with `ferret-` and have a [main module](https://docs.npmjs.com/files/package.json#main).
 
@@ -17,22 +20,40 @@ First, create a new plugin shell:
     npm init -y
     npm i --save @forthright/ferret
 
-## Plugin API
+Note: Unless you need an explicit or frozen version for `ferret`,
+it is **highly** recommend you add ferret to `peerDependencies` instead of `dependencies`,
+as there will always be a library instance available to every plugin.
 
-### exports.exec
+## Creating a simple plugin
 
-The `exec` property must be method that returns an array of metadata,
-or a promise that resolves into one:
+A simple `lib/index.js` that generates a single warning:
 ```javascript
+const ferret = require("@forthright/ferret")
+
 module.exports = {
-  exec: (plugin_config) =>
-    [ metadata ] || a_promise_that_resolves_to_array_of_metadata
+  exec: (ferret_config) => {
+    return ferret.data({
+      type: ferret.WARN,
+      path: "lib/index.js",
+      message: "Oh no!"
+    })
+  }
 }
 ```
+You can run plugin easily
+
+## Plugin API
+
+Here are the methods defs.
+
 ### exports.context
 
 This is a property that provides a declarative way for plugins to signal
 things like what languages and frameworks they support.
+
+Unless you are doing language agnostic analysis or
+hand rolling your own file system traveral, you should if possible
+set the appropriate contexts for your plugin.
 
 An example for a plugin that supports generic
 Ruby projects and also Rails projects:
@@ -53,10 +74,26 @@ If you wanted to exclusively run a plugin for Rails apps, omit the `ruby` contex
 This property must be a method that is called for every valid file path
 that matches the plugin's allow/ignore config and file type contexts.
 
-## API Docs
+If you want dead simple file traversal and type matching support (through context
+setting), this is your friend.
 
-The `exec` method is the default way to hook into Ferret's analysis calls,
-and provides a very barebones way to pass metadata.
+If you really want to see any example of doing custom file traversal
+using the `exec` hook, see (show pre-routine or something?).
+
+### exports.exec
+
+This is the method hook to use if you are not doing much with file
+system traversing such as dependency release or package security checks.
+
+The property must be method that returns an array of metadata,
+or a promise that resolves into one:
+```javascript
+module.exports = {
+  exec: (plugin_config) =>
+    [ metadata ] || a_promise_that_resolves_to_array_of_metadata
+}
+```
+## API Docs
 
 However, you can also [require("@forthright/ferret")](library/) in your plugin and use its
 API, which also provides some helpers.

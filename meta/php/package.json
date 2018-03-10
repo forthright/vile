@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/forthright/ferret#readme",
   "dependencies": {
-    "ferret": "^0.19.2",
     "ferret-phpmd": "^0.3.3"
   }
 }

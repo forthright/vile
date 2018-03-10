@@ -6,15 +6,6 @@ Current list of [Contributors](https://github.com/forthright/ferret/graphs/contr
 
 By participating in this project you agree to our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## Project Tenets
-
-* :rainbow: Provide an open and extensible platform for any type of software analysis
-* :seedling: Help maintain and foster an open and inclusive community around code quality
-* :vhs: Distill various types of software analysis into a language independent
-data format
-* :tada: Support and complement existing tooling (linters, complexity tools, etc.)
-* :nut_and_bolt: Create new open source libraries and plugins
-
 ## Submitting Issues
 
 Current issue tracker is on [GitHub](https://github.com/forthright/ferret/issues).

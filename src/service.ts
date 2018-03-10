@@ -32,7 +32,7 @@ const handle_response = (
 // TODO: Flush out use of Bluebird<any>
 
 const commit = (
-  issues : ferret.IssueList,
+  data : ferret.DataList,
   cli_time : number,
   auth : ferret.Auth
 ) : Bluebird<any> =>
@@ -41,7 +41,7 @@ const commit = (
     request.post({
       form: {
         cli_time,
-        issues: JSON.stringify(issues)
+        issues: JSON.stringify(data)
       },
       headers: http_authentication(auth.token),
       url

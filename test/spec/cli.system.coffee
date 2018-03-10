@@ -245,7 +245,8 @@ describe "system :: cli blackbox testing", ->
                 .to.eql { ferret: { allow: [], ignore: [ ".build" ] } }
               expect(stdout).to.match /created: .ferret.yml/i
               expect(stdout).to
-                .match /npm install \-\-save\-dev ferreferret              expect(stdout).to.match /ferret analyze/i
+                .match /npm install \-\-save\-dev ferret/
+              expect(stdout).to.match /ferret analyze/i
               expect(stdout).to.match /docs\.ferretci\.com/i
               expect(stdout).to.match /ferretci\.com\/plugins/i
               expect(stdout).to.match /happy punishing/i
@@ -312,7 +313,7 @@ describe "system :: cli blackbox testing", ->
         cli.exec_err "analyze -w", (stdout, stderr, code) ->
           expect(stderr).to.eql ""
           expect(stdout).to.match(
-            /warn warning test \(ferret-test-sync-plugin\)/)
+            /warn warning test \(vile-test-sync-plugin\)/)
           expect(code).to.eql 0
           done()
 
@@ -352,7 +353,7 @@ describe "system :: cli blackbox testing", ->
         cli.exec_err "analyze -w", (stdout, stderr, code) ->
           expect(stderr).to.eql ""
           expect(stdout).to.match(
-            /info test test \(ferret-test-async-plugin\)/)
+            /info test test \(vile-test-async-plugin\)/)
           expect(code).to.eql 0
           done()
 
@@ -621,7 +622,7 @@ describe "system :: cli blackbox testing", ->
           expect(stderr).to.match /unhandled Promise\.reject/ig
           expect(stderr).to.match /Error: huzzah!/ig
           expect(stderr).to
-            .match new RegExp("ferret-test-err-plugin-reject-plugin " +
+            .match new RegExp("vile-test-err-plugin-reject-plugin " +
             "worker exited", "ig")
           expect(code).to.eql 1
           done()
@@ -634,7 +635,7 @@ describe "system :: cli blackbox testing", ->
           expect(stderr).to.match /Error: huzzah!/ig
           expect(stderr).to.match /at Object\.punish/ig
           expect(stderr).to
-            .match new RegExp("ferret-test-err-plugin-exception-plugin " +
+            .match new RegExp("vile-test-err-plugin-exception-plugin " +
             "worker exited", "ig")
           expect(code).to.eql 1
           done()
@@ -646,7 +647,7 @@ describe "system :: cli blackbox testing", ->
         cli.exec_err "a -w -n", (stdout, stderr, code) ->
           expect(stderr).to.match /invalid plugin API/ig
           expect(stderr).to
-            .match new RegExp("ferret-test-err-plugin-bad-api-plugin " +
+            .match new RegExp("vile-test-err-plugin-bad-api-plugin " +
             "worker exited", "ig")
           expect(code).to.eql 1
           done()
@@ -659,7 +660,7 @@ describe "system :: cli blackbox testing", ->
           expect(stderr).to.match /oh no \(died on require\)/ig
           expect(stderr).to.match /error worker/ig
           expect(stderr).to
-            .match new RegExp("ferret-test-err-plugin-bad-require-plugin " +
+            .match new RegExp("vile-test-err-plugin-bad-require-plugin " +
             "worker exited", "ig")
           expect(code).to.eql 1
           done()
@@ -673,9 +674,9 @@ describe "system :: cli blackbox testing", ->
           expect(stderr).to.match /error worker/ig
           expect(stderr).to
             .match new RegExp("PluginNotFoundError: Cannot find module " +
-            "\'ferret-test-err-plugin-module-dne-plugin\'", "ig")
+            "\'vile-test-err-plugin-module-dne-plugin\'", "ig")
           expect(stderr).to
-            .match new RegExp("ferret-test-err-plugin-module-dne-plugin " +
+            .match new RegExp("vile-test-err-plugin-module-dne-plugin " +
             "worker exited", "ig")
           expect(code).to.eql 1
           done()

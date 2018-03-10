@@ -6,7 +6,7 @@ import ora = require("ora")
 const chalk = require("chalk")
 
 let enable_colors : boolean = false
-let allow_issue_types : ferret.IssueType.All[] = []
+let allow_data_types : ferret.DataType.All[] = []
 
 // HACK: need to get exported ora types
 const spin : any = ora({ color: "green" })
@@ -26,15 +26,15 @@ const update_spinner = (text : string) : void => {
 
 const level = (name : string) : void => {
   process.env.FERRET_LOG_LEVEL = name
-  // HACK: weird dual type (num/string) issue with log.LogLevel
+  // HACK: weird dual type (num/string) data with log.LogLevel
   log.setLevel(<any>name)
 }
 
 const enable = (
   colors = true,
-  issue_types : ferret.IssueType.All[] = []
+  data_types : ferret.DataType.All[] = []
 ) : void => {
-  allow_issue_types = issue_types
+  allow_data_types = data_types
   enable_colors = colors
 
   // HACK: supports auto setting color/log in worker procs for CLI
@@ -95,8 +95,8 @@ const apply_issue = (
   name : string,
   source : string
 ) => (...logs : any[]) : void => {
-  if ((_.isEmpty(allow_issue_types) ||
-      _.some(allow_issue_types, (t) => t == source))) {
+  if ((_.isEmpty(allow_data_types) ||
+      _.some(allow_data_types, (t) => t == source))) {
     log.info.apply(log, colorize(name, source, logs))
   }
 }

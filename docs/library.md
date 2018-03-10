@@ -25,7 +25,7 @@ const ferret = require("ferret")
 
 ferret
   .exec(ferret.config.load())
-  .then((issues : ferret.IssueList) => {
+  .then((data : ferret.DataList) => {
     // ...
   })
 ```
@@ -57,16 +57,16 @@ const allowed = (config) => {
   const allow_config = _.get(config, "allow", [])
   return (file, is_dir) =>
     is_dir ||
-      (vile.allowed(file, allow_config) &&
-        !vile.ignored(file, ignore_config))
+      (ferret.allowed(file, allow_config) &&
+        !ferret.ignored(file, ignore_config))
 }
 
 module.exports = {
   exec: (config) => {
-    vile.promise_each(
+    ferret.promise_each(
       process.cwd(),
       allowed(config),
-      into_stat_issue)
+      into_stat_metadata)
   }
 }
 ```
@@ -84,7 +84,7 @@ module.exports = {
 
     return get_some_filepaths_to_check()
       .filter((filepath) => filtered(filepath))
-      .each(determine_issues)
+      .each(determine_metedata)
   }
 }
 ```

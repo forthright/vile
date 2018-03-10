@@ -29,8 +29,8 @@ const add_default_ignores = (
   _.set(ferret_yml, "ferret.ignore", new_ignore)
 }
 
-const has_non_info_issues = (issues : ferret.IssueList) : boolean =>
-  _.filter(issues, (issue : ferret.Issue) =>
+const has_non_info_data = (data : ferret.DataList) : boolean =>
+  _.filter(data, (issue : ferret.Data) =>
     _.some(util.displayable_issues, (t) => t == issue.type)
   ).length > 0
 
@@ -43,8 +43,8 @@ const analyze = (
 
   const ferret_yml = config.get()
 
-  const force_plugins = typeof process.env.FORCE_PLUGINS == "string" ?
-    _.compact(_.split(process.env.FORCE_PLUGINS, ",")) : []
+  const additional_plugins = typeof opts.additionalPlugins == "string" ?
+    _.compact(_.split(opts.additionalPlugins, ",")) : []
 
   add_default_ignores(ferret_yml)
 
@@ -53,7 +53,7 @@ const analyze = (
     dont_post_process: opts.dontPostProcess,
     format: opts.format,
     plugins: custom_plugins,
-    force_plugins: force_plugins,
+    additional_plugins: additional_plugins,
     skip_core_plugins: opts.withoutCorePlugins,
     skip_snippets: opts.skipSnippets,
     spinner: !(opts.quiet || !opts.decorations)
@@ -67,25 +67,25 @@ const analyze = (
 
   const exec = () => plugin
     .exec(ferret_yml, exec_opts)
-    .then((issues : ferret.IssueList) => {
+    .then((data : ferret.DataList) => {
       const cli_end_time = new Date().getTime()
       const cli_time = cli_end_time - cli_start_time
 
       if (opts.format == "syntastic") {
-        log_helper.syntastic_issues(issues)
+        log_helper.syntastic_issues(data)
       } else if (opts.format == "json") {
-        process.stdout.write(JSON.stringify(issues))
+        process.stdout.write(JSON.stringify(data))
       } else {
         log_helper.issues(
-          issues,
+          data,
           opts.terminalSnippets,
           !opts.decorations)
       }
 
       if (opts.upload) {
-        return upload.commit(issues, cli_time, opts)
+        return upload.commit(data, cli_time, opts)
       } else {
-        if (opts.exitOnIssues && has_non_info_issues(issues)) {
+        if (opts.exitOnIssues && has_non_info_data(data)) {
           process.exit(1)
         }
         return Bluebird.resolve()
@@ -111,7 +111,7 @@ const configure = (
   opts : ferret.CLIApp
 ) : void => {
   const issue_levels = (_.compact(
-    _.split(opts.issueLog, ",")) as ferret.IssueType.All[])
+    _.split(opts.issueLog, ",")) as ferret.DataType.All[])
 
   logger.enable(opts.decorations, issue_levels)
 
@@ -140,8 +140,10 @@ const create = (cli : commander.CommanderStatic) =>
     .command("analyze [paths...]")
     .alias("a")
     .option("-p, --plugins [plugin_list]",
-            `unless specified in config, this can be a comma delimited ` +
-            `string, else run all installed plugins`)
+            `run only these plugins`)
+    .option("-a, --additional-plugins [plugin_list]",
+            `unless you specify --plugins, this will ` +
+            `add these plugins to auto-detected list`)
     .option("-c, --config [path]",
             "specify a custom config file")
     .option("-f, --format [type]",
@@ -159,7 +161,7 @@ const create = (cli : commander.CommanderStatic) =>
     .option("-g, --git-diff [rev]",
             "only check files patched in latest HEAD commit, or rev")
     .option("-d, --dont-post-process",
-            "don't post process data in any way (ex: adding ok issues)- " +
+            "don't post process data in any way (ex: adding ok data)- " +
             "useful for per file checking")
     .option("-w, --without-core-plugins",
             "don't use plugins bundled with core lib")
@@ -168,7 +170,7 @@ const create = (cli : commander.CommanderStatic) =>
     .option("-i, --issue-log [level]",
             "specify issue types to log (ex: '-i security,dependency')")
     .option("-e, --exit-on-issues", "exit with bad code " +
-            "if non-info issues exist")
+            "if non-info data points exist")
     .option("-q, --quiet", "log nothing")
     .option("-n, --no-decorations", "disable color and progress bar")
     .action(action)
