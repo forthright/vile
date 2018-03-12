@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="64" style="background: none" src="" alt="the CoffeeScript logo" />
+  <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/37267557-7d8d0f08-2597-11e8-9768-cf44161b9926.png" alt="the CoffeeScript logo" />
   <p align="center">
     <strong>Ferret-CoffeeScript</strong>
   </p>
@@ -31,6 +31,9 @@ See [docs.ferretci.com/lang#coffeescript](https://docs.ferretci.com/lang/#coffee
     <td id="complexity">Complexity</td>
     <td>
       <strong>TODO</strong>
+      ( alternative is to run
+      <a href="https://github.com/forthright/ferret-escopmlex">ferret-escomplex</a>
+      on your output dir)
     </td>
   </tr>
   <tr>
@@ -49,6 +52,9 @@ See [docs.ferretci.com/lang#coffeescript](https://docs.ferretci.com/lang/#coffee
     <td id="duplicate">Duplicate</td>
     <td>
       <strong>TODO</strong>
+      ( alternative is to run
+      <a href="https://github.com/forthright/ferret-synt">ferret-synt</a>
+      on your output dir)
     </td>
   </tr>
   <tr>

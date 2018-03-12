@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/32071529-90f27f60-ba5d-11e7-94ed-84bae82dee2e.png" alt="the Swift logo" />
+  <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/37267571-92c15244-2597-11e8-9489-b60ed1ed8f08.png" alt="the Swift logo" />
   <p align="center">
     <strong>Ferret-Swift</strong>
   </p>

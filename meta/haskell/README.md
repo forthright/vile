@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="64" style="background: none" src="" alt="the Haskell logo" />
+  <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/37267561-846c1346-2597-11e8-9423-2ddb3734e234.png" alt="the Haskell logo" />
   <p align="center">
     <strong>Ferret-Haskell</strong>
   </p>

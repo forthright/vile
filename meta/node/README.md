@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="64" style="background: none" src="" alt="the Node.js logo" />
+  <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/37267638-f61a71c2-2597-11e8-92ef-3d6696f11103.png" alt="the Node.js logo" />
   <p align="center">
     <strong>Ferret-Node</strong>
   </p>
@@ -55,8 +55,7 @@ See [docs.ferretci.com/lang#node](https://docs.ferretci.com/lang/#node)
     <td id="security">Security</td>
     <td>
       <a href="https://github.com/forthright/ferret-retire">ferret-retire</a>
-    </td>
-    <td>
+      <br>
       <a href="https://github.com/forthright/ferret-nsp">ferret-nsp</a>
     </td>
   </tr>

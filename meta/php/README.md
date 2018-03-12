@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/32071529-90f27f60-ba5d-11e7-94ed-84bae82dee2e.png" alt="the PHP logo" />
+  <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/37267565-8bbd5bb4-2597-11e8-8612-e6b11c2a5b95.png" alt="the PHP logo" />
   <p align="center">
     <strong>Ferret-PHP</strong>
   </p>

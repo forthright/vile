@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="64" style="background: none" src="" alt="the Scala logo" />
+  <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/37267567-8e991102-2597-11e8-8726-7cd0c77a22fe.png" alt="the Scala logo" />
   <p align="center">
     <strong>Ferret-Scala</strong>
   </p>

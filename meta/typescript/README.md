@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/32071529-90f27f60-ba5d-11e7-94ed-84bae82dee2e.png" alt="the TypeScript logo" />
+  <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/37267558-7fbea034-2597-11e8-9130-614582566220.png" alt="the TypeScript logo" />
   <p align="center">
     <strong>Ferret-TypeScript</strong>
   </p>
@@ -30,7 +30,9 @@ See [docs.ferretci.com/lang#typescript](https://docs.ferretci.com/lang/#typescri
   <tr>
     <td id="complexity">Complexity</td>
     <td>
-      <strong>TODO</strong>
+      ( alternative is to run
+      <a href="https://github.com/forthright/ferret-escomplex">ferret-escomplex</a>
+      on your output dir)
     </td>
   </tr>
   <tr>
