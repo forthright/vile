@@ -1,6 +1,6 @@
 {
   "name": "@forthright/ferret-swift",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Ferret meta plugin for analyzing your Swift code and ecosystem.",
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/forthright/ferret/issues"
   },
-  "homepage": "https://github.com/forthright/ferret#readme",
+  "homepage": "https://github.com/forthright/ferret/tree/master/meta/swift",
   "dependencies": {
     "@forthright/ferret-tailor": "^0.2.3"
   }

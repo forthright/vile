@@ -1,6 +1,6 @@
 {
   "name": "@forthright/ferret-ruby",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "A Ferret meta plugin for analyzing your Ruby code and ecosystem.",
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/forthright/ferret-ruby/issues"
   },
-  "homepage": "https://github.com/forthright/ferret-ruby#readme",
+  "homepage": "https://github.com/forthright/ferret/tree/master/meta/ruby",
   "dependencies": {
     "@forthright/ferret-bundler-audit": "^0.3.6",
     "@forthright/ferret-bundler-outdated": "^0.1.3",

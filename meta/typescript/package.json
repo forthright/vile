@@ -1,13 +1,14 @@
 {
-  "name": "@forthright/ferret-javascript",
-  "version": "0.1.3",
-  "description": "A Ferret meta plugin for analyzing your JavaScript code and ecosystem.",
+  "name": "@forthright/ferret-typescript",
+  "version": "0.2.0",
+  "description": "A Ferret meta plugin for analyzing your TypeScript code and ecosystem.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/forthright/ferret.git"
   },
   "keywords": [
-    "javascript",
+    "typescript",
+    "tslint",
     "ferret"
   ],
   "author": "Brent Lintner <brent.lintner@gmail.com>",
@@ -15,11 +16,9 @@
   "bugs": {
     "url": "https://github.com/forthright/ferret/issues"
   },
-  "homepage": "https://github.com/forthright/ferret#readme",
+  "homepage": "https://github.com/forthright/ferret/tree/master/meta/typescript",
   "dependencies": {
-    "@forthright/ferret-escomplex": "^0.1.6",
-    "@forthright/ferret-eslint": "^0.1.16",
-    "@forthright/ferret-git": "^0.5.6",
+    "@forthright/ferret-tslint": "^0.3.6",
     "@forthright/ferret-retire": "^0.1.6",
     "@forthright/ferret-synt": "^0.1.3"
   }

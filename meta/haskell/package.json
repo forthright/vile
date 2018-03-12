@@ -1,97 +1,25 @@
 {
-  "name": "synt",
-  "version": "0.4.8",
-  "description": "Find similar functions and classes in your JavaScript/TypeScript code",
-  "author": "Brent Lintner <brent.lintner@gmail.com>",
+  "name": "@forthright/ferret-haskell",
+  "version": "0.2.0",
+  "description": "A Ferret meta plugin for analyzing your Haskell code and ecosystem.",
+  "keywords": [
+    "haskell",
+    "ghc",
+    "ferret",
+    "code analysis",
+    "analysis"
+  ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/brentlintner/synt.git"
+    "url": "git+https://github.com/forthright/ferret-haskell.git"
   },
-  "main": "lib/index.js",
-  "types": "src/@types/index.d.ts",
-  "bin": {
-    "synt": "bin/synt"
-  },
-  "files": [
-    "bin/synt",
-    "src/@types",
-    "lib",
-    "LICENSE",
-    "README.md"
-  ],
-  "engines": {
-    "node": ">=4.0.0",
-    "npm": ">=2.0.0"
-  },
-  "keywords": [
-    "duplicate",
-    "similar",
-    "functions",
-    "methods",
-    "classes",
-    "code",
-    "analysis",
-    "compare",
-    "javascript",
-    "typescript"
-  ],
+  "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/brentlintner/synt/issues"
+    "url": "https://github.com/forthright/ferret/issues"
   },
-  "homepage": "https://github.com/brentlintner/synt",
-  "scripts": {
-    "compile": "tsc",
-    "clean": "rm -rf {.nyc_output,coverage,lib} && git checkout -- lib",
-    "dev": "tsc -w",
-    "lint-cov": "node bin/lint-cov",
-    "ncu": "ncu -a",
-    "nyc": "nyc",
-    "release-it": "release-it",
-    "test": "globstar -- _mocha \"test/spec/**/*.coffee\"",
-    "test-cov": "nyc -r lcov -r text -x test -x **/node_modules/** npm run -s test",
-    "test-ci-build": "node bin/test-ci-build",
-    "tsc": "tsc",
-    "ferret": "ferret a -u -n -x src.ts:lib.js"
-  },
+  "homepage": "https://github.com/forthright/ferret/tree/master/meta/hakell",
   "dependencies": {
-    "@types/commander": "^2.9.1",
-    "@types/escodegen": "0.0.6",
-    "@types/esprima": "^4.0.1",
-    "@types/estraverse": "0.0.6",
-    "@types/estree": "0.0.38",
-    "@types/lodash": "^4.14.80",
-    "cardinal": "^1.0.0",
-    "chalk": "^2.1.0",
-    "commander": "^2.10.0",
-    "escodegen": "^1.8.1",
-    "esprima": "^4.0.0",
-    "estraverse": "^4.2.0",
-    "lodash": "^4.17.4",
-    "typescript": "^2.3.4",
-    "walk-sync": "^0.3.2"
-  },
-  "devDependencies": {
-    "chai": "^4.0.2",
-    "coffee-script": "^1.12.6",
-    "coffeelint": "^2.0.6",
-    "globstar": "^1.0.0",
-    "mimus": "^0.2.7",
-    "mocha": "^4.0.1",
-    "npm-check-updates": "^2.12.0",
-    "nyc": "^11.3.0",
-    "release-it": "^3.1.2",
-    "retire": "^1.3.2",
-    "shelljs": "^0.7.8",
-    "sinon": "^4.0.2",
-    "sinon-chai": "^2.11.0",
-    "tslint": "^5.6.0",
-    "@forthright/ferret-coffeelint": "^0.1.16",
-    "@forthright/ferret-depcheck": "^0.1.13",
-    "@forthright/ferret-eclint": "^0.1.14",
-    "@forthright/ferret-escomplex": "^0.1.5",
-    "@forthright/ferret-git": "^0.5.6",
-    "@forthright/ferret-synt": "^0.1.2",
-    "@forthright/ferret-tslint": "^0.3.3"
+    "@forthright/ferret-hlint": "^0.2.3"
   }
 }

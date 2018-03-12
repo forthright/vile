@@ -1,13 +1,13 @@
 {
-  "name": "@forthright/ferret-javascript",
-  "version": "0.1.3",
+  "name": "@forthright/ferret-php",
+  "version": "0.2.0",
   "description": "A Ferret meta plugin for analyzing your PHP code and ecosystem.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/forthright/ferret.git"
   },
   "keywords": [
-    "javascript",
+    "php",
     "ferret"
   ],
   "author": "Brent Lintner <brent.lintner@gmail.com>",
@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/forthright/ferret/issues"
   },
-  "homepage": "https://github.com/forthright/ferret#readme",
+  "homepage": "https://github.com/forthright/ferret/tree/master/meta/php",
   "dependencies": {
     "@forthright/ferret-phpmd": "^0.3.3"
   }

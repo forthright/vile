@@ -1,6 +1,6 @@
 {
   "name": "@forthright/ferret-rails",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Ferret meta plugin for analyzing your Rails app and ecosystem.",
   "repository": {
     "type": "git",
@@ -8,6 +8,7 @@
   },
   "keywords": [
     "ruby",
+    "rails",
     "ferret"
   ],
   "author": "Brent Lintner <brent.lintner@gmail.com>",
@@ -15,9 +16,8 @@
   "bugs": {
     "url": "https://github.com/forthright/ferret-ruby/issues"
   },
-  "homepage": "https://github.com/forthright/ferret-ruby#readme",
+  "homepage": "https://github.com/forthright/ferret/tree/master/meta/rails",
   "dependencies": {
-    "@forthright/ferret-ruby": "^0.1.3",
     "@forthright/ferret-brakeman": "^0.3.4",
     "@forthright/ferret-eslint": "^0.1.15",
     "@forthright/ferret-rails-best-practices": "^0.3.2",
