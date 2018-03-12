@@ -1,13 +1,13 @@
-<h3 align="center">
-  <p align="center">
-    <img width="96" style="background: none" src="https://user-images.githubusercontent.com/93340/37267916-86d5600e-2599-11e8-9f8e-f84356810b63.png" alt="the Rails logo" />
-  </p>
-  Ferret-Rails
-</h3>
 <p align="center">
-  A
-  <a href="https://github.com/forthright/ferret">Ferret</a>
-  meta plugin for analyzing your Rails code and ecosystem.
+  <img width="96" style="background: none" src="https://user-images.githubusercontent.com/93340/37267916-86d5600e-2599-11e8-9f8e-f84356810b63.png" alt="the Rails logo" />
+  <p align="center">
+    <strong>Ferret-Rails</strong>
+  </p>
+  <p align="center">
+    A
+    <a href="https://github.com/forthright/ferret">Ferret</a>
+    meta plugin for analyzing your Rails code and ecosystem.
+  </p>
 </p>
 
 ## Installation
