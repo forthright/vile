@@ -86,6 +86,10 @@ To run compile task with file watch in the background:
 
     npm run dev
 
+To build binaries:
+
+    ./bin/build
+
 To build latest docs:
 
     mkdocs build

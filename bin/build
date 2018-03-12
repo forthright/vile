@@ -2,13 +2,23 @@
 
 set -xe
 
+target_arch=x86_64
+script_dir=`dirname $0`
+dist=dist
+app_version=$($script_dir/npm-pkg-version)
+base_dir=$script_dir/../build
+
+prepare() {
+  cd $base_dir
+  npm i
+  npm update
+  cd -
+}
+
 build() {
   target="node8.6.0-$target_os"
 
-  base_dir=$script_dir/..
   cd $base_dir
-
-  app_version=$($script_dir/npm-pkg-version)
 
   full_target=ferret-$app_version-$target_os-$target_arch
   core_dist=$dist/$full_target
@@ -16,18 +26,20 @@ build() {
 
   # need to include xdg-open
   mkdir -p $core_dist/node_modules/opn
-  cp node_modules/opn/xdg-open $core_dist/node_modules/opn/xdg-open
-  cp node_modules/opn/xdg-open $core_dist/xdg-open
+  cp $base_dir/node_modules/opn/xdg-open $core_dist/node_modules/opn/xdg-open
+  cp $base_dir/node_modules/opn/xdg-open $core_dist/xdg-open
 
   # need to hack include part of bundler-audit plugin until we make a rubygem
   mkdir -p $ruby_dist/node_modules/ferret-bundler-audit/lib_ruby
-  cp -r node_modules/ferret-bundler-audit/lib_ruby/* $ruby_dist/node_modules/ferret-bundler-audit/lib_ruby/.
+  cp -r $base_dir/node_modules/ferret-bundler-audit/lib_ruby/* $ruby_dist/node_modules/ferret-bundler-audit/lib_ruby/.
 
   bin_name="$core_dist/ferret"
   zip_name="$full_target.tgz"
 
-  npx pkg -t $target -o $bin_name $pkg_json
+  npx pkg -t $target -o $bin_name package.json
   tar -C $core_dist/.. -czvf $core_dist/../$zip_name $full_target
+
+  cd -
 }
 
 clean() {
@@ -38,22 +50,15 @@ clean() {
   npm run compile
 }
 
-main() {
-  dist=dist
-  script_dir=`dirname $0`
-  pkg_json=build/package-bin.json
-  target_arch=x86_64
+#clean
 
-  clean()
+#prepare
 
-  target_os=linux
-  build()
+target_os=linux
+build
 
-  target_os=win
-  build()
+target_os=win
+build
 
-  target_os=mac
-  build()
-}
-
-main()
+target_os=mac
+build
