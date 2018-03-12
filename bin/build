@@ -2,8 +2,6 @@
 
 set -xe
 
-# TODO: script sh/js (look in the forthright/scripts section
-
 build() {
   target="node8.6.0-$target_os"
 
@@ -43,7 +41,7 @@ clean() {
 main() {
   dist=dist
   script_dir=`dirname $0`
-  pkg_json=package-build.json
+  pkg_json=build/package-bin.json
   target_arch=x86_64
 
   clean()
