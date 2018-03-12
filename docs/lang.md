@@ -24,6 +24,8 @@ Make note about ESLint (i.e. what steps to create default config in meta package
 
 Provided by [ferret-node](https://github.com/forthright/ferret/tree/master/meta/node).
 
+TODO: note about retirejs config settings for turning node off unless using node.js too.
+
     eslint --....
 
 ### TypeScript
@@ -33,8 +35,6 @@ See [ferret-typescript](https://github.com/forthright/ferret/tree/master/meta/no
     tslint ---
 
 ### CoffeeScript
-
-Make note about ESLint (i.e. what steps to create default config in meta packages)
 
 See [ferret-coffeescript](https://github.com/forthright/ferret/tree/master/meta/node).
 
@@ -55,14 +55,12 @@ A good workaround is to ignore all `.jsx` files
 and also any `.js` files with JSX code in them.
 
 For example, with a plugin like [ferret-escomplex](https://github.com/forthright/ferret-escomplex):
-
 ```yaml
 escomplex:
   ignore:
     - "*.jsx"
     - path/to/jsx
 ```
-
 ### Non-Standard JS
 
 If you are using EMCAScript Stage-3 and below proposals,
@@ -70,31 +68,28 @@ some plugins might not work out of the box or just yet.
 
 A good workaround is to map `lib` data to `src` using the CLI's
 `-x src:lib` option, while also ignoring `src` for the specific plugins:
-
 ```yaml
 synt:
   ignore: src
 escomplex:
   ignore: src
 ```
-
 ## Ruby
 
-A basic Ruby project example (using [Bundler](http://bundler.io)):
+You will need to install additional gems before doing any analysis.
 
-```sh
-npm i -D ferret ferret-git ferret-rubycritic ferret-rubocop ferret-sass-lint ferret-bundler-audit ferret-bundler-outdated
+    gem install rubocop rubycritic bundler bundler-audit
 
-# you can also add these to your Gemfile
-gem install rubocop rubycritic bundler bundler-audit
+Then you can run:
 
-# depending on your setup, you may need to use `bundle exec`
-bundle exec ferret analyze
-```
+    bundle exec ferret analyze
 
-Note: Some plugins don't support ferret's allow/ignore out of the box.
+### Config
 
-For example, [ferret-rubycritic](https://github.com/forthright/ferret-rubycritic) requires
+Be sure to run `ferret configure` to copy over any required default
+config files.
+
+For example, [ferret-rubycritic](https://github.com/forthright/ferret-rubycritic#ignore) requires
 you set specific `allow` paths to avoid traversing `node_modules`.
 
 The same goes for [ferret-rubocop](https://github.com/forthright/ferret-rubocop#ignoring-files).
@@ -103,17 +98,44 @@ The same goes for [ferret-rubocop](https://github.com/forthright/ferret-rubocop#
 
 Provided by [ferret-rails](https://github.com/forthright/ferret/tree/master/meta/rails).
 
-For an in depth article about using Rails + ferret checkout [Continuous Analysis For Your Rails Project Using ferret and CircleCI](https://medium.com/forthright/continuous-analysis-for-your-rails-project-using-ferret-and-circleci-4fb077378ab6).
+Basic gem setup:
+
+    gem install rubocop rubycritic bundler bundler-audit brakeman rails-best-practices
+
+### Sass
+
+This should work out of the box with the Rails meta plugin.
+
+### Slim
+
+The `slim-lint` plugin is included as long as you install its gem:
+
+    gem install slim-lint
 
 ## Haskell
 
-Depending on your setup and if you are using sandboxes, you may need to use `cabal exec`:
+Provided by [ferret-haskell](https://github.com/forthright/ferret/tree/master/meta/haskell).
 
+Note: Haskell support is limited and is on the roadmap.
+
+Depending on your setup and if you are using sandboxes, you may need to use `cabal exec`:
 ```sh
 cabal exec -- ferret analyze
 ```
 ## PHP
 
-## Python
+Provided by [ferret-php](https://github.com/forthright/ferret/tree/master/meta/php).
+
+Note: PHP support is limited and is on the roadmap.
+
+## Swift
+
+Provided by [ferret-swift](https://github.com/forthright/ferret/tree/master/meta/swift).
+
+Note: Swift support is limited and is on the roadmap.
 
 ## Scala
+
+Provided by [ferret-scala](https://github.com/forthright/ferret/tree/master/meta/scala).
+
+Note: Scala support is limited and is on the roadmap.
