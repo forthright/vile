@@ -126,16 +126,23 @@ cabal exec -- ferret analyze
 
 Provided by [ferret-php](https://github.com/forthright/ferret/tree/master/meta/php).
 
-Note: PHP support is limited and is on the roadmap.
-
-## Swift
-
-Provided by [ferret-swift](https://github.com/forthright/ferret/tree/master/meta/swift).
-
-Note: Swift support is limited and is on the roadmap.
+Note: PHP support is limited and is a WIP.
 
 ## Scala
 
 Provided by [ferret-scala](https://github.com/forthright/ferret/tree/master/meta/scala).
 
-Note: Scala support is limited and is on the roadmap.
+Note: Scala support is limited and is a WIP.
+
+## Swift
+
+Provided by [ferret-swift](https://github.com/forthright/ferret/tree/master/meta/swift).
+
+Note: Swift support is limited and is a WIP.
+
+## Other Languages
+
+Other languages such as [Java](), [Kotlin](), [Go](), [Python](), [C/C++](), [Objective-C](), and
+other scripting/styling/template languages are also on the radar/planned.
+
+Want to help or have a plugin that supports a new language? [Say hi](https://twitter.com/ferretci)!
