@@ -10,7 +10,6 @@
   "files": [
     "bin/ferret",
     "lib",
-    "dist",
     "src/@types",
     "LICENSE",
     "CHANGELOG.md",
