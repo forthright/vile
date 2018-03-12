@@ -2,6 +2,12 @@
   "name": "@forthright/ferret-node",
   "version": "0.2.0",
   "description": "A Ferret meta plugin for analyzing your Node.js code and ecosystem.",
+  "files": [
+    "default",
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
   "keywords": [
     "node",
     "Node.js",

@@ -2,6 +2,12 @@
   "name": "@forthright/ferret-swift",
   "version": "0.2.0",
   "description": "A Ferret meta plugin for analyzing your Swift code and ecosystem.",
+  "files": [
+    "default",
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/forthright/ferret.git"
