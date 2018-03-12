@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/37267638-f61a71c2-2597-11e8-92ef-3d6696f11103.png" alt="the Node.js logo" />
+  <img width="96" style="background: none" src="https://user-images.githubusercontent.com/93340/37267638-f61a71c2-2597-11e8-92ef-3d6696f11103.png" alt="the Node.js logo" />
   <p align="center">
     <strong>Ferret-Node</strong>
   </p>
