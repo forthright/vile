@@ -1,6 +1,6 @@
 <h3 align="center">
   <p align="center">
-    <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/37267841-179f3188-2599-11e8-9a80-03d5e02747a5.png" alt="the Rails logo" />
+    <img width="64" style="background: none" src="https://user-images.githubusercontent.com/93340/37267916-86d5600e-2599-11e8-9f8e-f84356810b63.png" alt="the Rails logo" />
   </p>
   Ferret-Rails
 </h3>
