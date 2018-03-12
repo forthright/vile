@@ -33,7 +33,7 @@ const is_plugin = (name : string) : boolean =>
   !!/^ferret-/.test(name)
 
 const valid_plugin = (api : ferret.Plugin) : boolean =>
-  !!(api && typeof api.punish == "function")
+  !!(api && typeof api.exec == "function")
 
 const is_array = (list : any[]) : boolean =>
   !!(list && typeof list.forEach == "function")
@@ -42,9 +42,9 @@ const is_promise = (list : Bluebird<any>) : boolean =>
   !!(list && typeof list.then == "function")
 
 const map_plugin_name_to_data = (name : string) => (data : ferret.Data[]) =>
-  _.map(data, (issue : ferret.Data) => {
-    issue.plugin = name
-    return issue
+  _.map(data, (datum : ferret.Data) => {
+    datum.plugin = name
+    return datum
   })
 
 const exec_in_fork = (
@@ -53,7 +53,7 @@ const exec_in_fork = (
   worker  : cluster.Worker
 ) : Bluebird<ferret.DataList> =>
   new Bluebird((
-    resolve : (issue : ferret.DataList) => void,
+    resolve : (datum : ferret.DataList) => void,
     reject : (error : string) => void
   ) => {
     worker.on("message", (data : ferret.DataList) => {
@@ -78,17 +78,17 @@ const exec_in_fork = (
 const on_windows = () : boolean => /windows/i.test(os.type())
 
 const normalize_paths = (data : ferret.DataList) =>
-  _.each(data, (issue) => {
-    if (_.has(issue, "path")) {
-      issue.path = unixify(issue.path)
+  _.each(data, (datum) => {
+    if (_.has(datum, "path")) {
+      datum.path = unixify(datum.path)
 
       if (process.cwd() !== ".") {
-        issue.path = issue.path
+        datum.path = datum.path
           .replace(process.cwd(), "")
       }
 
       if (!on_windows()) {
-        issue.path = issue.path
+        datum.path = datum.path
           .replace(/^\.\//, "")
           .replace(/^\//, "")
       }
@@ -127,37 +127,37 @@ const combine_paths = (
     const merge_path_regexp = new RegExp(`^${merge_path}/`, "i")
 
     // TODO: Windows support, better matching
-    data.forEach((issue : ferret.Data, idx : number) =>  {
-      const issue_path = unixify(_.get(issue, "path", ""))
-      const issue_type = _.get(issue, "type")
+    data.forEach((datum : ferret.Data, idx : number) =>  {
+      const datum_path = unixify(_.get(datum, "path", ""))
+      const datum_type = _.get(datum, "type")
 
       // if folder base is not same, return
-      if (!merge_path_regexp.test(issue_path)) return
+      if (!merge_path_regexp.test(datum_path)) return
 
-      // if lib.js is given, make sure .js is issue path ext
+      // if lib.js is given, make sure .js is datum path ext
       if (!!merge_path_ext &&
-          !_.first(issue_path.match(FILE_EXT)) == !!merge_path_ext) return
+          !_.first(datum_path.match(FILE_EXT)) == !!merge_path_ext) return
 
-      let new_path = issue_path.replace(merge_path_regexp, base_path + "/")
+      let new_path = datum_path.replace(merge_path_regexp, base_path + "/")
       if (base_path_ext) {
         new_path = new_path.replace(FILE_EXT, base_path_ext)
       }
 
-      // HACK: ugh, such perf issue below
+      // HACK: ugh, such perf datum below
       const potential_data_dupe : boolean = !_.some(
-        util.displayable_issues,
-        (t : string) => t == issue_type)
+        util.displayable_data,
+        (t : string) => t == datum_type)
       // TODO: test this explicitly, especially unixify with non string
       const same_data_exists = potential_data_dupe &&
         _.some(data, (i : ferret.Data) =>
           i && _.has(i, "path") && unixify(i.path) == new_path &&
-            i.type == issue_type)
+            i.type == datum_type)
 
-      // HACK: If a lang,stat,comp issue and on base already, drop it
+      // HACK: If a lang,stat,comp datum and on base already, drop it
       if (same_data_exists) {
         data[idx] = undefined
       } else {
-        _.set(issue, "path", new_path)
+        _.set(datum, "path", new_path)
       }
     })
   })
@@ -180,7 +180,7 @@ const exec_plugin = (
 
     if (!valid_plugin(api)) reject(`invalid plugin API: ${name}`)
 
-    const data : any = api.punish(config)
+    const data : any = api.exec(config)
 
     if (is_promise(data)) {
       data
@@ -295,13 +295,13 @@ const add_code_snippets = (
     )).lines
 
     _.each(_.filter(data, (i : ferret.Data) => i.path == filepath),
-      (issue : ferret.Data) => {
-        const start = Number(_.get(issue, "where.start.line", 0))
-        const end = Number(_.get(issue, "where.end.line", start))
+      (datum : ferret.Data) => {
+        const start = Number(_.get(datum, "where.start.line", 0))
+        const end = Number(_.get(datum, "where.end.line", start))
 
-        if (issue.type == util.DUPE) {
+        if (datum.type == util.DUPE) {
           const locations : ferret.DuplicateLocations[] = _.
-            get(issue, "duplicate.locations", [])
+            get(datum, "duplicate.locations", [])
 
           _.each(locations, (loc : ferret.DuplicateLocations) => {
             const sub_start = Number(_.get(loc, "where.start.line", 0))
@@ -322,8 +322,8 @@ const add_code_snippets = (
         } else {
           if (start === 0 && end === start) return
 
-          if (_.some(util.displayable_issues, (t) => t == issue.type)) {
-            issue.snippet = into_snippet(lines, start, end)
+          if (_.some(util.displayable_data, (t) => t == datum.type)) {
+            datum.snippet = into_snippet(lines, start, end)
           }
         }
       })
@@ -346,14 +346,14 @@ const add_ok_data = (
       (util.allowed(p, ferret_allow) || is_dir) &&
         !util.ignored(p, ferret_ignore)
     ,
-    (filepath : string) => util.issue({
+    (filepath : string) => util.data({
       path: unixify(filepath),
       type: util.OK
     }),
     { read_data: false })
   .then((ok_data : ferret.DataList) => {
-    const distinct_ok_data = _.reject(ok_data, (issue : ferret.Data) =>
-      _.some(data, (i) => i.path == issue.path))
+    const distinct_ok_data = _.reject(ok_data, (datum : ferret.Data) =>
+      _.some(data, (i) => i.path == datum.path))
     return distinct_ok_data.concat(data)
   })
 

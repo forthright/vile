@@ -91,7 +91,7 @@ const apply = (
   }
 }
 
-const apply_issue = (
+const apply_data = (
   name : string,
   source : string
 ) => (...logs : any[]) : void => {
@@ -106,11 +106,11 @@ const create = (
 ) : ferret.LoggerInstance => {
   return {
     error:       apply("error", source),
-    error_issue: apply_issue("error", source),
+    error_data:  apply_data("error", source),
     info:        apply("info", source),
-    info_issue:  apply_issue("info", source),
+    info_data:   apply_data("info", source),
     warn:        apply("warn", source),
-    warn_issue:  apply_issue("warn", source)
+    warn_data:   apply_data("warn", source)
   }
 }
 

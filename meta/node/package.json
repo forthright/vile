@@ -1,27 +1,27 @@
 {
-  "name": "ferret-node",
+  "name": "@forthright/ferret-node",
   "version": "0.1.3",
   "description": "A Ferret meta plugin for analyzing your Node.js code and ecosystem.",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/forthright/ferret.git"
-  },
   "keywords": [
     "node",
     "Node.js",
     "NodeJS",
-    "ferret"
+    "ferret",
+    "code analysis",
+    "analysis"
   ],
   "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
   "bugs": {
     "url": "https://github.com/forthright/ferret/issues"
   },
-  "homepage": "https://github.com/forthright/ferret#readme",
+  "homepage": "https://github.com/forthright/ferret/tree/master/meta/javascript",
   "dependencies": {
-    "ferret-escomplex": "^0.1.6",
-    "ferret-eslint": "^0.1.16",
-    "ferret-retire": "^0.1.6",
-    "ferret-synt": "^0.1.3"
+    "@forthright/ferret-escomplex": "^0.1.6",
+    "@forthright/ferret-eslint": "^0.1.16",
+    "@forthright/ferret-retire": "^0.1.6",
+    "@forthright/ferret-ncu": "^0.4.0",
+    "@forthright/ferret-retire": "^0.1.6",
+    "@forthright/ferret-synt": "^0.1.3"
   }
 }

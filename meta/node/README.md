@@ -39,6 +39,8 @@
 This package aims to provide a complete set of plugins and documentation
 for analyzing your Node projects with [Ferret](https://github.com/forthright/ferret).
 
+TODO: note about retirejs config settings for turning js off if backend node.
+
 ## Requirements
 
 - [Node.js](https://nodejs.org)

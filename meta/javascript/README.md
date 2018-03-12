@@ -19,6 +19,8 @@
 
 See [docs.ferretci.com/lang#javascript](https://docs.ferretci.com/lang/#javascript)
 
+TODO: note about retirejs config settings for turning node off unless using node.js too.
+
 ## Bundled Plugins
 
 <table>

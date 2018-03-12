@@ -6,10 +6,13 @@ import _ = require("lodash")
 const fs_readdir = Bluebird.promisify(fs.readdir)
 
 const EXTRA_IGNORE_DIRECTORIES = [
+  "app/assets/images",
+  "app/assets/videos",
   "bin",
   ".bin",
   "build",
   ".build",
+  "config/*.yml",
   "public",
   ".test",
   ".tmp",

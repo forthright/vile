@@ -4,10 +4,8 @@
   "description": "An open platform for continuous software analysis.",
   "main": "lib/index.js",
   "types": "src/@types/index.d.ts",
-  "pkg": {
-    "scripts": [
-      "lib/plugin/worker.js"
-    ]
+  "bin": {
+    "ferret": "bin/ferret"
   },
   "files": [
     "bin/ferret",
@@ -18,8 +16,10 @@
     "CHANGELOG.md",
     "README.md"
   ],
-  "bin": {
-    "ferret": "bin/ferret"
+  "pkg": {
+    "scripts": [
+      "lib/plugin/worker.js"
+    ]
   },
   "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
@@ -82,10 +82,9 @@
     "os-name": "^2.0.1",
     "request": "^2.83.0",
     "unixify": "^1.0.0",
-    "@forthright/vile-comment": "^0.1.20",
-    "@forthright/vile-coverage": "^0.3.1",
-    "@forthright/vile-ncu": "^0.4.0",
-    "@forthright/vile-stat": "^0.1.2"
+    "@forthright/ferret-comment": "^0.1.20",
+    "@forthright/ferret-coverage": "^0.3.1",
+    "@forthright/ferret-stat": "^0.1.2"
   },
   "devDependencies": {
     "chai": "^4.1.2",
@@ -102,7 +101,8 @@
     "sinon": "^4.4.2",
     "sinon-chai": "^3.0.0",
     "sloc": "^0.2.0",
-    "typescript": "^2.7.2"
+    "typescript": "^2.7.2",
+    "@forthright/ferret-nsp": "^0.2.15"
   },
   "scripts": {
     "compile": "tsc",

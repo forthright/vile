@@ -179,10 +179,10 @@ const promise_each_file = (
   })
 }
 
-// TODO: validate issue objects as it comes in
-const into_issue = (data : ferret.Data) : ferret.Data => data
+// TODO: validate data objects as it comes in
+const into_data = (data : ferret.Data) : ferret.Data => data
 
-const displayable_issues : ferret.DataType.All[] = [
+const displayable_data : ferret.DataType.All[] = [
   "warning",
   "style",
   "maintainability",
@@ -230,12 +230,12 @@ const api : ferret.Module.Util = {
   WARN  :  ("warning" as ferret.DataType.Warn),
 
   allowed: is_allowed,
-  displayable_issues,
+  displayable_data,
   errors,
   filter: filter_promise_each,
   ignored: is_ignored,
   infos,
-  issue: into_issue,
+  data: into_data,
   promise_each: promise_each_file,
   spawn,
   warnings

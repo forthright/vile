@@ -146,7 +146,7 @@ const log_syntastic_applicable_messages = (
 ) => {
   data.forEach((datum : ferret.Data, index : number) => {
     const data_type : string = datum.type
-    if (_.some(util.displayable_issues, (t) => data_type == t)) {
+    if (_.some(util.displayable_data, (t) => data_type == t)) {
       console.log(to_console(datum, "syntastic"))
     }
   })
@@ -245,30 +245,30 @@ const log_data_messages = (
     const msg_postfix = plugin_name ? ` (ferret-${ plugin_name })` : ""
 
     if (_.some(util.errors, (i_type) => datum.type == i_type)) {
-      nlog.error_issue(to_console(datum) + msg_postfix)
+      nlog.error_data(to_console(datum) + msg_postfix)
     } else if (_.some(util.warnings, (i_type) => datum.type == i_type)) {
       if (datum.type == util.COMP) {
-        nlog.info_issue(to_console_comp(datum) + msg_postfix)
+        nlog.info_data(to_console_comp(datum) + msg_postfix)
       } else if (datum.type == util.CHURN) {
-        nlog.info_issue(to_console_churn(datum) + msg_postfix)
+        nlog.info_data(to_console_churn(datum) + msg_postfix)
       } else if (datum.type == util.DEP) {
-        nlog.warn_issue(to_console_dep(datum) + msg_postfix)
+        nlog.warn_data(to_console_dep(datum) + msg_postfix)
       } else if (datum.type == util.DUPE) {
-        nlog.warn_issue(to_console_duplicate(datum) + msg_postfix)
+        nlog.warn_data(to_console_duplicate(datum) + msg_postfix)
       } else {
-        nlog.warn_issue(to_console(datum) + msg_postfix)
+        nlog.warn_data(to_console(datum) + msg_postfix)
       }
     } else {
       if (datum.type == util.SCM) {
-        nlog.info_issue(to_console_scm(datum) + msg_postfix)
+        nlog.info_data(to_console_scm(datum) + msg_postfix)
       } else if (datum.type == util.STAT) {
-        nlog.info_issue(to_console_stat(datum) + msg_postfix)
+        nlog.info_data(to_console_stat(datum) + msg_postfix)
       } else if (datum.type == util.COV) {
-        nlog.info_issue(to_console_cov(datum) + msg_postfix)
+        nlog.info_data(to_console_cov(datum) + msg_postfix)
       } else if (datum.type == util.OK) {
         // TODO: don't log for now (too annoying for certain user experiences)
       } else {
-        nlog.info_issue(to_console(datum) + msg_postfix)
+        nlog.info_data(to_console(datum) + msg_postfix)
       }
     }
 

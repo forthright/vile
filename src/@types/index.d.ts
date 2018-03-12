@@ -63,7 +63,7 @@ declare namespace ferret {
     ending?  : string;
   }
 
-  export type Context = ContextType.All[]
+  export type Context = ContextType.All
 
   export module ContextType {
     export type Ruby         = "ruby";
@@ -71,9 +71,24 @@ declare namespace ferret {
     export type JavaScript   = "javascript";
     export type CoffeeScript = "coffeescript";
     export type Haskell      = "haskell";
-    export type Rails        = "rails";
+    export type PHP          = "php";
+    export type Swift        = "swift";
+    export type Scala        = "scala";
+    export type Python       = "python";
 
-    export type All = Ruby | TypeScript | JavaScript | CoffeeScript | Haskell | Rails
+    export type Rails        = "rails";
+    export type NodeJS       = "node";
+    export type Git          = "git";
+    export type EditorConfig = "editorconfig";
+
+    export type Sass         = "sass";
+    export type Slim         = "slim";
+    export type Css          = "css";
+    export type Html         = "html";
+
+    export type All = Ruby | TypeScript | JavaScript | CoffeeScript |
+      Haskell | PHP | Swift | Scala | Python | Rails | NodeJS |
+      Git | Sass | Slim | Css | Html
   }
 
   export module DataType {
@@ -186,7 +201,9 @@ declare namespace ferret {
   //
 
   export interface Plugin {
-    punish : (
+    context : Context;
+
+    exec : (
       config : PluginConfig
     ) => DataList | Bluebird<DataList>;
   }
@@ -257,11 +274,11 @@ declare namespace ferret {
 
   export interface LoggerInstance {
     error : (...l : any[]) => void;
-    error_issue : (...l : any[]) => void;
+    error_data : (...l : any[]) => void;
     info : (...l : any[]) => void;
-    info_issue : (...l : any[]) => void;
+    info_data : (...l : any[]) => void;
     warn : (...l : any[]) => void;
-    warn_issue :  (...l : any[]) => void;
+    warn_data :  (...l : any[]) => void;
   }
 
   export interface PluginWorkerData {
@@ -377,7 +394,7 @@ declare namespace ferret {
     }
 
     interface UtilObjects {
-      displayable_issues: DataType.All[];
+      displayable_data: DataType.All[];
       warnings: DataType.Warnings[];
       errors:   DataType.Errors[];
       infos:    DataType.Infos[];
@@ -393,7 +410,7 @@ declare namespace ferret {
 
       filter : (i : IgnoreList, a : AllowList) => (p : string) => boolean;
 
-      issue        : (d : RawMetaData) => Data;
+      data   : (d : RawMetaData) => Data;
 
       ignored      : (f : string, i : IgnoreList) => boolean;
       allowed      : (f : string, a : AllowList) => boolean;

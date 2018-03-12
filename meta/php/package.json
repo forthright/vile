@@ -1,5 +1,5 @@
 {
-  "name": "ferret-javascript",
+  "name": "@forthright/ferret-javascript",
   "version": "0.1.3",
   "description": "A Ferret meta plugin for analyzing your PHP code and ecosystem.",
   "repository": {
@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/forthright/ferret#readme",
   "dependencies": {
-    "ferret-phpmd": "^0.3.3"
+    "@forthright/ferret-phpmd": "^0.3.3"
   }
 }

@@ -27,7 +27,7 @@ const library : ferret.Module.Index = _.assign(types, {
   exec_plugin:  plugin.exec_plugin,
   filter:       util.filter,
   ignored:      util.ignored,
-  issue:        util.issue,
+  data:         util.data,
   logger,
   promise_each: util.promise_each,
   spawn:        util.spawn

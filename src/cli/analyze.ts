@@ -30,8 +30,8 @@ const add_default_ignores = (
 }
 
 const has_non_info_data = (data : ferret.DataList) : boolean =>
-  _.filter(data, (issue : ferret.Data) =>
-    _.some(util.displayable_issues, (t) => t == issue.type)
+  _.filter(data, (datum : ferret.Data) =>
+    _.some(util.displayable_data, (t) => t == datum.type)
   ).length > 0
 
 const analyze = (
@@ -168,7 +168,7 @@ const create = (cli : commander.CommanderStatic) =>
     .option("-l, --log [level]",
             "specify the log level (info=default|warn|error)")
     .option("-i, --issue-log [level]",
-            "specify issue types to log (ex: '-i security,dependency')")
+            "specify data types to log (ex: '-i security,dependency')")
     .option("-e, --exit-on-issues", "exit with bad code " +
             "if non-info data points exist")
     .option("-q, --quiet", "log nothing")

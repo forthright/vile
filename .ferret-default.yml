@@ -1,0 +1,68 @@
+# -------- Global --------
+
+ferret:
+  ignore:
+    - "*.json"
+    - "*.lock"
+    - "*.log"
+    - "*.md"
+    - "*.yml"
+    - .ackrc
+    - .editorconfig
+    - .env
+    - .eslintignore
+    - .eslintrc
+    - .fs-lint
+    - .gitignore
+    - .jshintignore
+    - .jshintrc
+    - .tags
+    - .npmrc
+    - dist
+    - LICENSE
+    - meta
+    - log
+    - logs
+    - public
+    - src/@types
+    - test/fixtures
+    - test/mocha.opts
+    - tmp
+    - .keep
+    - tags
+    - app/assets/images
+    - app/assets/videos
+    - bin
+    - .bin
+    - build
+    - .build
+    - config/*.yml
+    - public
+    - Procfile
+    - .test
+    - .tmp
+    - typings
+    - .reek
+    - .release.json
+    - .rspec
+    - .ruby-version
+
+# -------- JavaScript --------
+
+# -------- TypeScript --------
+
+# -------- CoffeeScript --------
+
+# -------- Node.js --------
+
+# -------- PHP --------
+
+# -------- Haskell --------
+
+# -------- Ruby/Rails --------
+
+rubycritic:
+  allow:
+    - app
+    - lib
+    - spec

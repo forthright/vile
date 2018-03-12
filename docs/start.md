@@ -98,4 +98,4 @@ For more details on installing via `npm` see [here](/lang/#plugins).
 
 To see exactly what plugins and versions are being used, you can run:
 
-    ferret version
+    ferret modules

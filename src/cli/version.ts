@@ -38,8 +38,7 @@ const log_sub_packages = (cb : () => void) : void => {
 
 const create = (cli : commander.CommanderStatic) =>
   cli
-    .command("version")
-    .alias("versions")
+    .command("modules")
     .action(() => {
       console.log("ferret", pkg.version)
 

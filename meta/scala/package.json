@@ -1,5 +1,5 @@
 {
-  "name": "ferret-javascript",
+  "name": "@forthright/ferret-javascript",
   "version": "0.1.0",
   "description": "",
   "repository": {
@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/forthright/ferret#readme",
   "dependencies": {
-    "ferret-scalastyle": "^0.3.2"
+    "@forthright/ferret-scalastyle": "^0.3.2"
   }
 }

@@ -28,7 +28,6 @@ const no_args = (argv : string[]) : boolean =>
 
 const log_additional_help = () => {
   console.log()
-  console.log()
   console.log("  Command specific help:")
   console.log()
   console.log("    {cmd} -h, --help")

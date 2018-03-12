@@ -1,5 +1,5 @@
 {
-  "name": "ferret-rails",
+  "name": "@forthright/ferret-rails",
   "version": "0.1.0",
   "description": "A Ferret meta plugin for analyzing your Rails app and ecosystem.",
   "repository": {
