@@ -18,5 +18,8 @@
   "homepage": "https://github.com/forthright/ferret/tree/master/meta/scala",
   "dependencies": {
     "@forthright/ferret-scalastyle": "^0.3.2"
+  },
+  "peerDependencies": {
+    "@forthright/ferret": "^0.19.3"
   }
 }

@@ -15,7 +15,7 @@ Even if you are uncomfortable with code, an issue or question is welcome.
 Note: If you are reporting a bug or feature request
 for [ferretci.com](https://ferretci.com) itself, please see [forthright/ferretci.com](https://github.com/forthright/ferretci.com) instead.
 
-## Submitting Patches
+## Contributing Code
 
 All you need to do is submit a [Pull Request](https://github.com/forthright/ferret/pulls).
 
@@ -26,7 +26,7 @@ Note: If you prefer to submit a `patch` then please [open an issue](https://gith
 
 ## Development Setup
 
-Ferret is centered around the use of [plugins](https://docs.ferretci.com/#creating-a-plugin) that generate [issues](https://docs.ferretci.com/interfaces/_src__types_index_d_.ferret.issue.html).
+Ferret is centered around the exectution of [plugins](https://docs.ferretci.com/plugins) that generate various types of [data](https://docs.ferretci.com/metadata).
 
 A plugin can be written in JavaScript, or easily [shell out](https://docs.ferretci.com/#writing-non-javascript-plugins) to another language.
 
@@ -40,7 +40,7 @@ Test code is written in [CoffeeScript](http://coffeescript.org).
 * [Python]()
 * [MkDocs]()
 * [Git]()
-* [zsh/bash](http://zsh.sourceforge.net)
+* [sh](http://zsh.sourceforge.net)
 
 ### Getting Started
 
@@ -86,7 +86,11 @@ To run compile task with file watch in the background:
 
     npm run dev
 
-To generate latest docs:
+To build latest docs:
 
-    ./bin/gen-docs
-    [server-static] ../ferret-docs/public/index.html
+    mkdocs build
+    [static-server] .docs-site
+
+To develop docs run:
+
+    mkdocs serve

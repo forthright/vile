@@ -21,5 +21,8 @@
   "homepage": "https://github.com/forthright/ferret/tree/master/meta/hakell",
   "dependencies": {
     "@forthright/ferret-hlint": "^0.2.3"
+  },
+  "peerDependencies": {
+    "@forthright/ferret": "^0.19.3"
   }
 }

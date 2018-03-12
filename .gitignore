@@ -9,6 +9,7 @@ npm-debug.log
 .ackrc
 web/report/*.js
 web/report/*.css
+meta/*/package-lock.json
 tags
 .build
 tmp

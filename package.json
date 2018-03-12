@@ -55,7 +55,6 @@
     "@forthright/ferret-coverage": "^0.3.1",
     "@forthright/ferret-stat": "^0.1.2",
     "@types/bluebird": "^3.5.20",
-    "@types/commander": "^2.12.2",
     "@types/inquirer": "^0.0.37",
     "@types/js-yaml": "^3.10.1",
     "@types/lodash": "^4.14.104",
@@ -87,7 +86,6 @@
     "unixify": "^1.0.0"
   },
   "devDependencies": {
-    "@forthright/ferret-nsp": "^0.2.15",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "coffee-script": "^1.12.7",
@@ -109,7 +107,6 @@
     "clean": "rm -rf {.nyc_output,coverage,lib} && git checkout -- lib",
     "dev": "tsc -w",
     "lint-cov": "nyc check-coverage --lines 97 --branches 88",
-    "ncu": "ncu -u",
     "stats": "sloc -d -f cli-table -k total,source,comment -e 'fixtures|@types' src test",
     "test": "globstar -- _mocha \"test/spec/**/*.coffee\"",
     "test-fast": "npm run -s test -- -i --grep 'system ::'",

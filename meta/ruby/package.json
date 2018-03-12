@@ -21,5 +21,8 @@
     "@forthright/ferret-bundler-outdated": "^0.1.3",
     "@forthright/ferret-rubocop": "^0.2.4",
     "@forthright/ferret-rubycritic": "^0.3.0"
+  },
+  "peerDependencies": {
+    "@forthright/ferret": "^0.19.3"
   }
 }

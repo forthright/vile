@@ -20,5 +20,8 @@
   "dependencies": {
     "@forthright/ferret-coffeelint": "^0.1.17",
     "@forthright/ferret-retire": "^0.1.6"
+  },
+  "peerDependencies": {
+    "@forthright/ferret": "^0.19.3"
   }
 }

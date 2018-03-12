@@ -18,5 +18,8 @@
   "homepage": "https://github.com/forthright/ferret/tree/master/meta/php",
   "dependencies": {
     "@forthright/ferret-phpmd": "^0.3.3"
+  },
+  "peerDependencies": {
+    "@forthright/ferret": "^0.19.3"
   }
 }

@@ -23,5 +23,8 @@
     "@forthright/ferret-rails-best-practices": "^0.3.2",
     "@forthright/ferret-sass-lint": "^0.4.0",
     "@forthright/ferret-slim-lint": "^0.3.3"
+  },
+  "peerDependencies": {
+    "@forthright/ferret": "^0.19.3"
   }
 }
