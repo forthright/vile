@@ -52,7 +52,7 @@
   "dependencies": {
     "@forthright/ferret-comment": "^0.1.20",
     "@forthright/ferret-coverage": "^0.3.1",
-    "@forthright/ferret-stat": "^0.1.2",
+    "@forthright/ferret-stat": "^0.1.3",
     "@types/bluebird": "^3.5.20",
     "@types/inquirer": "^0.0.37",
     "@types/js-yaml": "^3.10.1",
@@ -85,6 +85,9 @@
     "unixify": "^1.0.0"
   },
   "devDependencies": {
+    "@forthright/ferret": "^0.19.3",
+    "@forthright/ferret-depcheck": "^0.1.17",
+    "@forthright/ferret-license": "^0.4.3",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "coffee-script": "^1.12.7",

@@ -2,63 +2,75 @@
 
 set -xe
 
+NODE_ENV=production
 target_arch=x86_64
+dist_dir=dist
 script_dir=`dirname $0`
-dist=dist
 app_version=$($script_dir/npm-pkg-version)
-base_dir=$script_dir/../build
+root_dir=$script_dir/..
+default_yml_config=$root_dir/.ferret-default.yml
+build_dir=$root_dir/build
 
 prepare() {
-  cd $base_dir
-  npm i
-  npm update
+  cd $build_dir
+  npm i --loglevel error
   cd -
 }
 
 build() {
-  target="node8.6.0-$target_os"
-
-  cd $base_dir
+  target="$target_os"
 
   full_target=ferret-$app_version-$target_os-$target_arch
-  core_dist=$dist/$full_target
-  mkdir -p $core_dist
+  target_dist=$dist_dir/$full_target
 
-  # need to include xdg-open
-  mkdir -p $core_dist/node_modules/opn
-  cp $base_dir/node_modules/opn/xdg-open $core_dist/node_modules/opn/xdg-open
-  cp $base_dir/node_modules/opn/xdg-open $core_dist/xdg-open
+  mkdir -p $target_dist
 
-  # need to hack include part of bundler-audit plugin until we make a rubygem
-  mkdir -p $ruby_dist/node_modules/ferret-bundler-audit/lib_ruby
-  cp -r $base_dir/node_modules/ferret-bundler-audit/lib_ruby/* $ruby_dist/node_modules/ferret-bundler-audit/lib_ruby/.
+  # copy over all plugins
+  cp -r $build_dir/node_modules $target_dist/node_modules
 
-  bin_name="$core_dist/ferret"
+
+  # copy over all default config
+  cp $default_yml_config $target_dist/.
+  for i in $root_dir/meta
+  do
+    meta_dir=`basename $i`
+    mkdir -p $target_dist/$meta_dir
+    cp -r $i/default/* $target_dist/$meta_dir/.
+  done
+
+  # until this pkg gets removed from dev deps
+  rm -r $target_dist/node_modules/snyk*
+
+  # need to include xdg-open for ferret bin
+  mkdir -p $target_dist/node_modules/opn
+  cp $root_dir/node_modules/opn/xdg-open $target_dist/node_modules/opn/xdg-open
+  cp $root_dir/node_modules/opn/xdg-open $target_dist/xdg-open
+
+  bin_name="$target_dist/ferret"
   zip_name="$full_target.tgz"
 
   npx pkg -t $target -o $bin_name package.json
-  tar -C $core_dist/.. -czvf $core_dist/../$zip_name $full_target
 
-  cd -
+  tar -C $target_dist/.. -czf $target_dist/../$zip_name $full_target
 }
 
 clean() {
-  npm run clean
-  rm -rf $dist
-  mkdir $dist
-
-  npm run compile
+  rm -rf $dist_dir
+  mkdir $dist_dir
 }
 
-#clean
+clean
 
 #prepare
+
+#npm run clean
+#npm run compile
 
 target_os=linux
 build
 
-target_os=win
-build
+#target_os=win
+#build
 
-target_os=mac
-build
+#target_os=mac
+#build

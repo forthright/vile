@@ -9,27 +9,14 @@ import linez = require("linez")
 import logger = require("./logger")
 import util = require("./util")
 import plugin_require = require("./plugin/require")
-import PluginNotFoundError = require("./plugin/plugin_not_found_error")
 
 const chalk = require("chalk")
-
-const fs_readdir = Bluebird.promisify(fs.readdir)
 
 const log = logger.create("plugin")
 
 const FILE_EXT = /\.[^\.]*$/
 
 const WORKER_MODULE = path.join(__dirname, "plugin", "worker.js")
-
-// NOTE: defined in package.json dependencies section
-const BUNDLED_PLUGINS = [
-  "ferret-comment",
-  "ferret-coverage",
-  "ferret-stat"
-]
-
-const is_plugin = (name : string) : boolean =>
-  !!/^ferret-/.test(name)
 
 const valid_plugin = (api : ferret.Plugin) : boolean =>
   !!(api && (typeof api.exec == "function" || api.meta == true))
@@ -93,20 +80,6 @@ const normalize_paths = (data : ferret.DataList) =>
       }
     }
   })
-
-const check_for_uninstalled_plugins = (
-  allowed : string[],
-  plugins : ferret.PluginList
-) => {
-  _.each(allowed, (name : string) => {
-    if (!_.some(plugins, (plugin : string) =>
-      plugin.replace("ferret-", "") == name
-    )) {
-      throw new PluginNotFoundError(
-        `${name} is not installed`)
-    }
-  })
-}
 
 const combine_paths = (
   combine_str : string,
@@ -334,7 +307,7 @@ const add_code_snippets = (
   .then(() => data)
 
 const cwd_plugins_path = () =>
-  path.resolve(path.join(process.cwd(), "node_modules"))
+  path.join(process.cwd(), "node_modules")
 
 const add_ok_data = (
   ferret_allow : ferret.AllowList,
@@ -360,31 +333,6 @@ const add_ok_data = (
     return distinct_ok_data.concat(data)
   })
 
-const filter_plugins_to_run = (
-  peer_installed : ferret.PluginList,
-  via_config : ferret.PluginList, // via .ferret.yml
-  via_opts : ferret.PluginList, // via CLI opt
-  via_force_opts : ferret.PluginList, // for bundling meta pkg bins
-  skip_core_plugins : boolean
-) : ferret.PluginList => {
-  const allowed_plugins : ferret.PluginList = _
-    .isEmpty(via_opts) ? via_config : _.concat([], via_opts)
-
-  let available_plugins : ferret.PluginList = skip_core_plugins ?
-    peer_installed :
-    _.uniq(_.concat(peer_installed, BUNDLED_PLUGINS))
-
-  available_plugins = _.uniq(available_plugins.concat(via_force_opts))
-
-  check_for_uninstalled_plugins(allowed_plugins, available_plugins)
-
-  // TODO: have opt to disable auto adding bundled plugins
-  return _.isEmpty(allowed_plugins) ?
-    available_plugins :
-    _.filter(available_plugins, (p) =>
-      _.some(allowed_plugins, (a) => p.replace("ferret-", "") == a))
-}
-
 const exec = (
   config : ferret.YMLConfig = {},
   opts : ferret.PluginExecOptions = {}
@@ -400,24 +348,35 @@ const exec = (
   const allowed_plugins_via_additional_opts : ferret.PluginList = _
     .get(opts, "additional_plugins", [])
 
-  const run = (peer_installed_plugins : ferret.PluginList) =>
-    execute_plugins(
-      filter_plugins_to_run(
-        peer_installed_plugins,
+  log.debug("plugin base:", plugins_path)
+
+  return plugin_require
+    .available_modules()
+    .then((mods : string[][]) => {
+      const installed_plugins = _.map(mods,
+        (mod : string[]) =>
+        _.last(_.split(mod[0], "/")))
+
+      log.debug("available:", installed_plugins)
+      log.debug("to run via .ferret.yml =>", allowed_plugins_via_config.join(", "))
+      log.debug("to run via opts =>", allowed_plugins_via_opts.join(", "))
+      log.debug("to run via additional_opts =>", allowed_plugins_via_additional_opts.join(", "))
+      log.debug("skip core plugins =>", !!opts.skip_core_plugins)
+
+      const to_run = plugin_require.filter(
+        installed_plugins,
         allowed_plugins_via_config,
         allowed_plugins_via_opts,
         allowed_plugins_via_additional_opts,
-        opts.skip_core_plugins),
-      config,
-      opts)
+        !!opts.skip_core_plugins)
 
-  if (fs.existsSync(plugins_path)) {
-    return fs_readdir(plugins_path)
-      .filter(is_plugin)
-      .then(run)
-  } else {
-    return run([])
-  }
+      log.debug("to run: ", to_run.join(", ")
+
+      return execute_plugins(
+        to_run,
+        config,
+        opts)
+    })
 }
 
 const module_exports : ferret.Module.Plugin = {

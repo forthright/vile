@@ -70,9 +70,9 @@ const handle_worker_request = (data : ferret.PluginWorkerData) : void => {
   const config : ferret.YMLConfig = data.config
 
   Bluebird.map(plugins, (plugin_name : string) => {
-    const name : string = plugin_name.replace("ferret-", "")
-    const plugin_config = get_plugin_config(name, config)
-    return plugin.exec_plugin(name, plugin_config)
+    const real_name : string = plugin_name.replace("ferret-", "")
+    const plugin_config = get_plugin_config(real_name, config)
+    return plugin.exec_plugin(plugin_name, plugin_config)
   })
   .then(_.flatten)
   .then((data) => process.send(data))

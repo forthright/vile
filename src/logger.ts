@@ -63,6 +63,9 @@ const colorize = (
       case "warn":
         name = chalk.yellow(name)
         break
+      case "debug":
+        name = chalk.red(name)
+        break
       default:
         name = chalk.cyan(name)
         break
@@ -84,6 +87,9 @@ const apply = (
       break
     case "error":
       log.error.apply(log, colorize(name, source, logs))
+      break
+    case "debug":
+      log.debug.apply(log, colorize(name, source, logs))
       break
     default:
       log.info.apply(log, colorize(name, source, logs))
@@ -110,7 +116,9 @@ const create = (
     info:        apply("info", source),
     info_data:   apply_data("info", source),
     warn:        apply("warn", source),
-    warn_data:   apply_data("warn", source)
+    warn_data:   apply_data("warn", source),
+    debug:       apply("debug", source),
+    debug_data:  apply_data("debug", source)
   }
 }
 

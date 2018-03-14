@@ -1,10 +1,4 @@
 ferret:
-  plugins:
-    - depcheck
-    - eclint
-    - license
-    - nsp
-    - retire
   ignore:
     - ".*"
     - "*.json"

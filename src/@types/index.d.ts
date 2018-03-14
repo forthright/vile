@@ -281,6 +281,8 @@ declare namespace ferret {
     info_data : (...l : any[]) => void;
     warn : (...l : any[]) => void;
     warn_data :  (...l : any[]) => void;
+    debug : (...l : any[]) => void;
+    debug_data : (...l : any[]) => void;
   }
 
   export interface PluginWorkerData {

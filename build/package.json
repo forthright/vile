@@ -1,6 +1,4 @@
 {
-  "name": "ferret",
-  "private": true,
   "description": "Package file used to bundle into binaries.",
   "bin": {
     "ferret": "node_modules/@forthright/ferret/bin/ferret"
@@ -16,20 +14,20 @@
     ]
   },
   "dependencies": {
-    "@forthright/ferret": "^0.19.3",
-
-    "@forthright/ferret-ruby": "^0.1.0",
-    "@forthright/ferret-rails": "^0.1.0",
-    "@forthright/ferret-node": "^0.1.1",
-    "@forthright/ferret-javascript": "^0.1.0",
-    "@forthright/ferret-typescript": "^0.1.0",
-    "@forthright/ferret-coffeescript": "^0.1.0",
-    "@forthright/ferret-haskell": "^0.1.0",
-    "@forthright/ferret-php": "^0.1.0",
-    "@forthright/ferret-scala": "^0.1.0",
-    "@forthright/ferret-swift": "^0.1.0",
-
+    "@forthright/ferret-ruby": "^0.2.0",
+    "@forthright/ferret-rails": "^0.2.0",
+    "@forthright/ferret-node": "^0.2.0",
+    "@forthright/ferret-javascript": "^0.2.0",
+    "@forthright/ferret-typescript": "^0.2.0",
+    "@forthright/ferret-coffeescript": "^0.2.0",
+    "@forthright/ferret-haskell": "^0.2.0",
+    "@forthright/ferret-php": "^0.2.0",
+    "@forthright/ferret-scala": "^0.2.0",
+    "@forthright/ferret-swift": "^0.2.0",
     "@forthright/ferret-eclint": "^0.1.15",
     "@forthright/ferret-git": "^0.5.6"
+  },
+  "peerDependencies": {
+    "@forthright/ferret": "^0.19.3"
   }
 }

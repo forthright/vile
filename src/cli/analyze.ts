@@ -166,7 +166,7 @@ const create = (cli : commander.CommanderStatic) =>
     .option("-w, --without-core-plugins",
             "don't use plugins bundled with core lib")
     .option("-l, --log [level]",
-            "specify the log level (info=default|warn|error)")
+            "specify the log level (info=default|warn|error|debug)")
     .option("-i, --issue-log [level]",
             "specify data types to log (ex: '-i security,dependency')")
     .option("-e, --exit-on-issues", "exit with bad code " +
