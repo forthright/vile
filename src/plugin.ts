@@ -308,9 +308,6 @@ const add_code_snippets = (
   })
   .then(() => data)
 
-const cwd_plugins_path = () =>
-  path.join(process.cwd(), "node_modules")
-
 const add_ok_data = (
   ferret_allow : ferret.AllowList,
   ferret_ignore : ferret.IgnoreList,
@@ -344,13 +341,8 @@ const exec = (
     app_config, "plugins", [])
   const allowed_plugins_via_opts : ferret.PluginList = _.get(
     opts, "plugins", [])
-
-  const plugins_path = cwd_plugins_path()
-
   const allowed_plugins_via_additional_opts : ferret.PluginList = _
     .get(opts, "additional_plugins", [])
-
-  log.debug("plugin base:", plugins_path)
 
   return plugin_require
     .available_modules()
@@ -359,10 +351,16 @@ const exec = (
         (mod : string[]) =>
         _.last(_.split(mod[0], "/")))
 
-      log.debug("available:", installed_plugins.join(", "))
-      log.debug("to run via .ferret.yml =>", allowed_plugins_via_config.join(", "))
-      log.debug("to run via opts =>", allowed_plugins_via_opts.join(", "))
-      log.debug("to run via additional_opts =>", allowed_plugins_via_additional_opts.join(", "))
+      log.debug("available:", "\n" + installed_plugins.join("\n"))
+      log.debug(
+        "allow via .ferret.yml =>",
+        allowed_plugins_via_config.join(", ") || "any")
+      log.debug(
+        "allow via opts =>",
+        allowed_plugins_via_opts.join(", ") || "any")
+      log.debug(
+        "allow via additional_opts =>",
+        allowed_plugins_via_additional_opts.join(", ") || "any")
       log.debug("skip core plugins =>", !!opts.skip_core_plugins)
 
       const to_run = plugin_require.filter(

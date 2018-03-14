@@ -1,9 +1,16 @@
 # Language Support
 
-If you are installing Ferret [by "source"](start/#install-by-source) then this section
+If you are installing Ferret [by "source"](/start/#install-by-source) then this section
 will be helpful. If you are using the pre-compiled binary which
 comes loaded with all available official plugins, you only need to
 really worry about [configuring your project](/analyze/#configure-your-project).
+
+## Plugins
+
+Ferret is centred around plugins that generate various types of data for different
+types of languages and frameworks.
+
+You can find a full list of official plugins [here](https://ferretci.com/plugins).
 
 ## Meta Plugins
 

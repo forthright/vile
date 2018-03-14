@@ -14,6 +14,12 @@ const DEFAULT_IGNORE_DIRS = plugin_map.ignore
 
 const log = logger.create("cli")
 
+const debug_memory = () : void => {
+  _.each(process.memoryUsage(), (v : number, i : string) => {
+    log.debug(i, `${(v / 1024 / 1024).toFixed(2)}MB`)
+  })
+}
+
 const log_and_exit = (error : any) : void => {
   log.error("\n", _.get(error, "stack", error))
   process.exit(1)
@@ -59,6 +65,8 @@ const analyze = (
     spinner: !(opts.quiet || !opts.decorations)
   }
 
+  debug_memory()
+
   if (!_.isEmpty(paths)) {
     _.set(ferret_yml, "ferret.allow", paths)
   }
@@ -91,6 +99,7 @@ const analyze = (
         return Bluebird.resolve()
       }
     })
+    .then(() => { debug_memory() })
     .catch(log_and_exit)
 
   if (opts.gitDiff) {

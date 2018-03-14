@@ -89,8 +89,12 @@ The main library is written in [TypeScript](https://www.typescriptlang.org) on t
 To install packages manually, or if you are familiar with an npm setup:
 
     cd my_project/
-    npm i @forthright/ferret
-    npm i @forthright/ferret-XXXX (whatever plugins and meta packages you want)
+    npm i --save-dev @forthright/ferret
+    npm i --save-dev @forthright/ferret-coverage
+    npm i --save-dev @forthright/ferret-stat
+    npm i --save-dev @forthright/ferret-comment
+    npm i --save-dev @forthright/ferret-typescript
+    npm i --save-dev @forthright/ferret-....
 
 For more details on installing via `npm` see [here](/lang/#plugins).
 

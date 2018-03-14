@@ -1,9 +1,6 @@
 # Creating a Plugin
 
-Ferret is centred around plugins that generate various types of data for different
-types of languages and frameworks.
-
-You can find a full list of official, binary bundled plugins [here](https://ferretci.com/plugins).
+First make sure you read about [plugins and language support](/lang/#plugin).
 
 ## Quick Start
 

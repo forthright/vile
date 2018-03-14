@@ -53,7 +53,7 @@ build() {
 
   npx pkg -t $target -o $bin_name package.json
 
-  tar -C $target_dist/.. -czf $target_dist/../$zip_name $full_target
+  #tar -C $target_dist/.. -czf $target_dist/../$zip_name $full_target
 }
 
 clean() {

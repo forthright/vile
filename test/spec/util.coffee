@@ -64,7 +64,7 @@ describe "util", ->
     it "are defined", ->
       expect(util.OK).to.eql "ok"
 
-      expect(util.displayable_issues).to.eql [
+      expect(util.displayable_data).to.eql [
         "warning"
         "style"
         "maintainability"
