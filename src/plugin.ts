@@ -148,6 +148,8 @@ const exec_plugin = (
     resolve : (i : ferret.DataList) => void,
     reject : (e : string) => void
   ) => {
+    log.debug("exec:", name)
+
     const api : ferret.Plugin = plugin_require.locate(name)
 
     if (!valid_plugin(api)) {
@@ -357,7 +359,7 @@ const exec = (
         (mod : string[]) =>
         _.last(_.split(mod[0], "/")))
 
-      log.debug("available:", installed_plugins)
+      log.debug("available:", installed_plugins.join(", "))
       log.debug("to run via .ferret.yml =>", allowed_plugins_via_config.join(", "))
       log.debug("to run via opts =>", allowed_plugins_via_opts.join(", "))
       log.debug("to run via additional_opts =>", allowed_plugins_via_additional_opts.join(", "))
@@ -370,7 +372,7 @@ const exec = (
         allowed_plugins_via_additional_opts,
         !!opts.skip_core_plugins)
 
-      log.debug("to run: ", to_run.join(", ")
+      log.debug("to run: ", to_run.join(", "))
 
       return execute_plugins(
         to_run,

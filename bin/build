@@ -30,12 +30,14 @@ build() {
 
 
   # copy over all default config
-  cp $default_yml_config $target_dist/.
-  for i in $root_dir/meta
+  mkdir -p $target_dist/default
+  cp $default_yml_config $target_dist/default/.ferret.yml
+  for i in $root_dir/meta/*
   do
     meta_dir=`basename $i`
-    mkdir -p $target_dist/$meta_dir
-    cp -r $i/default/* $target_dist/$meta_dir/.
+    if [ -d "$i/default" ]; then
+      cp -r $i/default $target_dist/default/$meta_dir
+    fi
   done
 
   # until this pkg gets removed from dev deps

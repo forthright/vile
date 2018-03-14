@@ -242,7 +242,7 @@ const log_data_messages = (
 
     const nlog = nlogs[logger_type]
     const plugin_name : string = _.get(datum, "plugin", "")
-    const msg_postfix = plugin_name ? ` (ferret-${ plugin_name })` : ""
+    const msg_postfix = plugin_name ? ` (${ plugin_name })` : ""
 
     if (_.some(util.errors, (i_type) => datum.type == i_type)) {
       nlog.error_data(to_console(datum) + msg_postfix)

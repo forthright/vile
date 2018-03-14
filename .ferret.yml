@@ -6,10 +6,12 @@ ferret:
     - "*.lock"
     - "*.log"
     - "*.md"
+    - .docs-site/
     - src/@types
     - test/fixtures
-    - dist/*
-    - meta/*
+    - dist
+    - build
+    - meta
     - test/mocha.opts
     - "*.yml"
 
