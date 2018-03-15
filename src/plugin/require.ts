@@ -148,7 +148,7 @@ const available_plugins = () : Promise<string[][]> => {
       node_modules_list(pkg_entry_base),
       node_modules_list(pkg_entry_base, "@forthright"))
   } else {
-    const pkg_entry_base = path.resolve(path.join(__dirname, "..", ".."))
+    const pkg_entry_base = path.resolve(path.join(__dirname, "..", "..", ".."))
     log.debug("searching:", pkg_entry_base)
     if (pkg_entry_base != cwd) {
       potential_locations.push(

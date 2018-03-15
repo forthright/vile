@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+basedir=`dirname "$0"`
+
+node_bin="$basedir/lib/node/bin/node"
+ferret_bin="$basedir/node_modules/@forthright/ferret/bin/ferret"
+
+"$node_bin" "$ferret_bin" "$@"

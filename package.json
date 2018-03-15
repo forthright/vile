@@ -15,11 +15,6 @@
     "CHANGELOG.md",
     "README.md"
   ],
-  "pkg": {
-    "scripts": [
-      "lib/plugin/worker.js"
-    ]
-  },
   "author": "Brent Lintner <brent.lintner@gmail.com>",
   "license": "MPL-2.0",
   "bugs": {
@@ -91,7 +86,6 @@
     "mimus": "^0.2.8",
     "mocha": "^5.0.4",
     "nyc": "^11.6.0",
-    "pkg": "^4.3.0",
     "release-it": "^7.2.1",
     "rimraf": "^2.6.2",
     "shelljs": "^0.8.1",

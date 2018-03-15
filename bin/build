@@ -3,18 +3,42 @@
 set -xe
 
 NODE_ENV=production
+node_vers="9.8.0"
+node_builds="https://nodejs.org/dist/v$node_vers"
+node_base="node-v$node_vers"
+node_lin="$node_base-linux-x64"
+node_mac="$node_base-darwin-x64"
+node_win="$node_base-win-x64"
 target_arch=x86_64
-dist_dir=dist
 script_dir=`dirname $0`
 app_version=$($script_dir/npm-pkg-version)
 root_dir=$script_dir/..
 default_yml_config=$root_dir/.ferret-default.yml
 build_dir=$root_dir/build
+dist_dir=$root_dir/dist
+lib_dir=$build_dir/lib
 
-prepare() {
-  cd $build_dir
-  npm i --loglevel error
-  cd -
+get_node_pkgs() {
+  if [ ! -f "$lib_dir/$node_lin.tar.gz" ]; then
+    curl "$node_builds/$node_lin.tar.gz" > "$lib_dir/$node_lin.tar.gz"
+    cd $lib_dir
+    tar -xf $node_lin.tar.gz
+    cd -
+  fi
+
+  if [ ! -f "$lib_dir/$node_mac.tar.gz" ]; then
+    curl "$node_builds/$node_mac.tar.gz" > "$lib_dir/$node_mac.tar.gz"
+    cd $lib_dir
+    tar -xf $node_mac.tar.gz
+    cd -
+  fi
+
+  if [ ! -f "$lib_dir/$node_win.zip" ]; then
+    curl "$node_builds/$node_win.zip" > "$lib_dir/$node_win.zip"
+    cd $lib_dir
+    unzip $node_win.zip > /dev/null
+    cd -
+  fi
 }
 
 build() {
@@ -28,9 +52,8 @@ build() {
   # copy over all plugins
   cp -r $build_dir/node_modules $target_dist/node_modules
 
-
   # copy over all default config
-  mkdir -p $target_dist/default
+  mkdir $target_dist/default
   cp $default_yml_config $target_dist/default/.ferret.yml
   for i in $root_dir/meta/*
   do
@@ -43,36 +66,56 @@ build() {
   # until this pkg gets removed from dev deps
   rm -r $target_dist/node_modules/snyk*
 
-  # need to include xdg-open for ferret bin
-  mkdir -p $target_dist/node_modules/opn
-  cp $root_dir/node_modules/opn/xdg-open $target_dist/node_modules/opn/xdg-open
-  cp $root_dir/node_modules/opn/xdg-open $target_dist/xdg-open
+  # bin shims
+  if [ "$target" = "win" ]; then
+    cp $build_dir/bin/ferret.cmd $target_dist/.
+  else
+    cp $build_dir/bin/ferret $target_dist/.
+  fi
 
-  bin_name="$target_dist/ferret"
-  zip_name="$full_target.tgz"
+  # copy over node
+  mkdir $target_dist/lib
+  cp -r $lib_dir/$target_node $target_dist/lib/node
 
-  npx pkg -t $target -o $bin_name package.json
+  archive_name="$full_target.tgz"
 
-  #tar -C $target_dist/.. -czf $target_dist/../$zip_name $full_target
+  tar -C $target_dist/.. -czf $target_dist/../$archive_name $full_target
 }
 
 clean() {
+  npm run clean
   rm -rf $dist_dir
   mkdir $dist_dir
 }
 
+prepare() {
+  npm run compile
+  cd $build_dir
+  npm i --loglevel error
+  if [ ! -d "lib" ]; then
+    mkdir lib
+  fi
+  cd -
+}
+
 clean
 
-#prepare
+prepare
 
-#npm run clean
-#npm run compile
+get_node_pkgs
 
 target_os=linux
+target_node=$node_lin
 build
 
-#target_os=win
-#build
+target_os=win
+target_node=$node_win
+build
 
-#target_os=mac
-#build
+target_os=mac
+target_node=$node_mac
+build
+
+tree -na -L 2 $dist_dir
+
+du -hs $dist_dir

@@ -1,20 +1,22 @@
 {
   "description": "For bundling plugins with core binary.",
   "dependencies": {
+    "@forthright/ferret": "^0.19.4",
+    "@forthright/ferret-coffeescript": "^0.2.0",
     "@forthright/ferret-comment": "^0.1.20",
     "@forthright/ferret-coverage": "^0.3.1",
-    "@forthright/ferret-stat": "^0.1.3",
     "@forthright/ferret-eclint": "^0.1.15",
     "@forthright/ferret-git": "^0.5.6",
-    "@forthright/ferret-ruby": "^0.2.0",
-    "@forthright/ferret-rails": "^0.2.0",
-    "@forthright/ferret-node": "^0.2.0",
-    "@forthright/ferret-javascript": "^0.2.0",
-    "@forthright/ferret-typescript": "^0.2.0",
-    "@forthright/ferret-coffeescript": "^0.2.0",
     "@forthright/ferret-haskell": "^0.2.0",
+    "@forthright/ferret-javascript": "^0.2.0",
+    "@forthright/ferret-node": "^0.2.0",
     "@forthright/ferret-php": "^0.2.0",
+    "@forthright/ferret-rails": "^0.2.0",
+    "@forthright/ferret-ruby": "^0.2.0",
     "@forthright/ferret-scala": "^0.2.0",
-    "@forthright/ferret-swift": "^0.2.0"
+    "@forthright/ferret-stat": "^0.1.3",
+    "@forthright/ferret-swift": "^0.2.0",
+    "@forthright/ferret-typescript": "^0.2.0",
+    "retire": "^1.6.0"
   }
 }

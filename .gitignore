@@ -10,6 +10,7 @@ npm-debug.log
 web/report/*.js
 web/report/*.css
 meta/*/package-lock.json
+build/lib
 tags
 .build
 tmp
