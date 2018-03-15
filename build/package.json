@@ -1,7 +1,7 @@
 {
   "description": "For bundling plugins with core binary.",
   "dependencies": {
-    "@forthright/ferret": "^0.19.5",
+    "@forthright/ferret": "^0.19.6",
     "@forthright/ferret-coffeescript": "^0.2.0",
     "@forthright/ferret-comment": "^0.1.20",
     "@forthright/ferret-coverage": "^0.3.1",

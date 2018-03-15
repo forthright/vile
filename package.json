@@ -1,6 +1,6 @@
 {
   "name": "@forthright/ferret",
-  "version": "0.19.5",
+  "version": "0.19.6",
   "description": "An open platform for continuous software analysis.",
   "main": "lib/index.js",
   "types": "src/@types/index.d.ts",

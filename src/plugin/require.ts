@@ -68,11 +68,10 @@ const locate = (name : string) : ferret.Plugin => {
       try {
         plugin = _locate(local_modules, name, OFFICIAL_SCOPE)
       } catch (e2) {
-        if (!_.has(process, "pkg")) {
+        const bundled_modules = _.get(process, "env.FERRET_PLUGINS_PATH")
+        if (!bundled_modules) {
           throw e2
         } else {
-          const bundled_modules = path.dirname(process.execPath)
-
           try {
             plugin = _locate(bundled_modules, name)
           } catch (e3) {
@@ -135,26 +134,19 @@ const filter_plugins_to_run = (
 
 const available_plugins = () : Promise<string[][]> => {
   const cwd = process.cwd()
-
-  let potential_locations : Promise<string[]>[] = [
+  log.debug("searching:", cwd)
+  const potential_locations : Promise<string[]>[] = [
     node_modules_list(cwd),
     node_modules_list(cwd, "@forthright")
   ]
 
-  if (_.has(process, "pkg")) {
-    const pkg_entry_base = path.join(path.dirname(process.execPath))
-    log.debug("searching:", pkg_entry_base)
+  const bundled_modules = _.get(process, "env.FERRET_PLUGINS_PATH")
+  if (bundled_modules) {
+    const abs_path = path.resolve(bundled_modules)
+    log.debug("searching:", abs_path)
     potential_locations.push(
-      node_modules_list(pkg_entry_base),
-      node_modules_list(pkg_entry_base, "@forthright"))
-  } else {
-    const pkg_entry_base = path.resolve(path.join(__dirname, "..", "..", ".."))
-    log.debug("searching:", pkg_entry_base)
-    if (pkg_entry_base != cwd) {
-      potential_locations.push(
-        node_modules_list(pkg_entry_base),
-        node_modules_list(pkg_entry_base, "@forthright"))
-    }
+      node_modules_list(abs_path),
+      node_modules_list(abs_path, "@forthright"))
   }
 
   return Promise
@@ -163,7 +155,7 @@ const available_plugins = () : Promise<string[][]> => {
     .then((list : string[]) => {
       log.debug("found:", "\n" + list.join("\n"))
       return _.map(_.uniq(list), (mod_path : string) => {
-        const version = require(path.join(mod_path, "package")).version
+        const version = require(path.join(mod_path, "package.json")).version
         return [ mod_path, version ]
       })
     })

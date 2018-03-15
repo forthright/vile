@@ -4,4 +4,6 @@ basedir=`dirname "$0"`
 node_bin="$basedir/lib/node/bin/node"
 ferret_bin="$basedir/node_modules/@forthright/ferret/bin/ferret"
 
+FERRET_PLUGINS_PATH=""
+
 "$node_bin" "$ferret_bin" "$@"

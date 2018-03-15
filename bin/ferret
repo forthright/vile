@@ -1,3 +1,2 @@
 #!/usr/bin/env node
-console.log(process.pkg)
 require("./../lib/cli").interpret(process.argv)
