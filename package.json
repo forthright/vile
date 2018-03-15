@@ -77,6 +77,7 @@
     "unixify": "^1.0.0"
   },
   "devDependencies": {
+    "@forthright/ferret": "^0.19.6",
     "@forthright/ferret-depcheck": "^0.1.17",
     "@forthright/ferret-license": "^0.4.3",
     "chai": "^4.1.2",

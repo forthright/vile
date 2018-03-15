@@ -19,5 +19,5 @@ package() {
   install -m644 "${srcdir}/${_pkg}/LICENSE" "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
 
   cp -r "${srcdir}/${_pkg}/"* "${pkgdir}/opt/${_pkgname}" -R
-  ln -s /opt/${_pkgname}/bin/ferret "${pkgdir}"/usr/bin/ferret
+  ln -s /opt/${_pkgname}/ferret "${pkgdir}"/usr/bin/ferret
 }

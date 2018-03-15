@@ -8,6 +8,8 @@ import Bluebird = require("bluebird")
 import ignore = require("ignore")
 import logger = require("./logger")
 
+const log = logger.create("util")
+
 // HACK: no options in type defs?
 const fs_readFile : any = Bluebird.promisify(fs.readFile)
 
@@ -97,10 +99,19 @@ const spawn = (
 
     // HACK: Move node bin path added by npm-run-path to end
     //       (ex: so we don't clobber ruby rbenv/n shims etc)
-    const new_path : string = move_node_bin_to_end(npm_run_path({
+    let new_path : string = move_node_bin_to_end(npm_run_path({
       cwd: process.cwd(),
       path: process.env.PATH
     }))
+
+    const ferret_plugins_path = _.get(process, "env.FERRET_PLUGINS_PATH")
+
+    if (_.isString(ferret_plugins_path)) {
+      const bin_path = path.join(ferret_plugins_path, "node_modules", ".bin")
+      new_path = `${bin_path}:${new_path}`
+    }
+
+    log.debug("spawn", bin, "PATH =>", new_path)
 
     const new_env = _.assign({}, process.env)
 
@@ -130,8 +141,8 @@ const spawn = (
 
       // TODO: should be lib opt to disable auto logging stderr
       if (stderr_str) {
-        const log = logger.create(bin)
-        log.warn("\n", stderr_str)
+        const nlog = logger.create(bin)
+        nlog.warn("\n", stderr_str)
       }
 
       const data : ferret.SpawnData = {

@@ -295,7 +295,6 @@ declare namespace ferret {
     format?            : string;
     combine?           : string;
     dont_post_process? : boolean;
-    skip_core_plugins? : boolean
     skip_snippets?     : boolean;
     plugins?           : PluginList;
     additional_plugins? : PluginList;
@@ -318,7 +317,6 @@ declare namespace ferret {
     spinner?            : boolean;
     terminalSnippets?   : boolean;
     upload?             : string;
-    withoutCorePlugins? : boolean
   }
 
   export interface CLIModule {

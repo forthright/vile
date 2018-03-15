@@ -9,11 +9,6 @@ const readdirAsync = Promise.promisify(fs.readdir)
 
 const log = logger.create("plugin")
 
-// NOTE: defined in package.json dependencies section
-// HACK: THIS IS DUPED in version.js for now
-const BUNDLED_PLUGINS : string[] = [
-]
-
 const NODE_MODULES : string = "node_modules"
 
 const OFFICIAL_SCOPE: string = "@forthright"
@@ -22,10 +17,11 @@ const is_plugin = (name : string) : boolean =>
   !!/^ferret-/.test(name)
 
 const cannot_find_module = (
-  err : NodeJS.ErrnoException | string
+  err : NodeJS.ErrnoException | string,
+  module_loc : string
 ) : boolean =>
-  /cannot find module/i.test(
-    _.get(err, "stack", (err as string)))
+  new RegExp(`cannot find module '${module_loc}'`, "i")
+    .test(_.get(err, "stack", (err as string)));
 
 const _locate = (
   base_path : string,
@@ -38,17 +34,21 @@ const _locate = (
 
   let plugin : ferret.Plugin
 
-  log.debug("looking in:", modules_path)
+  log.debug(`looking for ${module_name} in:`, modules_path)
+
+  // CWD first (in case a bundled plugin is also locally installed)
+  const module_loc = path.join(modules_path, module_name)
 
   try {
-    // CWD first (in case a bundled plugin is also locally installed)
-    const module_loc = path.join(modules_path, module_name)
     plugin = require(module_loc)
-    log.debug("found", module_loc)
+    log.debug("using", module_loc)
   } catch (e) {
-    if (cannot_find_module(e)) {
+    if (cannot_find_module(e, module_loc)) {
       throw new PluginNotFoundError(e)
-    } else { throw e }
+    } else {
+      // HACK: just error log
+      log.error(e)
+    }
   }
 
   return plugin
@@ -113,17 +113,12 @@ const filter_plugins_to_run = (
   installed : ferret.PluginList,
   via_config : ferret.PluginList, // via .ferret.yml
   via_opts : ferret.PluginList, // via CLI opt
-  via_additional_opts : ferret.PluginList, // for bundling meta pkg bins
-  skip_core_plugins : boolean
+  via_additional_opts : ferret.PluginList // for bundling meta pkg bins
 ) : ferret.PluginList => {
   const allowed_plugins : ferret.PluginList = _
     .isEmpty(via_opts) ? via_config : _.concat([], via_opts)
 
-  let to_run : ferret.PluginList = skip_core_plugins ?
-    installed :
-    _.concat(installed, BUNDLED_PLUGINS)
-
-  to_run = _.uniq(to_run.concat(via_additional_opts))
+  const to_run = _.uniq(_.concat([], installed, via_additional_opts))
 
   return _.isEmpty(allowed_plugins) ?
     to_run :
@@ -134,7 +129,6 @@ const filter_plugins_to_run = (
 
 const available_plugins = () : Promise<string[][]> => {
   const cwd = process.cwd()
-  log.debug("searching:", cwd)
   const potential_locations : Promise<string[]>[] = [
     node_modules_list(cwd),
     node_modules_list(cwd, "@forthright")
@@ -143,7 +137,6 @@ const available_plugins = () : Promise<string[][]> => {
   const bundled_modules = _.get(process, "env.FERRET_PLUGINS_PATH")
   if (bundled_modules) {
     const abs_path = path.resolve(bundled_modules)
-    log.debug("searching:", abs_path)
     potential_locations.push(
       node_modules_list(abs_path),
       node_modules_list(abs_path, "@forthright"))
@@ -153,7 +146,8 @@ const available_plugins = () : Promise<string[][]> => {
     .all(potential_locations)
     .then(_.flatten)
     .then((list : string[]) => {
-      log.debug("found:", "\n" + list.join("\n"))
+      log.debug("known locations...", "\n=> " +
+        (list.join("\n=> ") || "none"))
       return _.map(_.uniq(list), (mod_path : string) => {
         const version = require(path.join(mod_path, "package.json")).version
         return [ mod_path, version ]
@@ -163,7 +157,6 @@ const available_plugins = () : Promise<string[][]> => {
 
 export = {
   available_modules: available_plugins,
-  bundled: BUNDLED_PLUGINS,
   filter: filter_plugins_to_run,
   locate: locate
 }

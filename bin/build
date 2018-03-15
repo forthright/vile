@@ -52,6 +52,11 @@ build() {
   # copy over all plugins
   cp -r $build_dir/node_modules $target_dist/node_modules
 
+  # copy over license/readme
+  cp $root_dir/README.md $target_dist/.
+  cp $root_dir/CHANGELOG.md $target_dist/.
+  cp $root_dir/LICENSE $target_dist/.
+
   # copy over all default config
   mkdir $target_dist/default
   cp $default_yml_config $target_dist/default/.ferret.yml
@@ -72,6 +77,10 @@ build() {
   else
     cp $build_dir/bin/ferret $target_dist/.
   fi
+
+  # debug..
+  #cp -rf $root_dir/lib/* $target_dist/node_modules/@forthright/ferret/lib/.
+  #cp -rf $root_dir/bin/ferret $target_dist/node_modules/@forthright/ferret/bin/.
 
   # copy over node
   mkdir $target_dist/lib

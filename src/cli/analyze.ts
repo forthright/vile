@@ -60,7 +60,6 @@ const analyze = (
     format: opts.format,
     plugins: custom_plugins,
     additional_plugins: additional_plugins,
-    skip_core_plugins: opts.withoutCorePlugins,
     skip_snippets: opts.skipSnippets,
     spinner: !(opts.quiet || !opts.decorations)
   }
@@ -172,8 +171,6 @@ const create = (cli : commander.CommanderStatic) =>
     .option("-d, --dont-post-process",
             "don't post process data in any way (ex: adding ok data)- " +
             "useful for per file checking")
-    .option("-w, --without-core-plugins",
-            "don't use plugins bundled with core lib")
     .option("-l, --log [level]",
             "specify the log level (info=default|warn|error|debug)")
     .option("-i, --issue-log [level]",
