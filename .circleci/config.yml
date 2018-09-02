@@ -9,11 +9,10 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: Reset Shallow Clone
-          command: "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
-      - run:
-          name: Resync Origin
-          command: git fetch origin $CIRCLE_BRANCH
+          name: Reset shallow clone
+          command: |
+            [[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow
+            git fetch origin $CIRCLE_BRANCH
       - run:
           name: Versions
           command: sh bin/list-env-versions
